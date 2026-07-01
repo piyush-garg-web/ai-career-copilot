@@ -1,6 +1,6 @@
 # AI Career Copilot — Project Context
 
-**Version:** 1.0  
+**Version:** 2.0  
 **Last Updated:** July 1, 2026  
 **Status:** Planning Complete — Ready for Implementation  
 **Purpose:** Living document for AI assistants and developers to continue work at any time
@@ -16,7 +16,7 @@
 | Project Name | AI Career Copilot |
 | Type | Full-stack SaaS web application |
 | Stage | Pre-implementation (planning complete) |
-| MVP Timeline | ~8 weeks |
+| MVP Timeline | ~9 weeks |
 | Language | JavaScript (not TypeScript) |
 
 ---
@@ -24,7 +24,7 @@
 ## 2. Tech Stack
 
 | Layer | Technology | Version | Purpose |
-|-------|-----------|---------|---------|
+|-------|-----------|---------|-------|
 | Framework | Next.js (App Router) | 15.x | Full-stack React framework |
 | UI Library | React | 19.x | Component rendering |
 | Language | JavaScript | ES2022+ | Application code |
@@ -39,6 +39,8 @@
 | AI | Google Gemini API | gemini-2.0-flash | All AI features |
 | Deployment | Vercel | — | Hosting + serverless functions |
 | Charts | Recharts | 2.x | Analytics visualizations |
+| Code Quality | ESLint, Prettier, Husky, lint-staged, commitlint | — | Linting, formatting, commit validation |
+| Env Validation | Zod | — | Environment variable schema validation |
 
 ---
 
@@ -51,7 +53,7 @@
 | [DATABASE.md](./DATABASE.md) | Database schema | Prisma schema, tables, relations, indexes, JSON schemas |
 | [API.md](./API.md) | API reference | All endpoints, request/response shapes, auth, rate limits |
 | [UI.md](./UI.md) | UI/UX specification | Pages, components, colors, typography, responsive design |
-| [TASKS.md](./TASKS.md) | Implementation tasks | 120 tasks in 12 phases with dependencies |
+| [TASKS.md](./TASKS.md) | Implementation tasks | 134 tasks in 13 phases with dependencies |
 | [PROJECT_CONTEXT.md](./PROJECT_CONTEXT.md) | This document | Living summary for continuity |
 
 ---
@@ -59,24 +61,26 @@
 ## 4. Feature Status Tracker
 
 | Feature | PRD Priority | MVP | Status | Tasks |
-|---------|-------------|-----|--------|-------|
-| Authentication (Clerk) | P0 | ✅ | ⬜ Not started | T015–T019 |
-| Onboarding wizard | P0 | ✅ | ⬜ Not started | T037–T040 |
-| Resume upload (PDF/DOCX) | P0 | ✅ | ⬜ Not started | T049–T052 |
-| Resume parsing | P0 | ✅ | ⬜ Not started | T053–T056, T059 |
-| AI resume analysis | P0 | ✅ | ⬜ Not started | T063–T066 |
-| ATS score | P0 | ✅ | ⬜ Not started | T064, T067 |
-| Improvement suggestions | P0 | ✅ | ⬜ Not started | T069, T070 |
-| Job description matching | P0 | ✅ | ⬜ Not started | T073–T079 |
-| AI cover letter generation | P0 | ✅ | ⬜ Not started | T081–T087 |
-| Interview coach | P0 | ✅ | ⬜ Not started | T089–T098 |
-| Interview evaluation | P0 | ✅ | ⬜ Not started | T090, T095, T099–T100 |
-| Interview history | P0 | ✅ | ⬜ Not started | T101 |
-| Analytics dashboard | P0 | ✅ | ⬜ Not started | T103–T107 |
-| Profile management | P0 | ✅ | ⬜ Not started | T041–T042 |
-| Settings | P0 | ✅ | ⬜ Not started | T043–T046 |
-| Career roadmap | P1 | ❌ Phase 2 | ⬜ Not started | T109–T114 |
-| Landing page | P0 | ✅ | ⬜ Not started | T031–T036 |
+|-------|-----------|-----|------|-----|
+| Code Quality & Tooling | — | ✅ | ⬜ Not started | T001–T006 |
+| Authentication (Clerk) | P0 | ✅ | ⬜ Not started | T012–T015, T024 |
+| Onboarding wizard | P0 | ✅ | ⬜ Not started | T050–T053 |
+| UI Foundation | — | ✅ | ⬜ Not started | T026–T043 |
+| Resume upload (PDF/DOCX) | P0 | ✅ | ⬜ Not started | T062–T065 |
+| Resume parsing | P0 | ✅ | ⬜ Not started | T066–T069, T072 |
+| AI resume analysis | P0 | ✅ | ⬜ Not started | T076–T079 |
+| ATS score | P0 | ✅ | ⬜ Not started | T077, T080 |
+| Improvement suggestions | P0 | ✅ | ⬜ Not started | T082, T083 |
+| Job description matching | P0 | ✅ | ⬜ Not started | T086–T092 |
+| AI cover letter generation | P0 | ✅ | ⬜ Not started | T094–T100 |
+| Interview coach | P0 | ✅ | ⬜ Not started | T102–T111 |
+| Interview evaluation | P0 | ✅ | ⬜ Not started | T103, T108, T112–T113 |
+| Interview history | P0 | ✅ | ⬜ Not started | T114 |
+| Analytics dashboard | P0 | ✅ | ⬜ Not started | T116–T120 |
+| Profile management | P0 | ✅ | ⬜ Not started | T054–T055 |
+| Settings | P0 | ✅ | ⬜ Not started | T056–T060 |
+| Career Roadmap | P1 | ❌ Phase 2 | ⬜ Not started | T121–T126 |
+| Landing page | P0 | ✅ | ⬜ Not started | T044–T049 |
 
 ---
 
@@ -120,7 +124,6 @@ Full schema in [DATABASE.md](./DATABASE.md).
 | GET/DELETE | `/api/roadmaps/[id]` | Roadmap CRUD |
 | PATCH | `/api/roadmaps/[id]/milestones/[milestoneId]` | Update milestone |
 | GET | `/api/analytics` | Dashboard data |
-| POST | `/api/ai/stream` | Streaming AI responses |
 
 Full API spec in [API.md](./API.md).
 
@@ -167,6 +170,8 @@ Full API spec in [API.md](./API.md).
 | Styling approach | Tailwind + shadcn/ui | Rapid development, consistent design system |
 | API pattern | Next.js Route Handlers | Colocated with app, serverless-ready |
 | JSON storage | PostgreSQL JSON columns | Flexible AI output without schema migrations |
+| Code quality | ESLint, Prettier, Husky, lint-staged, commitlint | Consistent code style, prevent bad commits |
+| Env validation | Zod | Catch missing/invalid env vars early |
 
 ---
 
@@ -206,11 +211,11 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 - [x] DATABASE.md — Database schema
 - [x] API.md — API reference
 - [x] UI.md — UI/UX specification
-- [x] TASKS.md — 120 implementation tasks
+- [x] TASKS.md — 134 implementation tasks
 - [x] PROJECT_CONTEXT.md — This document
 
 ### Not Started
-- [ ] All application code (Tasks T001–T120)
+- [ ] All application code (Tasks T001–T134)
 - [ ] Database migrations
 - [ ] Environment configuration
 - [ ] Deployment setup
@@ -257,16 +262,17 @@ When continuing development on this project:
 ### File Creation Order (First Session)
 
 ```
-1. npx create-next-app@latest . --js --tailwind --app --src-dir
-2. Configure jsconfig.json paths
-3. Install dependencies (see ARCHITECTURE.md)
-4. Set up shadcn/ui
-5. Configure globals.css with color variables
-6. Create .env.example
-7. Initialize Prisma + schema
-8. Set up Clerk
-9. Create middleware.js
-10. Create root layout with providers
+1. npx create-next-app@latest . --js --tailwind --app --src-dir --eslint
+2. Install Prettier, ESLint plugins
+3. Install Husky, lint-staged, commitlint
+4. Set up env validation with Zod
+5. Configure jsconfig.json paths
+6. Install dependencies (Framer Motion, Lucide React)
+7. Set up globals.css with color variables, next-themes
+8. Create .env.example
+9. Install and set up shadcn/ui
+10. Install Clerk
+11. Initialize Prisma
 ```
 
 ---
@@ -274,14 +280,13 @@ When continuing development on this project:
 ## 12. Known Constraints & Gotchas
 
 | Constraint | Detail | Mitigation |
-|------------|--------|------------|
+|----------|--------|-----------|
 | Vercel function timeout | 10s (hobby) / 60s (pro) | Background processing for AI calls; streaming for long operations |
 | Gemini rate limits | Varies by tier | Server-side retry with backoff; rate limiting on API routes |
 | UploadThing file limit | 10MB default | Validate file size client-side before upload |
 | Clerk webhook delay | ~1-2s after signup | Handle race condition: create user on first API call if webhook hasn't fired |
 | Prisma on Vercel | Connection pooling needed | Use Neon connection pooling URL (`?pgbouncer=true`) |
-| No TypeScript | Project requirement | Use JSDoc comments for complex function signatures |
-| JavaScript JSON validation | No compile-time checks | Validate AI JSON responses with runtime schema checks |
+| No TypeScript | Project requirement | Use JSDoc comments for complex function signatures; use Zod for runtime validation |
 
 ---
 
@@ -295,7 +300,10 @@ When continuing development on this project:
 | AI | Test with sample resumes and JDs | After AI service tasks |
 | Responsive | Test at mobile/tablet/desktop breakpoints | After UI component tasks |
 | Auth | Test protected routes, webhook sync | After auth tasks |
-| Production | Smoke test on Vercel deployment | Task T120 |
+| Production | Smoke test on Vercel deployment | Task T132 |
+| Accessibility | WCAG 2.1 AA audit | Task T131 |
+| Performance | Lighthouse audit | Task T133 |
+| Cross-browser | Test Chrome, Firefox, Safari, Edge | Task T129 |
 
 ---
 
@@ -304,6 +312,7 @@ When continuing development on this project:
 | Date | Version | Changes |
 |------|---------|---------|
 | 2026-07-01 | 1.0 | Initial planning documents created. All 7 docs complete. Ready for T001. |
+| 2026-07-01 | 2.0 | Updated TASKS.md: reordered Phase 1, added Phase 0 (Code Quality), added Phase 2 (UI Foundation), expanded Phase 12 (Polish & Deploy), updated dependencies and task numbers. Updated PROJECT_CONTEXT.md to reflect changes. |
 
 ---
 
@@ -329,4 +338,4 @@ npm run dev
 # 5. Open TASKS.md and start with the first unchecked task
 ```
 
-**First implementation session should complete Phase 1 (T001–T020): Project Foundation.**
+**First implementation session should complete Phase 0 (T001–T006): Code Quality & Tooling.**
