@@ -1,5 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// prisma/schema.prisma
 
 generator client {
   provider = "prisma-client-js"
@@ -7,5 +6,261 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// USER
+// ─────────────────────────────────────────────
+
+model User {
+  id                 String           @id @default(cuid())
+  clerkId            String           @unique
+  email              String           @unique
+  firstName          String?
+  lastName           String?
+  imageUrl           String?
+  bio                String?          @db.Text
+  location           String?
+  linkedinUrl        String?
+  targetRole         String?
+  targetIndustry     String?
+  experienceLevel    ExperienceLevel?
+  careerGoals        String?          @db.Text
+  onboardingComplete Boolean          @default(false)
+  theme              Theme            @default(SYSTEM)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  resumes            Resume[]
+  jobDescriptions    JobDescription[]
+  jobMatches         JobMatch[]
+  interviewSessions  InterviewSession[]
+
+  @@index([clerkId])
+  @@index([email])
+  @@map("users")
+}
+
+enum ExperienceLevel {
+  ENTRY
+  MID
+  SENIOR
+  EXECUTIVE
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+// ─────────────────────────────────────────────
+// RESUME
+// ─────────────────────────────────────────────
+
+model Resume {
+  id           String          @id @default(cuid())
+  userId       String
+  fileName     String
+  fileUrl      String
+  fileType     FileType
+  fileSize     Int
+  status       ResumeStatus    @default(UPLOADED)
+  version      Int             @default(1)
+  parsedData   Json?
+  rawText      String?         @db.Text
+  parsingError String?         @db.Text
+  isPrimary    Boolean         @default(false)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  analysis   ResumeAnalysis?
+  jobMatches JobMatch[]
+
+  @@index([userId])
+  @@index([userId, isPrimary])
+  @@index([status])
+  @@map("resumes")
+}
+
+enum FileType {
+  PDF
+  DOCX
+}
+
+enum ResumeStatus {
+  UPLOADED
+  PARSING
+  PARSED
+  ANALYZING
+  ANALYZED
+  ERROR
+}
+
+// ─────────────────────────────────────────────
+// RESUME ANALYSIS (1:1 with Resume)
+// ─────────────────────────────────────────────
+
+model ResumeAnalysis {
+  id              String   @id @default(cuid())
+  resumeId        String   @unique
+  overallScore    Int
+  atsScore        Int
+  skillsScore     Int
+  experienceScore Int
+  educationScore  Int
+  projectsScore   Int
+  grammarScore    Int
+  scoreBreakdown  Json?
+  suggestions     Json?
+  keywords        Json?
+  summary         String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  resume          Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@index([resumeId])
+  @@map("resume_analyses")
+}
+
+// ─────────────────────────────────────────────
+// JOB DESCRIPTION
+// ─────────────────────────────────────────────
+
+model JobDescription {
+  id        String     @id @default(cuid())
+  userId    String
+  title     String?
+  company   String?
+  content   String     @db.Text
+  source    String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobMatches JobMatch[]
+
+  @@index([userId])
+  @@map("job_descriptions")
+}
+
+// ─────────────────────────────────────────────
+// JOB MATCH (references both Resume and JobDescription)
+// ─────────────────────────────────────────────
+
+model JobMatch {
+  id               String   @id @default(cuid())
+  userId           String
+  resumeId         String
+  jobDescriptionId String
+  matchScore       Int
+  matchedSkills    Json
+  missingSkills    Json
+  matchedKeywords  Json
+  missingKeywords  Json
+  suggestions      Json
+  analysis         Json?
+  summary          String?  @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resume           Resume         @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  jobDescription   JobDescription @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([resumeId])
+  @@index([jobDescriptionId])
+  @@map("job_matches")
+}
+
+// ─────────────────────────────────────────────
+// INTERVIEW SESSION
+// ─────────────────────────────────────────────
+
+model InterviewSession {
+  id             String              @id @default(cuid())
+  userId         String
+  title          String
+  role           String
+  difficulty     Difficulty
+  questionTypes  Json
+  status         InterviewStatus     @default(ACTIVE)
+  overallScore   Int?
+  categoryScores Json?
+  evaluation     Json?
+  feedback       String?             @db.Text
+  duration       Int?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  completedAt    DateTime?
+
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questions      InterviewQuestion[]
+
+  @@index([userId])
+  @@index([userId, status])
+  @@map("interview_sessions")
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum InterviewStatus {
+  ACTIVE
+  COMPLETED
+  ABANDONED
+}
+
+// ─────────────────────────────────────────────
+// INTERVIEW QUESTION
+// ─────────────────────────────────────────────
+
+model InterviewQuestion {
+  id           String           @id @default(cuid())
+  sessionId    String
+  content      String           @db.Text
+  questionType QuestionType
+  order        Int
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  session      InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  answer       InterviewAnswer?
+
+  @@index([sessionId])
+  @@index([sessionId, order])
+  @@map("interview_questions")
+}
+
+enum QuestionType {
+  BEHAVIORAL
+  TECHNICAL
+  SITUATIONAL
+}
+
+// ─────────────────────────────────────────────
+// INTERVIEW ANSWER (1:1 with InterviewQuestion)
+// ─────────────────────────────────────────────
+
+model InterviewAnswer {
+  id             String            @id @default(cuid())
+  questionId     String            @unique
+  content        String            @db.Text
+  score          Int?
+  feedback       String?           @db.Text
+  improvedAnswer String?           @db.Text
+  analysis       Json?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  question       InterviewQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId])
+  @@map("interview_answers")
 }
