@@ -1,5 +1,5 @@
 import { createUploadthing } from "uploadthing/next";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 
 const f = createUploadthing();
@@ -17,7 +17,7 @@ export const ourFileRouter = {
   })
     .middleware(async ({ req }) => {
       // Get the authenticated user from Clerk
-      const { userId: clerkId } = await auth();
+      const { userId: clerkId, sessionClaims } = await auth();
       if (!clerkId) {
         throw new Error("Unauthorized - Clerk session not found");
       }
@@ -29,23 +29,21 @@ export const ourFileRouter = {
 
       // Fallback: Create user record in DB if Clerk webhooks were blocked locally
       if (!dbUser) {
-        const user = await currentUser();
-        if (!user) {
-          throw new Error("Unauthorized - Clerk user profile could not be loaded");
-        }
-
-        const email = user.emailAddresses?.[0]?.email_address;
-        if (!email) {
-          throw new Error("Unauthorized - Missing user email address");
-        }
+        console.log(`[UPLOADTHING MIDDLEWARE]: User ${clerkId} not found in DB. Creating fallback record via session claims...`);
+        
+        // Extract details from sessionClaims or default gracefully
+        const email = sessionClaims?.email || sessionClaims?.primary_email_address || `user_${clerkId}@clerk.local`;
+        const firstName = sessionClaims?.first_name || null;
+        const lastName = sessionClaims?.last_name || null;
+        const imageUrl = sessionClaims?.image_url || null;
 
         dbUser = await db.user.create({
           data: {
             clerkId,
             email,
-            firstName: user.firstName || null,
-            lastName: user.lastName || null,
-            imageUrl: user.imageUrl || null,
+            firstName,
+            lastName,
+            imageUrl,
           },
         });
       }

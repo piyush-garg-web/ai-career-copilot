@@ -1,5 +1,3 @@
-import pdfParse from "pdf-parse";
-
 /**
  * Extract plain text from a PDF document buffer.
  * @param {Buffer} buffer - The PDF file binary buffer.
@@ -11,13 +9,24 @@ export async function parsePdf(buffer) {
   }
 
   try {
-    const data = await pdfParse(buffer);
+    // Load pdf-parse using CommonJS require inside execution scope to avoid Webpack compilation warnings
+    const pdf = require("pdf-parse");
+    const PDFParse = pdf.PDFParse;
     
-    if (!data || typeof data.text !== "string") {
+    if (typeof PDFParse !== "function") {
+      throw new Error("Could not locate the PDFParse class constructor in the pdf-parse package exports.");
+    }
+
+    // Instantiate and extract text using pdf-parse v2 API
+    const parser = new PDFParse({ data: buffer });
+    const result = await parser.getText();
+    await parser.destroy();
+    
+    if (!result || typeof result.text !== "string") {
       throw new Error("Extracted PDF data is empty or invalid.");
     }
 
-    const trimmedText = data.text.trim();
+    const trimmedText = result.text.trim();
     if (!trimmedText) {
       throw new Error("No readable text content could be extracted from this PDF.");
     }
