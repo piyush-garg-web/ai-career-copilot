@@ -1,38 +1,70 @@
-"use client";
-
 import React from "react";
+import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
+import { db } from "@/lib/db";
 import { PageHeader } from "@/components/shared/page-header";
+import { JobMatchForm } from "@/components/resume/job-match-form";
 import { Card, CardContent } from "@/components/ui/card";
-import { Target, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Plus, BarChart2 } from "lucide-react";
 
-export default function JobMatchPage() {
+export const revalidate = 0; // Disable static build route caching
+
+export default async function JobMatchPage() {
+  // Resolve Clerk authenticated user
+  const { userId: clerkId } = await auth();
+  if (!clerkId) {
+    redirect("/sign-in");
+  }
+
+  // Fetch corresponding DB User
+  const dbUser = await db.user.findUnique({
+    where: { clerkId },
+  });
+
+  if (!dbUser) {
+    redirect("/resume");
+  }
+
+  // Fetch user's resumes
+  const resumes = await db.resume.findMany({
+    where: { userId: dbUser.id },
+    orderBy: { createdAt: "desc" },
+  });
+
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Job Matcher"
-        description="Compare your resume against specific job descriptions to find critical skill gaps."
+        title="Resume & Job Matcher"
+        description="Compare your resume details against any job description to discover key keyword gaps and fit alignment."
       />
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <Card className="border-border/40 bg-card/60 backdrop-blur-md hover:border-border transition-colors duration-200">
-          <CardContent className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-4 text-cyan-500">
-              <Target className="w-6 h-6 animate-pulse" />
+
+      {resumes.length === 0 ? (
+        /* Empty State */
+        <Card className="border border-border/40 bg-card/60 backdrop-blur-sm shadow-sm py-16">
+          <CardContent className="flex flex-col items-center justify-center text-center max-w-md mx-auto space-y-5">
+            <div className="p-4 rounded-2xl bg-indigo-500/10 text-indigo-500 animate-pulse">
+              <BarChart2 className="w-8 h-8" />
             </div>
-            <h3 className="text-lg font-bold text-foreground flex items-center gap-1.5 justify-center">
-              Job Matching Engine
-              <Sparkles className="w-4 h-4 text-cyan-500 inline" />
-            </h3>
-            <p className="text-sm text-muted-foreground max-w-sm mt-1.5 font-medium">
-              This module will compare your resume text against a pasted job description, calculate a match percentage, and list missing skills.
-            </p>
+            <div className="space-y-1.5">
+              <h3 className="text-lg font-bold text-foreground">No Resumes Found</h3>
+              <p className="text-sm text-muted-foreground font-medium">
+                You must upload your resume document first before comparing it with job roles.
+              </p>
+            </div>
+            <Button asChild className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold gap-1.5 cursor-pointer shadow-md shadow-blue-500/10 h-10 px-5">
+              <Link href="/resume/upload">
+                <Plus className="w-4 h-4" />
+                Upload Resume
+              </Link>
+            </Button>
           </CardContent>
         </Card>
-      </motion.div>
+      ) : (
+        /* Load Job Match Selector Form */
+        <JobMatchForm resumes={resumes} />
+      )}
     </div>
   );
 }

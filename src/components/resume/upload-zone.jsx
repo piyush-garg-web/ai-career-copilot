@@ -28,15 +28,43 @@ export function UploadZone({ onUploadComplete }) {
   const fileInputRef = useRef(null);
 
   const { startUpload } = useUploadThing("resumeUploader", {
-    onClientUploadComplete: (res) => {
-      setUploadStatus("SUCCESS");
-      setUploadProgress(100);
-      toast.success("Resume uploaded successfully!");
-      if (onUploadComplete && res?.[0]) {
-        // Pass file info to parent callback after 1 second delay for visual confirmation
-        setTimeout(() => {
-          onUploadComplete(res[0]);
-        }, 1000);
+    onClientUploadComplete: async (res) => {
+      const serverData = res?.[0]?.serverData;
+      const resumeId = serverData?.resumeId;
+
+      if (!resumeId) {
+        setUploadStatus("ERROR");
+        setErrorMessage("Upload succeeded, but could not retrieve resume database ID.");
+        toast.error("Upload tracking error");
+        return;
+      }
+
+      setUploadStatus("PARSING");
+      setUploadProgress(95);
+
+      try {
+        const parseResponse = await fetch(`/api/resumes/${resumeId}/parse`, {
+          method: "POST",
+        });
+
+        if (!parseResponse.ok) {
+          const errorData = await parseResponse.json();
+          throw new Error(errorData.error || "Failed to extract plain text from resume.");
+        }
+
+        setUploadProgress(100);
+        setUploadStatus("SUCCESS");
+        toast.success("Resume uploaded and parsed successfully!");
+        
+        if (onUploadComplete && res?.[0]) {
+          setTimeout(() => {
+            onUploadComplete(res[0]);
+          }, 1500);
+        }
+      } catch (err) {
+        setUploadStatus("ERROR");
+        setErrorMessage(err.message || "Something went wrong during document parsing.");
+        toast.error("Parsing failed");
       }
     },
     onUploadError: (err) => {
@@ -267,6 +295,42 @@ export function UploadZone({ onUploadComplete }) {
                 <span className="text-blue-500 font-bold">{uploadProgress}%</span>
               </div>
               <Progress value={uploadProgress} className="h-2 bg-accent" />
+            </div>
+          </motion.div>
+        )}
+
+        {/* State: PARSING */}
+        {uploadStatus === "PARSING" && fileDetails && (
+          <motion.div
+            key="parsing"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="border border-border/40 rounded-2xl p-6 bg-card/60 backdrop-blur-sm shadow-sm space-y-5"
+          >
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-500">
+                <Sparkles className="w-6 h-6 animate-pulse" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-foreground truncate">
+                  {fileDetails.name}
+                </p>
+                <p className="text-xs text-muted-foreground font-semibold">
+                  {fileDetails.type} File • {formatFileSize(fileDetails.size)}
+                </p>
+              </div>
+              <div className="flex items-center justify-center shrink-0">
+                <Loader2 className="w-5 h-5 text-indigo-500 animate-spin" />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
+                <span>Extracting plain text...</span>
+                <span className="text-indigo-500 font-bold">Processing</span>
+              </div>
+              <Progress value={95} className="h-2 bg-accent [&>div]:bg-indigo-500" />
             </div>
           </motion.div>
         )}

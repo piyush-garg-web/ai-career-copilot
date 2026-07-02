@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button } from "@/components/ui/button";
@@ -47,9 +47,28 @@ export default async function ResumesPage() {
   }
 
   // Fetch corresponding DB User
-  const dbUser = await db.user.findUnique({
+  let dbUser = await db.user.findUnique({
     where: { clerkId },
   });
+
+  // Fallback: Create user record in DB if Clerk webhooks were blocked locally
+  if (!dbUser) {
+    const user = await currentUser();
+    if (user) {
+      const email = user.emailAddresses?.[0]?.email_address;
+      if (email) {
+        dbUser = await db.user.create({
+          data: {
+            clerkId,
+            email,
+            firstName: user.firstName || null,
+            lastName: user.lastName || null,
+            imageUrl: user.imageUrl || null,
+          },
+        });
+      }
+    }
+  }
 
   let resumes = [];
 
@@ -116,7 +135,9 @@ export default async function ResumesPage() {
                     </div>
                     <div className="min-w-0">
                       <CardTitle className="text-sm font-bold text-foreground truncate group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-200" title={resume.fileName}>
-                        {resume.fileName}
+                        <Link href={`/resume/${resume.id}`} className="hover:underline">
+                          {resume.fileName}
+                        </Link>
                       </CardTitle>
                       <span className="text-[10px] font-semibold text-muted-foreground/80 tracking-wide uppercase mt-0.5 block">
                         {resume.fileType} Document
@@ -158,11 +179,11 @@ export default async function ResumesPage() {
                       variant="ghost"
                       size="icon"
                       className="w-8 h-8 rounded-xl border border-border/40 hover:bg-accent cursor-pointer"
-                      title="View document"
+                      title="View details"
                     >
-                      <a href={resume.fileUrl} target="_blank" rel="noreferrer">
+                      <Link href={`/resume/${resume.id}`}>
                         <Eye className="w-3.5 h-3.5 text-muted-foreground hover:text-foreground" />
-                      </a>
+                      </Link>
                     </Button>
                   </div>
                 </CardFooter>

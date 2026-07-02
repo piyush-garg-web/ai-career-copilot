@@ -1,5 +1,5 @@
 import { createUploadthing } from "uploadthing/next";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 
 const f = createUploadthing();
@@ -23,11 +23,31 @@ export const ourFileRouter = {
       }
 
       // Fetch the corresponding internal user database record
-      const dbUser = await db.user.findUnique({
+      let dbUser = await db.user.findUnique({
         where: { clerkId },
       });
+
+      // Fallback: Create user record in DB if Clerk webhooks were blocked locally
       if (!dbUser) {
-        throw new Error("Unauthorized - User database record not found");
+        const user = await currentUser();
+        if (!user) {
+          throw new Error("Unauthorized - Clerk user profile could not be loaded");
+        }
+
+        const email = user.emailAddresses?.[0]?.email_address;
+        if (!email) {
+          throw new Error("Unauthorized - Missing user email address");
+        }
+
+        dbUser = await db.user.create({
+          data: {
+            clerkId,
+            email,
+            firstName: user.firstName || null,
+            lastName: user.lastName || null,
+            imageUrl: user.imageUrl || null,
+          },
+        });
       }
 
       // Metadata to pass to onUploadComplete
