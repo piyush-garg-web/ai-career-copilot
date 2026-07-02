@@ -9,6 +9,8 @@
 
 **AI Career Copilot** is a production-grade SaaS application designed to streamline the modern job application lifecycle. It empowers candidates to optimize their resumes for ATS screening, analyze alignment with job descriptions, and conduct interactive, AI-powered mock interviews with real-time feedback.
 
+**Live Demo:** [https://ai-career-copilot-ehmy.vercel.app](https://ai-career-copilot-ehmy.vercel.app)
+
 ---
 
 ## 🚀 Live Demo
