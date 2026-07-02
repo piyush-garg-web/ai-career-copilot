@@ -6,6 +6,12 @@ import { ResumeDetailsView } from "@/components/resume/resume-details-view";
 
 export const revalidate = 0; // Disable static page generation cache for dynamic database fetches
 
+export const metadata = {
+  title: "Resume Details | AI Career Copilot",
+  description: "View details, text transcripts, and parsed structured sections of your resume.",
+};
+
+
 export default async function ResumeDetailPage({ params }) {
   // Resolve Dynamic Params Asynchronously in Next.js 15
   const resolvedParams = await params;

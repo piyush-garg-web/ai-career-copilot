@@ -13,6 +13,12 @@ import { FileText, Sparkles, Calendar, HardDrive, Plus, Eye, BarChart2 } from "l
 
 export const revalidate = 0; // Disable static build route caching
 
+export const metadata = {
+  title: "AI Resume Analysis | AI Career Copilot",
+  description: "Analyze your resume structure, strengths, weaknesses, and optimization suggestions.",
+};
+
+
 // Helper: Format file size to human readable MB/KB
 const formatFileSize = (bytes) => {
   if (!bytes || bytes === 0) return "0 Bytes";

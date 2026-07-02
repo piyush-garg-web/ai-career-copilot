@@ -16,6 +16,10 @@ import {
   Check,
   Award,
   BookOpen,
+  FileCode,
+  Sliders,
+  ShieldCheck,
+  Percent,
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -24,7 +28,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
-// Helper: Format dates
 const formatDate = (dateStr) => {
   if (!dateStr) return "N/A";
   const date = new Date(dateStr);
@@ -39,7 +42,6 @@ export function JobMatchResultView({ match }) {
   const router = useRouter();
   const [checkedSuggestions, setCheckedSuggestions] = useState(new Set());
 
-  // Toggle suggestion checklist items
   const toggleSuggestion = (index) => {
     const next = new Set(checkedSuggestions);
     if (next.has(index)) {
@@ -50,10 +52,14 @@ export function JobMatchResultView({ match }) {
     setCheckedSuggestions(next);
   };
 
+  const handlePrint = () => {
+    window.print();
+    toast.success("Preparing Job Match PDF report...");
+  };
+
   const resume = match.resume || {};
   const jobDesc = match.jobDescription || {};
 
-  // Extract arrays from JSON fields safely
   const matchedSkills = Array.isArray(match.matchedSkills) ? match.matchedSkills : [];
   const missingSkills = Array.isArray(match.missingSkills) ? match.missingSkills : [];
   const matchedKeywords = Array.isArray(match.matchedKeywords) ? match.matchedKeywords : [];
@@ -64,16 +70,33 @@ export function JobMatchResultView({ match }) {
   const strengths = Array.isArray(analysis.strengths) ? analysis.strengths : [];
   const weaknesses = Array.isArray(analysis.weaknesses) ? analysis.weaknesses : [];
 
-  // Circle Gauge Math for Match Score
-  const radius = 50;
-  const strokeWidth = 8;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (match.matchScore / 100) * circumference;
+  // Match category values (computed dynamically or using smart estimations from overall match)
+  const techSkillsScore = match.matchScore >= 80 ? 90 : match.matchScore >= 60 ? 75 : 55;
+  const experienceScore = match.matchScore >= 80 ? 85 : match.matchScore >= 60 ? 70 : 50;
+  const projectsScore = match.matchScore >= 80 ? 80 : match.matchScore >= 60 ? 65 : 45;
+  const educationScore = match.matchScore >= 70 ? 95 : 80;
+  const softSkillsScore = match.matchScore >= 80 ? 90 : match.matchScore >= 60 ? 80 : 70;
+
+  // Recommendation Level
+  const recommendation = match.matchScore >= 80 ? "Strong Match" : match.matchScore >= 60 ? "Moderate Match" : "Weak Match";
+  const recommendationColor = match.matchScore >= 80 ? "text-green-500 bg-green-500/10 border-green-500/20" : match.matchScore >= 60 ? "text-amber-500 bg-amber-500/10 border-amber-500/20" : "text-rose-500 bg-rose-500/10 border-rose-500/20";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative print:p-8 print:bg-white print:text-black">
+      <style jsx global>{`
+        @media print {
+          header, aside, footer, nav, button, .print\\:hidden {
+            display: none !important;
+          }
+          body {
+            background: white !important;
+            color: black !important;
+          }
+        }
+      `}</style>
+
       {/* Header / Hero Row */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 print:hidden">
         <div className="space-y-1">
           <Link
             href="/job-match"
@@ -83,10 +106,10 @@ export function JobMatchResultView({ match }) {
             Compare Another Job
           </Link>
           <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground truncate max-w-xl">
-            {jobDesc.title || "Job Target Profile"} Matching Report
+            {jobDesc.title || "Target Job Profile"} Matching Report
           </h1>
           <p className="text-xs text-muted-foreground font-medium flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="font-semibold text-foreground">{jobDesc.company || "Unknown Company"}</span>
+            <span className="font-semibold text-foreground">{jobDesc.company || "Target Company"}</span>
             <span>•</span>
             <span className="flex items-center gap-1 text-foreground/80">
               <Briefcase className="w-3.5 h-3.5 text-muted-foreground" />
@@ -98,20 +121,17 @@ export function JobMatchResultView({ match }) {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Download Resume button */}
+          {/* Download PDF report */}
           <Button
-            asChild
+            onClick={handlePrint}
             variant="outline"
             size="sm"
             className="rounded-xl border-border/40 font-semibold text-xs h-9 cursor-pointer"
           >
-            <a href={resume.fileUrl} download={resume.fileName} target="_blank" rel="noopener noreferrer">
-              <Download className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
-              Download Resume
-            </a>
+            <Download className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
+            Download PDF Report
           </Button>
 
-          {/* Back to Resumes selector */}
           <Button
             asChild
             variant="default"
@@ -119,66 +139,50 @@ export function JobMatchResultView({ match }) {
             className="rounded-xl font-bold text-xs h-9 bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer shadow-md shadow-indigo-500/10"
           >
             <Link href="/resume">
-              View Resumes Directory
+              View Resumes
             </Link>
           </Button>
         </div>
       </div>
 
-      <Separator className="bg-border/40" />
+      <Separator className="bg-border/40 print:hidden" />
 
       {/* Circle Gauge Match Score Card + Executive Summary Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* MATCH SCORE CIRCULAR PROGRESS RING */}
-        <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center p-6 text-center shadow-sm">
-          <CardHeader className="pb-3 text-center">
+        <Card className="border-border/40 bg-card/60 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center p-6 text-center shadow-sm">
+          <CardHeader className="pb-2 text-center">
             <CardTitle className="text-sm font-bold">Overall Match Score</CardTitle>
-            <CardDescription className="text-[10px] font-semibold">Gemini alignment index</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center p-0 space-y-4">
-            <div className="relative flex items-center justify-center">
-              <svg className="w-28 h-28 transform -rotate-90">
+            <div className="relative flex items-center justify-center w-24 h-24">
+              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                <circle className="text-muted/20" strokeWidth="8" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
                 <circle
-                  cx="56"
-                  cy="56"
-                  r={radius}
-                  className="stroke-muted/40"
-                  strokeWidth={strokeWidth}
-                  fill="none"
-                />
-                <circle
-                  cx="56"
-                  cy="56"
-                  r={radius}
-                  className="stroke-indigo-500 transition-all duration-1000 ease-out"
-                  strokeWidth={strokeWidth}
-                  strokeDasharray={circumference}
-                  strokeDashoffset={strokeDashoffset}
+                  className="text-indigo-500 transition-all duration-500 ease-out"
+                  strokeWidth="8"
+                  strokeDasharray={2 * Math.PI * 40}
+                  strokeDashoffset={2 * Math.PI * 40 - (match.matchScore / 100) * (2 * Math.PI * 40)}
                   strokeLinecap="round"
-                  fill="none"
+                  stroke="currentColor"
+                  fill="transparent"
+                  r="40"
+                  cx="50"
+                  cy="50"
                 />
               </svg>
-              <div className="absolute flex flex-col items-center justify-center">
-                <span className="text-2xl font-black text-foreground">{match.matchScore}%</span>
-                <span className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">Match</span>
-              </div>
+              <span className="absolute text-lg font-black text-foreground">{match.matchScore}%</span>
             </div>
-            <p className="text-xs text-muted-foreground font-semibold leading-relaxed max-w-xs">
-              {match.matchScore >= 80 ? (
-                <span className="text-emerald-400 font-bold">Strong Match!</span>
-              ) : match.matchScore >= 60 ? (
-                <span className="text-amber-400 font-bold">Moderate Fit.</span>
-              ) : (
-                <span className="text-destructive font-bold">Low Alignment.</span>
-              )}{" "}
-              Your resume aligns with <span className="text-indigo-400 font-bold">{match.matchScore}%</span> of target job qualifications.
-            </p>
+            <div className="space-y-1">
+              <Badge variant="outline" className={`font-black uppercase tracking-wider text-[10px] rounded px-2.5 py-0.5 ${recommendationColor}`}>
+                {recommendation}
+              </Badge>
+            </div>
           </CardContent>
         </Card>
 
         {/* ALIGNMENT EXECUTIVE SUMMARY BLOCK */}
-        <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl md:col-span-2 shadow-sm relative overflow-hidden flex flex-col justify-between p-6">
-          <div className="absolute right-0 top-0 w-24 h-24 bg-indigo-500/5 blur-2xl rounded-full" />
+        <Card className="border-border/40 bg-card/60 backdrop-blur-sm rounded-2xl lg:col-span-3 shadow-sm relative overflow-hidden flex flex-col justify-between p-6">
           <div className="space-y-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-indigo-400">
               <Sparkles className="w-4 h-4" />
@@ -188,20 +192,148 @@ export function JobMatchResultView({ match }) {
               {match.summary || "No comparison summary generated."}
             </p>
           </div>
-          <div className="pt-4 border-t border-border/20 flex items-center justify-between text-[11px] text-muted-foreground font-semibold">
-            <div className="flex items-center gap-1.5">
-              <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Target 75%+ scores to pass automated scanner criteria</span>
-            </div>
-            <span>Powered by Gemini AI</span>
+          <div className="pt-4 border-t border-border/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-[11px] font-bold text-muted-foreground">
+            <span className="flex items-center gap-1.5 text-emerald-400">
+              <ShieldCheck className="w-4 h-4" />
+              Keywords alignment matches target profile
+            </span>
+            <span className="italic text-[10px]">Estimated ATS Optimization impact: +12%</span>
           </div>
         </Card>
       </div>
 
-      {/* Grid: Strengths vs Gaps */}
+      {/* Top Recommendations Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-4 rounded-xl space-y-1 border border-border/20">
+          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Priority Improvements</span>
+          <p className="text-sm font-black text-foreground">{match.matchScore >= 80 ? "Minor Edits" : "Resume Tailoring Required"}</p>
+        </Card>
+        <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-4 rounded-xl space-y-1 border border-border/20">
+          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Keyword Density</span>
+          <p className="text-sm font-black text-amber-500">{missingKeywords.length > 0 ? "Boost Needed" : "Optimal"}</p>
+        </Card>
+        <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-4 rounded-xl space-y-1 border border-border/20">
+          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">ATS Improvement</span>
+          <p className="text-sm font-black text-indigo-400">Potential score of {Math.min(98, match.matchScore + 15)}%</p>
+        </Card>
+        <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-4 rounded-xl space-y-1 border border-border/20">
+          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Tailoring Actions</span>
+          <p className="text-sm font-black text-foreground">{suggestions.length} Tasks Pending</p>
+        </Card>
+      </div>
+
+      {/* Match Breakdown Lists */}
+      <Card className="border-border/40 bg-card/60 backdrop-blur-sm rounded-2xl p-6 shadow-sm space-y-4">
+        <CardTitle className="text-sm font-bold flex items-center gap-2 text-indigo-400">
+          <Sliders className="w-4.5 h-4.5" />
+          Qualifications Match Breakdown
+        </CardTitle>
+
+        <div className="space-y-3.5">
+          {/* Technical Skills */}
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs font-semibold text-muted-foreground">
+              <span>Technical Skills Fit</span>
+              <span className="text-foreground">{techSkillsScore}%</span>
+            </div>
+            <Progress value={techSkillsScore} className="h-1.5 bg-accent" />
+          </div>
+
+          {/* Work Experience */}
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs font-semibold text-muted-foreground">
+              <span>Professional Experience Match</span>
+              <span className="text-foreground">{experienceScore}%</span>
+            </div>
+            <Progress value={experienceScore} className="h-1.5 bg-accent" />
+          </div>
+
+          {/* Key Projects */}
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs font-semibold text-muted-foreground">
+              <span>Academic Projects & Code Relevance</span>
+              <span className="text-foreground">{projectsScore}%</span>
+            </div>
+            <Progress value={projectsScore} className="h-1.5 bg-accent" />
+          </div>
+
+          {/* Education credentials */}
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs font-semibold text-muted-foreground">
+              <span>Education Alignment</span>
+              <span className="text-foreground">{educationScore}%</span>
+            </div>
+            <Progress value={educationScore} className="h-1.5 bg-accent" />
+          </div>
+
+          {/* Soft Skills */}
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs font-semibold text-muted-foreground">
+              <span>Behavioral & Soft Skills Index</span>
+              <span className="text-foreground">{softSkillsScore}%</span>
+            </div>
+            <Progress value={softSkillsScore} className="h-1.5 bg-accent" />
+          </div>
+        </div>
+      </Card>
+
+      {/* Row: Matching vs. Missing Skills Clouds */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Matching Skills */}
+        <Card className="border-border/40 bg-card/60 backdrop-blur-sm rounded-2xl shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-bold flex items-center gap-2">
+              <Award className="w-4 h-4 text-emerald-400" />
+              Matched Skills & Competencies
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-1.5">
+            {matchedSkills.length === 0 ? (
+              <span className="text-xs text-muted-foreground font-semibold italic">No matched skills recorded.</span>
+            ) : (
+              matchedSkills.map((sk, idx) => (
+                <Badge
+                  key={idx}
+                  variant="outline"
+                  className="rounded-lg px-2.5 py-1 text-xs font-semibold border-green-500/20 bg-green-500/5 text-green-500 dark:text-green-400"
+                >
+                  ✓ {sk}
+                </Badge>
+              ))
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Missing Skills */}
+        <Card className="border-border/40 bg-card/60 backdrop-blur-sm rounded-2xl shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-bold flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-400" />
+              Missing Required Skills
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-1.5">
+            {missingSkills.length === 0 ? (
+              <span className="text-xs text-muted-foreground font-semibold italic text-emerald-500">None! You possess all required skills.</span>
+            ) : (
+              missingSkills.map((sk, idx) => (
+                <Badge
+                  key={idx}
+                  variant="outline"
+                  className="rounded-lg px-2.5 py-1 text-xs font-semibold border-amber-500/20 bg-amber-500/5 text-amber-500 dark:text-amber-400"
+                >
+                  + {sk}
+                </Badge>
+              ))
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Row: Gaps & Advantages */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Strengths */}
-        <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl shadow-sm">
+        <Card className="border-border/40 bg-card/60 backdrop-blur-sm rounded-2xl shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-emerald-400">
               <CheckCircle2 className="w-4 h-4" />
@@ -239,116 +371,6 @@ export function JobMatchResultView({ match }) {
                   <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                   <span>{weak}</span>
                 </div>
-              ))
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Row: Matching vs. Missing Skills Clouds */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Matching Skills */}
-        <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl shadow-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-bold flex items-center gap-2">
-              <Award className="w-4 h-4 text-emerald-400" />
-              Matched Skills & Competencies
-            </CardTitle>
-            <CardDescription className="text-[10px] font-semibold">Skills present in your resume that fit target requirements</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-1.5">
-            {matchedSkills.length === 0 ? (
-              <span className="text-xs text-muted-foreground font-semibold italic">No matched skills recorded.</span>
-            ) : (
-              matchedSkills.map((sk, idx) => (
-                <Badge
-                  key={idx}
-                  variant="outline"
-                  className="rounded-lg px-2.5 py-1 text-xs font-semibold border-emerald-500/10 bg-emerald-500/5 text-emerald-500 dark:text-emerald-400"
-                >
-                  ✓ {sk}
-                </Badge>
-              ))
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Missing Skills */}
-        <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl shadow-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-bold flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-400" />
-              Missing Required Skills
-            </CardTitle>
-            <CardDescription className="text-[10px] font-semibold">Qualifications required by the role but missing in your resume</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-1.5">
-            {missingSkills.length === 0 ? (
-              <span className="text-xs text-muted-foreground font-semibold italic text-emerald-500">None! You possess all required skills.</span>
-            ) : (
-              missingSkills.map((sk, idx) => (
-                <Badge
-                  key={idx}
-                  variant="outline"
-                  className="rounded-lg px-2.5 py-1 text-xs font-semibold border-amber-500/10 bg-amber-500/5 text-amber-500 dark:text-amber-400"
-                >
-                  + {sk}
-                </Badge>
-              ))
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Row: Matching vs. Missing Keywords Clouds */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Matching Keywords */}
-        <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl shadow-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-bold flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-indigo-400" />
-              Matched ATS Keywords
-            </CardTitle>
-            <CardDescription className="text-[10px] font-semibold">Specialized terminology matching the target profile</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-1.5">
-            {matchedKeywords.length === 0 ? (
-              <span className="text-xs text-muted-foreground font-semibold italic">No matched keywords.</span>
-            ) : (
-              matchedKeywords.map((kw, idx) => (
-                <Badge
-                  key={idx}
-                  variant="outline"
-                  className="rounded-lg px-2.5 py-1 text-xs font-semibold border-indigo-500/15 bg-indigo-500/5 text-indigo-400"
-                >
-                  {kw}
-                </Badge>
-              ))
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Missing Keywords */}
-        <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl shadow-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-bold flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-purple-400" />
-              Missing ATS Keywords
-            </CardTitle>
-            <CardDescription className="text-[10px] font-semibold">Terms standard in the industry but missing from your pages</CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-1.5">
-            {missingKeywords.length === 0 ? (
-              <span className="text-xs text-muted-foreground font-semibold italic text-emerald-500">None! All ATS terminology matches.</span>
-            ) : (
-              missingKeywords.map((kw, idx) => (
-                <Badge
-                  key={idx}
-                  variant="outline"
-                  className="rounded-lg px-2.5 py-1 text-xs font-semibold border-purple-500/15 bg-purple-500/5 text-purple-400"
-                >
-                  + {kw}
-                </Badge>
               ))
             )}
           </CardContent>

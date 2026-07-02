@@ -110,11 +110,11 @@ export async function generateJSONContent({
       // Race the API call against the timeout gate
       const response = await Promise.race([apiCallPromise, timeoutPromise]);
 
-      if (!response || typeof response.text !== "function") {
+      if (!response || typeof response.text !== "string") {
         throw new Error("Invalid response format received from Gemini client.");
       }
 
-      const responseText = response.text();
+      const responseText = response.text;
       const parsedJson = parseJsonResponse(responseText);
 
       // Validate schema if custom validator callback is provided

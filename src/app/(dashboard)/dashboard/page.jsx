@@ -1,344 +1,275 @@
-"use client";
-
 import React from "react";
-import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
-import { motion } from "framer-motion";
-import {
-  FileText,
-  Gauge,
-  Target,
-  Mic,
-  Plus,
-  Sparkles,
-  ArrowRight,
-  TrendingUp,
-  Award,
-  Clock,
-  Briefcase,
-  CheckCircle2,
-  AlertCircle,
-  FileCheck2,
-  Mail,
-  ChevronRight,
-} from "lucide-react";
-import { toast } from "sonner";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
+import { redirect } from "next/navigation";
+import { auth, currentUser } from "@clerk/nextjs/server";
+import { db } from "@/lib/db";
+import { DashboardClientView } from "@/components/dashboard/dashboard-client-view";
 
-// Framer motion animation variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.06,
-    },
-  },
+export const revalidate = 0; // Disable server cache to ensure fresh DB loads
+
+export const metadata = {
+  title: "Dashboard | AI Career Copilot",
+  description: "Get a comprehensive overview of your resume metrics, ATS readiness scores, and AI mock interview practice stats.",
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 16 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 120,
-      damping: 18,
-    },
-  },
-};
 
-const activities = [
-  {
-    id: 1,
-    type: "resume",
-    title: "Resume Analyzed",
-    description: "Senior Frontend Engineer Resume optimized. ATS score improved to 82.",
-    time: "2 hours ago",
-    icon: FileCheck2,
-    iconColor: "text-green-500 bg-green-500/10",
-    badgeColor: "success",
-  },
-  {
-    id: 2,
-    type: "interview",
-    title: "Mock Interview Completed",
-    description: "Frontend Engineer role mock session. Communication score: 85%.",
-    time: "Yesterday",
-    icon: Mic,
-    iconColor: "text-blue-500 bg-blue-500/10",
-    badgeColor: "info",
-  },
-  {
-    id: 3,
-    type: "match",
-    title: "Job Match Analysis",
-    description: "Matched against 'Senior Developer' at Google. Match probability: 74%.",
-    time: "3 days ago",
-    icon: Target,
-    iconColor: "text-cyan-500 bg-cyan-500/10",
-    badgeColor: "accent",
-  },
-  {
-    id: 4,
-    type: "letter",
-    title: "Cover Letter Generated",
-    description: "Created customized cover letter for Microsoft. Tone: Professional.",
-    time: "4 days ago",
-    icon: Mail,
-    iconColor: "text-purple-500 bg-purple-500/10",
-    badgeColor: "secondary",
-  },
-];
+// Helper to format relative time in Node.js
+function formatRelativeTime(date) {
+  const now = new Date();
+  const diffInMs = now.getTime() - new Date(date).getTime();
+  const diffInMins = Math.floor(diffInMs / (1000 * 60));
+  const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
 
-export default function DashboardPage() {
-  const { user, isLoaded } = useUser();
-  const router = useRouter();
+  if (diffInMins < 1) return "Just now";
+  if (diffInMins < 60) return `${diffInMins}m ago`;
+  if (diffInHours < 24) return `${diffInHours}h ago`;
+  if (diffInDays === 1) return "Yesterday";
+  if (diffInDays < 30) return `${diffInDays}d ago`;
+  return new Date(date).toLocaleDateString();
+}
 
-  const quickActions = [
-    {
-      title: "Upload Resume",
-      description: "Upload a PDF or Word document.",
-      icon: Plus,
-      color: "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/10 hover:shadow-blue-600/20",
-      action: () => router.push("/resume"),
-    },
-    {
-      title: "Analyze Resume",
-      description: "Run ATS scanning & optimizations.",
-      icon: Sparkles,
-      color: "bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/10 hover:shadow-indigo-600/20",
-      action: () => router.push("/resume/analysis"),
-    },
-    {
-      title: "Start Interview",
-      description: "Practice behavioral & technical questions.",
-      icon: Mic,
-      color: "bg-slate-900 dark:bg-slate-100 dark:text-slate-950 dark:hover:bg-slate-200 hover:bg-slate-800 text-white shadow-slate-950/10",
-      action: () => router.push("/interview"),
-    },
-  ];
+export default async function DashboardPage() {
+  const { userId: clerkId } = await auth();
+  if (!clerkId) {
+    redirect("/sign-in");
+  }
 
+  // Fetch or create user record
+  let dbUser = await db.user.findUnique({
+    where: { clerkId },
+  });
+
+  if (!dbUser) {
+    const user = await currentUser();
+    if (user) {
+      const email = user.emailAddresses?.[0]?.email_address;
+      if (email) {
+        dbUser = await db.user.create({
+          data: {
+            clerkId,
+            email,
+            firstName: user.firstName || null,
+            lastName: user.lastName || null,
+            imageUrl: user.imageUrl || null,
+          },
+        });
+      }
+    }
+  }
+
+  if (!dbUser) {
+    redirect("/resume");
+  }
+
+  // 1. Fetch resumes to calculate resumeScore & atsScore
+  const resumes = await db.resume.findMany({
+    where: { userId: dbUser.id },
+    include: { analysis: true },
+    orderBy: { createdAt: "desc" },
+  });
+
+  const latestAnalyzedResume = resumes.find(r => r.status === "ANALYZED" && r.analysis);
+  const resumeScore = latestAnalyzedResume ? latestAnalyzedResume.analysis.overallScore : 0;
+  const atsScore = latestAnalyzedResume ? latestAnalyzedResume.analysis.atsScore : 0;
+
+  // 2. Fetch latest JobMatch record
+  const latestMatch = await db.jobMatch.findFirst({
+    where: { userId: dbUser.id },
+    orderBy: { createdAt: "desc" },
+  });
+  const jobMatchScore = latestMatch ? latestMatch.matchScore : 0;
+
+  // 3. Fetch latest completed InterviewSession record
+  const latestInterview = await db.interviewSession.findFirst({
+    where: { userId: dbUser.id, status: "COMPLETED" },
+    orderBy: { updatedAt: "desc" },
+  });
+  const interviewScore = latestInterview ? latestInterview.overallScore || 0 : 0;
+
+  // Calculate Profile Completion %
+  const profileFields = ["bio", "location", "linkedinUrl", "targetRole", "targetIndustry", "experienceLevel", "careerGoals"];
+  const filledFields = profileFields.filter(f => dbUser[f]);
+  const profileCompletion = Math.round((filledFields.length / profileFields.length) * 100);
+
+  // Resume Uploaded & Last Analyzed metadata
+  const resumeUploadedDate = resumes[0] ? formatRelativeTime(resumes[0].createdAt) : "No uploads yet";
+  const lastAnalyzedResumeName = latestAnalyzedResume ? latestAnalyzedResume.fileName : "None";
+
+  // Parse Suggestions from Latest Resume Analysis
+  let suggestions = [];
+  if (latestAnalyzedResume && latestAnalyzedResume.analysis) {
+    const rawSuggestions = latestAnalyzedResume.analysis.suggestions;
+    if (Array.isArray(rawSuggestions)) {
+      suggestions = rawSuggestions.slice(0, 3);
+    } else if (typeof rawSuggestions === "object" && rawSuggestions !== null) {
+      suggestions = Object.values(rawSuggestions).slice(0, 3);
+    } else if (typeof rawSuggestions === "string") {
+      try {
+        suggestions = JSON.parse(rawSuggestions).slice(0, 3);
+      } catch (e) {
+        suggestions = [rawSuggestions];
+      }
+    }
+  }
+
+  // Fallback default suggestions if empty
+  if (suggestions.length === 0) {
+    suggestions = [
+      "Upload your first resume to get detailed AI feedback suggestions.",
+      "Practice mock interviews to get targeted responses recommendations.",
+      "Match against jobs to find technical capability gaps.",
+    ];
+  }
+
+  // Compile Dynamic Quick Insights
+  const insights = [];
+  if (atsScore > 0 && atsScore < 80) {
+    insights.push("Improve ATS score by adding missing keywords highlighted in your report.");
+  } else if (atsScore >= 80) {
+    insights.push("ATS score is optimized! Continue matching to job descriptions to find custom gaps.");
+  }
+  if (interviewScore === 0) {
+    insights.push("Practice mock interviews to evaluate technical delivery and confidence levels.");
+  } else if (interviewScore < 80) {
+    insights.push("Strengthen problem-solving keywords in answers to raise interview index.");
+  }
+  if (jobMatchScore > 0 && jobMatchScore < 70) {
+    insights.push("Customize your resume projects to better align with job requirements.");
+  }
+  if (insights.length < 3) {
+    insights.push("Quantify resume bullet achievements with metrics and technical details.");
+  }
+
+  // Format stats payload
   const stats = [
     {
       title: "Resume Score",
-      value: "78",
+      value: resumeScore > 0 ? String(resumeScore) : "0",
       max: "100",
-      change: "+4 from last week",
-      trend: "up",
-      icon: FileText,
-      color: "text-blue-500",
-      progress: 78,
+      change: resumeScore > 0 ? "Latest resume optimization" : "No resume analyzed yet",
+      trend: resumeScore > 0 ? "up" : "neutral",
+      progress: resumeScore,
     },
     {
       title: "ATS Score",
-      value: "82",
+      value: atsScore > 0 ? String(atsScore) : "0",
       max: "100",
-      change: "Good profile match",
-      trend: "up",
-      icon: Gauge,
-      color: "text-green-500",
-      progress: 82,
+      change: atsScore >= 80 ? "Strong ATS compatibility" : atsScore > 0 ? "Needs keyword booster" : "Pending analysis",
+      trend: atsScore > 0 ? "up" : "neutral",
+      progress: atsScore,
     },
     {
       title: "Job Match %",
-      value: "74%",
+      value: jobMatchScore > 0 ? `${jobMatchScore}%` : "0%",
       max: null,
-      change: "Google, Vercel roles",
+      change: jobMatchScore > 0 ? "Match compatibility scan" : "No match scan run",
       trend: "neutral",
-      icon: Target,
-      color: "text-cyan-500",
-      progress: 74,
+      progress: jobMatchScore,
     },
     {
       title: "Interview Score",
-      value: "85",
+      value: interviewScore > 0 ? String(interviewScore) : "0",
       max: "100",
-      change: "Excellent delivery",
-      trend: "up",
-      icon: Award,
-      color: "text-purple-500",
-      progress: 85,
+      change: interviewScore >= 80 ? "Excellent response quality" : interviewScore > 0 ? "Requires coaching practice" : "No coach session completed",
+      trend: interviewScore > 0 ? "up" : "neutral",
+      progress: interviewScore,
     },
   ];
 
+  // 4. Build Recent Activity Feed from Database
+  const activityLogs = [];
+
+  // Resume activities
+  resumes.slice(0, 5).forEach((res) => {
+    if (res.status === "ANALYZED" && res.analysis) {
+      activityLogs.push({
+        id: `resume-analyzed-${res.id}`,
+        refId: res.id,
+        type: "resume",
+        title: "Resume Analyzed",
+        description: `Scorecard computed for "${res.fileName}". Score: ${res.analysis.overallScore}/100.`,
+        time: formatRelativeTime(res.updatedAt),
+        rawTime: new Date(res.updatedAt).getTime(),
+      });
+    } else if (res.status === "PARSED") {
+      activityLogs.push({
+        id: `resume-parsed-${res.id}`,
+        refId: res.id,
+        type: "resume",
+        title: "Resume Parsed",
+        description: `Content extracted from "${res.fileName}". Ready for analysis.`,
+        time: formatRelativeTime(res.updatedAt),
+        rawTime: new Date(res.updatedAt).getTime(),
+      });
+    }
+  });
+
+  // Job Match activities
+  const recentMatches = await db.jobMatch.findMany({
+    where: { userId: dbUser.id },
+    include: { jobDescription: true },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+  });
+
+  recentMatches.forEach((match) => {
+    activityLogs.push({
+      id: `match-${match.id}`,
+      refId: match.id,
+      type: "match",
+      title: "Job Match Scanned",
+      description: `Matched against "${match.jobDescription.company || "Target Job"}". Alignment: ${match.matchScore}%.`,
+      time: formatRelativeTime(match.createdAt),
+      rawTime: new Date(match.createdAt).getTime(),
+    });
+  });
+
+  // Interview activities
+  const recentInterviews = await db.interviewSession.findMany({
+    where: { userId: dbUser.id },
+    orderBy: { updatedAt: "desc" },
+    take: 5,
+  });
+
+  recentInterviews.forEach((session) => {
+    if (session.status === "COMPLETED") {
+      activityLogs.push({
+        id: `interview-${session.id}`,
+        refId: session.id,
+        type: "interview",
+        title: "Interview Completed",
+        description: `Practice session for "${session.role}" graded. Score: ${session.overallScore || 0}%.`,
+        time: formatRelativeTime(session.updatedAt),
+        rawTime: new Date(session.updatedAt).getTime(),
+      });
+    } else if (session.status === "ACTIVE") {
+      activityLogs.push({
+        id: `interview-${session.id}`,
+        refId: session.id,
+        type: "interview",
+        title: "Interview Started",
+        description: `Coaching session for "${session.role}" is currently active.`,
+        time: formatRelativeTime(session.updatedAt),
+        rawTime: new Date(session.updatedAt).getTime(),
+      });
+    }
+  });
+
+  // Sort merged list by descending timestamp and limit to 4
+  const sortedActivities = activityLogs
+    .sort((a, b) => b.rawTime - a.rawTime)
+    .slice(0, 4);
+
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
-      className="space-y-8"
-    >
-      {/* Welcome Section */}
-      <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          {isLoaded && user ? (
-            <h2 className="text-2xl font-bold tracking-tight md:text-3xl bg-gradient-to-r from-foreground via-foreground/90 to-foreground/75 bg-clip-text text-transparent">
-              Welcome back, {user.firstName || "there"}! 👋
-            </h2>
-          ) : (
-            <div className="h-9 w-64 bg-accent animate-pulse rounded-lg" />
-          )}
-          <p className="text-sm text-muted-foreground font-medium mt-1">
-            Here&apos;s an overview of your resume improvements and interview coach prep.
-          </p>
-        </div>
-      </motion.div>
-
-      {/* Analytics Cards Grid */}
-      <motion.div
-        variants={itemVariants}
-        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-      >
-        {stats.map((stat, idx) => {
-          const Icon = stat.icon;
-          return (
-            <Card
-              key={idx}
-              className="border-border/40 bg-card/60 backdrop-blur-md overflow-hidden relative group hover:border-border transition-all duration-300 hover:shadow-md hover:shadow-accent/5"
-            >
-              {/* Colored top hover indicator */}
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-blue-500/0 via-blue-500/50 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  {stat.title}
-                </span>
-                <Icon className={`w-4 h-4 ${stat.color} transition-transform duration-200 group-hover:scale-110`} />
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-extrabold tracking-tight">
-                    {stat.value}
-                  </span>
-                  {stat.max && (
-                    <span className="text-xs text-muted-foreground/80 font-medium">
-                      /{stat.max}
-                    </span>
-                  )}
-                </div>
-                <div className="space-y-1.5">
-                  <Progress value={stat.progress} className="h-1.5 bg-accent" />
-                  <p className="text-[11px] font-medium text-muted-foreground/90 flex items-center gap-1">
-                    {stat.trend === "up" && (
-                      <TrendingUp className="w-3 h-3 text-green-500 inline-block" />
-                    )}
-                    <span>{stat.change}</span>
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </motion.div>
-
-      {/* Middle Grid: Recent Activity & Quick Actions */}
-      <div className="grid gap-6 md:grid-cols-12">
-        {/* Recent Activity */}
-        <motion.div variants={itemVariants} className="md:col-span-7 lg:col-span-8">
-          <Card className="border-border/40 bg-card/60 backdrop-blur-md h-full hover:border-border transition-colors duration-200">
-            <CardHeader className="flex flex-row items-center justify-between pb-3">
-              <div>
-                <CardTitle className="text-lg font-bold flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-muted-foreground" />
-                  Recent Activity
-                </CardTitle>
-                <CardDescription className="text-xs font-medium text-muted-foreground mt-0.5">
-                  Your recent updates and system analysis logs.
-                </CardDescription>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-xs text-blue-500 hover:text-blue-600 rounded-xl"
-                onClick={() => {
-                  toast.success("Navigating to full activity logs...", {
-                    description: "Activity page placeholder",
-                  });
-                }}
-              >
-                View all
-                <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
-              </Button>
-            </CardHeader>
-            <CardContent className="pt-2">
-              <div className="space-y-4">
-                {activities.map((act) => {
-                  const ActIcon = act.icon;
-                  return (
-                    <div
-                      key={act.id}
-                      className="flex items-start gap-4 p-3 rounded-xl hover:bg-accent/30 transition-colors duration-200 group cursor-pointer"
-                    >
-                      <div className={`p-2 rounded-xl shrink-0 ${act.iconColor}`}>
-                        <ActIcon className="w-4 h-4" />
-                      </div>
-                      <div className="flex-1 space-y-0.5 min-w-0">
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="text-sm font-semibold text-foreground truncate group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors">
-                            {act.title}
-                          </p>
-                          <span className="text-[11px] font-medium text-muted-foreground shrink-0">
-                            {act.time}
-                          </span>
-                        </div>
-                        <p className="text-xs text-muted-foreground line-clamp-1">
-                          {act.description}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Quick Actions */}
-        <motion.div variants={itemVariants} className="md:col-span-5 lg:col-span-4">
-          <Card className="border-border/40 bg-card/60 backdrop-blur-md h-full hover:border-border transition-colors duration-200">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg font-bold flex items-center gap-2">
-                <Briefcase className="w-4 h-4 text-muted-foreground" />
-                Quick Actions
-              </CardTitle>
-              <CardDescription className="text-xs font-medium text-muted-foreground mt-0.5">
-                Launch key workflows instantly.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3">
-              {quickActions.map((action, idx) => {
-                const ActionIcon = action.icon;
-                return (
-                  <Button
-                    key={idx}
-                    onClick={action.action}
-                    className={`w-full justify-between h-14 rounded-xl px-4 py-3 flex items-center transition-all duration-200 cursor-pointer ${action.color}`}
-                  >
-                    <div className="flex items-center gap-3 text-left">
-                      <div className="p-1.5 rounded-lg bg-white/10 text-white shrink-0">
-                        <ActionIcon className="w-4 h-4" />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold leading-none">
-                          {action.title}
-                        </span>
-                        <span className="text-[10px] opacity-80 leading-none mt-1 font-medium">
-                          {action.description}
-                        </span>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
-                  </Button>
-                );
-              })}
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    </motion.div>
+    <DashboardClientView
+      stats={stats}
+      activities={sortedActivities}
+      userFirstName={dbUser.firstName}
+      profileCompletion={profileCompletion}
+      resumeUploadedDate={resumeUploadedDate}
+      lastAnalyzedResumeName={lastAnalyzedResumeName}
+      suggestions={suggestions}
+      insights={insights}
+    />
   );
 }

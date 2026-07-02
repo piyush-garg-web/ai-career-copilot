@@ -11,6 +11,12 @@ import { Plus, BarChart2 } from "lucide-react";
 
 export const revalidate = 0; // Disable static build route caching
 
+export const metadata = {
+  title: "AI Interview Coach | AI Career Copilot",
+  description: "Practice mock interview questions tailored to your resume and experience level with real-time feedback.",
+};
+
+
 export default async function InterviewPage() {
   // Resolve Clerk authenticated session
   const { userId: clerkId } = await auth();

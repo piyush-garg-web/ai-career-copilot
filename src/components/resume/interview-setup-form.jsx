@@ -13,6 +13,11 @@ import {
   Briefcase,
   History,
   Settings2,
+  Clock,
+  BookOpen,
+  HelpCircle,
+  Sliders,
+  CheckCircle,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -36,7 +41,14 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
   const [questionCount, setQuestionCount] = useState("5");
   const [isInitializing, setIsInitializing] = useState(false);
 
-  // Submit interview config parameters
+  // Compute config details dynamically
+  const estDuration = questionCount === "5" ? "10-15 Minutes" : questionCount === "10" ? "20-25 Minutes" : "30-40 Minutes";
+  const diffDescription = difficulty === "Easy"
+    ? "Starter queries checking foundational technical concepts and basic resume declarations."
+    : difficulty === "Medium"
+    ? "Standard industry mock questions simulating professional Mid-level engineer behavioral scenarios."
+    : "High-pressure Senior panels checking architecture design, systems constraints, and complex leadership scenarios.";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -70,8 +82,6 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
 
       const data = await response.json();
       toast.success("Questions generated! Entering session room...");
-      
-      // Redirect to the newly created dynamic interview flow page
       router.push(`/interview/${data.sessionId}`);
     } catch (err) {
       console.error("Interview setup fail:", err);
@@ -81,9 +91,12 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
     }
   };
 
+  const activeResume = resumes.find(r => r.id === selectedResumeId);
+  const activeJob = jobDescriptions.find(j => j.id === selectedJobDescId);
+
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      {/* Loading Overlay during question generation */}
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Loading Overlay */}
       <AnimatePresence>
         {isInitializing && (
           <motion.div
@@ -108,157 +121,212 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
         )}
       </AnimatePresence>
 
-      {/* Setup Form Card */}
-      <Card className="border border-border/40 bg-card/60 backdrop-blur-sm shadow-sm rounded-2xl">
-        <CardHeader className="pb-4 flex flex-row items-start justify-between">
-          <div className="space-y-1">
-            <CardTitle className="text-base font-bold flex items-center gap-2">
-              <Settings2 className="w-4.5 h-4.5 text-indigo-400" />
-              Configure Practice Session
-            </CardTitle>
-            <CardDescription className="text-xs font-semibold leading-relaxed">
-              Design a mock interview targeted to your experience levels or pasted requirements.
-            </CardDescription>
-          </div>
-
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            className="rounded-xl border-border/40 text-xs font-semibold h-8 cursor-pointer gap-1.5"
-          >
-            <Link href="/interview/history">
-              <History className="w-3.5 h-3.5 text-muted-foreground" />
-              History
-            </Link>
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Resume Selection */}
-            <div className="space-y-2">
-              <Label htmlFor="resume-select" className="text-xs font-bold text-foreground">
-                1. Select Resume Profile
-              </Label>
-              <Select onValueChange={setSelectedResumeId} value={selectedResumeId}>
-                <SelectTrigger id="resume-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
-                  <SelectValue placeholder="Select one of your resumes..." />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
-                  {resumes.map((res) => (
-                    <SelectItem
-                      key={res.id}
-                      value={res.id}
-                      className="rounded-lg cursor-pointer"
-                      disabled={res.status !== "ANALYZED" && res.status !== "PARSED"}
-                    >
-                      <span className="flex items-center gap-2">
-                        <FileText className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                        <span>{res.fileName}</span>
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Setup Form Card */}
+        <Card className="border border-border/40 bg-card/60 backdrop-blur-sm shadow-sm rounded-2xl lg:col-span-8">
+          <CardHeader className="pb-4 flex flex-row items-start justify-between">
+            <div className="space-y-1">
+              <CardTitle className="text-base font-bold flex items-center gap-2">
+                <Settings2 className="w-4.5 h-4.5 text-indigo-400" />
+                Configure Practice Session
+              </CardTitle>
+              <CardDescription className="text-xs font-semibold leading-relaxed">
+                Design a mock interview targeted to your experience levels or pasted requirements.
+              </CardDescription>
             </div>
 
-            {/* Target Job Description Selection */}
-            <div className="space-y-2">
-              <Label htmlFor="jobdesc-select" className="text-xs font-bold text-foreground">
-                2. Target Job Target (Optional)
-              </Label>
-              <Select onValueChange={setSelectedJobDescId} value={selectedJobDescId}>
-                <SelectTrigger id="jobdesc-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
-                  <SelectValue placeholder="Select a job description target..." />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
-                  <SelectItem value="none" className="rounded-lg cursor-pointer font-bold text-indigo-400">
-                    General Professional Mock (No target JD)
-                  </SelectItem>
-                  {jobDescriptions.map((jd) => (
-                    <SelectItem
-                      key={jd.id}
-                      value={jd.id}
-                      className="rounded-lg cursor-pointer"
-                    >
-                      <span className="flex items-center gap-2">
-                        <Briefcase className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
-                        <span>{jd.title} {jd.company ? `at ${jd.company}` : ""}</span>
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <Separator className="bg-border/20 my-2" />
-
-            {/* Config parameters Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {/* Interview Type */}
-              <div className="space-y-2">
-                <Label htmlFor="type-select" className="text-xs font-bold text-foreground">
-                  Interview Type
-                </Label>
-                <Select onValueChange={setInterviewType} value={interviewType}>
-                  <SelectTrigger id="type-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
-                    <SelectItem value="Mixed" className="rounded-lg cursor-pointer">Mixed Focus</SelectItem>
-                    <SelectItem value="Technical" className="rounded-lg cursor-pointer">Technical Questions</SelectItem>
-                    <SelectItem value="Behavioral" className="rounded-lg cursor-pointer">Behavioral Questions (HR)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Difficulty */}
-              <div className="space-y-2">
-                <Label htmlFor="diff-select" className="text-xs font-bold text-foreground">
-                  Difficulty Level
-                </Label>
-                <Select onValueChange={setDifficulty} value={difficulty}>
-                  <SelectTrigger id="diff-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
-                    <SelectItem value="Easy" className="rounded-lg cursor-pointer">Easy (Starter)</SelectItem>
-                    <SelectItem value="Medium" className="rounded-lg cursor-pointer">Medium (Standard)</SelectItem>
-                    <SelectItem value="Hard" className="rounded-lg cursor-pointer">Hard (Senior)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Question Count */}
-              <div className="space-y-2">
-                <Label htmlFor="count-select" className="text-xs font-bold text-foreground">
-                  Question Count
-                </Label>
-                <Select onValueChange={setQuestionCount} value={questionCount}>
-                  <SelectTrigger id="count-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
-                    <SelectItem value="5" className="rounded-lg cursor-pointer">5 Questions (Fast)</SelectItem>
-                    <SelectItem value="10" className="rounded-lg cursor-pointer">10 Questions (Standard)</SelectItem>
-                    <SelectItem value="15" className="rounded-lg cursor-pointer">15 Questions (Deep)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {/* Submit button */}
             <Button
-              type="submit"
-              disabled={isInitializing}
-              className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs h-10 shadow-md shadow-indigo-500/10 cursor-pointer gap-1.5 mt-4"
+              asChild
+              variant="outline"
+              size="sm"
+              className="rounded-xl border-border/40 text-xs font-semibold h-8 cursor-pointer gap-1.5"
             >
-              <Mic className="w-4 h-4" />
-              Begin AI Practice Session
+              <Link href="/interview/history">
+                <History className="w-3.5 h-3.5 text-muted-foreground" />
+                History
+              </Link>
             </Button>
-          </form>
-        </CardContent>
-      </Card>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Resume Selection */}
+              <div className="space-y-2">
+                <Label htmlFor="resume-select" className="text-xs font-bold text-foreground">
+                  1. Select Resume Profile
+                </Label>
+                <Select onValueChange={setSelectedResumeId} value={selectedResumeId}>
+                  <SelectTrigger id="resume-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
+                    <SelectValue placeholder="Select one of your resumes..." />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
+                    {resumes.map((res) => (
+                      <SelectItem
+                        key={res.id}
+                        value={res.id}
+                        className="rounded-lg cursor-pointer"
+                        disabled={res.status !== "ANALYZED" && res.status !== "PARSED"}
+                      >
+                        <span className="flex items-center gap-2">
+                          <FileText className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                          <span>{res.fileName}</span>
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Target Job Description Selection */}
+              <div className="space-y-2">
+                <Label htmlFor="jobdesc-select" className="text-xs font-bold text-foreground">
+                  2. Target Job Target (Optional)
+                </Label>
+                <Select onValueChange={setSelectedJobDescId} value={selectedJobDescId}>
+                  <SelectTrigger id="jobdesc-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
+                    <SelectValue placeholder="Select a job description target..." />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
+                    <SelectItem value="none" className="rounded-lg cursor-pointer font-bold text-indigo-400">
+                      General Professional Mock (No target JD)
+                    </SelectItem>
+                    {jobDescriptions.map((jd) => (
+                      <SelectItem
+                        key={jd.id}
+                        value={jd.id}
+                        className="rounded-lg cursor-pointer"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Briefcase className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                          <span>{jd.title} {jd.company ? `at ${jd.company}` : ""}</span>
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <Separator className="bg-border/20 my-2" />
+
+              {/* Config parameters Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {/* Interview Type */}
+                <div className="space-y-2">
+                  <Label htmlFor="type-select" className="text-xs font-bold text-foreground">
+                    Interview Type
+                  </Label>
+                  <Select onValueChange={setInterviewType} value={interviewType}>
+                    <SelectTrigger id="type-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
+                      <SelectItem value="Mixed" className="rounded-lg cursor-pointer">Mixed Focus</SelectItem>
+                      <SelectItem value="Technical" className="rounded-lg cursor-pointer">Technical Questions</SelectItem>
+                      <SelectItem value="Behavioral" className="rounded-lg cursor-pointer">Behavioral Questions (HR)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Difficulty */}
+                <div className="space-y-2">
+                  <Label htmlFor="diff-select" className="text-xs font-bold text-foreground">
+                    Difficulty Level
+                  </Label>
+                  <Select onValueChange={setDifficulty} value={difficulty}>
+                    <SelectTrigger id="diff-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
+                      <SelectItem value="Easy" className="rounded-lg cursor-pointer">Easy (Starter)</SelectItem>
+                      <SelectItem value="Medium" className="rounded-lg cursor-pointer">Medium (Standard)</SelectItem>
+                      <SelectItem value="Hard" className="rounded-lg cursor-pointer">Hard (Senior)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Question Count */}
+                <div className="space-y-2">
+                  <Label htmlFor="count-select" className="text-xs font-bold text-foreground">
+                    Question Count
+                  </Label>
+                  <Select onValueChange={setQuestionCount} value={questionCount}>
+                    <SelectTrigger id="count-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
+                      <SelectItem value="5" className="rounded-lg cursor-pointer">5 Questions (Fast)</SelectItem>
+                      <SelectItem value="10" className="rounded-lg cursor-pointer">10 Questions (Standard)</SelectItem>
+                      <SelectItem value="15" className="rounded-lg cursor-pointer">15 Questions (Deep)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={isInitializing}
+                className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs h-10 shadow-md shadow-indigo-500/10 cursor-pointer gap-1.5 mt-4"
+              >
+                <Mic className="w-4 h-4" />
+                Begin AI Practice Session
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        {/* Sidebar Info Summary */}
+        <div className="lg:col-span-4 space-y-6">
+          <Card className="border border-border/40 bg-card/60 backdrop-blur-sm p-5 rounded-2xl space-y-4">
+            <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+              <Sliders className="w-4 h-4 text-indigo-400" />
+              Session Summary
+            </h4>
+            
+            <div className="space-y-3 text-xs font-semibold text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-indigo-400 shrink-0" />
+                <div>
+                  <span className="block text-[10px] text-muted-foreground/60 uppercase">Est. Duration</span>
+                  <span className="text-foreground">{estDuration}</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-indigo-400 shrink-0" />
+                <div>
+                  <span className="block text-[10px] text-muted-foreground/60 uppercase">Question Focus</span>
+                  <span className="text-foreground">{interviewType} Questions</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <HelpCircle className="w-4 h-4 text-indigo-400 shrink-0" />
+                <div>
+                  <span className="block text-[10px] text-muted-foreground/60 uppercase">Difficulty Setting</span>
+                  <span className="text-foreground">{difficulty}</span>
+                </div>
+              </div>
+            </div>
+
+            <Separator className="bg-border/20" />
+
+            <div className="space-y-1.5 text-[10px] font-bold text-muted-foreground">
+              <span className="uppercase text-muted-foreground/60 block">Difficulty Description</span>
+              <p className="leading-relaxed font-semibold italic">{diffDescription}</p>
+            </div>
+          </Card>
+
+          {/* Question categories checklist summary */}
+          <Card className="border border-border/40 bg-card/60 backdrop-blur-sm p-5 rounded-2xl space-y-3">
+            <h4 className="text-xs font-bold text-foreground">Scored Categories</h4>
+            <div className="space-y-2 text-[11px] font-semibold text-muted-foreground">
+              <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />Technical Competencies</div>
+              <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />Communication & Tone Delivery</div>
+              <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />STAR behavioral scenario logic</div>
+              <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />Problem solving structural steps</div>
+            </div>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

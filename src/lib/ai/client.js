@@ -16,4 +16,5 @@ export const aiClient = new GoogleGenAI({
 });
 
 // Production-ready default model for structured text analysis
-export const DEFAULT_MODEL = "gemini-1.5-flash";
+export const DEFAULT_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash";
+

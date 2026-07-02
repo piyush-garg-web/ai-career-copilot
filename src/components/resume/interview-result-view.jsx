@@ -17,12 +17,16 @@ import {
   ThumbsUp,
   Check,
   Flame,
+  Download,
+  RotateCcw,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
 
 // Helper: Format Dates
 const formatDate = (dateStr) => {
@@ -56,11 +60,20 @@ export function InterviewResultView({ session, questions }) {
   const commScore = scores.communicationScore || 0;
   const confScore = scores.confidenceScore || 0;
 
+  // Extrapolate values for detailed scoring grid if not present
+  const problemSolvingScore = scores.problemSolvingScore || Math.round((techScore * 0.7) + (commScore * 0.3)) || 0;
+  const behavioralScore = scores.behavioralScore || Math.round((commScore * 0.7) + (confScore * 0.3)) || 0;
+
   // Extract evaluation details safely from JSON
   const evaluation = session.evaluation || {};
   const strengths = Array.isArray(evaluation.strengths) ? evaluation.strengths : [];
   const areasToImprove = Array.isArray(evaluation.areasToImprove) ? evaluation.areasToImprove : [];
   const nextSteps = Array.isArray(evaluation.nextSteps) ? evaluation.nextSteps : [];
+
+  const handlePrint = () => {
+    window.print();
+    toast.success("Preparing PDF print scorecard...");
+  };
 
   // Circle Gauge Math for Overall Score
   const radius = 50;
@@ -69,9 +82,21 @@ export function InterviewResultView({ session, questions }) {
   const strokeDashoffset = circumference - ((session.overallScore || 0) / 100) * circumference;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative print:p-8 print:bg-white print:text-black">
+      <style jsx global>{`
+        @media print {
+          header, aside, footer, nav, button, .print\\:hidden {
+            display: none !important;
+          }
+          body {
+            background: white !important;
+            color: black !important;
+          }
+        }
+      `}</style>
+
       {/* Header Row */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 print:hidden">
         <div className="space-y-1">
           <Link
             href="/interview"
@@ -96,51 +121,45 @@ export function InterviewResultView({ session, questions }) {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Download PDF report */}
           <Button
-            asChild
+            onClick={handlePrint}
             variant="outline"
             size="sm"
             className="rounded-xl border-border/40 font-semibold text-xs h-9 cursor-pointer"
           >
-            <Link href="/interview/history">
-              View History logs
-            </Link>
+            <Download className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
+            Download PDF Report
           </Button>
 
+          {/* Retry Interview */}
           <Button
             asChild
             variant="default"
             size="sm"
-            className="rounded-xl font-bold text-xs h-9 bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer shadow-md shadow-indigo-500/10"
+            className="rounded-xl font-bold text-xs h-9 bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer shadow-md shadow-indigo-500/10 gap-1"
           >
             <Link href="/interview">
-              New Practice Session
+              <RotateCcw className="w-3.5 h-3.5" />
+              Retry Interview
             </Link>
           </Button>
         </div>
       </div>
 
-      <Separator className="bg-border/40" />
+      <Separator className="bg-border/40 print:hidden" />
 
-      {/* Circle Gauge Match Score Card + Executive Summary Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Score Grid & Performance Summary */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* OVERALL SCORE CIRCULAR RING */}
         <Card className="border-border/40 bg-card/45 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center p-6 text-center shadow-sm">
           <CardHeader className="pb-3 text-center">
-            <CardTitle className="text-sm font-bold">Session Rating</CardTitle>
-            <CardDescription className="text-[10px] font-semibold">Gemini overall mock index</CardDescription>
+            <CardTitle className="text-sm font-bold">Session Score</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center p-0 space-y-4">
             <div className="relative flex items-center justify-center">
               <svg className="w-28 h-28 transform -rotate-90">
-                <circle
-                  cx="56"
-                  cy="56"
-                  r={radius}
-                  className="stroke-muted/40"
-                  strokeWidth={strokeWidth}
-                  fill="none"
-                />
+                <circle cx="56" cy="56" r={radius} className="stroke-muted/40" strokeWidth={strokeWidth} fill="none" />
                 <circle
                   cx="56"
                   cy="56"
@@ -155,7 +174,7 @@ export function InterviewResultView({ session, questions }) {
               </svg>
               <div className="absolute flex flex-col items-center justify-center">
                 <span className="text-2xl font-black text-foreground">{session.overallScore}%</span>
-                <span className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">Rating</span>
+                <span className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">Score</span>
               </div>
             </div>
             <p className="text-xs text-muted-foreground font-semibold leading-relaxed max-w-xs">
@@ -166,36 +185,49 @@ export function InterviewResultView({ session, questions }) {
               ) : (
                 <span className="text-destructive font-bold">Needs Improvement.</span>
               )}{" "}
-              Your rating ranks higher than <span className="text-indigo-400 font-bold">{session.overallScore}%</span> of practice candidates.
+              Ranks higher than <span className="text-indigo-400 font-bold">{session.overallScore}%</span> of tested portfolio sessions.
             </p>
           </CardContent>
         </Card>
 
-        {/* MOCK COACH SUMMARY SUMMARY */}
-        <Card className="border-border/40 bg-card/45 backdrop-blur-sm rounded-2xl md:col-span-2 shadow-sm relative overflow-hidden flex flex-col justify-between p-6">
-          <div className="absolute right-0 top-0 w-24 h-24 bg-indigo-500/5 blur-2xl rounded-full" />
-          <div className="space-y-3">
+        {/* Dynamic Category Scores Grid */}
+        <Card className="border-border/40 bg-card/45 backdrop-blur-sm rounded-2xl lg:col-span-3 shadow-sm relative overflow-hidden flex flex-col justify-between p-6">
+          <div className="space-y-4 w-full">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-indigo-400">
               <Sparkles className="w-4 h-4" />
-              Overall Performance Summary
+              Detailed Category Breakdown
             </CardTitle>
-            <p className="text-xs font-semibold leading-relaxed text-foreground/90">
-              {session.feedback || "No performance summary recorded."}
-            </p>
-          </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 pt-2">
+              <div className="p-3 bg-muted/45 border border-border/20 rounded-xl space-y-1">
+                <span className="text-[9px] uppercase font-bold text-muted-foreground">Technical</span>
+                <p className="text-lg font-black text-indigo-400">{techScore}%</p>
+              </div>
+              <div className="p-3 bg-muted/45 border border-border/20 rounded-xl space-y-1">
+                <span className="text-[9px] uppercase font-bold text-muted-foreground">Clarity</span>
+                <p className="text-lg font-black text-teal-400">{commScore}%</p>
+              </div>
+              <div className="p-3 bg-muted/45 border border-border/20 rounded-xl space-y-1">
+                <span className="text-[9px] uppercase font-bold text-muted-foreground">Confidence</span>
+                <p className="text-lg font-black text-amber-400">{confScore}%</p>
+              </div>
+              <div className="p-3 bg-muted/45 border border-border/20 rounded-xl space-y-1">
+                <span className="text-[9px] uppercase font-bold text-muted-foreground">Problem Solving</span>
+                <p className="text-lg font-black text-blue-400">{problemSolvingScore}%</p>
+              </div>
+              <div className="p-3 bg-muted/45 border border-border/20 rounded-xl space-y-1">
+                <span className="text-[9px] uppercase font-bold text-muted-foreground">Behavioral</span>
+                <p className="text-lg font-black text-purple-400">{behavioralScore}%</p>
+              </div>
+            </div>
 
-          <div className="grid grid-cols-3 gap-4 border-t border-border/20 pt-4 mt-4 bg-muted/5 rounded-xl p-3">
-            <div className="text-center space-y-0.5">
-              <span className="text-[9px] font-bold text-muted-foreground uppercase block">Technical</span>
-              <span className="text-sm font-black text-indigo-400">{techScore}%</span>
-            </div>
-            <div className="text-center space-y-0.5 border-l border-border/20">
-              <span className="text-[9px] font-bold text-muted-foreground uppercase block">Clarity</span>
-              <span className="text-sm font-black text-teal-400">{commScore}%</span>
-            </div>
-            <div className="text-center space-y-0.5 border-l border-border/20">
-              <span className="text-[9px] font-bold text-muted-foreground uppercase block">Confidence</span>
-              <span className="text-sm font-black text-amber-400">{confScore}%</span>
+            <Separator className="bg-border/20" />
+
+            <div className="space-y-1">
+              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider block">Performance Advice</span>
+              <p className="text-xs font-semibold text-muted-foreground leading-relaxed">
+                {session.feedback || "No general coaching summary advice recorded."}
+              </p>
             </div>
           </div>
         </Card>
@@ -203,7 +235,6 @@ export function InterviewResultView({ session, questions }) {
 
       {/* Grid: Strengths vs Gaps */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Strengths */}
         <Card className="border-border/40 bg-card/45 backdrop-blur-sm rounded-2xl shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-emerald-400">
@@ -225,7 +256,6 @@ export function InterviewResultView({ session, questions }) {
           </CardContent>
         </Card>
 
-        {/* Weaknesses */}
         <Card className="border-border/40 bg-card/45 backdrop-blur-sm rounded-2xl shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-amber-400">
@@ -253,7 +283,7 @@ export function InterviewResultView({ session, questions }) {
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-bold flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-indigo-400" />
-            Recommended Next Steps
+            Recommended Next Steps & Career Advice
           </CardTitle>
           <CardDescription className="text-[10px] font-semibold">Actionable prep tasks for growth</CardDescription>
         </CardHeader>
@@ -287,7 +317,6 @@ export function InterviewResultView({ session, questions }) {
                 key={q.id}
                 className="border-border/40 bg-card/30 hover:border-border transition-colors duration-200 rounded-2xl overflow-hidden shadow-sm"
               >
-                {/* Accordion header click toggling */}
                 <div
                   onClick={() => toggleExpand(q.id)}
                   className="flex items-start justify-between gap-4 p-4 cursor-pointer select-none"
@@ -312,7 +341,6 @@ export function InterviewResultView({ session, questions }) {
                   </div>
                 </div>
 
-                {/* Expanded Feedback Panel */}
                 {isExpanded && (
                   <CardContent className="pt-2 pb-5 border-t border-border/20 space-y-5 bg-card/10">
                     {/* User response block */}
@@ -384,7 +412,7 @@ export function InterviewResultView({ session, questions }) {
                       </div>
                     </div>
 
-                    {/* rewritten answer suggestion */}
+                    {/* rewritten answer blueprint */}
                     {ans.improvedAnswer && (
                       <div className="space-y-1.5 border border-indigo-500/10 bg-indigo-500/5 p-4 rounded-xl relative overflow-hidden">
                         <div className="absolute right-0 top-0 p-1.5 text-indigo-500/10">

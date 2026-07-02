@@ -110,6 +110,7 @@ export function Sidebar({ className }) {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-label={item.name}
                 className={cn(
                   "relative flex items-center gap-3.5 px-4 py-3 text-sm font-medium rounded-xl transition-colors duration-200 group",
                   active

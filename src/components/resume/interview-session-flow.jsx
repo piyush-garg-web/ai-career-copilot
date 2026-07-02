@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
@@ -17,6 +17,11 @@ import {
   BadgeAlert,
   ThumbsUp,
   Flame,
+  User,
+  Bot,
+  Mic,
+  Activity,
+  AwardIcon,
 } from "lucide-react";
 
 import { Progress } from "@/components/ui/progress";
@@ -33,15 +38,41 @@ export function InterviewSessionFlow({ session, questions }) {
   const [secondsElapsed, setSecondsElapsed] = useState(0);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
-  const [currentEvaluation, setCurrentEvaluation] = useState(null);
 
-  // Interval timer count-up logic
+  // Chat conversation logs state
+  const [messages, setMessages] = useState([
+    {
+      id: "init-q",
+      sender: "interviewer",
+      content: questions[0]?.content || "Hello! Let's begin the mock interview session.",
+      type: questions[0]?.questionType || "Mixed",
+      index: 0,
+    },
+  ]);
+
+  // Aggregate evaluations to display dynamic live indicators
+  const [scores, setScores] = useState({
+    technical: 0,
+    communication: 0,
+    confidence: 0,
+    problemSolving: 0,
+    count: 0,
+  });
+
+  const chatEndRef = useRef(null);
+
+  // Timer interval logic
   useEffect(() => {
     const interval = setInterval(() => {
       setSecondsElapsed((prev) => prev + 1);
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  // Auto scroll chat to bottom
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isEvaluating]);
 
   const formatTime = (totalSecs) => {
     const m = Math.floor(totalSecs / 60);
@@ -52,13 +83,26 @@ export function InterviewSessionFlow({ session, questions }) {
   const activeQuestion = questions[currentIndex] || {};
   const isLastQuestion = currentIndex === questions.length - 1;
 
-  // Submit response for AI evaluation
+  // Submit candidate answer
   const handleSubmitAnswer = async () => {
-    if (!answerText || answerText.trim().length < 10) {
+    const candidateInput = answerText.trim();
+    if (!candidateInput || candidateInput.length < 10) {
       toast.error("Please provide a slightly more detailed response (minimum 10 characters).");
       return;
     }
 
+    // Append candidate message immediately
+    const userMsgId = `ans-${currentIndex}`;
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: userMsgId,
+        sender: "candidate",
+        content: candidateInput,
+      },
+    ]);
+
+    setAnswerText("");
     setIsEvaluating(true);
     toast.info("Gemini AI is assessing your answer metrics...");
 
@@ -68,7 +112,7 @@ export function InterviewSessionFlow({ session, questions }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           questionId: activeQuestion.id,
-          content: answerText.trim(),
+          content: candidateInput,
         }),
       });
 
@@ -78,7 +122,30 @@ export function InterviewSessionFlow({ session, questions }) {
       }
 
       const data = await response.json();
-      setCurrentEvaluation(data.evaluation);
+      const evalData = data.evaluation;
+
+      // Update aggregate scoring indexes
+      setScores((prev) => {
+        const count = prev.count + 1;
+        return {
+          technical: Math.round((prev.technical * prev.count + evalData.technicalAccuracy) / count),
+          communication: Math.round((prev.communication * prev.count + evalData.communication) / count),
+          confidence: Math.round((prev.confidence * prev.count + evalData.confidence) / count),
+          problemSolving: Math.round((prev.problemSolving * prev.count + (evalData.score || 70)) / count),
+          count,
+        };
+      });
+
+      // Append evaluation system response
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `eval-${currentIndex}`,
+          sender: "system_feedback",
+          evaluation: evalData,
+        },
+      ]);
+
       toast.success("Response recorded!");
     } catch (err) {
       console.error("Submit Answer Failure:", err);
@@ -88,14 +155,25 @@ export function InterviewSessionFlow({ session, questions }) {
     }
   };
 
-  // Move to next question card
+  // Next question logic
   const handleNextQuestion = () => {
-    setAnswerText("");
-    setCurrentEvaluation(null);
-    setCurrentIndex((prev) => prev + 1);
+    const nextIndex = currentIndex + 1;
+    setCurrentIndex(nextIndex);
+    
+    // Append next question from AI interviewer
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `q-${nextIndex}`,
+        sender: "interviewer",
+        content: questions[nextIndex].content,
+        type: questions[nextIndex].questionType,
+        index: nextIndex,
+      },
+    ]);
   };
 
-  // Compile final scorecard and redirect
+  // Complete Mock Interview Session
   const handleFinishInterview = async () => {
     setIsCompleting(true);
     toast.info("Mock evaluation session closing. Compiling final metrics...");
@@ -123,219 +201,145 @@ export function InterviewSessionFlow({ session, questions }) {
     }
   };
 
-  const progressPercentage = ((currentIndex + (currentEvaluation ? 1 : 0)) / questions.length) * 100;
+  const progressPercentage = ((currentIndex + (scores.count > currentIndex ? 1 : 0)) / questions.length) * 100;
+  const remainingCount = questions.length - scores.count;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      {/* Session Header Status */}
+    <div className="max-w-5xl mx-auto space-y-6">
+      {/* Session Header */}
       <div className="flex items-center justify-between gap-4">
         <div className="space-y-1 min-w-0">
-          <span className="text-[10px] font-bold text-indigo-400 tracking-wider uppercase">Active Session Room</span>
+          <span className="text-[10px] font-bold text-indigo-400 tracking-wider uppercase">Simulated Chat Room</span>
           <h1 className="text-lg font-extrabold text-foreground truncate max-w-md">
             {session.title}
           </h1>
         </div>
-        <div className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-xl border border-border/40 bg-card/60 text-xs font-semibold text-muted-foreground">
-          <Clock className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
-          <span>{formatTime(secondsElapsed)}</span>
+        <div className="flex items-center gap-4 shrink-0">
+          <div className="flex items-center gap-1 text-xs font-semibold text-indigo-400">
+            <Mic className="w-3.5 h-3.5 animate-pulse text-rose-500" />
+            <span className="text-[10px] uppercase font-bold text-muted-foreground">Mic Live</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border/40 bg-card/60 text-xs font-semibold text-muted-foreground">
+            <Clock className="w-3.5 h-3.5 text-indigo-400" />
+            <span>{formatTime(secondsElapsed)}</span>
+          </div>
         </div>
       </div>
 
-      {/* Dynamic Progress indicator */}
+      {/* Progress indicators */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground uppercase">
-          <span>Question Progress</span>
+          <span>Practice session progress</span>
           <span>
-            {currentIndex + 1} / {questions.length} Questions
+            {scores.count} / {questions.length} Answers Evaluated ({remainingCount} Remaining)
           </span>
         </div>
         <Progress value={progressPercentage} className="h-1.5 bg-accent" />
       </div>
 
-      <Separator className="bg-border/20" />
-
-      {/* Main Panel Card */}
-      <Card className="border border-border/40 bg-card/40 backdrop-blur-sm shadow-sm rounded-2xl overflow-hidden relative">
-        {/* Loading overlay for final compilation */}
-        <AnimatePresence>
-          {isCompleting && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-background/90 backdrop-blur-md z-40 flex flex-col items-center justify-center gap-4"
-            >
-              <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
-              <div className="space-y-1 text-center">
-                <h3 className="text-sm font-bold">Compiling Mock Session Report Card...</h3>
-                <p className="text-[10px] text-muted-foreground font-semibold max-w-xs leading-relaxed">
-                  Gemini is studying your communication logs, technical accuracy quotients, and drafting recommendations.
-                </p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <CardHeader className="pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/20">
-          <div className="space-y-1 min-w-0">
-            <CardDescription className="text-[10px] font-extrabold uppercase text-indigo-400 tracking-wider">
-              Question #{currentIndex + 1}
-            </CardDescription>
-            <CardTitle className="text-sm font-bold text-foreground">
-              {activeQuestion.content}
-            </CardTitle>
-          </div>
-          <Badge className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 font-extrabold text-[9px] uppercase tracking-wider shrink-0 self-start sm:self-center">
-            {activeQuestion.questionType}
-          </Badge>
-        </CardHeader>
-
-        <CardContent className="pt-6 space-y-6">
-          <AnimatePresence mode="wait">
-            {!currentEvaluation ? (
-              /* INPUT MODE: Answer Input Textarea */
-              <motion.div
-                key="input"
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                className="space-y-4"
-              >
-                <div className="space-y-2">
-                  <label htmlFor="user-answer" className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                    <MessageSquare className="w-4 h-4 text-indigo-400 shrink-0" />
-                    Your Response
-                  </label>
-                  <Textarea
-                    id="user-answer"
-                    placeholder="Type your response to the question in detail..."
-                    value={answerText}
-                    onChange={(e) => setAnswerText(e.target.value)}
-                    rows={8}
-                    disabled={isEvaluating}
-                    className="rounded-xl border-border/40 bg-background/30 text-xs font-medium leading-relaxed resize-none min-h-[160px] focus-visible:ring-indigo-500/30"
-                  />
-                  <div className="flex justify-between text-[10px] text-muted-foreground/80 font-semibold leading-relaxed">
-                    <span>Be descriptive. Refer to your project details or work metrics.</span>
-                    <span>{answerText.length} characters</span>
-                  </div>
-                </div>
-
-                {/* Submit trigger button */}
-                <Button
-                  onClick={handleSubmitAnswer}
-                  disabled={isEvaluating || answerText.trim().length < 10}
-                  className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs h-10 shadow-md shadow-indigo-500/10 cursor-pointer gap-1.5"
-                >
-                  {isEvaluating ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Evaluating Response...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4" />
-                      Submit Response & Evaluate
-                    </>
-                  )}
-                </Button>
-              </motion.div>
-            ) : (
-              /* EVALUATION MODE: AI Instant Grading Feedback card */
-              <motion.div
-                key="evaluation"
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                className="space-y-6"
-              >
-                {/* Visual score breakdown progress bars */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-muted/20 p-4 rounded-xl border border-border/20">
-                  {/* Overall Answer Score */}
-                  <div className="text-center space-y-1">
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase block">Answer Score</span>
-                    <span className="text-xl font-black text-indigo-400">{currentEvaluation.score}%</span>
-                  </div>
-                  {/* Communication */}
-                  <div className="text-center space-y-1 border-l border-border/20">
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase block">Clarity</span>
-                    <span className="text-xl font-black text-teal-400">{currentEvaluation.communication}%</span>
-                  </div>
-                  {/* Accuracy */}
-                  <div className="text-center space-y-1 border-l border-border/20">
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase block">Accuracy</span>
-                    <span className="text-xl font-black text-blue-400">{currentEvaluation.technicalAccuracy}%</span>
-                  </div>
-                  {/* Confidence */}
-                  <div className="text-center space-y-1 border-l border-border/20">
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase block">Confidence</span>
-                    <span className="text-xl font-black text-amber-400">{currentEvaluation.confidence}%</span>
-                  </div>
-                </div>
-
-                {/* Instant Feedback Statement */}
-                <div className="space-y-1">
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide flex items-center gap-1">
-                    <ThumbsUp className="w-3.5 h-3.5 text-indigo-400" />
-                    Coaching Feedback
-                  </span>
-                  <p className="text-xs font-semibold leading-relaxed text-foreground/90">
-                    {currentEvaluation.feedback}
-                  </p>
-                </div>
-
-                {/* Strengths & Improvements */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Strengths */}
-                  <div className="space-y-2 border border-emerald-500/10 bg-emerald-500/5 p-4 rounded-xl">
-                    <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-wide flex items-center gap-1.5">
-                      <Check className="w-4 h-4 shrink-0" />
-                      Strengths
-                    </span>
-                    <ul className="space-y-1.5 text-xs leading-relaxed font-semibold list-disc list-inside text-foreground/90">
-                      {currentEvaluation.strengths.map((str, idx) => (
-                        <li key={idx}>{str}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Improvements */}
-                  <div className="space-y-2 border border-amber-500/10 bg-amber-500/5 p-4 rounded-xl">
-                    <span className="text-[10px] font-bold text-amber-500 uppercase tracking-wide flex items-center gap-1.5">
-                      <BadgeAlert className="w-4 h-4 shrink-0" />
-                      Areas to Improve
-                    </span>
-                    <ul className="space-y-1.5 text-xs leading-relaxed font-semibold list-disc list-inside text-foreground/90">
-                      {currentEvaluation.improvements.map((imp, idx) => (
-                        <li key={idx}>{imp}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Rewritten Answer Blueprint */}
-                {currentEvaluation.improvedAnswer && (
-                  <div className="space-y-2 border border-indigo-500/10 bg-indigo-500/5 p-4 rounded-xl relative overflow-hidden">
-                    <div className="absolute right-0 top-0 p-1.5 text-indigo-500/10">
-                      <Flame className="w-12 h-12" />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Chat Feed layout */}
+        <Card className="border border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl overflow-hidden lg:col-span-8 flex flex-col h-[520px]">
+          {/* Live scrolling message zone */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {messages.map((msg) => {
+              if (msg.sender === "interviewer") {
+                return (
+                  <div key={msg.id} className="flex gap-2.5 max-w-[85%] items-start">
+                    <div className="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center shrink-0 border border-indigo-500/25">
+                      <Bot className="w-4.5 h-4.5" />
                     </div>
-                    <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wide flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4 text-indigo-400" />
-                      Ideal Answer Template
-                    </span>
-                    <p className="text-xs leading-relaxed font-semibold text-foreground/90">
-                      {currentEvaluation.improvedAnswer}
-                    </p>
+                    <div className="p-3 bg-muted/40 rounded-2xl rounded-tl-none border border-border/20 text-xs font-semibold leading-relaxed space-y-1 text-foreground">
+                      <div className="flex items-center justify-between gap-4 pb-1">
+                        <span className="text-[9px] uppercase font-bold text-indigo-400">Interviewer</span>
+                        <Badge variant="outline" className="text-[8px] px-1 py-0 bg-background text-indigo-400 font-extrabold uppercase scale-90 border-indigo-500/25">
+                          {msg.type}
+                        </Badge>
+                      </div>
+                      <p>{msg.content}</p>
+                    </div>
                   </div>
-                )}
+                );
+              } else if (msg.sender === "candidate") {
+                return (
+                  <div key={msg.id} className="flex gap-2.5 max-w-[85%] items-start ml-auto flex-row-reverse">
+                    <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0 border border-blue-500/25">
+                      <User className="w-4.5 h-4.5" />
+                    </div>
+                    <div className="p-3 bg-blue-600 text-white rounded-2xl rounded-tr-none text-xs font-semibold leading-relaxed">
+                      <p>{msg.content}</p>
+                    </div>
+                  </div>
+                );
+              } else if (msg.sender === "system_feedback") {
+                const evalData = msg.evaluation;
+                return (
+                  <div key={msg.id} className="p-3.5 rounded-xl border border-indigo-500/10 bg-indigo-500/5 text-xs font-semibold leading-relaxed space-y-3.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[9px] uppercase tracking-wider font-extrabold text-indigo-400 flex items-center gap-1">
+                        <ThumbsUp className="w-3.5 h-3.5" />
+                        Response Evaluation
+                      </span>
+                      <span className="text-xs font-black text-indigo-400">Score: {evalData.score}%</span>
+                    </div>
+                    <p className="text-muted-foreground">{evalData.feedback}</p>
+                    <div className="grid grid-cols-2 gap-3 pt-1">
+                      <div className="space-y-1 text-[11px]">
+                        <span className="text-emerald-500 font-bold block">✓ Strengths</span>
+                        <ul className="list-disc list-inside space-y-0.5 text-muted-foreground font-semibold">
+                          {evalData.strengths.slice(0, 2).map((s, idx) => <li key={idx}>{s}</li>)}
+                        </ul>
+                      </div>
+                      <div className="space-y-1 text-[11px]">
+                        <span className="text-amber-500 font-bold block">⚠ Improvements</span>
+                        <ul className="list-disc list-inside space-y-0.5 text-muted-foreground font-semibold">
+                          {evalData.improvements.slice(0, 2).map((i, idx) => <li key={idx}>{i}</li>)}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+              return null;
+            })}
 
-                {/* Action buttons */}
+            {/* AI thinking / evaluating loader */}
+            {isEvaluating && (
+              <div className="flex gap-2.5 max-w-[85%] items-start">
+                <div className="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-500 flex items-center justify-center shrink-0 border border-indigo-500/25">
+                  <Bot className="w-4.5 h-4.5" />
+                </div>
+                <div className="flex space-x-1.5 p-2.5 bg-accent/40 rounded-xl w-16 items-center justify-center">
+                  <div className="w-1.5 h-1.5 bg-foreground rounded-full animate-bounce [animation-delay:-0.3s]" />
+                  <div className="w-1.5 h-1.5 bg-foreground rounded-full animate-bounce [animation-delay:-0.15s]" />
+                  <div className="w-1.5 h-1.5 bg-foreground rounded-full animate-bounce" />
+                </div>
+              </div>
+            )}
+
+            <div ref={chatEndRef} />
+          </div>
+
+          {/* Action and input zone */}
+          <div className="p-3.5 border-t border-border/20 bg-muted/5 space-y-3 relative">
+            <AnimatePresence>
+              {isCompleting && (
+                <div className="absolute inset-0 bg-background/90 z-20 flex flex-col items-center justify-center gap-2">
+                  <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+                  <span className="text-xs font-bold">Compiling Mock Session Report Card...</span>
+                </div>
+              )}
+            </AnimatePresence>
+
+            {scores.count > currentIndex ? (
+              /* Navigation to next question or complete buttons */
+              <div className="flex gap-3">
                 {isLastQuestion ? (
                   <Button
                     onClick={handleFinishInterview}
                     className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs h-10 shadow-md shadow-indigo-500/10 cursor-pointer gap-1.5"
                   >
-                    Finish mock Interview
+                    Complete Practice & Grade
                     <Check className="w-4 h-4" />
                   </Button>
                 ) : (
@@ -343,15 +347,89 @@ export function InterviewSessionFlow({ session, questions }) {
                     onClick={handleNextQuestion}
                     className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs h-10 shadow-md shadow-indigo-500/10 cursor-pointer gap-1.5"
                   >
-                    Next Question
+                    Prepare Next Question
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 )}
-              </motion.div>
+              </div>
+            ) : (
+              /* Text Response Input */
+              <div className="space-y-3">
+                <Textarea
+                  placeholder="Type your response to the interviewer's question..."
+                  value={answerText}
+                  onChange={(e) => setAnswerText(e.target.value)}
+                  rows={2}
+                  disabled={isEvaluating}
+                  className="rounded-xl border-border/40 bg-background/30 text-xs font-semibold leading-relaxed resize-none focus-visible:ring-indigo-500/30 min-h-[60px]"
+                />
+                <div className="flex justify-between items-center text-[10px] text-muted-foreground font-semibold">
+                  <span>Enter 10+ characters to evaluate response alignment.</span>
+                  <Button
+                    onClick={handleSubmitAnswer}
+                    disabled={isEvaluating || answerText.trim().length < 10}
+                    className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-7 px-4 shadow-sm text-[10px] cursor-pointer"
+                  >
+                    Submit Answer
+                  </Button>
+                </div>
+              </div>
             )}
-          </AnimatePresence>
-        </CardContent>
-      </Card>
+          </div>
+        </Card>
+
+        {/* Dynamic Scoring indicators Side Widget */}
+        <Card className="border border-border/40 bg-card/60 backdrop-blur-sm p-5 rounded-2xl lg:col-span-4 space-y-4">
+          <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+            <Activity className="w-4.5 h-4.5 text-indigo-400" />
+            Live Session Scores
+          </h4>
+
+          <div className="space-y-3.5">
+            {/* Technical */}
+            <div className="space-y-1">
+              <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
+                <span>Technical Accuracy</span>
+                <span className="text-foreground">{scores.technical}%</span>
+              </div>
+              <Progress value={scores.technical} className="h-1 bg-accent" />
+            </div>
+
+            {/* Communication */}
+            <div className="space-y-1">
+              <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
+                <span>Communication Clarity</span>
+                <span className="text-foreground">{scores.communication}%</span>
+              </div>
+              <Progress value={scores.communication} className="h-1 bg-accent" />
+            </div>
+
+            {/* Confidence */}
+            <div className="space-y-1">
+              <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
+                <span>Confidence Index</span>
+                <span className="text-foreground">{scores.confidence}%</span>
+              </div>
+              <Progress value={scores.confidence} className="h-1 bg-accent" />
+            </div>
+
+            {/* Problem Solving */}
+            <div className="space-y-1">
+              <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
+                <span>Problem Solving Quotient</span>
+                <span className="text-foreground">{scores.problemSolving}%</span>
+              </div>
+              <Progress value={scores.problemSolving} className="h-1 bg-accent" />
+            </div>
+          </div>
+
+          <Separator className="bg-border/20" />
+
+          <p className="text-[9px] text-muted-foreground font-semibold leading-relaxed">
+            Live metric scores will average and update instantly as soon as you submit response evaluations to the interviewer.
+          </p>
+        </Card>
+      </div>
     </div>
   );
 }

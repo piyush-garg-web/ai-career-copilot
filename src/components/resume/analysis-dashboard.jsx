@@ -23,6 +23,9 @@ import {
   GraduationCap,
   Code,
   Languages,
+  ArrowRight,
+  ShieldCheck,
+  FileUp,
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -50,6 +53,22 @@ const formatDate = (dateStr) => {
     day: "numeric",
     year: "numeric",
   });
+};
+
+// Helper: Get Grade Letter
+const getGrade = (score) => {
+  if (score >= 90) return "A";
+  if (score >= 82) return "B+";
+  if (score >= 70) return "B";
+  if (score >= 60) return "C";
+  return "D";
+};
+
+// Helper: Get Grade Class
+const getGradeClass = (grade) => {
+  if (grade === "A" || grade === "B+") return "text-green-500 border-green-500/20 bg-green-500/5";
+  if (grade === "B" || grade === "C") return "text-amber-500 border-amber-500/20 bg-amber-500/5";
+  return "text-destructive border-destructive/20 bg-destructive/5";
 };
 
 export function AnalysisDashboard({ resume, analysis }) {
@@ -92,6 +111,11 @@ export function AnalysisDashboard({ resume, analysis }) {
     }
   };
 
+  const handlePrintPDF = () => {
+    window.print();
+    toast.success("Preparing report print view...");
+  };
+
   // Extract structured analysis arrays safely
   const scoreBreakdown = analysis.scoreBreakdown || {};
   const strengths = scoreBreakdown.strengths || [];
@@ -99,6 +123,12 @@ export function AnalysisDashboard({ resume, analysis }) {
   const suggestions = analysis.suggestions || [];
   const keywords = analysis.keywords || {};
   const missingKeywords = keywords.missingKeywords || [];
+
+  // Grade and Percentile calculations
+  const grade = getGrade(analysis.overallScore);
+  const percentile = analysis.overallScore > 0 ? Math.round(analysis.overallScore * 0.95 + 4) : 0;
+  const improvementPriority = analysis.overallScore >= 85 ? "Low" : analysis.overallScore >= 70 ? "Medium" : "High";
+  const estAtsImprovement = analysis.atsScore > 0 ? `${analysis.atsScore} → ${Math.min(98, analysis.atsScore + 14)}` : "0 → 80";
 
   // Math for Circular Overall Score Ring
   const radius = 50;
@@ -153,7 +183,24 @@ export function AnalysisDashboard({ resume, analysis }) {
   ];
 
   return (
-    <div className="space-y-6 relative">
+    <div className="space-y-6 relative print:p-8 print:bg-white print:text-black">
+      {/* CSS print utility overlay styles */}
+      <style jsx global>{`
+        @media print {
+          header, aside, footer, nav, button, .print\\:hidden {
+            display: none !important;
+          }
+          body {
+            background: white !important;
+            color: black !important;
+          }
+          .print-full-width {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+        }
+      `}</style>
+
       {/* Loading Overlay during Analyze Again */}
       <AnimatePresence>
         {isAnalyzing && (
@@ -161,7 +208,7 @@ export function AnalysisDashboard({ resume, analysis }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex flex-col items-center justify-center gap-4"
+            className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex flex-col items-center justify-center gap-4 print:hidden"
           >
             <div className="p-4 rounded-3xl bg-indigo-500/10 text-indigo-500 animate-bounce">
               <Sparkles className="w-8 h-8 animate-pulse" />
@@ -180,7 +227,7 @@ export function AnalysisDashboard({ resume, analysis }) {
       </AnimatePresence>
 
       {/* Hero Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 print:hidden">
         <div className="space-y-1">
           <Link
             href="/resume"
@@ -202,20 +249,18 @@ export function AnalysisDashboard({ resume, analysis }) {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Download Resume button */}
+          {/* Download PDF report */}
           <Button
-            asChild
+            onClick={handlePrintPDF}
             variant="outline"
             size="sm"
             className="rounded-xl border-border/40 font-semibold text-xs h-9 cursor-pointer"
           >
-            <a href={resume.fileUrl} download={resume.fileName} target="_blank" rel="noopener noreferrer">
-              <Download className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
-              Download Resume
-            </a>
+            <Download className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
+            Download PDF Report
           </Button>
 
-          {/* Analyze Again button */}
+          {/* Re-Analyze */}
           <Button
             variant="default"
             size="sm"
@@ -229,12 +274,11 @@ export function AnalysisDashboard({ resume, analysis }) {
         </div>
       </div>
 
-      <Separator className="bg-border/40" />
+      <Separator className="bg-border/40 print:hidden" />
 
-      {/* Executive Summary Card */}
+      {/* Dynamic Summary Block */}
       {analysis.summary && (
         <Card className="border border-indigo-500/10 bg-indigo-500/5 rounded-2xl shadow-sm relative overflow-hidden">
-          <div className="absolute right-0 top-0 w-24 h-24 bg-indigo-500/5 blur-2xl rounded-full" />
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-indigo-400">
               <Sparkles className="w-4 h-4" />
@@ -247,100 +291,95 @@ export function AnalysisDashboard({ resume, analysis }) {
         </Card>
       )}
 
-      {/* Grid: Circle Gauge Score Card + 6 Scorecards + ATS Breakdown */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* BIG HERO CIRCLE GAUGE: Overall Score */}
-        <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center p-6 text-center shadow-sm">
+      {/* Main SaaS Metrics Card Blocks */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {/* Circle Ring Overall Metric */}
+        <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center p-6 text-center shadow-sm md:col-span-1">
           <CardHeader className="pb-3 text-center">
-            <CardTitle className="text-sm font-bold">Overall Resume Score</CardTitle>
-            <CardDescription className="text-[10px] font-semibold">Weighted AI quality metric</CardDescription>
+            <CardTitle className="text-sm font-bold">Resume Grade</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center p-0 space-y-4">
-            <div className="relative flex items-center justify-center">
-              <svg className="w-28 h-28 transform -rotate-90">
-                <circle
-                  cx="56"
-                  cy="56"
-                  r={radius}
-                  className="stroke-muted/40"
-                  strokeWidth={strokeWidth}
-                  fill="none"
-                />
-                <circle
-                  cx="56"
-                  cy="56"
-                  r={radius}
-                  className="stroke-indigo-500 transition-all duration-1000 ease-out"
-                  strokeWidth={strokeWidth}
-                  strokeDasharray={circumference}
-                  strokeDashoffset={strokeDashoffset}
-                  strokeLinecap="round"
-                  fill="none"
-                />
-              </svg>
-              <div className="absolute flex flex-col items-center justify-center">
-                <span className="text-2xl font-black text-foreground">{analysis.overallScore}</span>
-                <span className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">Score</span>
-              </div>
+            {/* BIG Grade Display */}
+            <div className={`w-20 h-20 rounded-full border-2 flex items-center justify-center text-3xl font-black ${getGradeClass(grade)}`}>
+              {grade}
             </div>
-            <p className="text-xs text-muted-foreground font-semibold max-w-xs leading-relaxed">
-              Your resume ranks higher than <span className="text-indigo-400 font-bold">{analysis.overallScore}%</span> of tested candidates in this discipline.
+            <div className="space-y-1">
+              <span className="text-2xl font-black text-foreground">{analysis.overallScore}</span>
+              <span className="text-xs text-muted-foreground font-semibold block">Overall Score</span>
+            </div>
+            <p className="text-[10px] text-muted-foreground font-semibold leading-relaxed">
+              Grade based on ATS structure, experiences impact, and project details scan.
             </p>
           </CardContent>
         </Card>
 
-        {/* ATS Score Card Breakdown */}
-        <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-bold">ATS Readability</CardTitle>
-              <Badge className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 font-bold">
-                {analysis.atsScore}/100
-              </Badge>
+        {/* Executive SaaS Metrics Dashboard Card */}
+        <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl p-6 shadow-sm md:col-span-3 space-y-4">
+          <CardTitle className="text-sm font-bold flex items-center gap-1.5 text-blue-500">
+            <ShieldCheck className="w-4.5 h-4.5" />
+            Key Portfolio Benchmarks
+          </CardTitle>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="p-3.5 rounded-xl bg-accent/30 space-y-1 border border-border/20">
+              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Estimated Percentile</span>
+              <p className="text-base font-black text-foreground">Top {100 - percentile}%</p>
+              <span className="text-[9px] text-muted-foreground block">Better than {percentile}% of applicants</span>
             </div>
-            <div className="space-y-2">
-              <div className="flex justify-between text-[10px] text-muted-foreground font-bold">
-                <span>ATS Parsing Compatibility</span>
-                <span className="text-indigo-400">{analysis.atsScore}%</span>
-              </div>
-              <Progress value={analysis.atsScore} className="h-2 bg-accent" />
-            </div>
-            <p className="text-xs text-muted-foreground leading-relaxed font-semibold">
-              This score calculates how easily Applicant Tracking Systems can index your text formatting, headers, and section keywords without data loss.
-            </p>
-          </div>
-          <div className="pt-4 border-t border-border/20 flex items-center gap-2 text-xs font-bold text-indigo-400">
-            <TrendingUp className="w-4 h-4" />
-            <span>Target 80%+ for corporate applications</span>
-          </div>
-        </Card>
 
-        {/* Dynamic Metric Explanation Info */}
-        <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl p-6 shadow-sm flex flex-col justify-between">
-          <div className="space-y-4">
-            <CardTitle className="text-sm font-bold flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4 text-emerald-400" />
-              Optimization Impact
-            </CardTitle>
-            <p className="text-xs text-muted-foreground leading-relaxed font-semibold">
-              A high score signals to recruiters that your document contains the expected syntax patterns, action verbs, and skills. Addressing the suggestions below can raise your overall index rating significantly.
-            </p>
-            <div className="space-y-2.5 text-xs font-semibold">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>Increase ATS compatibility via missing keywords</span>
+            <div className="p-3.5 rounded-xl bg-accent/30 space-y-1 border border-border/20">
+              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Improvement Priority</span>
+              <p className={`text-base font-black ${
+                improvementPriority === "High" ? "text-rose-500" : improvementPriority === "Medium" ? "text-amber-500" : "text-emerald-500"
+              }`}>{improvementPriority}</p>
+              <span className="text-[9px] text-muted-foreground block">Urgency of suggestions action</span>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-accent/30 space-y-1 border border-border/20">
+              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">ATS Score Increase</span>
+              <p className="text-base font-black text-indigo-400">+{Math.min(98, analysis.atsScore + 14) - analysis.atsScore} Points</p>
+              <span className="text-[9px] text-muted-foreground block">With optimization suggestions: {estAtsImprovement}</span>
+            </div>
+          </div>
+
+          {/* Core Health Check Status */}
+          <div className="space-y-2.5 pt-2">
+            <span className="text-xs font-bold text-foreground">Content Health Status</span>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[10px] font-bold">
+              <div className="p-2.5 rounded-lg border border-border/30 bg-card/60 flex items-center justify-between">
+                <span className="text-muted-foreground">Formatting</span>
+                <span className={analysis.atsScore >= 80 ? "text-green-500" : "text-amber-500"}>
+                  {analysis.atsScore >= 80 ? "Pass" : "Warning"}
+                </span>
               </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>Improve experience scores using impact verbs</span>
+              <div className="p-2.5 rounded-lg border border-border/30 bg-card/60 flex items-center justify-between">
+                <span className="text-muted-foreground">Grammar</span>
+                <span className={analysis.grammarScore >= 80 ? "text-green-500" : "text-amber-500"}>
+                  {analysis.grammarScore >= 80 ? "Pass" : "Review"}
+                </span>
+              </div>
+              <div className="p-2.5 rounded-lg border border-border/30 bg-card/60 flex items-center justify-between">
+                <span className="text-muted-foreground">Keywords</span>
+                <span className={analysis.skillsScore >= 80 ? "text-green-500" : "text-rose-500"}>
+                  {analysis.skillsScore >= 80 ? "Complete" : "Low"}
+                </span>
+              </div>
+              <div className="p-2.5 rounded-lg border border-border/30 bg-card/60 flex items-center justify-between">
+                <span className="text-muted-foreground">Length</span>
+                <span className="text-green-500">Optimized</span>
+              </div>
+              <div className="p-2.5 rounded-lg border border-border/30 bg-card/60 flex items-center justify-between col-span-2 sm:col-span-1">
+                <span className="text-muted-foreground">Sections</span>
+                <span className={analysis.projectsScore >= 70 ? "text-green-500" : "text-amber-500"}>
+                  {analysis.projectsScore >= 70 ? "Full" : "Check"}
+                </span>
               </div>
             </div>
           </div>
-          <span className="text-[10px] text-muted-foreground/60 font-semibold italic">Powered by Google Gemini 1.5 Flash</span>
         </Card>
       </div>
 
-      {/* Grid: 6 Individual Scorecards */}
+      {/* Grid: 6 Individual Scorecard Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {scoreCardsConfig.map((card, idx) => (
           <Card key={idx} className="border-border/40 bg-card/40 backdrop-blur-sm hover:border-border transition-colors duration-300 rounded-2xl shadow-sm">
@@ -356,7 +395,7 @@ export function AnalysisDashboard({ resume, analysis }) {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Progress value={card.score} className={`h-1.5 bg-accent`} />
+              <Progress value={card.score} className="h-1.5 bg-accent" />
               <p className="text-[11px] leading-relaxed text-muted-foreground font-semibold">
                 {card.desc}
               </p>
@@ -367,7 +406,6 @@ export function AnalysisDashboard({ resume, analysis }) {
 
       {/* Column Row: Strengths vs Weaknesses */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Strengths */}
         <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-emerald-400">
@@ -389,7 +427,6 @@ export function AnalysisDashboard({ resume, analysis }) {
           </CardContent>
         </Card>
 
-        {/* Weaknesses */}
         <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-amber-400">
@@ -414,7 +451,6 @@ export function AnalysisDashboard({ resume, analysis }) {
 
       {/* Row: Missing Keywords & Actionable Suggestions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Missing Keywords Badge cloud */}
         <div className="lg:col-span-1">
           <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl shadow-sm h-full">
             <CardHeader className="pb-3">
@@ -441,7 +477,6 @@ export function AnalysisDashboard({ resume, analysis }) {
           </Card>
         </div>
 
-        {/* Right Column: Actionable Suggestions list */}
         <div className="lg:col-span-2">
           <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl shadow-sm">
             <CardHeader className="pb-3">

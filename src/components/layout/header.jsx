@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useUser, useClerk } from "@clerk/nextjs";
-import { Bell, Menu, Search, User, Settings, LogOut, Sparkles } from "lucide-react";
+import { Bell, Menu, Search, User, Settings, LogOut, Sparkles, FileText, CheckCircle2, Target, Mic } from "lucide-react";
 import { toast } from "sonner";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,6 @@ const getRouteTitle = (path) => {
   if (path === "/profile") return "Profile";
   if (path === "/settings") return "Settings";
   
-  // Try to extract dynamic routes beautifully
   const segments = path.split("/").filter(Boolean);
   if (segments[0] === "resume" && segments[1]) {
     return "Resume Details";
@@ -50,18 +49,117 @@ export function Header({ onMenuClick }) {
   const { user, isLoaded } = useUser();
   const { signOut } = useClerk();
 
+  // Search state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [resumes, setResumes] = useState([]);
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const searchRef = useRef(null);
+
+  // Notification state
+  const [notifications, setNotifications] = useState([]);
+  const [readNotifIds, setReadNotifIds] = useState([]);
+  const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+  const notifRef = useRef(null);
+
+  const staticPages = [
+    { name: "Dashboard", href: "/dashboard", description: "Main metrics and coaching overview" },
+    { name: "My Resumes", href: "/resume", description: "Upload and list resume documents" },
+    { name: "ATS Score Optimizer", href: "/ats-score", description: "Scoring check and optimization history" },
+    { name: "AI Interview Coach", href: "/interview", description: "Start custom mock sessions" },
+    { name: "Interview History", href: "/interview/history", description: "Review practice scorecards" },
+    { name: "My Profile", href: "/profile", description: "Career target roles and details" },
+    { name: "Settings", href: "/settings", description: "Appearance settings and theme" },
+  ];
+
+  // Fetch resumes and notifications
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [resumesRes, notifRes] = await Promise.all([
+          fetch("/api/resumes"),
+          fetch("/api/notifications"),
+        ]);
+        if (resumesRes.ok) {
+          const resumesData = await resumesRes.json();
+          setResumes(resumesData);
+        }
+        if (notifRes.ok) {
+          const notifData = await notifRes.json();
+          setNotifications(notifData);
+        }
+      } catch (err) {
+        console.error("Header data fetch error:", err);
+      }
+    }
+
+    if (isLoaded && user) {
+      fetchData();
+      // Load read notification IDs from localStorage
+      const stored = localStorage.getItem("read_notifications");
+      if (stored) {
+        setReadNotifIds(JSON.parse(stored));
+      }
+    }
+  }, [isLoaded, user]);
+
+  // Click outside handlers for dropdowns
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSearchDropdown(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setShowNotifDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Filter search results
+  const filteredPages = searchQuery
+    ? staticPages.filter(
+        (p) =>
+          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
+
+  const filteredResumes = searchQuery
+    ? resumes.filter((r) => r.fileName.toLowerCase().includes(searchQuery.toLowerCase()))
+    : [];
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    toast.info("Search functionality is not implemented yet.", {
-      description: "This is a frontend UI placeholder.",
-    });
+    if (filteredPages.length > 0) {
+      router.push(filteredPages[0].href);
+      setShowSearchDropdown(false);
+    } else if (filteredResumes.length > 0) {
+      router.push(`/resume/${filteredResumes[0].id}`);
+      setShowSearchDropdown(false);
+    } else {
+      toast.error("No search results found.");
+    }
   };
 
-  const handleNotificationClick = () => {
-    toast.info("No new notifications", {
-      description: "You are all caught up!",
-    });
+  const handleNotificationClick = (notif) => {
+    // Mark as read in local state and localStorage
+    const nextRead = [...new Set([...readNotifIds, notif.id])];
+    setReadNotifIds(nextRead);
+    localStorage.setItem("read_notifications", JSON.stringify(nextRead));
+    setShowNotifDropdown(false);
+    router.push(notif.link);
   };
+
+  const handleMarkAllAsRead = () => {
+    const allIds = notifications.map((n) => n.id);
+    const nextRead = [...new Set([...readNotifIds, ...allIds])];
+    setReadNotifIds(nextRead);
+    localStorage.setItem("read_notifications", JSON.stringify(nextRead));
+    toast.success("All notifications marked as read.");
+  };
+
+  const unreadNotifications = notifications.filter((n) => !readNotifIds.includes(n.id));
 
   const handleSignOut = async () => {
     try {
@@ -71,6 +169,18 @@ export function Header({ onMenuClick }) {
     } catch (error) {
       toast.error("Failed to sign out");
     }
+  };
+
+  // Helper relative time display
+  const getRelativeTimeText = (date) => {
+    const diff = new Date().getTime() - new Date(date).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return "Just now";
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
   };
 
   return (
@@ -103,32 +213,151 @@ export function Header({ onMenuClick }) {
       {/* Right side: Search, Theme, Notifications, Avatar */}
       <div className="flex items-center gap-3">
         {/* Search Bar - Desktop Only */}
-        <form
-          onSubmit={handleSearchSubmit}
-          className="relative w-full max-w-[240px] hidden md:block"
-        >
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/75" />
-          <Input
-            type="search"
-            placeholder="Quick search..."
-            className="w-full h-9 pl-9 pr-4 rounded-xl border-border/40 bg-accent/20 hover:bg-accent/30 focus-visible:bg-background focus-visible:ring-1 transition-all duration-200"
-          />
-        </form>
+        <div ref={searchRef} className="relative w-full max-w-[240px] hidden md:block">
+          <form onSubmit={handleSearchSubmit} className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/75" />
+            <Input
+              type="search"
+              placeholder="Quick search..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setShowSearchDropdown(true);
+              }}
+              onFocus={() => setShowSearchDropdown(true)}
+              className="w-full h-9 pl-9 pr-4 rounded-xl border-border/40 bg-accent/20 hover:bg-accent/30 focus-visible:bg-background focus-visible:ring-1 transition-all duration-200 text-xs font-semibold"
+            />
+          </form>
+
+          {/* Search Dropdown Results */}
+          {showSearchDropdown && searchQuery && (
+            <div className="absolute right-0 top-11 w-80 rounded-2xl border border-border/40 bg-card p-3 shadow-lg z-50 space-y-2.5 max-h-[360px] overflow-y-auto">
+              <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-2">Results</h4>
+              
+              {filteredPages.length === 0 && filteredResumes.length === 0 ? (
+                <p className="text-xs text-muted-foreground italic px-2 py-1">No matching results found.</p>
+              ) : (
+                <div className="space-y-1">
+                  {/* Pages */}
+                  {filteredPages.map((page) => (
+                    <button
+                      key={page.href}
+                      type="button"
+                      onClick={() => {
+                        router.push(page.href);
+                        setShowSearchDropdown(false);
+                      }}
+                      className="w-full text-left p-2 rounded-xl hover:bg-accent/50 transition-colors flex flex-col cursor-pointer"
+                    >
+                      <span className="text-xs font-bold text-foreground">{page.name}</span>
+                      <span className="text-[10px] text-muted-foreground mt-0.5">{page.description}</span>
+                    </button>
+                  ))}
+
+                  {/* Resumes */}
+                  {filteredResumes.map((res) => (
+                    <button
+                      key={res.id}
+                      type="button"
+                      onClick={() => {
+                        router.push(`/resume/${res.id}`);
+                        setShowSearchDropdown(false);
+                      }}
+                      className="w-full text-left p-2 rounded-xl hover:bg-accent/50 transition-colors flex items-center gap-2 cursor-pointer"
+                    >
+                      <FileText className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-xs font-bold text-foreground truncate">{res.fileName}</span>
+                        <span className="text-[10px] text-muted-foreground">Document details</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Theme Toggle */}
         <ThemeToggle />
 
         {/* Notification Icon */}
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={handleNotificationClick}
-          className="relative rounded-xl border-border/40 w-9 h-9"
-          aria-label="View notifications"
-        >
-          <Bell className="w-4 h-4 text-foreground" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-500 rounded-full" />
-        </Button>
+        <div ref={notifRef} className="relative">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setShowNotifDropdown(!showNotifDropdown)}
+            className="relative rounded-xl border-border/40 w-9 h-9 cursor-pointer"
+            aria-label="View notifications"
+          >
+            <Bell className="w-4 h-4 text-foreground" />
+            {unreadNotifications.length > 0 && (
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-500 rounded-full" />
+            )}
+          </Button>
+
+          {/* Notifications Dropdown Drawer */}
+          {showNotifDropdown && (
+            <div className="absolute right-0 top-11 w-80 rounded-2xl border border-border/40 bg-card p-3 shadow-lg z-50 space-y-2">
+              <div className="flex items-center justify-between px-2 pb-2 border-b border-border/20">
+                <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                  Notifications
+                  {unreadNotifications.length > 0 && (
+                    <span className="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-500 text-[10px] font-black">
+                      {unreadNotifications.length}
+                    </span>
+                  )}
+                </span>
+                {unreadNotifications.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleMarkAllAsRead}
+                    className="text-[10px] text-blue-500 hover:text-blue-600 font-bold transition-colors cursor-pointer"
+                  >
+                    Mark all as read
+                  </button>
+                )}
+              </div>
+
+              {notifications.length === 0 ? (
+                <div className="text-center py-8">
+                  <Bell className="w-6 h-6 text-muted-foreground/40 mx-auto mb-1.5" />
+                  <p className="text-xs text-muted-foreground font-semibold">All caught up!</p>
+                </div>
+              ) : (
+                <div className="space-y-1 max-h-[300px] overflow-y-auto">
+                  {notifications.map((notif) => {
+                    const isRead = readNotifIds.includes(notif.id);
+                    return (
+                      <div
+                        key={notif.id}
+                        onClick={() => handleNotificationClick(notif)}
+                        className={`p-2.5 rounded-xl hover:bg-accent/40 transition-colors flex gap-2.5 cursor-pointer relative ${
+                          !isRead ? "bg-muted/10" : ""
+                        }`}
+                      >
+                        {!isRead && (
+                          <div className="absolute right-3.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full" />
+                        )}
+                        <div className="flex-1 space-y-0.5 min-w-0 pr-2">
+                          <p className="text-xs font-bold text-foreground truncate">
+                            {notif.title}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground leading-snug line-clamp-2">
+                            {notif.description}
+                          </p>
+                          <span className="text-[9px] text-muted-foreground/60 block pt-0.5">
+                            {getRelativeTimeText(notif.time)}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Divider */}
         <div className="h-6 w-px bg-border/60 hidden sm:block" />
