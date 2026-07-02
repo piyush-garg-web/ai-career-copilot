@@ -1,7 +1,18 @@
 {
   "name": "ai-career-copilot",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "An AI-powered career copilot platform for resume analysis, ATS optimization, and interactive mock interviews.",
   "private": true,
+  "author": "Piyush Garg",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piyushgarg6702-cyber/ai-career-copilot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/piyushgarg6702-cyber/ai-career-copilot/issues"
+  },
+  "homepage": "https://github.com/piyushgarg6702-cyber/ai-career-copilot#readme",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
