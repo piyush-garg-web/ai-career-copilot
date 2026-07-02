@@ -16,7 +16,7 @@ import {
   Smartphone
 } from "lucide-react";
 
-export default function Features() {
+export default function Features({ onFeatureClick }) {
   const featureList = [
     {
       icon: FileText,
@@ -115,7 +115,8 @@ export default function Features() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              className="group p-6 rounded-2xl border border-border/50 bg-card/40 hover:bg-card/75 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 hover:border-indigo-500/20 dark:hover:border-indigo-500/35 transition-all duration-300 flex flex-col justify-between"
+              onClick={() => onFeatureClick?.("Please sign in to use this feature.")}
+              className="group p-6 rounded-2xl border border-border/50 bg-card/40 hover:bg-card/75 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 hover:border-indigo-500/20 dark:hover:border-indigo-500/35 transition-all duration-300 flex flex-col justify-between cursor-pointer"
             >
               <div className="space-y-4">
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feat.color} flex items-center justify-center`}>

@@ -50,11 +50,6 @@ export default function Footer() {
                 Get Started Free
               </Button>
             </Link>
-            <Link href="/sign-in" className="w-full sm:w-auto">
-              <Button size="lg" variant="ghost" className="w-full sm:w-auto text-base font-semibold px-8 py-6 rounded-xl border border-white/30 text-white hover:bg-white/10 hover:text-white transition-all duration-200">
-                Sign In
-              </Button>
-            </Link>
           </div>
         </div>
 

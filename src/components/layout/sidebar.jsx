@@ -74,6 +74,12 @@ export function Sidebar({ className }) {
     if (item.exact) {
       return pathname === item.href;
     }
+    if (item.href === "/resume" && pathname.startsWith("/resume/analysis")) {
+      return false;
+    }
+    if (item.href === "/interview" && pathname.startsWith("/interview/history")) {
+      return false;
+    }
     return pathname.startsWith(item.href);
   };
 

@@ -35,6 +35,7 @@ model User {
   jobDescriptions    JobDescription[]
   jobMatches         JobMatch[]
   interviewSessions  InterviewSession[]
+  reviews            Review[]
 
   @@index([clerkId])
   @@index([email])
@@ -263,4 +264,23 @@ model InterviewAnswer {
 
   @@index([questionId])
   @@map("interview_answers")
+}
+
+// ─────────────────────────────────────────────
+// REVIEWS
+// ─────────────────────────────────────────────
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  rating    Int
+  title     String
+  review    String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("reviews")
 }

@@ -19,7 +19,6 @@ import {
   Flame,
   User,
   Bot,
-  Mic,
   Activity,
   AwardIcon,
 } from "lucide-react";
@@ -215,10 +214,6 @@ export function InterviewSessionFlow({ session, questions }) {
           </h1>
         </div>
         <div className="flex items-center gap-4 shrink-0">
-          <div className="flex items-center gap-1 text-xs font-semibold text-indigo-400">
-            <Mic className="w-3.5 h-3.5 animate-pulse text-rose-500" />
-            <span className="text-[10px] uppercase font-bold text-muted-foreground">Mic Live</span>
-          </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border/40 bg-card/60 text-xs font-semibold text-muted-foreground">
             <Clock className="w-3.5 h-3.5 text-indigo-400" />
             <span>{formatTime(secondsElapsed)}</span>

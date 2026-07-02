@@ -260,6 +260,11 @@ export default async function DashboardPage() {
     .sort((a, b) => b.rawTime - a.rawTime)
     .slice(0, 4);
 
+  // Fetch existing review if any
+  const userReview = await db.review.findFirst({
+    where: { userId: dbUser.id },
+  });
+
   return (
     <DashboardClientView
       stats={stats}
@@ -270,6 +275,7 @@ export default async function DashboardPage() {
       lastAnalyzedResumeName={lastAnalyzedResumeName}
       suggestions={suggestions}
       insights={insights}
+      initialReview={userReview}
     />
   );
 }

@@ -136,8 +136,23 @@ export async function generateJSONContent({
 
       attempt++;
       if (attempt > retries) {
+        let cleanErrorMessage = error.message;
+        if (
+          error.message.includes("quota") ||
+          error.message.includes("RESOURCE_EXHAUSTED") ||
+          error.message.includes("limit exceeded") ||
+          error.message.includes("429")
+        ) {
+          cleanErrorMessage = "Your Gemini API Key quota or rate limit has been exceeded. Please check your plan/billing details or replace your GEMINI_API_KEY in the environment config (.env) file.";
+        } else if (
+          error.message.includes("API key not valid") ||
+          error.message.includes("API_KEY_INVALID") ||
+          error.message.includes("key is invalid")
+        ) {
+          cleanErrorMessage = "Invalid Gemini API Key. Please verify your GEMINI_API_KEY environment variable in your .env file.";
+        }
         throw new Error(
-          `AI Infrastructure failed after ${retries + 1} attempts. Last error: ${error.message}`
+          `AI Infrastructure failed after ${retries + 1} attempts. Last error: ${cleanErrorMessage}`
         );
       }
 

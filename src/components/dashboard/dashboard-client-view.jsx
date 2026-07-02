@@ -20,10 +20,12 @@ import {
   Mail,
   User,
   Info,
+  Star,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { toast } from "sonner";
 
 // Framer motion animation variants
 const containerVariants = {

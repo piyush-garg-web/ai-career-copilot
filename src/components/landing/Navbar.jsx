@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Sparkles } from "lucide-react";
 
 import { useRouter, usePathname } from "next/navigation";
+import { useUser, useClerk } from "@clerk/nextjs";
 
 // Inline Custom SVG for GitHub
 const GithubIcon = ({ className }) => (
@@ -30,6 +31,9 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const { isLoaded, isSignedIn, user } = useUser();
+  const { signOut } = useClerk();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,25 +70,25 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-background/80 backdrop-blur-md border-b border-border/40 shadow-sm"
-          : "bg-transparent"
+          ? "bg-background/80 backdrop-blur-md border-b border-border/40 py-3 shadow-sm shadow-accent/5"
+          : "bg-transparent py-5"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 group">
-            <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-primary-foreground group-hover:scale-105 transition-transform duration-200">
-              <Sparkles className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+        <div className="flex items-center justify-between">
+          {/* Logo Brand */}
+          <Link href="/" className="flex items-center space-x-2.5 group">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/10 group-hover:shadow-indigo-500/25 transition-all duration-300">
+              <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <span className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/80 group-hover:to-foreground transition-all">
+            <span className="text-lg font-black tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/75 bg-clip-text text-transparent group-hover:opacity-90 transition-opacity">
               AI Career Copilot
             </span>
           </Link>
 
-          {/* Desktop Nav Links */}
+          {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
             <button
               onClick={() => scrollToSection("features")}
@@ -98,7 +102,12 @@ export default function Navbar() {
             >
               How It Works
             </button>
-
+            <button
+              onClick={() => scrollToSection("reviews")}
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
+            >
+              Reviews
+            </button>
             <button
               onClick={() => scrollToSection("faq")}
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
@@ -119,16 +128,31 @@ export default function Navbar() {
           {/* Desktop Action Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            <Link href="/sign-in">
-              <Button variant="ghost" className="font-medium text-sm">
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/sign-up">
-              <Button className="font-medium text-sm bg-primary hover:bg-primary/95 shadow-md hover:shadow-lg transition-all duration-200">
-                Get Started
-              </Button>
-            </Link>
+
+            {isLoaded && isSignedIn && user ? (
+              <>
+                <Link href="/dashboard">
+                  <Button className="font-medium text-sm bg-primary hover:bg-primary/95 shadow-md hover:shadow-lg transition-all duration-200">
+                    Dashboard
+                  </Button>
+                </Link>
+                <div className="pl-2 flex items-center border-l border-border/50 h-8">
+                  <Button
+                    variant="ghost"
+                    onClick={() => signOut()}
+                    className="text-xs font-semibold text-muted-foreground hover:text-foreground cursor-pointer rounded-xl h-8 px-2"
+                  >
+                    Sign Out
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <Link href="/sign-in">
+                <Button className="font-medium text-sm bg-primary hover:bg-primary/95 shadow-md hover:shadow-lg transition-all duration-200">
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -139,19 +163,15 @@ export default function Navbar() {
               className="p-2 rounded-md text-foreground hover:bg-secondary transition-colors"
               aria-label="Toggle menu"
             >
-              {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Drawer Overlay */}
+      {/* Mobile Drawer Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-b border-border bg-background/95 backdrop-blur-md absolute top-full left-0 right-0 py-6 px-4 space-y-4 shadow-xl transition-all duration-300">
+        <div className="md:hidden bg-background/95 border-b border-border/40 py-4 px-4 space-y-4 shadow-xl backdrop-blur-lg">
           <div className="flex flex-col space-y-3">
             <button
               onClick={() => scrollToSection("features")}
@@ -165,7 +185,12 @@ export default function Navbar() {
             >
               How It Works
             </button>
-
+            <button
+              onClick={() => scrollToSection("reviews")}
+              className="text-left py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
+            >
+              Reviews
+            </button>
             <button
               onClick={() => scrollToSection("faq")}
               className="text-left py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
@@ -183,16 +208,33 @@ export default function Navbar() {
             </Link>
           </div>
           <div className="border-t border-border pt-4 flex flex-col sm:flex-row gap-3">
-            <Link href="/sign-in" className="w-full">
-              <Button variant="outline" className="w-full font-medium">
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/sign-up" className="w-full">
-              <Button className="w-full font-medium bg-primary hover:bg-primary/95">
-                Get Started
-              </Button>
-            </Link>
+            {isLoaded && isSignedIn && user ? (
+              <div className="flex flex-col gap-2 w-full">
+                <div className="flex items-center justify-between p-2.5 bg-secondary/40 rounded-xl mb-1">
+                  <span className="text-xs font-bold text-muted-foreground truncate max-w-[180px]">
+                    {user.fullName || user.primaryEmailAddress?.emailAddress}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    onClick={() => signOut()}
+                    className="text-[11px] font-bold text-red-500 hover:text-red-600 h-6 px-2 cursor-pointer"
+                  >
+                    Sign Out
+                  </Button>
+                </div>
+                <Link href="/dashboard" className="w-full">
+                  <Button className="w-full font-medium bg-primary hover:bg-primary/95">
+                    Dashboard
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <Link href="/sign-in" className="w-full">
+                <Button className="w-full font-medium bg-primary hover:bg-primary/95">
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       )}

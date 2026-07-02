@@ -1,5 +1,6 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { db } from "@/lib/db";
 import LandingPageClient from "@/components/landing/LandingPageClient";
 
 export const metadata = {
@@ -44,10 +45,51 @@ export const metadata = {
 
 export default async function Home() {
   const { userId } = await auth();
+  let dbUser = null;
+  let userReview = null;
 
   if (userId) {
     redirect("/dashboard");
   }
 
-  return <LandingPageClient />;
+  // Fetch initial reviews (page 1, limit 10, newest first)
+  const [initialReviews, totalReviews, ratingAggregate] = await Promise.all([
+    db.review.findMany({
+      take: 10,
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            imageUrl: true,
+            targetRole: true,
+          },
+        },
+      },
+    }),
+    db.review.count(),
+    db.review.aggregate({
+      _avg: {
+        rating: true,
+      },
+    }),
+  ]);
+
+  const initialAverageRating = ratingAggregate._avg.rating
+    ? parseFloat(ratingAggregate._avg.rating.toFixed(1))
+    : 0;
+
+  const initialHasMore = totalReviews > 10;
+
+  return (
+    <LandingPageClient
+      initialReviews={initialReviews}
+      initialTotal={totalReviews}
+      initialAverage={initialAverageRating}
+      initialHasMore={initialHasMore}
+      isAuthenticated={!!userId}
+      currentUserReview={userReview}
+    />
+  );
 }
