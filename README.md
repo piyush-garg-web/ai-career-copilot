@@ -13,7 +13,7 @@
 
 ## 🚀 Live Demo
 
-Check out the live application here: **[https://ai-career-copilot-demo.vercel.app](https://ai-career-copilot-demo.vercel.app)** *(Placeholder URL)*
+Check out the live application here: **[https://ai-career-copilot-ehmy.vercel.app](https://ai-career-copilot-ehmy.vercel.app)**
 
 ---
 
@@ -33,9 +33,9 @@ Here is a look at the AI Career Copilot interface:
 | :---: | :---: |
 | ![Interview Coach](screenshots/interview-coach.png) | ![Interview History](screenshots/interview-history.png) |
 
-| Profile Preferences | Mobile Dashboard View |
-| :---: | :---: |
-| ![Profile](screenshots/profile.png) | ![Mobile View](screenshots/mobile-dashboard.png) |
+| Profile Preferences |
+| :---: |
+| ![Profile](screenshots/profile.png) |
 
 ---
 
