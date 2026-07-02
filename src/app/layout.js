@@ -8,7 +8,9 @@ export const metadata = {
   title: "AI Career Copilot",
   description: "Your AI-powered career assistant",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/icon.jpg",
+    shortcut: "/icon.jpg",
+    apple: "/icon.jpg",
   },
 };
 

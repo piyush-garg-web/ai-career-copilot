@@ -6,7 +6,9 @@ export const metadata = {
   title: "AI Career Copilot",
   description: "Optimize your resume, evaluate ATS compliance scores, discover key skill gaps, and practice behavioral and technical mock interviews with Generative AI feedback.",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/icon.jpg",
+    shortcut: "/icon.jpg",
+    apple: "/icon.jpg",
   },
   keywords: [
     "AI Career Coach",
