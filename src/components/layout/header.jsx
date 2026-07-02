@@ -164,7 +164,7 @@ export function Header({ onMenuClick }) {
   const handleSignOut = async () => {
     try {
       await signOut();
-      router.push("/sign-in");
+      router.push("/");
       toast.success("Signed out successfully");
     } catch (error) {
       toast.error("Failed to sign out");

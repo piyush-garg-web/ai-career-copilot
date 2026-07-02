@@ -7,6 +7,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 export const metadata = {
   title: "AI Career Copilot",
   description: "Your AI-powered career assistant",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({ children }) {
