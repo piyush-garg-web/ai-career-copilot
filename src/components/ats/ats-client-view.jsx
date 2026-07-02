@@ -349,7 +349,7 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
                         <div className="flex items-center gap-3 text-[10px] text-muted-foreground/80 mt-1">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
-                            {new Date(res.createdAt).toLocaleDateString()}
+                            {new Date(res.createdAt).toLocaleDateString("en-US")}
                           </span>
                           <span>•</span>
                           <span className="flex items-center gap-1">

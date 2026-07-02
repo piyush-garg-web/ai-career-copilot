@@ -157,7 +157,7 @@ export default async function ResumeAnalysisPage({ searchParams }) {
                   <div className="grid grid-cols-2 gap-2 text-xs font-medium text-muted-foreground">
                     <div className="flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
-                      <span>{new Date(res.createdAt).toLocaleDateString()}</span>
+                      <span>{new Date(res.createdAt).toLocaleDateString("en-US")}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <HardDrive className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />

@@ -21,6 +21,8 @@ import {
   User,
   Info,
   Star,
+  Trash2,
+  Edit,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -68,8 +70,122 @@ export function DashboardClientView({
   lastAnalyzedResumeName = "None",
   suggestions = [],
   insights = [],
+  initialReviews = [],
 }) {
   const router = useRouter();
+
+  const [userReviews, setUserReviews] = React.useState(initialReviews || []);
+  const [isFormOpen, setIsFormOpen] = React.useState(false);
+  const [editingReview, setEditingReview] = React.useState(null);
+
+  const [reviewRating, setReviewRating] = React.useState(0);
+  const [reviewTitle, setReviewTitle] = React.useState("");
+  const [reviewText, setReviewText] = React.useState("");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [isDeletingId, setIsDeletingId] = React.useState(null);
+
+  // Sync state when editing targets change
+  React.useEffect(() => {
+    if (editingReview) {
+      setReviewRating(editingReview.rating);
+      setReviewTitle(editingReview.title);
+      setReviewText(editingReview.review);
+    } else {
+      setReviewRating(0);
+      setReviewTitle("");
+      setReviewText("");
+    }
+  }, [editingReview]);
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+
+    if (!reviewRating || reviewRating < 1 || reviewRating > 5) {
+      toast.error("Please select a star rating.");
+      return;
+    }
+    if (!reviewTitle.trim()) {
+      toast.error("Review title is required.");
+      return;
+    }
+    if (reviewTitle.length > 100) {
+      toast.error("Title must be 100 characters or less.");
+      return;
+    }
+    if (!reviewText.trim()) {
+      toast.error("Review description is required.");
+      return;
+    }
+    if (reviewText.length > 500) {
+      toast.error("Description must be 500 characters or less.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const url = editingReview ? `/api/reviews/${editingReview.id}` : "/api/reviews";
+    const method = editingReview ? "PUT" : "POST";
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          rating: reviewRating,
+          title: reviewTitle,
+          review: reviewText,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(editingReview ? "Review updated successfully!" : "Review submitted successfully!");
+        
+        if (editingReview) {
+          setUserReviews((prev) =>
+            prev.map((r) => (r.id === editingReview.id ? data.review : r))
+          );
+        } else {
+          setUserReviews((prev) => [data.review, ...prev]);
+        }
+
+        setIsFormOpen(false);
+        setEditingReview(null);
+      } else {
+        toast.error(data.error || "Failed to save review.");
+      }
+    } catch (err) {
+      toast.error("An error occurred while saving.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!confirm("Are you sure you want to delete this review? This action cannot be undone.")) return;
+    setIsDeletingId(reviewId);
+
+    try {
+      const res = await fetch(`/api/reviews/${reviewId}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        toast.success("Review deleted successfully.");
+        setUserReviews((prev) => prev.filter((r) => r.id !== reviewId));
+        if (editingReview && editingReview.id === reviewId) {
+          setEditingReview(null);
+          setIsFormOpen(false);
+        }
+      } else {
+        const data = await res.json();
+        toast.error(data.error || "Failed to delete review.");
+      }
+    } catch (err) {
+      toast.error("An error occurred while deleting.");
+    } finally {
+      setIsDeletingId(null);
+    }
+  };
 
   const quickActions = [
     {
@@ -426,6 +542,194 @@ export function DashboardClientView({
           </Card>
         </motion.div>
       </div>
+
+      {/* Community Reviews Feedback Card */}
+      <motion.div variants={itemVariants} className="mt-8">
+        <Card className="border-border/40 bg-card/60 backdrop-blur-md hover:border-border transition-colors duration-200">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+            <div className="space-y-1">
+              <CardTitle className="text-base font-bold flex items-center gap-2">
+                <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                Community Reviews & Ratings
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Tell us how AI Career Copilot is helping your career search. Write as many reviews as you wish!
+              </CardDescription>
+            </div>
+            {!isFormOpen && (
+              <Button
+                onClick={() => {
+                  setEditingReview(null);
+                  setIsFormOpen(true);
+                }}
+                className="rounded-xl px-4 py-2 cursor-pointer bg-primary hover:bg-primary/95 text-xs font-bold shadow-md hover:shadow-lg transition-all"
+              >
+                <Plus className="w-4 h-4 mr-1.5" />
+                Write a Review
+              </Button>
+            )}
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {isFormOpen && (
+              <div className="p-5 rounded-2xl border border-border/40 bg-background/50 space-y-4">
+                <h3 className="text-sm font-extrabold text-foreground">
+                  {editingReview ? "Edit Your Review" : "Write a New Review"}
+                </h3>
+                <form onSubmit={handleSubmitReview} className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold text-muted-foreground">Your Rating:</span>
+                    <div className="flex items-center space-x-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setReviewRating(star)}
+                          className="p-0.5 hover:scale-110 transition-transform cursor-pointer focus:outline-none"
+                        >
+                          <Star
+                            className={`w-6 h-6 transition-colors duration-150 ${
+                              star <= reviewRating
+                                ? "fill-yellow-500 text-yellow-500"
+                                : "text-muted-foreground/35 fill-transparent hover:text-yellow-500/80"
+                            }`}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid gap-2">
+                    <label htmlFor="review-title" className="text-xs font-bold text-foreground">
+                      Review Title
+                    </label>
+                    <input
+                      id="review-title"
+                      type="text"
+                      placeholder="e.g. Outstanding ATS scan tools!"
+                      value={reviewTitle}
+                      onChange={(e) => setReviewTitle(e.target.value)}
+                      maxLength={100}
+                      required
+                      className="w-full p-3 rounded-xl border border-border/50 bg-background/50 text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all duration-200"
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
+                    <label htmlFor="review-description" className="text-xs font-bold text-foreground">
+                      Review Details
+                    </label>
+                    <textarea
+                      id="review-description"
+                      placeholder="Share your thoughts on how AI Career Copilot helps you..."
+                      value={reviewText}
+                      onChange={(e) => setReviewText(e.target.value)}
+                      maxLength={500}
+                      required
+                      className="w-full min-h-[100px] p-3 rounded-xl border border-border/50 bg-background/50 text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all duration-200 resize-none"
+                    />
+                    <div className="flex justify-between items-center text-[10px] font-bold text-muted-foreground">
+                      <span>Maximum 500 characters</span>
+                      <span>{reviewText.length} / 500</span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 justify-end">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => {
+                        setIsFormOpen(false);
+                        setEditingReview(null);
+                      }}
+                      className="rounded-xl text-xs font-bold cursor-pointer"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="rounded-xl px-5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all cursor-pointer"
+                    >
+                      {isSubmitting ? "Saving..." : editingReview ? "Save Changes" : "Submit Review"}
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {/* List of user reviews */}
+            <div className="space-y-4">
+              <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground/80">
+                Your Submitted Reviews ({userReviews.length})
+              </h3>
+              {userReviews.length === 0 ? (
+                <p className="text-xs text-muted-foreground/85 font-medium py-3 text-center border border-dashed border-border/40 rounded-xl">
+                  You have not submitted any reviews yet. Click &ldquo;Write a Review&rdquo; above to share your experience!
+                </p>
+              ) : (
+                <div className="grid gap-4">
+                  {userReviews.map((rev) => (
+                    <div
+                      key={rev.id}
+                      className="p-4 rounded-2xl border border-border/45 bg-background/30 flex flex-col sm:flex-row sm:items-start justify-between gap-4 hover:border-border/80 transition-colors"
+                    >
+                      <div className="space-y-2 min-w-0">
+                        <div className="flex items-center gap-2.5">
+                          <div className="flex items-center space-x-0.5">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star
+                                key={star}
+                                className={`w-3.5 h-3.5 ${
+                                  star <= rev.rating
+                                    ? "fill-yellow-500 text-yellow-500"
+                                    : "text-muted-foreground/20"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-[10px] text-muted-foreground font-semibold">
+                            {new Date(rev.createdAt).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
+                          </span>
+                        </div>
+                        <h4 className="text-sm font-extrabold text-foreground truncate">{rev.title}</h4>
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed italic">
+                          &ldquo;{rev.review}&rdquo;
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0 self-end sm:self-start">
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setEditingReview(rev);
+                            setIsFormOpen(true);
+                          }}
+                          className="rounded-xl h-8 px-2.5 text-[11px] font-bold cursor-pointer hover:bg-secondary/60"
+                        >
+                          <Edit className="w-3 h-3 mr-1.5" />
+                          Edit
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          onClick={() => handleDeleteReview(rev.id)}
+                          disabled={isDeletingId === rev.id}
+                          className="rounded-xl h-8 px-2.5 text-[11px] font-bold text-red-500 hover:text-red-500 hover:bg-red-500/10 cursor-pointer"
+                        >
+                          <Trash2 className="w-3 h-3 mr-1.5" />
+                          {isDeletingId === rev.id ? "..." : "Delete"}
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </motion.div>
   );
 }

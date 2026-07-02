@@ -42,7 +42,7 @@ export default function Testimonials({
   // Review Form States
   const [userReview, setUserReview] = useState(currentUserReview);
   const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
-  const [rating, setRating] = useState(userReview ? userReview.rating : 5);
+  const [rating, setRating] = useState(userReview ? userReview.rating : 0);
   const [titleInput, setTitleInput] = useState(userReview ? userReview.title : "");
   const [reviewInput, setReviewInput] = useState(userReview ? userReview.review : "");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,7 +54,7 @@ export default function Testimonials({
       onUnauthAction?.();
       return;
     }
-    setRating(userReview ? userReview.rating : 5);
+    setRating(userReview ? userReview.rating : 0);
     setTitleInput(userReview ? userReview.title : "");
     setReviewInput(userReview ? userReview.review : "");
     setIsWriteModalOpen(true);
@@ -63,7 +63,9 @@ export default function Testimonials({
   // Reload reviews list, average scores, and counts
   const refreshReviewsAndStats = async (currentSort = sort) => {
     try {
-      const res = await fetch(`/api/reviews?page=1&limit=10&sort=${currentSort}`);
+      const res = await fetch(`/api/reviews?page=1&limit=10&sort=${currentSort}&t=${Date.now()}`, {
+        cache: "no-store",
+      });
       if (res.ok) {
         const data = await res.json();
         setReviews(data.reviews);
@@ -71,9 +73,13 @@ export default function Testimonials({
         setAverageRating(data.averageRating);
         setHasMore(data.hasMore);
         setPage(1);
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        toast.error(errorData.error || "Failed to load sorted reviews.");
       }
     } catch (err) {
       console.error("Refresh error:", err);
+      toast.error("Failed to load sorted reviews.");
     }
   };
 
@@ -83,7 +89,9 @@ export default function Testimonials({
     setIsLoading(true);
     const nextPage = page + 1;
     try {
-      const res = await fetch(`/api/reviews?page=${nextPage}&limit=10&sort=${sort}`);
+      const res = await fetch(`/api/reviews?page=${nextPage}&limit=10&sort=${sort}&t=${Date.now()}`, {
+        cache: "no-store",
+      });
       if (res.ok) {
         const data = await res.json();
         setReviews((prev) => [...prev, ...data.reviews]);
@@ -300,7 +308,7 @@ export default function Testimonials({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
             {reviews.map((rev) => {
               const isOwner = userReview && rev.id === userReview.id;
-              const formattedDate = new Date(rev.createdAt).toLocaleDateString(undefined, {
+              const formattedDate = new Date(rev.createdAt).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -423,8 +431,8 @@ export default function Testimonials({
                   className="p-1 hover:scale-110 transition-transform cursor-pointer focus:outline-none"
                 >
                   <Star
-                    className={`w-7 h-7 ${
-                      star <= rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/20"
+                    className={`w-7 h-7 transition-colors duration-150 ${
+                      star <= rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/35 fill-transparent hover:text-yellow-400/80"
                     }`}
                   />
                 </button>

@@ -273,7 +273,7 @@ export function InterviewHistoryView({ initialSessions }) {
                   <div className="grid grid-cols-2 gap-2 text-xs font-medium text-muted-foreground border-b border-border/20 pb-3">
                     <div className="flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
-                      <span>{new Date(sess.createdAt).toLocaleDateString()}</span>
+                      <span>{new Date(sess.createdAt).toLocaleDateString("en-US")}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />

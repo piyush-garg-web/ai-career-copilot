@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/reviews
  * Fetches paginated reviews from the database.
@@ -12,7 +14,7 @@ import { db } from "@/lib/db";
  */
 export async function GET(req) {
   try {
-    const { searchParams } = new URL(req.url);
+    const searchParams = req.nextUrl ? req.nextUrl.searchParams : new URL(req.url, "http://localhost").searchParams;
     const page = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
     const limit = Math.max(1, Math.min(50, parseInt(searchParams.get("limit") || "10", 10)));
     const sort = searchParams.get("sort") || "newest";
@@ -20,11 +22,11 @@ export async function GET(req) {
     const skip = (page - 1) * limit;
 
     // Determine sorting criteria
-    let orderBy = { createdAt: "desc" };
+    let orderBy = [{ createdAt: "desc" }];
     if (sort === "highest") {
-      orderBy = { rating: "desc" };
+      orderBy = [{ rating: "desc" }, { createdAt: "desc" }];
     } else if (sort === "lowest") {
-      orderBy = { rating: "asc" };
+      orderBy = [{ rating: "asc" }, { createdAt: "desc" }];
     }
 
     // Fetch total count and average rating
@@ -60,12 +62,21 @@ export async function GET(req) {
 
     const hasMore = total > page * limit;
 
-    return NextResponse.json({
-      reviews,
-      total,
-      averageRating,
-      hasMore,
-    });
+    return NextResponse.json(
+      {
+        reviews,
+        total,
+        averageRating,
+        hasMore,
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
+        },
+      }
+    );
   } catch (error) {
     console.error("[GET_REVIEWS_ERROR]:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
@@ -91,17 +102,7 @@ export async function POST(req) {
       return NextResponse.json({ error: "User profile not found in database" }, { status: 404 });
     }
 
-    // Check if user already has a review (One review per user rule)
-    const existingReview = await db.review.findFirst({
-      where: { userId: dbUser.id },
-    });
 
-    if (existingReview) {
-      return NextResponse.json(
-        { error: "Duplicate review. You have already submitted a review." },
-        { status: 400 }
-      );
-    }
 
     const body = await req.json();
     const { rating, title, review } = body;

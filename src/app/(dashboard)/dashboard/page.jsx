@@ -25,7 +25,7 @@ function formatRelativeTime(date) {
   if (diffInHours < 24) return `${diffInHours}h ago`;
   if (diffInDays === 1) return "Yesterday";
   if (diffInDays < 30) return `${diffInDays}d ago`;
-  return new Date(date).toLocaleDateString();
+  return new Date(date).toLocaleDateString("en-US");
 }
 
 export default async function DashboardPage() {
@@ -260,9 +260,10 @@ export default async function DashboardPage() {
     .sort((a, b) => b.rawTime - a.rawTime)
     .slice(0, 4);
 
-  // Fetch existing review if any
-  const userReview = await db.review.findFirst({
+  // Fetch existing reviews of the user
+  const userReviews = await db.review.findMany({
     where: { userId: dbUser.id },
+    orderBy: { createdAt: "desc" },
   });
 
   return (
@@ -275,7 +276,7 @@ export default async function DashboardPage() {
       lastAnalyzedResumeName={lastAnalyzedResumeName}
       suggestions={suggestions}
       insights={insights}
-      initialReview={userReview}
+      initialReviews={userReviews}
     />
   );
 }

@@ -33,9 +33,6 @@ export default function LandingPageClient({
 
   const handleWriteReviewUnauthenticated = () => {
     setToastMessage("Please sign in to share your experience.");
-    setTimeout(() => {
-      window.location.href = "/sign-in";
-    }, 2000);
   };
 
   return (
