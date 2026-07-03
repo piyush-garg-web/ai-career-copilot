@@ -10,7 +10,7 @@ import { validateJobMatch } from "../validators/job-match";
  * @param {string} jobDescription - Pasted target job description text requirements.
  * @returns {Promise<object>} - Validated JSON evaluation containing alignment scores and keyword lists.
  */
-export async function matchJobDescriptionWithAI(rawText, parsedData, jobDescription) {
+export async function matchJobDescriptionWithAI(rawText, parsedData, jobDescription, resumeId = null, aiPreferences = {}) {
   if (!rawText || !rawText.trim()) {
     throw new Error("Cannot run Job Matching with empty or missing plain resume text.");
   }
@@ -19,7 +19,7 @@ export async function matchJobDescriptionWithAI(rawText, parsedData, jobDescript
   }
 
   // Construct comparison prompt template containing resume and job requirements
-  const prompt = buildJobMatchPrompt(rawText, parsedData || {}, jobDescription);
+  const prompt = buildJobMatchPrompt(rawText, parsedData || {}, jobDescription, aiPreferences);
 
   console.log(`[JOB MATCHER SERVICE]: Executing AI comparison match. Job description length: ${jobDescription.length}`);
 
@@ -29,5 +29,10 @@ export async function matchJobDescriptionWithAI(rawText, parsedData, jobDescript
     systemInstruction: JOB_MATCH_SYSTEM_PROMPT,
     validator: validateJobMatch,
     temperature: 0.1, // Low temperature for maximum compliance and consistent scores
+    cacheContext: {
+      feature: "job-match",
+      resumeId: resumeId || "unknown_resume",
+      jobDescription,
+    },
   });
 }

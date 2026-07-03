@@ -42,7 +42,14 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
   const [isInitializing, setIsInitializing] = useState(false);
 
   // Compute config details dynamically
-  const estDuration = questionCount === "5" ? "10-15 Minutes" : questionCount === "10" ? "20-25 Minutes" : "30-40 Minutes";
+  const estDuration =
+    questionCount === "3"
+      ? "5-8 Minutes"
+      : questionCount === "5"
+      ? "10-15 Minutes"
+      : questionCount === "10"
+      ? "20-25 Minutes"
+      : "30-40 Minutes";
   const diffDescription = difficulty === "Easy"
     ? "Starter queries checking foundational technical concepts and basic resume declarations."
     : difficulty === "Medium"
@@ -253,6 +260,7 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
+                      <SelectItem value="3" className="rounded-lg cursor-pointer">3 Questions (Express)</SelectItem>
                       <SelectItem value="5" className="rounded-lg cursor-pointer">5 Questions (Fast)</SelectItem>
                       <SelectItem value="10" className="rounded-lg cursor-pointer">10 Questions (Standard)</SelectItem>
                       <SelectItem value="15" className="rounded-lg cursor-pointer">15 Questions (Deep)</SelectItem>

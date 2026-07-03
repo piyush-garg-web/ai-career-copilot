@@ -62,6 +62,7 @@ export async function POST(req) {
       type,
       difficulty,
       count: questionCount,
+      aiPreferences: dbUser.aiPreferences || {},
     });
 
     const parsedQuestions = aiQuestionsData.questions || [];

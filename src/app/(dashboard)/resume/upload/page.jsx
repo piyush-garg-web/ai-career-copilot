@@ -10,7 +10,23 @@ import { ArrowLeft } from "lucide-react";
 export default function ResumeUploadPage() {
   const router = useRouter();
 
-  const handleUploadComplete = (res) => {
+  const handleUploadComplete = async (res) => {
+    const resumeId = res?.serverData?.resumeId;
+    if (resumeId) {
+      try {
+        const userRes = await fetch("/api/user");
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          const autoAnalyze = userData.resumePreferences?.autoAnalyze;
+          if (autoAnalyze) {
+            // Trigger background auto-analysis API call
+            fetch(`/api/resumes/${resumeId}/analyze`, { method: "POST" });
+          }
+        }
+      } catch (err) {
+        console.error("Auto analyze background error:", err);
+      }
+    }
     // Redirect back to the resume lists on success
     router.push("/resume");
     router.refresh();

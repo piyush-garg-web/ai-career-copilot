@@ -10,13 +10,13 @@ import { validateResumeAnalysis } from "../validators/resume-analysis";
  * @param {object} parsedData - Structured JSON fields extracted by regexes.
  * @returns {Promise<object>} - Validated JSON evaluation containing scores, list matrices, and summary.
  */
-export async function analyzeResumeWithAI(rawText, parsedData) {
+export async function analyzeResumeWithAI(rawText, parsedData, aiPreferences = {}) {
   if (!rawText || !rawText.trim()) {
     throw new Error("Cannot run AI Resume Analysis with empty or missing plain text.");
   }
 
   // Construct query prompt containing raw text and parsed details
-  const prompt = buildResumeAnalysisPrompt(rawText, parsedData || {});
+  const prompt = buildResumeAnalysisPrompt(rawText, parsedData || {}, aiPreferences);
 
   console.log(`[RESUME ANALYZER SERVICE]: Executing AI analysis request. Raw text length: ${rawText.length}`);
 
@@ -26,5 +26,9 @@ export async function analyzeResumeWithAI(rawText, parsedData) {
     systemInstruction: RESUME_ANALYSIS_SYSTEM_PROMPT,
     validator: validateResumeAnalysis,
     temperature: 0.15, // Low temperature for deterministic scoring consistency
+    cacheContext: {
+      feature: "resume-analysis",
+      resumeText: rawText,
+    },
   });
 }

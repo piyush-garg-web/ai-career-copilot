@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import {
   FileText,
   Download,
@@ -57,6 +58,7 @@ const getStatusBadge = (status) => {
 
 export function ResumeListView({ initialResumes }) {
   const router = useRouter();
+  const { user } = useUser();
   const [resumes, setResumes] = useState(initialResumes);
 
   // Interaction UI states
@@ -176,7 +178,7 @@ export function ResumeListView({ initialResumes }) {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="My Resumes"
+        title={user?.firstName ? `Hey ${user.firstName}! My Resumes` : "My Resumes"}
         description="View and manage your uploaded resumes or upload a new version."
         actions={
           resumes.length > 0 && (

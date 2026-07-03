@@ -35,7 +35,13 @@ export function buildQuestionsPrompt({
   type,
   difficulty,
   count,
+  aiPreferences = {}
 }) {
+  const language = aiPreferences.language || "English";
+  const personality = aiPreferences.personality || "Professional";
+  const responseLength = aiPreferences.responseLength || "Balanced";
+  const coachStyle = aiPreferences.coachStyle || "Technical Interview";
+
   return `
 --- REQUEST SPECIFICATIONS ---
 Difficulty Level: ${difficulty}
@@ -71,6 +77,10 @@ Requirements: ${jobDescription.content}
 }
 
 Please generate the ${count} interview questions in the expected JSON shape.
+
+CRITICAL INSTRUCTIONS FOR CUSTOMIZATION & MULTILINGUAL SUPPORT:
+1. OUTPUT LANGUAGE: You MUST write the content of the questions ("content" fields) in the language: "${language}".
+2. COACH STYLE / TONE: Adopt a "${coachStyle}" coaching style and "${personality}" tone when generating the questions.
 `;
 }
 
@@ -97,13 +107,23 @@ Rules:
 3. Return raw valid JSON. Do not write explanations or wrap inside markdown blocks.
 `;
 
-export function buildAnswerEvaluationPrompt(questionContent, questionType, userAnswer) {
+export function buildAnswerEvaluationPrompt(questionContent, questionType, userAnswer, aiPreferences = {}) {
+  const language = aiPreferences.language || "English";
+  const personality = aiPreferences.personality || "Professional";
+  const responseLength = aiPreferences.responseLength || "Balanced";
+  const coachStyle = aiPreferences.coachStyle || "Technical Interview";
+
   return `
 Question Type: ${questionType}
 Question: ${questionContent}
 User's Answer: ${userAnswer}
 
 Evaluate the response above and compile the JSON feedback report.
+
+CRITICAL INSTRUCTIONS FOR CUSTOMIZATION & MULTILINGUAL SUPPORT:
+1. OUTPUT LANGUAGE: You MUST write the content for all free-form text fields in the output JSON (specifically: "strengths", "improvements", "improvedAnswer", and "feedback") in the language: "${language}".
+2. COACH STYLE / TONE: Adopt a "${coachStyle}" coaching style and "${personality}" tone when providing feedback.
+3. DETAIL LEVEL: Adjust the detail level of your observations to: "${responseLength}".
 `;
 }
 
@@ -130,7 +150,12 @@ Rules:
 3. Return raw valid JSON. Do not write explanations or wrap in code block symbols.
 `;
 
-export function buildSessionEvaluationPrompt(roleName, difficulty, questionData) {
+export function buildSessionEvaluationPrompt(roleName, difficulty, questionData, aiPreferences = {}) {
+  const language = aiPreferences.language || "English";
+  const personality = aiPreferences.personality || "Professional";
+  const responseLength = aiPreferences.responseLength || "Balanced";
+  const coachStyle = aiPreferences.coachStyle || "Technical Interview";
+
   return `
 Role: ${roleName}
 Difficulty: ${difficulty}
@@ -140,5 +165,9 @@ ${JSON.stringify(questionData, null, 2)}
 -----------------------------------------
 
 Generate the overall mock interview session scorecard.
+
+CRITICAL INSTRUCTIONS FOR CUSTOMIZATION & MULTILINGUAL SUPPORT:
+1. OUTPUT LANGUAGE: You MUST write the content for all free-form text fields in the output JSON (specifically: "summary", "strengths", "areasToImprove", and "nextSteps") in the language: "${language}".
+2. COACH STYLE / TONE: Adopt a "${coachStyle}" coaching style and "${personality}" tone when writing the summary and suggestions.
 `;
 }

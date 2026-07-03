@@ -35,7 +35,12 @@ Rules:
  * @param {string} jobDescription 
  * @returns {string}
  */
-export function buildJobMatchPrompt(rawText, parsedData, jobDescription) {
+export function buildJobMatchPrompt(rawText, parsedData, jobDescription, aiPreferences = {}) {
+  const language = aiPreferences.language || "English";
+  const personality = aiPreferences.personality || "Professional";
+  const responseLength = aiPreferences.responseLength || "Balanced";
+  const coachStyle = aiPreferences.coachStyle || "Technical Interview";
+
   return `
 --- START CANDIDATE RESUME RAW TEXT ---
 ${rawText}
@@ -50,5 +55,10 @@ ${jobDescription}
 --- END TARGET JOB DESCRIPTION ---
 
 Please perform the job alignment analysis and generate the JSON report.
+
+CRITICAL INSTRUCTIONS FOR CUSTOMIZATION & MULTILINGUAL SUPPORT:
+1. OUTPUT LANGUAGE: You MUST write the content for all free-form text fields in the output JSON (specifically: "strengths", "weaknesses", "suggestions", and "summary") in the language: "${language}". 
+2. PERSONALITY / TONE: Adopt a "${personality}" personality and tone.
+3. RESPONSE DETAIL: Adjust the detail level of your observations to: "${responseLength}".
 `;
 }

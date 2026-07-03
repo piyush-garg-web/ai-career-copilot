@@ -36,7 +36,12 @@ Rules:
  * @param {object} parsedData 
  * @returns {string}
  */
-export function buildResumeAnalysisPrompt(rawText, parsedData) {
+export function buildResumeAnalysisPrompt(rawText, parsedData, aiPreferences = {}) {
+  const language = aiPreferences.language || "English";
+  const personality = aiPreferences.personality || "Professional";
+  const responseLength = aiPreferences.responseLength || "Balanced";
+  const coachStyle = aiPreferences.coachStyle || "Technical Interview";
+
   return `
 --- START RAW RESUME TEXT ---
 ${rawText}
@@ -47,5 +52,10 @@ ${JSON.stringify(parsedData, null, 2)}
 --- END STRUCTURED PARSED RESUME JSON ---
 
 Please analyze the resume contents above and generate the evaluation JSON report.
+
+CRITICAL INSTRUCTIONS FOR CUSTOMIZATION & MULTILINGUAL SUPPORT:
+1. OUTPUT LANGUAGE: You MUST write the content for all free-form text fields in the output JSON (specifically: "strengths", "weaknesses", "suggestions", and "summary") in the language: "${language}". 
+2. PERSONALITY / TONE: Adopt a "${personality}" personality and tone.
+3. RESPONSE DETAIL: Adjust the detail level of your observations to: "${responseLength}".
 `;
 }

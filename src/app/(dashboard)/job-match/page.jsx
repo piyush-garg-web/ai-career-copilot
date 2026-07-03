@@ -36,7 +36,7 @@ export default async function JobMatchPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Resume & Job Matcher"
+        title={dbUser.firstName ? `Hey ${dbUser.firstName}! Resume & Job Matcher` : "Resume & Job Matcher"}
         description="Compare your resume details against any job description to discover key keyword gaps and fit alignment."
       />
 

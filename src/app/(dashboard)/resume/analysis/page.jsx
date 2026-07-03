@@ -103,7 +103,7 @@ export default async function ResumeAnalysisPage({ searchParams }) {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Resume Analysis Panel"
+        title={dbUser.firstName ? `Hey ${dbUser.firstName}! Resume Analysis Panel` : "Resume Analysis Panel"}
         description="Choose a parsed resume to run comprehensive ATS keyword assessments and content scoring evaluations."
       />
 

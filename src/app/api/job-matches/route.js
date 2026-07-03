@@ -57,11 +57,12 @@ export async function POST(req) {
 
     console.log(`[JOB MATCH]: Dispatching scan for Resume ID: ${resumeId}`);
 
-    // Call the Job Match AI service
     const matchResult = await matchJobDescriptionWithAI(
       resume.rawText,
       resume.parsedData || {},
-      content.trim()
+      content.trim(),
+      resume.id,
+      dbUser.aiPreferences || {}
     );
 
     // Save JobDescription first (saves parsed title & company)

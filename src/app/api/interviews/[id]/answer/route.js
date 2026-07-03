@@ -63,7 +63,8 @@ export async function POST(req, { params }) {
     const evaluation = await evaluateCandidateAnswer(
       question.content,
       question.questionType,
-      content.trim()
+      content.trim(),
+      dbUser.aiPreferences || {}
     );
 
     // Save answer evaluation in database using upsert

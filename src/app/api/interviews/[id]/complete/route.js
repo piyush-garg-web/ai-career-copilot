@@ -70,7 +70,8 @@ export async function POST(req, { params }) {
     const scorecard = await compileSessionScorecard(
       session.role,
       session.difficulty,
-      dialogueLogs
+      dialogueLogs,
+      dbUser.aiPreferences || {}
     );
 
     // Save final report card in InterviewSession

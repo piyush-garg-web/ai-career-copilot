@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { generateJSONContent } from "@/lib/ai/service";
 
-export const revalidate = 0; // Disable static build route caching for live API testing
+export const dynamic = "force-dynamic";
 
 /**
  * GET /api/ai/test

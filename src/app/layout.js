@@ -3,6 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import AccentColorProvider from "@/components/shared/AccentColorProvider";
 
 export const metadata = {
   title: "AI Career Copilot",
@@ -20,8 +21,10 @@ export default function RootLayout({ children }) {
       <html lang="en" suppressHydrationWarning>
         <body>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <TooltipProvider>{children}</TooltipProvider>
-            <Toaster />
+            <AccentColorProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+              <Toaster />
+            </AccentColorProvider>
           </ThemeProvider>
         </body>
       </html>

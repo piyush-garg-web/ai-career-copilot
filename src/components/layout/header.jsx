@@ -58,6 +58,7 @@ export function Header({ onMenuClick }) {
   // Notification state
   const [notifications, setNotifications] = useState([]);
   const [readNotifIds, setReadNotifIds] = useState([]);
+  const [dismissedNotifIds, setDismissedNotifIds] = useState([]);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
   const notifRef = useRef(null);
 
@@ -98,6 +99,11 @@ export function Header({ onMenuClick }) {
       const stored = localStorage.getItem("read_notifications");
       if (stored) {
         setReadNotifIds(JSON.parse(stored));
+      }
+      // Load dismissed notification IDs from localStorage
+      const storedDismissed = localStorage.getItem("dismissed_notifications");
+      if (storedDismissed) {
+        setDismissedNotifIds(JSON.parse(storedDismissed));
       }
     }
   }, [isLoaded, user]);
@@ -151,15 +157,24 @@ export function Header({ onMenuClick }) {
     router.push(notif.link);
   };
 
+  const visibleNotifications = notifications.filter((n) => !dismissedNotifIds.includes(n.id));
+  const unreadNotifications = visibleNotifications.filter((n) => !readNotifIds.includes(n.id));
+
   const handleMarkAllAsRead = () => {
-    const allIds = notifications.map((n) => n.id);
+    const allIds = visibleNotifications.map((n) => n.id);
     const nextRead = [...new Set([...readNotifIds, ...allIds])];
     setReadNotifIds(nextRead);
     localStorage.setItem("read_notifications", JSON.stringify(nextRead));
     toast.success("All notifications marked as read.");
   };
 
-  const unreadNotifications = notifications.filter((n) => !readNotifIds.includes(n.id));
+  const handleClearAll = () => {
+    const allIds = visibleNotifications.map((n) => n.id);
+    const nextDismissed = [...new Set([...dismissedNotifIds, ...allIds])];
+    setDismissedNotifIds(nextDismissed);
+    localStorage.setItem("dismissed_notifications", JSON.stringify(nextDismissed));
+    toast.success("All notifications cleared.");
+  };
 
   const handleSignOut = async () => {
     try {
@@ -308,25 +323,39 @@ export function Header({ onMenuClick }) {
                     </span>
                   )}
                 </span>
-                {unreadNotifications.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={handleMarkAllAsRead}
-                    className="text-[10px] text-blue-500 hover:text-blue-600 font-bold transition-colors cursor-pointer"
-                  >
-                    Mark all as read
-                  </button>
-                )}
+                <div className="flex items-center gap-1.5">
+                  {unreadNotifications.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleMarkAllAsRead}
+                      className="text-[10px] text-blue-500 hover:text-blue-600 font-bold transition-colors cursor-pointer"
+                    >
+                      Mark read
+                    </button>
+                  )}
+                  {unreadNotifications.length > 0 && visibleNotifications.length > 0 && (
+                    <span className="text-[10px] text-muted-foreground/40 font-semibold">|</span>
+                  )}
+                  {visibleNotifications.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleClearAll}
+                      className="text-[10px] text-muted-foreground hover:text-foreground font-bold transition-colors cursor-pointer"
+                    >
+                      Clear all
+                    </button>
+                  )}
+                </div>
               </div>
 
-              {notifications.length === 0 ? (
+              {visibleNotifications.length === 0 ? (
                 <div className="text-center py-8">
                   <Bell className="w-6 h-6 text-muted-foreground/40 mx-auto mb-1.5" />
                   <p className="text-xs text-muted-foreground font-semibold">All caught up!</p>
                 </div>
               ) : (
                 <div className="space-y-1 max-h-[300px] overflow-y-auto">
-                  {notifications.map((notif) => {
+                  {visibleNotifications.map((notif) => {
                     const isRead = readNotifIds.includes(notif.id);
                     return (
                       <div

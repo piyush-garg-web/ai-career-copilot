@@ -48,7 +48,7 @@ export default async function InterviewPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="AI Interview Coach"
+        title={dbUser.firstName ? `Hey ${dbUser.firstName}! AI Interview Coach` : "AI Interview Coach"}
         description="Build custom mock interview sessions and record answers to receive structured, active-coaching feedback."
       />
 

@@ -75,6 +75,24 @@ export function AnalysisDashboard({ resume, analysis }) {
   const router = useRouter();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [checkedSuggestions, setCheckedSuggestions] = useState(new Set());
+  const [preferences, setPreferences] = useState({
+    autoGenerateSuggestions: true,
+    highlightKeywords: true,
+  });
+
+  React.useEffect(() => {
+    fetch("/api/user")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && data.resumePreferences) {
+          setPreferences({
+            autoGenerateSuggestions: data.resumePreferences.autoGenerateSuggestions !== false,
+            highlightKeywords: data.resumePreferences.highlightKeywords !== false,
+          });
+        }
+      })
+      .catch((err) => console.error("Error loading resume settings:", err));
+  }, []);
 
   // Suggestions checklist state toggling
   const toggleSuggestion = (index) => {
@@ -460,7 +478,9 @@ export function AnalysisDashboard({ resume, analysis }) {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-1.5">
-              {missingKeywords.length === 0 ? (
+              {!preferences.highlightKeywords ? (
+                <span className="text-xs text-muted-foreground font-semibold italic">Highlight missing keywords is disabled.</span>
+              ) : missingKeywords.length === 0 ? (
                 <span className="text-xs text-muted-foreground font-semibold italic">No missing keywords detected. Good job!</span>
               ) : (
                 missingKeywords.map((kw, idx) => (
@@ -486,7 +506,9 @@ export function AnalysisDashboard({ resume, analysis }) {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2.5">
-              {suggestions.length === 0 ? (
+              {!preferences.autoGenerateSuggestions ? (
+                <p className="text-xs text-muted-foreground font-semibold italic">Auto Generate suggestions is disabled.</p>
+              ) : suggestions.length === 0 ? (
                 <p className="text-xs text-muted-foreground font-semibold">No suggestions available.</p>
               ) : (
                 suggestions.map((sug, idx) => {
