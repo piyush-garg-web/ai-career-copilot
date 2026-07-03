@@ -66,13 +66,13 @@ export function Header({ onMenuClick }) {
   const notifRef = useRef(null);
 
   const staticPages = [
-    { name: "Dashboard", href: "/dashboard", description: "Main metrics and coaching overview" },
-    { name: "My Resumes", href: "/resume", description: "Upload and list resume documents" },
-    { name: "ATS Score Optimizer", href: "/ats-score", description: "Scoring check and optimization history" },
-    { name: "AI Interview Coach", href: "/interview", description: "Start custom mock sessions" },
-    { name: "Interview History", href: "/interview/history", description: "Review practice scorecards" },
-    { name: "My Profile", href: "/profile", description: "Career target roles and details" },
-    { name: "Settings", href: "/settings", description: "Appearance settings and theme" },
+    { name: t("header.searchPages.dashboard"), href: "/dashboard", description: t("header.searchPages.dashboardDesc") },
+    { name: t("header.searchPages.resumes"), href: "/resume", description: t("header.searchPages.resumesDesc") },
+    { name: t("header.searchPages.ats"), href: "/ats-score", description: t("header.searchPages.atsDesc") },
+    { name: t("header.searchPages.interview"), href: "/interview", description: t("header.searchPages.interviewDesc") },
+    { name: t("header.searchPages.history"), href: "/interview/history", description: t("header.searchPages.historyDesc") },
+    { name: t("header.searchPages.profile"), href: "/profile", description: t("header.searchPages.profileDesc") },
+    { name: t("header.searchPages.settings"), href: "/settings", description: t("header.searchPages.settingsDesc") },
   ];
 
   // Fetch resumes and notifications
@@ -147,7 +147,7 @@ export function Header({ onMenuClick }) {
       router.push(`/resume/${filteredResumes[0].id}`);
       setShowSearchDropdown(false);
     } else {
-      toast.error("No search results found.");
+      toast.error(t("header.searchNoResults"));
     }
   };
 
@@ -168,7 +168,7 @@ export function Header({ onMenuClick }) {
     const nextRead = [...new Set([...readNotifIds, ...allIds])];
     setReadNotifIds(nextRead);
     localStorage.setItem("read_notifications", JSON.stringify(nextRead));
-    toast.success("All notifications marked as read.");
+    toast.success(t("header.notificationsMarkedRead"));
   };
 
   const handleClearAll = () => {
@@ -176,16 +176,16 @@ export function Header({ onMenuClick }) {
     const nextDismissed = [...new Set([...dismissedNotifIds, ...allIds])];
     setDismissedNotifIds(nextDismissed);
     localStorage.setItem("dismissed_notifications", JSON.stringify(nextDismissed));
-    toast.success("All notifications cleared.");
+    toast.success(t("header.notificationsCleared"));
   };
 
   const handleSignOut = async () => {
     try {
       await signOut();
       router.push("/");
-      toast.success("Signed out successfully");
+      toast.success(t("header.signOutSuccess"));
     } catch (error) {
-      toast.error("Failed to sign out");
+      toast.error(t("header.signOutError"));
     }
   };
 
@@ -193,12 +193,12 @@ export function Header({ onMenuClick }) {
   const getRelativeTimeText = (date) => {
     const diff = new Date().getTime() - new Date(date).getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 1) return "Just now";
-    if (mins < 60) return `${mins}m ago`;
+    if (mins < 1) return t("common.justNow");
+    if (mins < 60) return t("common.minutesAgo", { count: mins });
     const hours = Math.floor(mins / 60);
-    if (hours < 24) return `${hours}h ago`;
+    if (hours < 24) return t("common.hoursAgo", { count: hours });
     const days = Math.floor(hours / 24);
-    return `${days}d ago`;
+    return t("common.daysAgo", { count: days });
   };
 
   return (
@@ -210,7 +210,7 @@ export function Header({ onMenuClick }) {
           size="icon"
           onClick={onMenuClick}
           className="lg:hidden rounded-xl border-border/40 w-9 h-9"
-          aria-label="Open sidebar"
+          aria-label={t("common.toggleMenu")}
         >
           <Menu className="w-5 h-5 text-foreground" />
         </Button>
@@ -236,7 +236,7 @@ export function Header({ onMenuClick }) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/75" />
             <Input
               type="search"
-              placeholder="Quick search..."
+              placeholder={`${t("common.search")}...`}
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -250,10 +250,10 @@ export function Header({ onMenuClick }) {
           {/* Search Dropdown Results */}
           {showSearchDropdown && searchQuery && (
             <div className="absolute right-0 top-11 w-80 rounded-2xl border border-border/40 bg-card p-3 shadow-lg z-50 space-y-2.5 max-h-[360px] overflow-y-auto">
-              <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-2">Results</h4>
+              <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-2">{t("common.results")}</h4>
               
               {filteredPages.length === 0 && filteredResumes.length === 0 ? (
-                <p className="text-xs text-muted-foreground italic px-2 py-1">No matching results found.</p>
+                <p className="text-xs text-muted-foreground italic px-2 py-1">{t("common.noResults")}</p>
               ) : (
                 <div className="space-y-1">
                   {/* Pages */}
@@ -286,7 +286,7 @@ export function Header({ onMenuClick }) {
                       <FileText className="w-3.5 h-3.5 text-blue-500 shrink-0" />
                       <div className="flex flex-col min-w-0">
                         <span className="text-xs font-bold text-foreground truncate">{res.fileName}</span>
-                        <span className="text-[10px] text-muted-foreground">Document details</span>
+                        <span className="text-[10px] text-muted-foreground">{t("header.documentDetails")}</span>
                       </div>
                     </button>
                   ))}
@@ -308,7 +308,7 @@ export function Header({ onMenuClick }) {
             size="icon"
             onClick={() => setShowNotifDropdown(!showNotifDropdown)}
             className="relative rounded-xl border-border/40 w-9 h-9 cursor-pointer"
-            aria-label="View notifications"
+            aria-label={t("header.viewNotifications")}
           >
             <Bell className="w-4 h-4 text-foreground" />
             {unreadNotifications.length > 0 && (
@@ -321,7 +321,7 @@ export function Header({ onMenuClick }) {
             <div className="absolute right-0 top-11 w-80 rounded-2xl border border-border/40 bg-card p-3 shadow-lg z-50 space-y-2">
               <div className="flex items-center justify-between px-2 pb-2 border-b border-border/20">
                 <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                  Notifications
+                  {t("header.notifications")}
                   {unreadNotifications.length > 0 && (
                     <span className="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-500 text-[10px] font-black">
                       {unreadNotifications.length}
@@ -335,7 +335,7 @@ export function Header({ onMenuClick }) {
                       onClick={handleMarkAllAsRead}
                       className="text-[10px] text-blue-500 hover:text-blue-600 font-bold transition-colors cursor-pointer"
                     >
-                      Mark read
+                      {t("header.markRead")}
                     </button>
                   )}
                   {unreadNotifications.length > 0 && visibleNotifications.length > 0 && (
@@ -347,7 +347,7 @@ export function Header({ onMenuClick }) {
                       onClick={handleClearAll}
                       className="text-[10px] text-muted-foreground hover:text-foreground font-bold transition-colors cursor-pointer"
                     >
-                      Clear all
+                      {t("header.clearAll")}
                     </button>
                   )}
                 </div>
@@ -356,7 +356,7 @@ export function Header({ onMenuClick }) {
               {visibleNotifications.length === 0 ? (
                 <div className="text-center py-8">
                   <Bell className="w-6 h-6 text-muted-foreground/40 mx-auto mb-1.5" />
-                  <p className="text-xs text-muted-foreground font-semibold">All caught up!</p>
+                  <p className="text-xs text-muted-foreground font-semibold">{t("header.allCaughtUp")}</p>
                 </div>
               ) : (
                 <div className="space-y-1 max-h-[300px] overflow-y-auto">
@@ -435,14 +435,14 @@ export function Header({ onMenuClick }) {
                 className="flex items-center gap-2 py-2 px-3 rounded-xl cursor-pointer"
               >
                 <User className="w-4 h-4 text-muted-foreground" />
-                <span>Profile</span>
+                <span>{t("nav.profile")}</span>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => router.push("/settings")}
                 className="flex items-center gap-2 py-2 px-3 rounded-xl cursor-pointer"
               >
                 <Settings className="w-4 h-4 text-muted-foreground" />
-                <span>Settings</span>
+                <span>{t("nav.settings")}</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-border/40" />
               <DropdownMenuItem
@@ -450,7 +450,7 @@ export function Header({ onMenuClick }) {
                 className="flex items-center gap-2 py-2 px-3 rounded-xl cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive"
               >
                 <LogOut className="w-4 h-4" />
-                <span>Log out</span>
+                <span>{t("nav.logout")}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

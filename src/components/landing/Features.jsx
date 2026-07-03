@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 import {
   FileText,
   Target,
@@ -17,71 +18,72 @@ import {
 } from "lucide-react";
 
 export default function Features({ onFeatureClick }) {
+  const { t } = useTranslation();
   const featureList = [
     {
       icon: FileText,
-      title: "AI Resume Analysis",
-      description: "Generates thorough section audits for experience, project impact, structure, and formatting metrics.",
+      title: t("landing.features.items.resume.title"),
+      description: t("landing.features.items.resume.description"),
       color: "from-blue-500/10 to-indigo-500/10 text-blue-600 dark:text-blue-400"
     },
     {
       icon: Target,
-      title: "ATS Score",
-      description: "Calculates an industry compliance rating to guarantee your resume passes automatic HR screening systems.",
+      title: t("landing.features.items.ats.title"),
+      description: t("landing.features.items.ats.description"),
       color: "from-green-500/10 to-emerald-500/10 text-green-600 dark:text-green-400"
     },
     {
       icon: Activity,
-      title: "Resume Health",
-      description: "Grades grammar completeness, section structure, formatting polish, and document readability rules.",
+      title: t("landing.features.items.health.title"),
+      description: t("landing.features.items.health.description"),
       color: "from-rose-500/10 to-pink-500/10 text-rose-600 dark:text-rose-400"
     },
     {
       icon: Zap,
-      title: "AI Suggestions",
-      description: "Offers word-by-word replacement ideas, active verb suggestions, and spelling corrections in real-time.",
+      title: t("landing.features.items.suggestions.title"),
+      description: t("landing.features.items.suggestions.description"),
       color: "from-amber-500/10 to-yellow-500/10 text-amber-600 dark:text-amber-400"
     },
     {
       icon: Briefcase,
-      title: "Job Match",
-      description: "Compares your skills directly with target job postings to compute overall alignment index.",
+      title: t("landing.features.items.jobMatch.title"),
+      description: t("landing.features.items.jobMatch.description"),
       color: "from-cyan-500/10 to-blue-500/10 text-cyan-600 dark:text-cyan-400"
     },
     {
       icon: AlertCircle,
-      title: "Missing Skills Detection",
-      description: "Pinpoints exactly which programming frameworks, certifications, or toolkits you need to list.",
+      title: t("landing.features.items.missingSkills.title"),
+      description: t("landing.features.items.missingSkills.description"),
       color: "from-violet-500/10 to-purple-500/10 text-violet-600 dark:text-violet-400"
     },
     {
       icon: Bot,
-      title: "Interview Coach",
-      description: "Conduct interactive oral mock sessions tailored directly to your background and preferred difficulty.",
+      title: t("landing.features.items.interview.title"),
+      description: t("landing.features.items.interview.description"),
       color: "from-fuchsia-500/10 to-purple-500/10 text-fuchsia-600 dark:text-fuchsia-400"
     },
     {
       icon: History,
-      title: "Interview History",
-      description: "Revisit and review previously completed sessions to compare answer ratings and track performance.",
+      title: t("landing.features.items.history.title"),
+      description: t("landing.features.items.history.description"),
       color: "from-teal-500/10 to-emerald-500/10 text-teal-600 dark:text-teal-400"
     },
     {
       icon: LayoutDashboard,
-      title: "Analytics Dashboard",
-      description: "A centralized hub featuring graphs, current task lists, and recent matching progress checks.",
+      title: t("landing.features.items.analytics.title"),
+      description: t("landing.features.items.analytics.description"),
       color: "from-indigo-500/10 to-violet-500/10 text-indigo-600 dark:text-indigo-400"
     },
     {
       icon: Moon,
-      title: "Dark Mode",
-      description: "A fully integrated dark and light mode UI supporting automatic operating system overrides.",
+      title: t("landing.features.items.darkMode.title"),
+      description: t("landing.features.items.darkMode.description"),
       color: "from-slate-500/15 to-zinc-500/15 text-slate-700 dark:text-slate-300"
     },
     {
       icon: Smartphone,
-      title: "Responsive Design",
-      description: "Optimized grid alignments providing standard support for mobile phones, tablets, and large screens.",
+      title: t("landing.features.items.responsive.title"),
+      description: t("landing.features.items.responsive.description"),
       color: "from-orange-500/10 to-red-500/10 text-orange-600 dark:text-orange-400"
     }
   ];
@@ -115,7 +117,7 @@ export default function Features({ onFeatureClick }) {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              onClick={() => onFeatureClick?.("Please sign in to use this feature.")}
+              onClick={() => onFeatureClick?.(t("landing.features.loginPrompt"))}
               className="group p-6 rounded-2xl border border-border/50 bg-card/40 hover:bg-card/75 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 hover:border-indigo-500/20 dark:hover:border-indigo-500/35 transition-all duration-300 flex flex-col justify-between cursor-pointer"
             >
               <div className="space-y-4">
@@ -130,7 +132,7 @@ export default function Features({ onFeatureClick }) {
                 </p>
               </div>
               <div className="mt-4 pt-4 border-t border-border/10 flex items-center justify-end text-xs font-semibold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-1 transition-transform">
-                Explore &rarr;
+                {t("landing.features.explore")}
               </div>
             </motion.div>
           ))}

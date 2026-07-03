@@ -67,7 +67,7 @@ export default function SettingsPage() {
   const { user, isLoaded } = useUser();
   const { setAccentColor } = useAccent();
   const { openUserProfile } = useClerk();
-  const { changeLanguage } = useTranslation();
+  const { t, changeLanguage } = useTranslation();
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -605,15 +605,15 @@ export default function SettingsPage() {
 
   // Tab definitions with keyword mapping for dynamic searches
   const tabsList = [
-    { id: "ai", label: "AI Preferences", icon: Sparkles, keywords: "personality length focus language mentor memory conversational custom" },
-    { id: "notifications", label: "Notifications", icon: Bell, keywords: "email push weekly monthly alerts alerts completeness platform" },
-    { id: "security", label: "Security & Privacy", icon: Shield, keywords: "password mfa session verification status device history log" },
-    { id: "accounts", label: "Connected Accounts", icon: Link2, keywords: "github linkedin google microsoft portfolio leetcode accounts sync" },
-    { id: "engine", label: "AI Engine", icon: Activity, keywords: "fallback priority provider gemini openai requests daily status model" },
-    { id: "resume", label: "Resume & Job", icon: FileText, keywords: "default template salary work mode relocate countries cities roles open" },
-    { id: "appearance", label: "Appearance & Access", icon: Sliders, keywords: "theme visual color picker text font contrast speed reduce motion rounded" },
-    { id: "data", label: "Data & Storage", icon: Database, keywords: "billing download export database backup premium upgrade subscription size delete cache" },
-    { id: "danger", label: "Danger Zone", icon: Trash2, keywords: "delete account erase purge reset confirmation delete warning data" },
+    { id: "ai", label: t("settings.tabs.ai"), icon: Sparkles, keywords: "personality length focus language mentor memory conversational custom" },
+    { id: "notifications", label: t("settings.tabs.notifications"), icon: Bell, keywords: "email push weekly monthly alerts alerts completeness platform" },
+    { id: "security", label: t("settings.tabs.security"), icon: Shield, keywords: "password mfa session verification status device history log" },
+    { id: "accounts", label: t("settings.tabs.connected"), icon: Link2, keywords: "github linkedin google microsoft portfolio leetcode accounts sync" },
+    { id: "engine", label: t("settings.tabs.engine"), icon: Activity, keywords: "fallback priority provider gemini openai requests daily status model" },
+    { id: "resume", label: t("settings.tabs.resumeJob"), icon: FileText, keywords: "default template salary work mode relocate countries cities roles open" },
+    { id: "appearance", label: t("settings.tabs.appearance"), icon: Sliders, keywords: "theme visual color picker text font contrast speed reduce motion rounded" },
+    { id: "data", label: t("settings.tabs.data"), icon: Database, keywords: "billing download export database backup premium upgrade subscription size delete cache" },
+    { id: "danger", label: t("settings.tabs.danger"), icon: Trash2, keywords: "delete account erase purge reset confirmation delete warning data" },
   ];
 
   // Filter tabs list dynamically based on search query
@@ -630,12 +630,12 @@ export default function SettingsPage() {
   }, [searchQuery, filteredTabs, activeTab]);
 
   const accountsMapping = [
-    { key: "github", label: "GitHub Profile", desc: "Sync public repo contributions", dbField: "githubUrl", placeholder: "e.g. https://github.com/username", icon: GitHubIcon },
-    { key: "linkedin", label: "LinkedIn Connect", desc: "Sync professional accomplishments", dbField: "linkedinUrl", placeholder: "e.g. https://linkedin.com/in/username", icon: LinkedInIcon },
-    { key: "portfolio", label: "Portfolio URL Link", desc: "Link custom personal landing pages", dbField: "portfolioUrl", placeholder: "e.g. https://myportfolio.dev", icon: Globe },
-    { key: "leetcode", label: "LeetCode Activity", desc: "Import algorithmic stats profile", dbField: "leetcodeUrl", placeholder: "e.g. leetcode_username", icon: Award },
-    { key: "hackerrank", label: "HackerRank Board", desc: "Import skill certification profile", dbField: "hackerrankUrl", placeholder: "e.g. hackerrank_username", icon: Award },
-    { key: "codeforces", label: "Codeforces Handle", desc: "Import rating levels stats", dbField: "codeforcesUrl", placeholder: "e.g. codeforces_handle", icon: Code }
+    { key: "github", label: t("settings.accounts.github.label"), desc: t("settings.accounts.github.desc"), dbField: "githubUrl", placeholder: t("settings.accounts.github.placeholder"), icon: GitHubIcon },
+    { key: "linkedin", label: t("settings.accounts.linkedin.label"), desc: t("settings.accounts.linkedin.desc"), dbField: "linkedinUrl", placeholder: t("settings.accounts.linkedin.placeholder"), icon: LinkedInIcon },
+    { key: "portfolio", label: t("settings.accounts.portfolio.label"), desc: t("settings.accounts.portfolio.desc"), dbField: "portfolioUrl", placeholder: t("settings.accounts.portfolio.placeholder"), icon: Globe },
+    { key: "leetcode", label: t("settings.accounts.leetcode.label"), desc: t("settings.accounts.leetcode.desc"), dbField: "leetcodeUrl", placeholder: t("settings.accounts.leetcode.placeholder"), icon: Award },
+    { key: "hackerrank", label: t("settings.accounts.hackerrank.label"), desc: t("settings.accounts.hackerrank.desc"), dbField: "hackerrankUrl", placeholder: t("settings.accounts.hackerrank.placeholder"), icon: Award },
+    { key: "codeforces", label: t("settings.accounts.codeforces.label"), desc: t("settings.accounts.codeforces.desc"), dbField: "codeforcesUrl", placeholder: t("settings.accounts.codeforces.placeholder"), icon: Code }
   ];
 
   const isGoogleConnected = user?.externalAccounts?.some(acc => acc.provider.includes("google")) || false;
@@ -645,7 +645,7 @@ export default function SettingsPage() {
     return (
       <div className="flex flex-col items-center justify-center py-32 gap-3">
         <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
-        <span className="text-sm font-semibold text-muted-foreground animate-pulse">Syncing settings dashboard...</span>
+        <span className="text-sm font-semibold text-muted-foreground animate-pulse">{t("settings.loading")}</span>
       </div>
     );
   }
@@ -656,15 +656,15 @@ export default function SettingsPage() {
       {/* HEADER SECTION WITH USER GREETING */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <PageHeader
-          title={user?.firstName ? `Hey ${user.firstName}! Settings` : "Settings"}
-          description="Manage your detailed visual themes, active fallback AI models, notification parameters, and data integrations."
+          title={user?.firstName ? t("settings.pageTitleWithName", { name: user.firstName }) : t("settings.pageTitle")}
+          description={t("settings.pageDescription")}
         />
         {/* Search bar integration */}
         <div className="relative w-full md:w-80 shrink-0">
           <Search className="absolute left-3.5 top-3 w-4 h-4 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Search all settings..."
+            placeholder={t("settings.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full h-10 pl-10 pr-4 text-xs rounded-xl border border-border/40 bg-accent/20 text-foreground font-semibold placeholder:text-muted-foreground/60 focus:outline-none focus:border-indigo-500 transition-colors"
@@ -677,9 +677,9 @@ export default function SettingsPage() {
         {/* Settings Completion Ring */}
         <Card className="border border-border/40 bg-card/60 backdrop-blur-sm p-4 flex items-center justify-between gap-4">
           <div className="space-y-1">
-            <span className="text-[10px] font-black uppercase text-muted-foreground/80 tracking-wider">Settings Configuration</span>
-            <h4 className="text-sm font-black text-foreground">SaaS Customizations</h4>
-            <p className="text-[10px] text-muted-foreground font-medium">Fine-tune account behaviors.</p>
+            <span className="text-[10px] font-black uppercase text-muted-foreground/80 tracking-wider">{t("settings.cards.configuration.label")}</span>
+            <h4 className="text-sm font-black text-foreground">{t("settings.cards.configuration.title")}</h4>
+            <p className="text-[10px] text-muted-foreground font-medium">{t("settings.cards.configuration.description")}</p>
           </div>
           <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
             <svg className="w-full h-full transform -rotate-90">
@@ -696,9 +696,9 @@ export default function SettingsPage() {
         {/* AI personalization ring */}
         <Card className="border border-border/40 bg-card/60 backdrop-blur-sm p-4 flex items-center justify-between gap-4">
           <div className="space-y-1">
-            <span className="text-[10px] font-black uppercase text-muted-foreground/80 tracking-wider">AI Personalization</span>
-            <h4 className="text-sm font-black text-foreground">Prompt Profiles</h4>
-            <p className="text-[10px] text-muted-foreground font-medium">Auto-align custom prompts.</p>
+            <span className="text-[10px] font-black uppercase text-muted-foreground/80 tracking-wider">{t("settings.cards.personalization.label")}</span>
+            <h4 className="text-sm font-black text-foreground">{t("settings.cards.personalization.title")}</h4>
+            <p className="text-[10px] text-muted-foreground font-medium">{t("settings.cards.personalization.description")}</p>
           </div>
           <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
             <svg className="w-full h-full transform -rotate-90">
@@ -715,15 +715,15 @@ export default function SettingsPage() {
         {/* Subscription Plan Panel */}
         <Card className="border border-border/40 bg-gradient-to-br from-indigo-500/10 via-card/60 to-card/60 backdrop-blur-sm p-4 flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-[10px] font-black uppercase text-indigo-400 tracking-wider">Billing Tier</span>
+            <span className="text-[10px] font-black uppercase text-indigo-400 tracking-wider">{t("settings.cards.billing.label")}</span>
             <div className="flex items-center gap-1.5">
-              <h4 className="text-sm font-black text-foreground">Starter Free Plan</h4>
-              <span className="text-[8px] bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded-full font-black uppercase tracking-wider">Free</span>
+              <h4 className="text-sm font-black text-foreground">{t("settings.cards.billing.title")}</h4>
+              <span className="text-[8px] bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded-full font-black uppercase tracking-wider">{t("settings.cards.billing.badge")}</span>
             </div>
-            <p className="text-[10px] text-muted-foreground font-medium">Standard rate limits apply.</p>
+            <p className="text-[10px] text-muted-foreground font-medium">{t("settings.cards.billing.description")}</p>
           </div>
           <Button size="sm" className="h-8 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] uppercase tracking-wider cursor-pointer">
-            Upgrade
+            {t("settings.cards.billing.button")}
           </Button>
         </Card>
       </div>
@@ -739,7 +739,7 @@ export default function SettingsPage() {
           >
             <div className="flex items-center gap-2.5 text-xs font-semibold text-amber-500">
               <AlertTriangle className="w-4 h-4 animate-pulse" />
-              <span>You have unsaved changes in your settings dashboard.</span>
+              <span>{t("settings.unsavedBanner")}</span>
             </div>
             <Button
               onClick={handleSaveSettings}
@@ -747,7 +747,7 @@ export default function SettingsPage() {
               className="h-8 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-black text-[10px] uppercase tracking-wider cursor-pointer flex items-center gap-1.5"
             >
               {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-              Save Changes
+              {t("settings.saveChanges")}
             </Button>
           </motion.div>
         )}

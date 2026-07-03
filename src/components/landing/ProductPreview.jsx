@@ -3,42 +3,44 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LayoutDashboard, FileText, CheckCircle2, Briefcase, Bot } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 export default function ProductPreview() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("dashboard");
 
   const tabs = [
     {
       id: "dashboard",
-      label: "Dashboard",
+      label: t("landing.productPreview.tabs.dashboard"),
       icon: LayoutDashboard,
       imagePath: "/screenshots/dashboard.png",
       url: "ai-career-copilot.vercel.app/dashboard"
     },
     {
       id: "resume-analysis",
-      label: "Resume Analysis",
+      label: t("landing.productPreview.tabs.resumeAnalysis"),
       icon: FileText,
       imagePath: "/screenshots/resume-analysis.png",
       url: "ai-career-copilot.vercel.app/resume"
     },
     {
       id: "ats-score",
-      label: "ATS Score & Health",
+      label: t("landing.productPreview.tabs.ats"),
       icon: CheckCircle2,
       imagePath: "/screenshots/ats-score.png",
       url: "ai-career-copilot.vercel.app/ats-score"
     },
     {
       id: "job-match",
-      label: "Job Match",
+      label: t("landing.productPreview.tabs.jobMatch"),
       icon: Briefcase,
       imagePath: "/screenshots/job-match.png",
       url: "ai-career-copilot.vercel.app/job-match"
     },
     {
       id: "interview-coach",
-      label: "Interview Coach",
+      label: t("landing.productPreview.tabs.interview"),
       icon: Bot,
       imagePath: "/screenshots/interview-coach.png",
       url: "ai-career-copilot.vercel.app/interview"
@@ -57,13 +59,13 @@ export default function ProductPreview() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16 space-y-4">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-            Product Tour
+            {t("landing.productPreview.sectionTitle")}
           </h2>
           <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
-            See the Platform in Action
+            {t("landing.productPreview.title")}
           </p>
           <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-            Take a virtual tour through the high-fidelity features and AI interfaces built to optimize your career path.
+            {t("landing.productPreview.subtitle")}
           </p>
         </div>
 

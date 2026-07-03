@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { Sparkles, Mail, ShieldCheck } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 // Inline Custom SVG for GitHub
 const GithubIcon = ({ className }) => (
@@ -24,6 +25,7 @@ const GithubIcon = ({ className }) => (
 );
 
 export default function Footer() {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -37,17 +39,17 @@ export default function Footer() {
 
           <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6 relative z-10">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
-              Ready to Ace Your Next Interview?
+              {t("landing.footer.ctaTitle")}
             </h2>
             <p className="text-sm sm:text-base text-indigo-100 dark:text-indigo-200 leading-relaxed font-normal">
-              Join thousands of job candidates who use AI Career Copilot to optimize their application documents, pass screening bots, and practice behavioral mocks.
+              {t("landing.footer.ctaDescription")}
             </p>
           </div>
 
           <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/sign-up" className="w-full sm:w-auto">
               <Button size="lg" className="w-full sm:w-auto text-base font-semibold px-8 py-6 rounded-xl bg-white text-indigo-900 hover:bg-indigo-50 shadow-lg transition-all duration-200">
-                Get Started Free
+                {t("landing.footer.ctaButton")}
               </Button>
             </Link>
           </div>
@@ -66,26 +68,26 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-sm">
-              Your AI-powered career assistant designed to optimize resumes, evaluate ATS compliance ratings, analyze skill gaps, and coach you through mock interview panels.
+              {t("landing.footer.description")}
             </p>
           </div>
 
           {/* Quick links & categories */}
           <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8">
             <div className="space-y-3">
-              <h4 className="font-bold text-xs sm:text-sm text-foreground tracking-wider uppercase">Product</h4>
+              <h4 className="font-bold text-xs sm:text-sm text-foreground tracking-wider uppercase">{t("landing.footer.product")}</h4>
               <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground">
                 <li>
-                  <Link href="#features" className="hover:text-foreground transition-colors">Features</Link>
+                  <Link href="#features" className="hover:text-foreground transition-colors">{t("landing.footer.features")}</Link>
                 </li>
                 <li>
-                  <Link href="#how-it-works" className="hover:text-foreground transition-colors">How It Works</Link>
+                  <Link href="#how-it-works" className="hover:text-foreground transition-colors">{t("landing.footer.howItWorks")}</Link>
                 </li>
               </ul>
             </div>
 
             <div className="space-y-3">
-              <h4 className="font-bold text-xs sm:text-sm text-foreground tracking-wider uppercase">Developers</h4>
+              <h4 className="font-bold text-xs sm:text-sm text-foreground tracking-wider uppercase">{t("landing.footer.developers")}</h4>
               <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground">
                 <li>
                   <Link
@@ -103,21 +105,21 @@ export default function Footer() {
             </div>
 
             <div className="space-y-3 col-span-2 sm:col-span-1">
-              <h4 className="font-bold text-xs sm:text-sm text-foreground tracking-wider uppercase">Legal & Contact</h4>
+              <h4 className="font-bold text-xs sm:text-sm text-foreground tracking-wider uppercase">{t("landing.footer.legal")}</h4>
               <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground">
                 <li>
                   <Link href="/privacy" className="hover:text-foreground flex items-center gap-1.5 transition-colors">
-                    <ShieldCheck className="w-3.5 h-3.5" /> Privacy Policy
+                    <ShieldCheck className="w-3.5 h-3.5" /> {t("nav.privacy")}
                   </Link>
                 </li>
                 <li>
                   <Link href="/terms" className="hover:text-foreground transition-colors">
-                    Terms of Service
+                    {t("nav.terms")}
                   </Link>
                 </li>
                 <li>
                   <Link href="mailto:support@aicareercopilot.app" className="hover:text-foreground flex items-center gap-1.5 transition-colors">
-                    <Mail className="w-3.5 h-3.5" /> Contact Support
+                    <Mail className="w-3.5 h-3.5" /> {t("landing.footer.contactSupport")}
                   </Link>
                 </li>
               </ul>
@@ -131,7 +133,7 @@ export default function Footer() {
             &copy; {currentYear} AI Career Copilot. All rights reserved. Distributed under MIT License.
           </p>
           <div className="flex items-center space-x-4">
-            <span className="text-xs text-muted-foreground hidden sm:inline">Change appearance:</span>
+            <span className="text-xs text-muted-foreground hidden sm:inline">{t("landing.footer.changeAppearance")}</span>
             <ThemeToggle />
           </div>
         </div>

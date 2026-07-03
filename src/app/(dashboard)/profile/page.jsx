@@ -65,6 +65,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { deepEqual } from "@/lib/utils";
 import { validateProfileData } from "@/lib/validators";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 // Constant categories for skill autocomplete/chips re-ordering
 const SKILL_CATEGORIES = [
@@ -81,6 +82,7 @@ const SKILL_CATEGORIES = [
 
 export default function ProfilePage() {
   const router = useRouter();
+  const { t } = useTranslation();
 
   // Loading and Save Tracking states
   const [loading, setLoading] = useState(true);
@@ -610,7 +612,7 @@ export default function ProfilePage() {
     return (
       <div className="flex flex-col items-center justify-center py-32 gap-3">
         <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
-        <span className="text-sm font-semibold text-muted-foreground animate-pulse">Syncing AI Profile Dashboard...</span>
+        <span className="text-sm font-semibold text-muted-foreground animate-pulse">{t("profile.loading")}</span>
       </div>
     );
   }
@@ -618,15 +620,15 @@ export default function ProfilePage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       <PageHeader
-        title={`Hey ${profile.firstName || "there"}! Welcome to your AI Career Profile`}
-        description="Configure your detailed resume profiles, timeline career goals, and model settings to personalize the AI Copilot."
+        title={t("profile.pageTitle", { name: profile.firstName || t("profile.defaultUser") })}
+        description={t("profile.pageDescription")}
       />
 
       {/* Save status notification bar */}
       <div className="flex items-center justify-between border border-border/40 bg-card/40 backdrop-blur-md px-5 py-3 rounded-2xl">
         <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
           <Activity className="w-4 h-4 text-indigo-400 animate-pulse" />
-          <span>Status: </span>
+          <span>{t("profile.statusLabel")}</span>
           <span className={`font-black uppercase tracking-wider ${saveStatus === "Saved" ? "text-emerald-400" : saveStatus === "Saving..." ? "text-amber-400 animate-pulse" : "text-rose-400"}`}>
             {saveStatus}
           </span>
@@ -639,11 +641,11 @@ export default function ProfilePage() {
               disabled={saving}
               className="h-8 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] uppercase tracking-wider cursor-pointer flex items-center gap-1.5 shadow-sm"
             >
-              <Save className="w-3.5 h-3.5" /> Save Changes
+              <Save className="w-3.5 h-3.5" /> {t("profile.saveButton")}
             </Button>
           ) : (
             <span className="text-[10px] text-muted-foreground/60 font-black uppercase flex items-center gap-1">
-              <CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Settings synchronized
+              <CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> {t("profile.savedState")}
             </span>
           )}
         </div>
@@ -669,13 +671,13 @@ export default function ProfilePage() {
                 </svg>
                 <div className="absolute flex flex-col items-center">
                   <span className="text-lg font-black text-foreground">{completeness}%</span>
-                  <span className="text-[8px] uppercase text-muted-foreground/80 font-black">Complete</span>
+                  <span className="text-[8px] uppercase text-muted-foreground/80 font-black">{t("profile.complete")}</span>
                 </div>
               </div>
 
               {/* Outstanding checklist tasks */}
               <div className="flex-1 space-y-3">
-                <h4 className="text-xs font-bold text-foreground">Outstanding Setup Checklist</h4>
+                <h4 className="text-xs font-bold text-foreground">{t("profile.checklistTitle")}</h4>
                 {remainingTasks.length === 0 ? (
                   <p className="text-xs text-emerald-400 font-bold flex items-center gap-1.5">
                     <CheckCircle className="w-4 h-4" /> All checklist tasks complete! Your profile context is optimized.

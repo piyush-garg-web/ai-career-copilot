@@ -1,4 +1,23 @@
 {
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "submit": "Submit",
+    "search": "Search",
+    "results": "Results",
+    "noResults": "No matching results found.",
+    "searchLanguage": "Search language...",
+    "noLanguagesFound": "No languages found",
+    "toggleMenu": "Toggle menu",
+    "complete": "Complete",
+    "justNow": "Just now",
+    "minutesAgo": "{{count}}m ago",
+    "hoursAgo": "{{count}}h ago",
+    "daysAgo": "{{count}}d ago"
+  },
   "nav": {
     "home": "Home",
     "dashboard": "Dashboard",
@@ -23,7 +42,129 @@
     },
     "features": {
       "title": "Core Features Built for Your Success",
-      "subtitle": "Discover the tools designed to accelerate your career search."
+      "subtitle": "Discover the tools designed to accelerate your career search.",
+      "loginPrompt": "Please sign in to use this feature.",
+      "explore": "Explore →",
+      "items": {
+        "resume": { "title": "AI Resume Analysis", "description": "Generates thorough section audits for experience, project impact, structure, and formatting metrics." },
+        "ats": { "title": "ATS Score", "description": "Calculates an industry compliance rating to guarantee your resume passes automatic HR screening systems." },
+        "health": { "title": "Resume Health", "description": "Grades grammar completeness, section structure, formatting polish, and document readability rules." },
+        "suggestions": { "title": "AI Suggestions", "description": "Offers word-by-word replacement ideas, active verb suggestions, and spelling corrections in real-time." },
+        "jobMatch": { "title": "Job Match", "description": "Compares your skills directly with target job postings to compute overall alignment index." },
+        "missingSkills": { "title": "Missing Skills Detection", "description": "Pinpoints exactly which programming frameworks, certifications, or toolkits you need to list." },
+        "interview": { "title": "Interview Coach", "description": "Conduct interactive oral mock sessions tailored directly to your background and preferred difficulty." },
+        "history": { "title": "Interview History", "description": "Revisit and review previously completed sessions to compare answer ratings and track performance." },
+        "analytics": { "title": "Analytics Dashboard", "description": "A centralized hub featuring graphs, current task lists, and recent matching progress checks." },
+        "darkMode": { "title": "Dark Mode", "description": "A fully integrated dark and light mode UI supporting automatic operating system overrides." },
+        "responsive": { "title": "Responsive Design", "description": "Optimized grid alignments providing standard support for mobile phones, tablets, and large screens." }
+      }
+    },
+    "stats": {
+      "resumeAnalyses": { "label": "Resume Analyses", "description": "Optimized for career seekers worldwide" },
+      "atsImprovement": { "label": "ATS Improvement", "description": "Average success score enhancement rate" },
+      "interviewQuestions": { "label": "Interview Questions", "description": "Answered and graded by AI engines" },
+      "uptime": { "label": "Uptime SLA", "description": "High performance database clustering" }
+    },
+    "howItWorks": {
+      "sectionTitle": "Workflow",
+      "title": "Simple, Interactive Journey",
+      "subtitle": "See how AI Career Copilot guides you step-by-step from raw resume document auditing up to mock interview preparation.",
+      "steps": {
+        "one": { "title": "Step 1: Upload Resume", "description": "Securely upload your resume in PDF or Word format (up to 10MB) via our lightning-fast file upload gate." },
+        "two": { "title": "Step 2: AI Parses Resume", "description": "Our local parser extracts structured raw text dynamically and submits it for evaluation by Gemini AI engines." },
+        "three": { "title": "Step 3: Analyze ATS Score", "description": "Get instant metrics highlighting section completion, readability scores, and grammar optimization goals." },
+        "four": { "title": "Step 4: Match Job description", "description": "Paste target job postings to compare semantic matching metrics, missing skills, and keywords." },
+        "five": { "title": "Step 5: Practice Interviews", "description": "Run tailored voice-to-text behavioral and technical simulations receiving structured feedback per answer." },
+        "six": { "title": "Step 6: Land More Interviews", "description": "Apply with optimized keywords and polished confidence, beating automated filters and hiring managers' expectations." }
+      }
+    },
+    "faq": {
+      "sectionTitle": "Support",
+      "title": "Frequently Asked Questions",
+      "subtitle": "Quick answers to standard questions about our AI pipeline, security models, file support, and data privacy policies.",
+      "items": {
+        "one": { "question": "How does AI analysis work?", "answer": "When you upload your resume, our local parser extracts the raw text from your document (PDF or DOCX). This text is then securely processed by our Google Gemini AI pipeline, which compares it against industry-standard ATS filtering rules and grades sections on grammar, formatting completeness, and keyword strength." },
+        "two": { "question": "Is my resume secure?", "answer": "Yes, your resume files are handled securely. We upload the documents to a private bucket hosted by UploadThing, and only authenticated user accounts can retrieve or parse them. Your personal information is protected at all times." },
+        "three": { "question": "Which file formats are supported?", "answer": "We fully support standard PDF (.pdf) and Microsoft Word (.docx) document uploads up to 10MB. We parse formatting data locally to extract clean text for AI evaluation." },
+        "four": { "question": "Can I analyze multiple resumes?", "answer": "Absolutely! You can upload multiple resumes or version drafts to your dashboard. You can toggle any upload to be your 'Primary' resume, which will then serve as the base document for job descriptions matching and mock interview sessions." },
+        "five": { "question": "Is my data private?", "answer": "Yes, your data is private and locked to your personal account. We do not sell your resume details, performance reports, or mock interview transcripts to third-party databases. All auth gates are guarded by Clerk middleware authentication tokens." }
+      }
+    },
+    "comparison": {
+      "sectionTitle": "Comparison",
+      "title": "Why Choose AI Career Copilot?",
+      "subtitle": "See how our intelligent Generative AI engine outperforms traditional, outdated resume review and interview preparation workflows.",
+      "table": {
+        "capability": "Capability",
+        "traditional": "Traditional Review",
+        "copilot": "Copilot"
+      },
+      "rows": {
+        "instantAI": { "feature": "Instant AI Analysis", "traditional": "Days/Weeks waiting for feedback", "copilot": "Real-time feedback under 10 seconds" },
+        "ats": { "feature": "ATS Optimization Scoring", "traditional": "Guesswork based on generic templates", "copilot": "Precision calculation matching 85+ parsing filters" },
+        "jobMatch": { "feature": "Tailored Job Matching", "traditional": "Manual comparison with job listings", "copilot": "Semantic skill-gap detection highlighting missing keywords" },
+        "interview": { "feature": "AI Mock Interview Coaching", "traditional": "Costly professional review coaches", "copilot": "Dynamic STAR-based sessions with grading logs" },
+        "actionItems": { "feature": "Context-Aware Action Items", "traditional": "Vague templates (\"make verbs stronger\")", "copilot": "Precise word-by-word active verb replacement tips" },
+        "multiResume": { "feature": "Multi-Resume Version Checks", "traditional": "Scattered files on personal computers", "copilot": "Centralized storage database to compare versions" }
+      }
+    },
+    "productPreview": {
+      "sectionTitle": "Product Tour",
+      "title": "See the Platform in Action",
+      "subtitle": "Take a virtual tour through the high-fidelity features and AI interfaces built to optimize your career path.",
+      "tabs": {
+        "dashboard": "Dashboard",
+        "resumeAnalysis": "Resume Analysis",
+        "ats": "ATS Score & Health",
+        "jobMatch": "Job Match",
+        "interview": "Interview Coach"
+      }
+    },
+    "footer": {
+      "ctaTitle": "Ready to Ace Your Next Interview?",
+      "ctaDescription": "Join thousands of job candidates who use AI Career Copilot to optimize their application documents, pass screening bots, and practice behavioral mocks.",
+      "ctaButton": "Get Started Free",
+      "description": "Your AI-powered career assistant designed to optimize resumes, evaluate ATS compliance ratings, analyze skill gaps, and coach you through mock interview panels.",
+      "product": "Product",
+      "features": "Features",
+      "howItWorks": "How It Works",
+      "developers": "Developers",
+      "faq": "FAQs",
+      "legal": "Legal & Contact",
+      "contactSupport": "Contact Support",
+      "changeAppearance": "Change appearance:"
+    },
+    "testimonials": {
+      "loginPrompt": "Please sign in to share your experience."
+    }
+  },
+  "header": {
+    "documentDetails": "Document details",
+    "viewNotifications": "View notifications",
+    "notifications": "Notifications",
+    "markRead": "Mark read",
+    "clearAll": "Clear all",
+    "allCaughtUp": "All caught up!",
+    "searchNoResults": "No search results found.",
+    "notificationsMarkedRead": "All notifications marked as read.",
+    "notificationsCleared": "All notifications cleared.",
+    "signOutSuccess": "Signed out successfully",
+    "signOutError": "Failed to sign out",
+    "searchPages": {
+      "dashboard": "Dashboard",
+      "dashboardDesc": "Main metrics and coaching overview",
+      "resumes": "My Resumes",
+      "resumesDesc": "Upload and list resume documents",
+      "ats": "ATS Score Optimizer",
+      "atsDesc": "Scoring check and optimization history",
+      "interview": "AI Interview Coach",
+      "interviewDesc": "Start custom mock sessions",
+      "history": "Interview History",
+      "historyDesc": "Review practice scorecards",
+      "profile": "My Profile",
+      "profileDesc": "Career target roles and details",
+      "settings": "Settings",
+      "settingsDesc": "Appearance settings and theme"
     }
   },
   "dashboard": {
@@ -41,13 +182,15 @@
     "welcome": {
       "title": "Welcome back",
       "subtitle": "Here's an overview of your resume improvements and interview coach prep.",
-      "readiness": "AI Career Readiness"
+      "readiness": "AI Career Readiness",
+      "defaultUser": "there"
     },
     "stats": {
       "resumes": "Uploaded Resumes",
       "atsScore": "Target ATS Score",
       "interviews": "Practice Sessions",
       "completeness": "Profile Completion",
+      "completenessHint": "Complete your target role, goals, and experience details in the Profile tab to align AI metrics.",
       "resumeScore": "Resume Score",
       "atsScoreCard": "ATS Score",
       "jobMatchCard": "Job Match %",
@@ -92,12 +235,62 @@
       "analyze": "Analyze Resume",
       "analyzeDesc": "Run ATS scanning & optimizations.",
       "interview": "Start Interview",
-      "interviewDesc": "Practice behavioral & technical questions."
+      "interviewDesc": "Practice behavioral & technical questions.",
+      "complete": "Complete"
+    },
+    "reviews": {
+      "title": "Community Reviews & Ratings",
+      "description": "Tell us how AI Career Copilot is helping your career search. Write as many reviews as you wish!",
+      "write": "Write a Review",
+      "editTitle": "Edit Your Review",
+      "newTitle": "Write a New Review",
+      "yourRating": "Your Rating:",
+      "reviewTitle": "Review Title",
+      "reviewDetails": "Review Details",
+      "titlePlaceholder": "e.g. Outstanding ATS scan tools!",
+      "detailsPlaceholder": "Share your thoughts on how AI Career Copilot helps you...",
+      "maxCharacters": "Maximum 500 characters",
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "submitReview": "Submit Review",
+      "saving": "Saving...",
+      "yourReviews": "Your Submitted Reviews ({{count}})",
+      "empty": "You have not submitted any reviews yet. Click “Write a Review” above to share your experience!",
+      "edit": "Edit",
+      "delete": "Delete",
+      "validation": {
+        "rating": "Please select a star rating.",
+        "titleRequired": "Review title is required.",
+        "titleLength": "Title must be 100 characters or less.",
+        "descriptionRequired": "Review description is required.",
+        "descriptionLength": "Description must be 500 characters or less."
+      },
+      "success": {
+        "submitted": "Review submitted successfully!",
+        "updated": "Review updated successfully!",
+        "deleted": "Review deleted successfully."
+      },
+      "errors": {
+        "save": "Failed to save review.",
+        "saveUnexpected": "An error occurred while saving.",
+        "delete": "Failed to delete review.",
+        "deleteUnexpected": "An error occurred while deleting."
+      },
+      "confirmDelete": "Are you sure you want to delete this review? This action cannot be undone."
     }
   },
   "profile": {
     "title": "My Professional Profile",
     "subtitle": "Keep your details updated to customize your AI recommendations and ATS targeting.",
+    "loading": "Syncing AI Profile Dashboard...",
+    "pageTitle": "Hey {{name}}! Welcome to your AI Career Profile",
+    "defaultUser": "there",
+    "pageDescription": "Configure your detailed resume profiles, timeline career goals, and model settings to personalize the AI Copilot.",
+    "statusLabel": "Status:",
+    "saveButton": "Save Changes",
+    "savedState": "Settings synchronized",
+    "complete": "Complete",
+    "checklistTitle": "Outstanding Setup Checklist",
     "buttons": {
       "save": "Save Profile Changes",
       "cancel": "Cancel",
@@ -120,6 +313,32 @@
   "settings": {
     "title": "Account Configurations",
     "subtitle": "Adjust your AI models, notification parameters, linked integrations, and theme parameters.",
+    "loading": "Syncing settings dashboard...",
+    "pageTitle": "Settings",
+    "pageTitleWithName": "Hey {{name}}! Settings",
+    "pageDescription": "Manage your detailed visual themes, active fallback AI models, notification parameters, and data integrations.",
+    "searchPlaceholder": "Search all settings...",
+    "unsavedBanner": "You have unsaved changes in your settings dashboard.",
+    "saveChanges": "Save Changes",
+    "cards": {
+      "configuration": {
+        "label": "Settings Configuration",
+        "title": "SaaS Customizations",
+        "description": "Fine-tune account behaviors."
+      },
+      "personalization": {
+        "label": "AI Personalization",
+        "title": "Prompt Profiles",
+        "description": "Auto-align custom prompts."
+      },
+      "billing": {
+        "label": "Billing Tier",
+        "title": "Starter Free Plan",
+        "badge": "Free",
+        "description": "Standard rate limits apply.",
+        "button": "Upgrade"
+      }
+    },
     "tabs": {
       "ai": "AI Preferences",
       "notifications": "Notifications",
@@ -139,6 +358,14 @@
       "saveConversations": "Auto Save AI Conversations",
       "useMemory": "Use AI Memory Context",
       "improveResponses": "Auto Improve Responses"
+    },
+    "accounts": {
+      "github": { "label": "GitHub Profile", "desc": "Sync public repo contributions", "placeholder": "e.g. https://github.com/username" },
+      "linkedin": { "label": "LinkedIn Connect", "desc": "Sync professional accomplishments", "placeholder": "e.g. https://linkedin.com/in/username" },
+      "portfolio": { "label": "Portfolio URL Link", "desc": "Link custom personal landing pages", "placeholder": "e.g. https://myportfolio.dev" },
+      "leetcode": { "label": "LeetCode Activity", "desc": "Import algorithmic stats profile", "placeholder": "e.g. leetcode_username" },
+      "hackerrank": { "label": "HackerRank Board", "desc": "Import skill certification profile", "placeholder": "e.g. hackerrank_username" },
+      "codeforces": { "label": "Codeforces Handle", "desc": "Import rating levels stats", "placeholder": "e.g. codeforces_handle" }
     }
   },
   "ats": {
@@ -166,5 +393,15 @@
     "error": "An error occurred, please try again.",
     "saved": "All changes persisted.",
     "loading": "Loading data..."
+  },
+  "auth": {
+    "signIn": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue your career journey."
+    },
+    "signUp": {
+      "title": "Create your account",
+      "subtitle": "Join AI Career Copilot and start optimizing your profile."
+    }
   }
 }

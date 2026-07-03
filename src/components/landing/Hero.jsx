@@ -7,6 +7,8 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, FileText, Bot, Briefcase, TrendingUp } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
+const heroHighlights = ["hero.badge", "hero.cards.resume", "hero.cards.interview", "hero.cards.jobMatch"];
+
 export default function Hero() {
   const { t } = useTranslation();
   const scrollToFeatures = () => {
@@ -68,7 +70,7 @@ export default function Hero() {
               className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-400 border border-indigo-500/20"
             >
               <Sparkles className="w-3.5 h-3.5 fill-current" />
-              Next-Gen AI Career Coaching Platform
+              {t("landing.hero.badge")}
             </motion.div>
 
             <motion.h1
@@ -101,7 +103,7 @@ export default function Hero() {
                 onClick={scrollToFeatures}
                 className="w-full sm:w-auto text-base font-semibold px-8 py-6 rounded-xl border-border/80 hover:bg-secondary/60 hover:text-foreground transition-all duration-200"
               >
-                View Features
+                {t("landing.hero.secondaryCta")}
               </Button>
             </motion.div>
           </motion.div>
@@ -130,13 +132,13 @@ export default function Hero() {
                     <FileText className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-xs text-foreground">ATS Score Evaluated</h3>
-                    <p className="text-[10px] text-muted-foreground">Resume parsed successfully</p>
+                    <h3 className="font-semibold text-xs text-foreground">{t("landing.hero.cards.resumeTitle")}</h3>
+                    <p className="text-[10px] text-muted-foreground">{t("landing.hero.cards.resumeDesc")}</p>
                   </div>
                 </div>
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs font-medium">
-                    <span>Optimization Level</span>
+                    <span>{t("landing.hero.cards.optimization")}</span>
                     <span className="text-green-600 dark:text-green-400 font-bold">87%</span>
                   </div>
                   <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
@@ -162,14 +164,14 @@ export default function Hero() {
                   <div className="p-2 rounded-lg bg-purple-500/15 text-purple-600 dark:text-purple-400">
                     <Bot className="w-5 h-5" />
                   </div>
-                  <h3 className="font-semibold text-xs text-foreground">AI Mock Interview Coach</h3>
+                  <h3 className="font-semibold text-xs text-foreground">{t("landing.hero.cards.interviewTitle")}</h3>
                 </div>
                 <div className="space-y-2 text-[11px] leading-relaxed">
                   <div className="p-2 rounded bg-secondary/50 text-muted-foreground">
-                    &quot;Describe a time when you had to optimize client code.&quot;
+                    {t("landing.hero.cards.interviewPrompt")}
                   </div>
                   <div className="p-2 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 font-medium">
-                    💡 <strong>Tip:</strong> Incorporate the STAR method. Emphasize actual metrics.
+                    💡 <strong>{t("landing.hero.cards.tipLabel")}</strong> {t("landing.hero.cards.tipText")}
                   </div>
                 </div>
               </motion.div>
@@ -192,8 +194,8 @@ export default function Hero() {
                   <Briefcase className="w-4 h-4" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] text-muted-foreground truncate">Job Description Match</p>
-                  <p className="text-xs font-bold text-foreground truncate">Product Manager</p>
+                  <p className="text-[10px] text-muted-foreground truncate">{t("landing.hero.cards.jobMatchLabel")}</p>
+                  <p className="text-xs font-bold text-foreground truncate">{t("landing.hero.cards.jobMatchRole")}</p>
                 </div>
                 <div className="text-xs font-extrabold text-blue-600 dark:text-blue-400 bg-blue-500/10 py-0.5 px-1.5 rounded">
                   92%

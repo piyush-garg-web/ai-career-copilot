@@ -2,44 +2,46 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 import { Upload, Cpu, Eye, FileSearch, MessageSquare, Award } from "lucide-react";
 
 export default function HowItWorks() {
+  const { t } = useTranslation();
   const steps = [
     {
       icon: Upload,
-      title: "Step 1: Upload Resume",
-      description: "Securely upload your resume in PDF or Word format (up to 10MB) via our lightning-fast file upload gate.",
+      title: t("landing.howItWorks.steps.one.title"),
+      description: t("landing.howItWorks.steps.one.description"),
       color: "bg-blue-500/10 text-blue-600 dark:text-blue-400"
     },
     {
       icon: Cpu,
-      title: "Step 2: AI Parses Resume",
-      description: "Our local parser extracts structured raw text dynamically and submits it for evaluation by Gemini AI engines.",
+      title: t("landing.howItWorks.steps.two.title"),
+      description: t("landing.howItWorks.steps.two.description"),
       color: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400"
     },
     {
       icon: Eye,
-      title: "Step 3: Analyze ATS Score",
-      description: "Get instant metrics highlighting section completion, readability scores, and grammar optimization goals.",
+      title: t("landing.howItWorks.steps.three.title"),
+      description: t("landing.howItWorks.steps.three.description"),
       color: "bg-amber-500/10 text-amber-600 dark:text-amber-400"
     },
     {
       icon: FileSearch,
-      title: "Step 4: Match Job description",
-      description: "Paste target job postings to compare semantic matching metrics, missing skills, and keywords.",
+      title: t("landing.howItWorks.steps.four.title"),
+      description: t("landing.howItWorks.steps.four.description"),
       color: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400"
     },
     {
       icon: MessageSquare,
-      title: "Step 5: Practice Interviews",
-      description: "Run tailored voice-to-text behavioral and technical simulations receiving structured feedback per answer.",
+      title: t("landing.howItWorks.steps.five.title"),
+      description: t("landing.howItWorks.steps.five.description"),
       color: "bg-purple-500/10 text-purple-600 dark:text-purple-400"
     },
     {
       icon: Award,
-      title: "Step 6: Land More Interviews",
-      description: "Apply with optimized keywords and polished confidence, beating automated filters and hiring managers' expectations.",
+      title: t("landing.howItWorks.steps.six.title"),
+      description: t("landing.howItWorks.steps.six.description"),
       color: "bg-green-500/10 text-green-600 dark:text-green-400"
     }
   ];
@@ -51,13 +53,13 @@ export default function HowItWorks() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20 space-y-4">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-            Workflow
+            {t("landing.howItWorks.sectionTitle")}
           </h2>
           <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
-            Simple, Interactive Journey
+            {t("landing.howItWorks.title")}
           </p>
           <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-            See how AI Career Copilot guides you step-by-step from raw resume document auditing up to mock interview preparation.
+            {t("landing.howItWorks.subtitle")}
           </p>
         </div>
 

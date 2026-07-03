@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, X } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 import Navbar from "./Navbar";
 import Hero from "./Hero";
 import Stats from "./Stats";
@@ -22,6 +23,7 @@ export default function LandingPageClient({
   isAuthenticated = false,
   currentUserReview = null,
 }) {
+  const { t } = useTranslation();
   const [toastMessage, setToastMessage] = useState(null);
 
   useEffect(() => {
@@ -32,7 +34,7 @@ export default function LandingPageClient({
   }, [toastMessage]);
 
   const handleWriteReviewUnauthenticated = () => {
-    setToastMessage("Please sign in to share your experience.");
+    setToastMessage(t("landing.testimonials.loginPrompt"));
   };
 
   return (

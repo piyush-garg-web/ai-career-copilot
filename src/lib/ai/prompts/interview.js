@@ -43,8 +43,18 @@ const langMap = {
 };
 
 function resolveLanguage(aiPreferences = {}) {
-  // If a preferredLanguage code is set on user settings, use it, otherwise fall back to aiPreferences.language
-  return aiPreferences.language || langMap[aiPreferences.preferredLanguage] || "English";
+  const preferredLanguage = aiPreferences.preferredLanguage;
+  if (preferredLanguage && langMap[preferredLanguage]) {
+    return langMap[preferredLanguage];
+  }
+
+  const explicitLanguage = aiPreferences.language;
+  if (typeof explicitLanguage === "string" && explicitLanguage.trim()) {
+    const normalized = explicitLanguage.toLowerCase();
+    return langMap[normalized] || explicitLanguage;
+  }
+
+  return "English";
 }
 
 export function buildQuestionsPrompt({

@@ -51,7 +51,18 @@ const langMap = {
 };
 
 function resolveLanguage(aiPreferences = {}) {
-  return aiPreferences.language || langMap[aiPreferences.preferredLanguage] || "English";
+  const preferredLanguage = aiPreferences.preferredLanguage;
+  if (preferredLanguage && langMap[preferredLanguage]) {
+    return langMap[preferredLanguage];
+  }
+
+  const explicitLanguage = aiPreferences.language;
+  if (typeof explicitLanguage === "string" && explicitLanguage.trim()) {
+    const normalized = explicitLanguage.toLowerCase();
+    return langMap[normalized] || explicitLanguage;
+  }
+
+  return "English";
 }
 
 export function buildJobMatchPrompt(rawText, parsedData, jobDescription, aiPreferences = {}) {

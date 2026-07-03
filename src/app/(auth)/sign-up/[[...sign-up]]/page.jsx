@@ -1,10 +1,17 @@
 "use client";
 
 import { SignUp } from "@clerk/nextjs";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 export default function SignUpPage() {
+  const { t } = useTranslation();
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4 py-10 gap-4">
+      <div className="text-center space-y-1">
+        <h1 className="text-xl font-semibold text-foreground">{t("auth.signUp.title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("auth.signUp.subtitle")}</p>
+      </div>
       <SignUp
         appearance={{
           elements: {

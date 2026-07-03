@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 function AnimatedCounter({ value, duration = 2, suffix = "", decimals = 0 }) {
   const [count, setCount] = useState(0);
@@ -52,33 +53,34 @@ function AnimatedCounter({ value, duration = 2, suffix = "", decimals = 0 }) {
 }
 
 export default function Stats() {
+  const { t } = useTranslation();
   const stats = [
     {
       value: 10000,
       suffix: "+",
-      label: "Resume Analyses",
-      description: "Optimized for career seekers worldwide",
+      label: t("landing.stats.resumeAnalyses.label"),
+      description: t("landing.stats.resumeAnalyses.description"),
       decimals: 0
     },
     {
       value: 95,
       suffix: "%",
-      label: "ATS Improvement",
-      description: "Average success score enhancement rate",
+      label: t("landing.stats.atsImprovement.label"),
+      description: t("landing.stats.atsImprovement.description"),
       decimals: 0
     },
     {
       value: 50000,
       suffix: "+",
-      label: "Interview Questions",
-      description: "Answered and graded by AI engines",
+      label: t("landing.stats.interviewQuestions.label"),
+      description: t("landing.stats.interviewQuestions.description"),
       decimals: 0
     },
     {
       value: 99.9,
       suffix: "%",
-      label: "Uptime SLA",
-      description: "High performance database clustering",
+      label: t("landing.stats.uptime.label"),
+      description: t("landing.stats.uptime.description"),
       decimals: 1
     }
   ];

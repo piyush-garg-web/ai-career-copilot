@@ -166,7 +166,7 @@ export default function Navbar() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 rounded-md text-foreground hover:bg-secondary transition-colors"
-              aria-label="Toggle menu"
+              aria-label={t("common.toggleMenu")}
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -182,19 +182,19 @@ export default function Navbar() {
               onClick={() => scrollToSection("features")}
               className="text-left py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
             >
-              Features
+              {t("nav.features")}
             </button>
             <button
               onClick={() => scrollToSection("how-it-works")}
               className="text-left py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
             >
-              How It Works
+              {t("nav.howItWorks")}
             </button>
             <button
               onClick={() => scrollToSection("reviews")}
               className="text-left py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
             >
-              Reviews
+              {t("nav.reviews")}
             </button>
             <button
               onClick={() => scrollToSection("faq")}
@@ -224,19 +224,19 @@ export default function Navbar() {
                     onClick={() => signOut()}
                     className="text-[11px] font-bold text-red-500 hover:text-red-600 h-6 px-2 cursor-pointer"
                   >
-                    Sign Out
+                    {t("nav.logout")}
                   </Button>
                 </div>
                 <Link href="/dashboard" className="w-full">
                   <Button className="w-full font-medium bg-primary hover:bg-primary/95">
-                    Dashboard
+                    {t("nav.dashboard")}
                   </Button>
                 </Link>
               </div>
             ) : (
               <Link href="/sign-in" className="w-full">
                 <Button className="w-full font-medium bg-primary hover:bg-primary/95">
-                  Sign In
+                  {t("nav.signIn")}
                 </Button>
               </Link>
             )}

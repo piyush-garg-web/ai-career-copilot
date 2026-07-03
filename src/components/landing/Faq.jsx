@@ -3,30 +3,32 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 export default function Faq() {
+  const { t } = useTranslation();
   const [openIndex, setOpenIndex] = useState(null);
 
   const faqs = [
     {
-      question: "How does AI analysis work?",
-      answer: "When you upload your resume, our local parser extracts the raw text from your document (PDF or DOCX). This text is then securely processed by our Google Gemini AI pipeline, which compares it against industry-standard ATS filtering rules and grades sections on grammar, formatting completeness, and keyword strength."
+      question: t("landing.faq.items.one.question"),
+      answer: t("landing.faq.items.one.answer")
     },
     {
-      question: "Is my resume secure?",
-      answer: "Yes, your resume files are handled securely. We upload the documents to a private bucket hosted by UploadThing, and only authenticated user accounts can retrieve or parse them. Your personal information is protected at all times."
+      question: t("landing.faq.items.two.question"),
+      answer: t("landing.faq.items.two.answer")
     },
     {
-      question: "Which file formats are supported?",
-      answer: "We fully support standard PDF (.pdf) and Microsoft Word (.docx) document uploads up to 10MB. We parse formatting data locally to extract clean text for AI evaluation."
+      question: t("landing.faq.items.three.question"),
+      answer: t("landing.faq.items.three.answer")
     },
     {
-      question: "Can I analyze multiple resumes?",
-      answer: "Absolutely! You can upload multiple resumes or version drafts to your dashboard. You can toggle any upload to be your 'Primary' resume, which will then serve as the base document for job descriptions matching and mock interview sessions."
+      question: t("landing.faq.items.four.question"),
+      answer: t("landing.faq.items.four.answer")
     },
     {
-      question: "Is my data private?",
-      answer: "Yes, your data is private and locked to your personal account. We do not sell your resume details, performance reports, or mock interview transcripts to third-party databases. All auth gates are guarded by Clerk middleware authentication tokens."
+      question: t("landing.faq.items.five.question"),
+      answer: t("landing.faq.items.five.answer")
     }
   ];
 
@@ -44,13 +46,13 @@ export default function Faq() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16 space-y-4">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-            Support
+            {t("landing.faq.sectionTitle")}
           </h2>
           <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
-            Frequently Asked Questions
+            {t("landing.faq.title")}
           </p>
           <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-            Quick answers to standard questions about our AI pipeline, security models, file support, and data privacy policies.
+            {t("landing.faq.subtitle")}
           </p>
         </div>
 

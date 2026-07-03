@@ -135,15 +135,28 @@ export function LanguageProvider({ children }) {
     }
   };
 
-  const t = (path) => {
+  const t = (path, params = {}) => {
     if (!path) return "";
     const parts = path.split(".");
     let val = translations;
     for (const part of parts) {
-      if (val === undefined || val === null) return path;
+      if (val === undefined || val === null) {
+        return typeof params === "string" ? params : path;
+      }
       val = val[part];
     }
-    return val !== undefined ? val : path;
+
+    if (val === undefined || val === null) {
+      return typeof params === "string" ? params : path;
+    }
+    if (typeof val !== "string") {
+      return typeof params === "string" ? params : path;
+    }
+
+    const replacements = typeof params === "object" && params !== null ? params : {};
+    return val.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+      return replacements[key] !== undefined ? String(replacements[key]) : match;
+    });
   };
 
   return (

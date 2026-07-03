@@ -5,7 +5,7 @@ import { Globe, ChevronDown, Check, Search } from "lucide-react";
 import { useTranslation, SUPPORTED_LANGUAGES } from "@/lib/i18n/LanguageProvider";
 
 export default function LanguageSwitcher() {
-  const { locale, changeLanguage } = useTranslation();
+  const { locale, changeLanguage, t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef(null);
@@ -57,7 +57,7 @@ export default function LanguageSwitcher() {
             <Search className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-muted-foreground" />
             <input
               type="text"
-              placeholder="Search language..."
+              placeholder={t("common.searchLanguage")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full h-8 pl-8 pr-3 text-[10px] rounded-xl border border-border/40 bg-background text-foreground font-semibold focus:outline-none focus:border-indigo-500"
@@ -99,7 +99,7 @@ export default function LanguageSwitcher() {
               })
             ) : (
               <div className="py-2 text-center text-[10px] text-muted-foreground font-semibold">
-                No languages found
+                {t("common.noLanguagesFound")}
               </div>
             )}
           </div>

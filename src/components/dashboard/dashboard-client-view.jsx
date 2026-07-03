@@ -103,23 +103,23 @@ export function DashboardClientView({
     e.preventDefault();
 
     if (!reviewRating || reviewRating < 1 || reviewRating > 5) {
-      toast.error("Please select a star rating.");
+      toast.error(t("dashboard.reviews.validation.rating"));
       return;
     }
     if (!reviewTitle.trim()) {
-      toast.error("Review title is required.");
+      toast.error(t("dashboard.reviews.validation.titleRequired"));
       return;
     }
     if (reviewTitle.length > 100) {
-      toast.error("Title must be 100 characters or less.");
+      toast.error(t("dashboard.reviews.validation.titleLength"));
       return;
     }
     if (!reviewText.trim()) {
-      toast.error("Review description is required.");
+      toast.error(t("dashboard.reviews.validation.descriptionRequired"));
       return;
     }
     if (reviewText.length > 500) {
-      toast.error("Description must be 500 characters or less.");
+      toast.error(t("dashboard.reviews.validation.descriptionLength"));
       return;
     }
 
@@ -140,7 +140,7 @@ export function DashboardClientView({
 
       const data = await res.json();
       if (res.ok) {
-        toast.success(editingReview ? "Review updated successfully!" : "Review submitted successfully!");
+        toast.success(editingReview ? t("dashboard.reviews.success.updated") : t("dashboard.reviews.success.submitted"));
         
         if (editingReview) {
           setUserReviews((prev) =>
@@ -153,17 +153,17 @@ export function DashboardClientView({
         setIsFormOpen(false);
         setEditingReview(null);
       } else {
-        toast.error(data.error || "Failed to save review.");
+        toast.error(data.error || t("dashboard.reviews.errors.save"));
       }
     } catch (err) {
-      toast.error("An error occurred while saving.");
+      toast.error(t("dashboard.reviews.errors.saveUnexpected"));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDeleteReview = async (reviewId) => {
-    if (!confirm("Are you sure you want to delete this review? This action cannot be undone.")) return;
+    if (!confirm(t("dashboard.reviews.confirmDelete"))) return;
     setIsDeletingId(reviewId);
 
     try {
@@ -172,7 +172,7 @@ export function DashboardClientView({
       });
 
       if (res.ok) {
-        toast.success("Review deleted successfully.");
+        toast.success(t("dashboard.reviews.success.deleted"));
         setUserReviews((prev) => prev.filter((r) => r.id !== reviewId));
         if (editingReview && editingReview.id === reviewId) {
           setEditingReview(null);
@@ -180,10 +180,10 @@ export function DashboardClientView({
         }
       } else {
         const data = await res.json();
-        toast.error(data.error || "Failed to delete review.");
+        toast.error(data.error || t("dashboard.reviews.errors.delete"));
       }
     } catch (err) {
-      toast.error("An error occurred while deleting.");
+      toast.error(t("dashboard.reviews.errors.deleteUnexpected"));
     } finally {
       setIsDeletingId(null);
     }
@@ -240,7 +240,7 @@ export function DashboardClientView({
       <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight md:text-3xl bg-gradient-to-r from-foreground via-foreground/90 to-foreground/75 bg-clip-text text-transparent">
-            {t("dashboard.welcome.title")}, {userFirstName || "there"}! 👋
+            {t("dashboard.welcome.title")}, {userFirstName || t("dashboard.welcome.defaultUser")}! 👋
           </h2>
           <p className="text-sm text-muted-foreground font-medium mt-1">
             {t("dashboard.welcome.subtitle")}
@@ -331,11 +331,11 @@ export function DashboardClientView({
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-foreground">{profileCompletion}% {t("dashboard.quickActions.complete", "Complete")}</span>
+                <span className="text-xs font-bold text-foreground">{profileCompletion}% {t("dashboard.quickActions.complete")}</span>
               </div>
               <Progress value={profileCompletion} className="h-2 bg-accent" />
               <p className="text-[10px] text-muted-foreground font-semibold">
-                Complete your target role, goals, and experience details in the Profile tab to align AI metrics.
+                {t("dashboard.stats.completenessHint")}
               </p>
             </CardContent>
           </Card>
@@ -598,10 +598,10 @@ export function DashboardClientView({
             <div className="space-y-1">
               <CardTitle className="text-base font-bold flex items-center gap-2">
                 <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-                Community Reviews & Ratings
+                {t("dashboard.reviews.title")}
               </CardTitle>
               <CardDescription className="text-xs">
-                Tell us how AI Career Copilot is helping your career search. Write as many reviews as you wish!
+                {t("dashboard.reviews.description")}
               </CardDescription>
             </div>
             {!isFormOpen && (
@@ -613,7 +613,7 @@ export function DashboardClientView({
                 className="rounded-xl px-4 py-2 cursor-pointer bg-primary hover:bg-primary/95 text-xs font-bold shadow-md hover:shadow-lg transition-all"
               >
                 <Plus className="w-4 h-4 mr-1.5" />
-                Write a Review
+                {t("dashboard.reviews.write")}
               </Button>
             )}
           </CardHeader>
@@ -621,11 +621,11 @@ export function DashboardClientView({
             {isFormOpen && (
               <div className="p-5 rounded-2xl border border-border/40 bg-background/50 space-y-4">
                 <h3 className="text-sm font-extrabold text-foreground">
-                  {editingReview ? "Edit Your Review" : "Write a New Review"}
+                  {editingReview ? t("dashboard.reviews.editTitle") : t("dashboard.reviews.newTitle")}
                 </h3>
                 <form onSubmit={handleSubmitReview} className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-bold text-muted-foreground">Your Rating:</span>
+                    <span className="text-xs font-bold text-muted-foreground">{t("dashboard.reviews.yourRating")}</span>
                     <div className="flex items-center space-x-1">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button
@@ -648,12 +648,12 @@ export function DashboardClientView({
 
                   <div className="grid gap-2">
                     <label htmlFor="review-title" className="text-xs font-bold text-foreground">
-                      Review Title
+                      {t("dashboard.reviews.reviewTitle")}
                     </label>
                     <input
                       id="review-title"
                       type="text"
-                      placeholder="e.g. Outstanding ATS scan tools!"
+                      placeholder={t("dashboard.reviews.titlePlaceholder")}
                       value={reviewTitle}
                       onChange={(e) => setReviewTitle(e.target.value)}
                       maxLength={100}
@@ -664,11 +664,11 @@ export function DashboardClientView({
 
                   <div className="grid gap-2">
                     <label htmlFor="review-description" className="text-xs font-bold text-foreground">
-                      Review Details
+                      {t("dashboard.reviews.reviewDetails")}
                     </label>
                     <textarea
                       id="review-description"
-                      placeholder="Share your thoughts on how AI Career Copilot helps you..."
+                      placeholder={t("dashboard.reviews.detailsPlaceholder")}
                       value={reviewText}
                       onChange={(e) => setReviewText(e.target.value)}
                       maxLength={500}
@@ -676,7 +676,7 @@ export function DashboardClientView({
                       className="w-full min-h-[100px] p-3 rounded-xl border border-border/50 bg-background/50 text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all duration-200 resize-none"
                     />
                     <div className="flex justify-between items-center text-[10px] font-bold text-muted-foreground">
-                      <span>Maximum 500 characters</span>
+                      <span>{t("dashboard.reviews.maxCharacters")}</span>
                       <span>{reviewText.length} / 500</span>
                     </div>
                   </div>
@@ -691,14 +691,14 @@ export function DashboardClientView({
                       }}
                       className="rounded-xl text-xs font-bold cursor-pointer"
                     >
-                      Cancel
+                      {t("dashboard.reviews.cancel")}
                     </Button>
                     <Button
                       type="submit"
                       disabled={isSubmitting}
                       className="rounded-xl px-5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all cursor-pointer"
                     >
-                      {isSubmitting ? "Saving..." : editingReview ? "Save Changes" : "Submit Review"}
+                      {isSubmitting ? t("dashboard.reviews.saving") : editingReview ? t("dashboard.reviews.saveChanges") : t("dashboard.reviews.submitReview")}
                     </Button>
                   </div>
                 </form>
@@ -708,11 +708,11 @@ export function DashboardClientView({
             {/* List of user reviews */}
             <div className="space-y-4">
               <h3 className="text-xs font-black uppercase tracking-wider text-muted-foreground/80">
-                Your Submitted Reviews ({userReviews.length})
+                {t("dashboard.reviews.yourReviews", { count: userReviews.length })}
               </h3>
               {userReviews.length === 0 ? (
                 <p className="text-xs text-muted-foreground/85 font-medium py-3 text-center border border-dashed border-border/40 rounded-xl">
-                  You have not submitted any reviews yet. Click &ldquo;Write a Review&rdquo; above to share your experience!
+                  {t("dashboard.reviews.empty")}
                 </p>
               ) : (
                 <div className="grid gap-4">
@@ -758,7 +758,7 @@ export function DashboardClientView({
                           className="rounded-xl h-8 px-2.5 text-[11px] font-bold cursor-pointer hover:bg-secondary/60"
                         >
                           <Edit className="w-3 h-3 mr-1.5" />
-                          Edit
+                          {t("dashboard.reviews.edit")}
                         </Button>
                         <Button
                           variant="ghost"
@@ -767,7 +767,7 @@ export function DashboardClientView({
                           className="rounded-xl h-8 px-2.5 text-[11px] font-bold text-red-500 hover:text-red-500 hover:bg-red-500/10 cursor-pointer"
                         >
                           <Trash2 className="w-3 h-3 mr-1.5" />
-                          {isDeletingId === rev.id ? "..." : "Delete"}
+                          {isDeletingId === rev.id ? "..." : t("dashboard.reviews.delete")}
                         </Button>
                       </div>
                     </div>

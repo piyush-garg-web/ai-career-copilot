@@ -2,43 +2,45 @@
 
 import React from "react";
 import { Check, X, Sparkles } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 export default function ComparisonTable() {
+  const { t } = useTranslation();
   const comparisonData = [
     {
-      feature: "Instant AI Analysis",
-      traditional: "Days/Weeks waiting for feedback",
-      copilot: "Real-time feedback under 10 seconds",
+      feature: t("landing.comparison.rows.instantAI.feature"),
+      traditional: t("landing.comparison.rows.instantAI.traditional"),
+      copilot: t("landing.comparison.rows.instantAI.copilot"),
       supported: true
     },
     {
-      feature: "ATS Optimization Scoring",
-      traditional: "Guesswork based on generic templates",
-      copilot: "Precision calculation matching 85+ parsing filters",
+      feature: t("landing.comparison.rows.ats.feature"),
+      traditional: t("landing.comparison.rows.ats.traditional"),
+      copilot: t("landing.comparison.rows.ats.copilot"),
       supported: true
     },
     {
-      feature: "Tailored Job Matching",
-      traditional: "Manual comparison with job listings",
-      copilot: "Semantic skill-gap detection highlighting missing keywords",
+      feature: t("landing.comparison.rows.jobMatch.feature"),
+      traditional: t("landing.comparison.rows.jobMatch.traditional"),
+      copilot: t("landing.comparison.rows.jobMatch.copilot"),
       supported: true
     },
     {
-      feature: "AI Mock Interview Coaching",
-      traditional: "Costly professional review coaches",
-      copilot: "Dynamic STAR-based sessions with grading logs",
+      feature: t("landing.comparison.rows.interview.feature"),
+      traditional: t("landing.comparison.rows.interview.traditional"),
+      copilot: t("landing.comparison.rows.interview.copilot"),
       supported: true
     },
     {
-      feature: "Context-Aware Action Items",
-      traditional: "Vague templates (\"make verbs stronger\")",
-      copilot: "Precise word-by-word active verb replacement tips",
+      feature: t("landing.comparison.rows.actionItems.feature"),
+      traditional: t("landing.comparison.rows.actionItems.traditional"),
+      copilot: t("landing.comparison.rows.actionItems.copilot"),
       supported: true
     },
     {
-      feature: "Multi-Resume Version Checks",
-      traditional: "Scattered files on personal computers",
-      copilot: "Centralized storage database to compare versions",
+      feature: t("landing.comparison.rows.multiResume.feature"),
+      traditional: t("landing.comparison.rows.multiResume.traditional"),
+      copilot: t("landing.comparison.rows.multiResume.copilot"),
       supported: true
     }
   ];
@@ -49,13 +51,13 @@ export default function ComparisonTable() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20 space-y-4">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-            Comparison
+            {t("landing.comparison.sectionTitle")}
           </h2>
           <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
-            Why Choose AI Career Copilot?
+            {t("landing.comparison.title")}
           </p>
           <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-            See how our intelligent Generative AI engine outperforms traditional, outdated resume review and interview preparation workflows.
+            {t("landing.comparison.subtitle")}
           </p>
         </div>
 
@@ -63,10 +65,10 @@ export default function ComparisonTable() {
         <div className="max-w-4xl mx-auto overflow-hidden rounded-2xl border border-border/60 bg-card shadow-lg">
           {/* Header Row */}
           <div className="grid grid-cols-12 gap-2 bg-secondary/50 p-4 font-bold text-xs sm:text-sm text-foreground uppercase tracking-wider border-b border-border">
-            <div className="col-span-4 sm:col-span-5">Capability</div>
-            <div className="col-span-4 sm:col-span-3.5 text-center text-muted-foreground">Traditional Review</div>
+            <div className="col-span-4 sm:col-span-5">{t("landing.comparison.table.capability")}</div>
+            <div className="col-span-4 sm:col-span-3.5 text-center text-muted-foreground">{t("landing.comparison.table.traditional")}</div>
             <div className="col-span-4 sm:col-span-3.5 text-center text-indigo-600 dark:text-indigo-400 flex items-center justify-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 fill-current" /> Copilot
+              <Sparkles className="w-3.5 h-3.5 fill-current" /> {t("landing.comparison.table.copilot")}
             </div>
           </div>
 
