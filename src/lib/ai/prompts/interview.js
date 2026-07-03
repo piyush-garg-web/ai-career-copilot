@@ -27,6 +27,26 @@ Rules:
 3. Do not include any introductory text, notes, or markdown formatting tags. Return raw valid JSON.
 `;
 
+const langMap = {
+  en: "English",
+  hi: "Hindi",
+  es: "Spanish",
+  fr: "French",
+  de: "German",
+  pt: "Portuguese",
+  it: "Italian",
+  ja: "Japanese",
+  ko: "Korean",
+  zh: "Chinese",
+  ar: "Arabic",
+  ru: "Russian"
+};
+
+function resolveLanguage(aiPreferences = {}) {
+  // If a preferredLanguage code is set on user settings, use it, otherwise fall back to aiPreferences.language
+  return aiPreferences.language || langMap[aiPreferences.preferredLanguage] || "English";
+}
+
 export function buildQuestionsPrompt({
   rawText,
   parsedData,
@@ -37,7 +57,7 @@ export function buildQuestionsPrompt({
   count,
   aiPreferences = {}
 }) {
-  const language = aiPreferences.language || "English";
+  const language = resolveLanguage(aiPreferences);
   const personality = aiPreferences.personality || "Professional";
   const responseLength = aiPreferences.responseLength || "Balanced";
   const coachStyle = aiPreferences.coachStyle || "Technical Interview";
@@ -108,7 +128,7 @@ Rules:
 `;
 
 export function buildAnswerEvaluationPrompt(questionContent, questionType, userAnswer, aiPreferences = {}) {
-  const language = aiPreferences.language || "English";
+  const language = resolveLanguage(aiPreferences);
   const personality = aiPreferences.personality || "Professional";
   const responseLength = aiPreferences.responseLength || "Balanced";
   const coachStyle = aiPreferences.coachStyle || "Technical Interview";
@@ -154,7 +174,7 @@ Rules:
 `;
 
 export function buildSessionEvaluationPrompt(roleName, difficulty, questionData, aiPreferences = {}) {
-  const language = aiPreferences.language || "English";
+  const language = resolveLanguage(aiPreferences);
   const personality = aiPreferences.personality || "Professional";
   const responseLength = aiPreferences.responseLength || "Balanced";
   const coachStyle = aiPreferences.coachStyle || "Technical Interview";

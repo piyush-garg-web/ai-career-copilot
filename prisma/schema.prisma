@@ -28,6 +28,7 @@ model User {
   careerGoals        String?          @db.Text
   onboardingComplete Boolean          @default(false)
   theme              Theme            @default(SYSTEM)
+  preferredLanguage  String           @default("en")
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
 

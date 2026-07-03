@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "home": "홈",
+    "dashboard": "대시보드",
+    "profile": "프로필",
+    "settings": "설정",
+    "signIn": "로그인",
+    "signUp": "회원가입",
+    "logout": "로그아웃",
+    "backToHome": "홈으로 돌아가기",
+    "privacy": "개인정보 처리방침",
+    "terms": "이용약관"
+  },
+  "landing": {
+    "hero": {
+      "title": "AI 기반 커리어 코파일럿",
+      "subtitle": "Google Gemini 기반 실시간 피드백을 통해 이력서를 분석하고, ATS 점수를 확인하고, 채용 공고를 매칭하고, 모의 면접을 연습해 보세요.",
+      "cta": "무료로 시작하기"
+    },
+    "features": {
+      "title": "성공을 위한 핵심 기능",
+      "subtitle": "당신의 취업 여정을 가속화할 수 있도록 설계된 도구들을 확인해 보세요."
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "dashboard": "대시보드",
+      "resumeUpload": "이력서 업로드",
+      "resumeAnalysis": "이력서 분석",
+      "atsScore": "ATS 점수",
+      "jobMatch": "채용 공고 매칭",
+      "interviewCoach": "면접 코치",
+      "interviewHistory": "면접 연습 기록",
+      "profile": "내 프로필",
+      "settings": "계정 설정"
+    },
+    "welcome": {
+      "title": "다시 오신 것을 환영합니다",
+      "subtitle": "현재 커리어 상태 및 준비 상태에 대한 요약입니다.",
+      "readiness": "AI 커리어 준비도"
+    },
+    "stats": {
+      "resumes": "업로드된 이력서",
+      "atsScore": "목표 ATS 점수",
+      "interviews": "연습 세션 수",
+      "completeness": "프로필 설정"
+    }
+  },
+  "profile": {
+    "title": "내 전문 프로필",
+    "subtitle": "AI 추천 및 ATS 설정을 커스터마이징하기 위해 최신 프로필 정보를 입력해 주세요.",
+    "buttons": {
+      "save": "프로필 변경 저장",
+      "cancel": "취소",
+      "saved": "저장됨",
+      "unsaved": "저장되지 않은 변경사항",
+      "saving": "변경사항 저장 중..."
+    },
+    "sections": {
+      "bio": "자기소개 및 지역",
+      "goals": "희망 직무 및 급여 목표",
+      "projects": "주요 프로젝트",
+      "experience": "경력 사항",
+      "education": "학력 사항",
+      "certifications": "자격증 목록",
+      "languages": "언어 능력",
+      "achievements": "주요 성과",
+      "privacy": "개인정보 및 알림"
+    }
+  },
+  "settings": {
+    "title": "계정 설정 구성",
+    "subtitle": "AI 모델 설정, 알림 매개변수, 연결된 계정 정보, 테마 설정을 조정합니다.",
+    "tabs": {
+      "ai": "AI 환경 설정",
+      "notifications": "알림 설정",
+      "security": "보안 및 개인정보",
+      "connected": "연결된 계정",
+      "engine": "AI 엔진",
+      "resumeJob": "이력서 및 채용 설정",
+      "appearance": "외관 및 접근성",
+      "data": "데이터 및 스토리지",
+      "danger": "위험 구역"
+    },
+    "ai": {
+      "language": "AI 응답 언어",
+      "personality": "AI 성격/어조",
+      "coachStyle": "코칭 스타일",
+      "responseLength": "피드백 상세도",
+      "saveConversations": "대화 자동 저장",
+      "useMemory": "AI 메모리 컨텍스트 사용",
+      "improveResponses": "응답 자동 개선"
+    }
+  },
+  "ats": {
+    "title": "ATS 점수 검사기",
+    "subtitle": "최신 이력서 분석 시스템 기준에 따라 이력서 형식을 스캔하고 점수를 확인합니다.",
+    "ring": "ATS 준비 점수",
+    "scoreLabel": "내 점수"
+  },
+  "jobMatch": {
+    "title": "AI 채용 공고 매칭 스캐너",
+    "subtitle": "채용 공고 설명을 붙여넣어 일치도 점수를 즉시 확인해 보세요."
+  },
+  "interview": {
+    "title": "AI 모의 면접 코치",
+    "subtitle": "실시간 맞춤형 피드백을 통해 기술 및 인성 모의 면접을 연습해 보세요."
+  },
+  "status": {
+    "verified": "인증됨",
+    "connected": "연결됨",
+    "notLinked": "연결 안 됨",
+    "notConnected": "미연결"
+  },
+  "alerts": {
+    "success": "작업이 성공적으로 완료되었습니다!",
+    "error": "오류가 발생했습니다. 다시 시도해 주세요.",
+    "saved": "모든 변경사항이 저장되었습니다.",
+    "loading": "데이터 불러오는 중..."
+  }
+}

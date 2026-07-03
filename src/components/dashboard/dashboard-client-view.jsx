@@ -3,6 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 import {
   FileText,
   Gauge,
@@ -72,6 +73,7 @@ export function DashboardClientView({
   insights = [],
   initialReviews = [],
 }) {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const [userReviews, setUserReviews] = React.useState(initialReviews || []);
@@ -238,10 +240,10 @@ export function DashboardClientView({
       <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight md:text-3xl bg-gradient-to-r from-foreground via-foreground/90 to-foreground/75 bg-clip-text text-transparent">
-            Welcome back, {userFirstName || "there"}! 👋
+            {t("dashboard.welcome.title")}, {userFirstName || "there"}! 👋
           </h2>
           <p className="text-sm text-muted-foreground font-medium mt-1">
-            Here&apos;s an overview of your resume improvements and interview coach prep.
+            {t("dashboard.welcome.subtitle")}
           </p>
         </div>
       </motion.div>
@@ -254,6 +256,29 @@ export function DashboardClientView({
         {stats.map((stat, idx) => {
           const config = statConfig[stat.title] || { icon: FileText, color: "text-blue-500" };
           const Icon = config.icon;
+
+          const statsTitleMap = {
+            "Resume Score": t("dashboard.stats.resumeScore"),
+            "ATS Score": t("dashboard.stats.atsScoreCard"),
+            "Job Match %": t("dashboard.stats.jobMatchCard"),
+            "Interview Score": t("dashboard.stats.interviewScoreCard")
+          };
+          const title = statsTitleMap[stat.title] || stat.title;
+
+          const changeTranslationMap = {
+            "Latest resume optimization": t("dashboard.stats.latestResumeOptimization"),
+            "No resume analyzed yet": t("dashboard.stats.noResumeAnalyzedYet"),
+            "Strong ATS compatibility": t("dashboard.stats.strongAtsCompatibility"),
+            "Needs keyword booster": t("dashboard.stats.needsKeywordBooster"),
+            "Pending analysis": t("dashboard.stats.pendingAnalysis"),
+            "Match compatibility scan": t("dashboard.stats.matchCompatibilityScan"),
+            "No match scan run": t("dashboard.stats.noMatchScanRun"),
+            "Excellent response quality": t("dashboard.stats.excellentResponseQuality"),
+            "Requires coaching practice": t("dashboard.stats.requiresCoachingPractice"),
+            "No coach session completed": t("dashboard.stats.noCoachSessionCompleted")
+          };
+          const change = changeTranslationMap[stat.change] || stat.change;
+
           return (
             <Card
               key={idx}
@@ -263,7 +288,7 @@ export function DashboardClientView({
               <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-blue-500/0 via-blue-500/50 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                 <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  {stat.title}
+                  {title}
                 </span>
                 <Icon className={`w-4 h-4 ${config.color} transition-transform duration-200 group-hover:scale-110`} />
               </CardHeader>
@@ -284,7 +309,7 @@ export function DashboardClientView({
                     {stat.trend === "up" && (
                       <TrendingUp className="w-3 h-3 text-green-500 inline-block" />
                     )}
-                    <span>{stat.change}</span>
+                    <span>{change}</span>
                   </p>
                 </div>
               </CardContent>
@@ -301,12 +326,12 @@ export function DashboardClientView({
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <User className="w-4 h-4 text-indigo-400" />
-                Profile Completion
+                {t("dashboard.stats.completeness")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-foreground">{profileCompletion}% Complete</span>
+                <span className="text-xs font-bold text-foreground">{profileCompletion}% {t("dashboard.quickActions.complete", "Complete")}</span>
               </div>
               <Progress value={profileCompletion} className="h-2 bg-accent" />
               <p className="text-[10px] text-muted-foreground font-semibold">
@@ -319,16 +344,16 @@ export function DashboardClientView({
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <FileText className="w-4 h-4 text-teal-400" />
-                Resume Metadata
+                {t("dashboard.metadata.title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3.5 text-xs font-semibold text-muted-foreground">
               <div className="flex justify-between border-b border-border/20 pb-2">
-                <span>Last Upload Date</span>
+                <span>{t("dashboard.metadata.lastUpload")}</span>
                 <span className="text-foreground">{resumeUploadedDate}</span>
               </div>
               <div className="flex justify-between">
-                <span>Last Analyzed Resume</span>
+                <span>{t("dashboard.metadata.lastAnalyzed")}</span>
                 <span className="text-foreground truncate max-w-[150px]" title={lastAnalyzedResumeName}>{lastAnalyzedResumeName}</span>
               </div>
             </CardContent>
@@ -341,10 +366,10 @@ export function DashboardClientView({
             <CardHeader>
               <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <Gauge className="w-4 h-4 text-cyan-400" />
-                Weekly Analytics Trend
+                {t("dashboard.weeklyTrend.title")}
               </CardTitle>
               <CardDescription className="text-xs">
-                Performance indicators plotted across core coaching parameters.
+                {t("dashboard.weeklyTrend.desc")}
               </CardDescription>
             </CardHeader>
             <CardContent className="flex justify-center items-center h-44">
@@ -367,19 +392,28 @@ export function DashboardClientView({
                 />
 
                 {/* Data Points rendering */}
-                {points.map((p, i) => (
-                  <g key={i}>
-                    {/* Shadow circle for visual depth */}
-                    <circle cx={p.x} cy={p.y} r="8" fill={p.color} className="opacity-20" />
-                    <circle cx={p.x} cy={p.y} r="4" fill={p.color} stroke="#ffffff" strokeWidth="1.5" />
-                    <text x={p.x} y={p.y - 12} textAnchor="middle" className="text-[10px] font-black fill-foreground">
-                      {p.val}%
-                    </text>
-                    <text x={p.x} y="180" textAnchor="middle" className="text-[9px] font-bold fill-muted-foreground">
-                      {p.label}
-                    </text>
-                  </g>
-                ))}
+                {points.map((p, i) => {
+                  const labelMap = {
+                    "Resume": t("dashboard.stats.resumeScore"),
+                    "ATS": t("dashboard.stats.atsScoreCard"),
+                    "Job Match": t("dashboard.stats.jobMatchCard"),
+                    "Interview": t("dashboard.stats.interviewScoreCard")
+                  };
+                  const label = labelMap[p.label] || p.label;
+                  return (
+                    <g key={i}>
+                      {/* Shadow circle for visual depth */}
+                      <circle cx={p.x} cy={p.y} r="8" fill={p.color} className="opacity-20" />
+                      <circle cx={p.x} cy={p.y} r="4" fill={p.color} stroke="#ffffff" strokeWidth="1.5" />
+                      <text x={p.x} y={p.y - 12} textAnchor="middle" className="text-[10px] font-black fill-foreground">
+                        {p.val}%
+                      </text>
+                      <text x={p.x} y="180" textAnchor="middle" className="text-[9px] font-bold fill-muted-foreground">
+                        {label}
+                      </text>
+                    </g>
+                  );
+                })}
               </svg>
             </CardContent>
           </Card>
@@ -394,7 +428,7 @@ export function DashboardClientView({
             <CardHeader>
               <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-indigo-400" />
-                Recent AI Suggestions
+                {t("dashboard.suggestions.title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3.5">
@@ -414,7 +448,7 @@ export function DashboardClientView({
             <CardHeader>
               <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <Info className="w-4 h-4 text-teal-400" />
-                Coaching Insights
+                {t("dashboard.insights.title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3.5">
@@ -438,10 +472,10 @@ export function DashboardClientView({
               <div>
                 <CardTitle className="text-lg font-bold flex items-center gap-2">
                   <Clock className="w-4 h-4 text-muted-foreground" />
-                  Recent Activity
+                  {t("dashboard.activity.title")}
                 </CardTitle>
                 <CardDescription className="text-xs font-medium text-muted-foreground mt-0.5">
-                  Your recent updates and system analysis logs.
+                  {t("dashboard.activity.desc")}
                 </CardDescription>
               </div>
               <Button
@@ -450,7 +484,7 @@ export function DashboardClientView({
                 className="text-xs text-blue-500 hover:text-blue-600 rounded-xl cursor-pointer"
                 onClick={() => router.push("/resume/analysis")}
               >
-                View all
+                {t("dashboard.activity.viewAll")}
                 <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
               </Button>
             </CardHeader>
@@ -458,7 +492,7 @@ export function DashboardClientView({
               {activities.length === 0 ? (
                 <div className="text-center py-10">
                   <Clock className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
-                  <p className="text-xs text-muted-foreground font-semibold">No recent activity logs found.</p>
+                  <p className="text-xs text-muted-foreground font-semibold">{t("dashboard.activity.empty")}</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -506,15 +540,29 @@ export function DashboardClientView({
             <CardHeader className="pb-3">
               <CardTitle className="text-lg font-bold flex items-center gap-2">
                 <Briefcase className="w-4 h-4 text-muted-foreground" />
-                Quick Actions
+                {t("dashboard.quickActions.title")}
               </CardTitle>
               <CardDescription className="text-xs font-medium text-muted-foreground mt-0.5">
-                Launch key workflows instantly.
+                {t("dashboard.quickActions.desc")}
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
               {quickActions.map((action, idx) => {
                 const ActionIcon = action.icon;
+                const actionsTitleMap = {
+                  "Upload Resume": t("dashboard.quickActions.upload"),
+                  "Analyze Resume": t("dashboard.quickActions.analyze"),
+                  "Start Interview": t("dashboard.quickActions.interview")
+                };
+                const actionTitle = actionsTitleMap[action.title] || action.title;
+
+                const actionsDescMap = {
+                  "Upload a PDF or Word document.": t("dashboard.quickActions.uploadDesc"),
+                  "Run ATS scanning & optimizations.": t("dashboard.quickActions.analyzeDesc"),
+                  "Practice behavioral & technical questions.": t("dashboard.quickActions.interviewDesc")
+                };
+                const actionDesc = actionsDescMap[action.description] || action.description;
+
                 return (
                   <Button
                     key={idx}
@@ -527,10 +575,10 @@ export function DashboardClientView({
                       </div>
                       <div className="flex flex-col">
                         <span className="text-sm font-bold leading-none">
-                          {action.title}
+                          {actionTitle}
                         </span>
                         <span className="text-[10px] opacity-80 leading-none mt-1 font-medium">
-                          {action.description}
+                          {actionDesc}
                         </span>
                       </div>
                     </div>

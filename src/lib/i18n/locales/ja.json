@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "dashboard": "ダッシュボード",
+    "profile": "プロフィール",
+    "settings": "設定",
+    "signIn": "サインイン",
+    "signUp": "サインアップ",
+    "logout": "ログアウト",
+    "backToHome": "ホームに戻る",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約"
+  },
+  "landing": {
+    "hero": {
+      "title": "AI搭載のキャリアコパイロット",
+      "subtitle": "Google Geminiを搭載したリアルタイムのフィードバックを使用して、履歴書の分析、ATSスコアの確認、求人マッチング、模擬面接の練習を行います。",
+      "cta": "無料で始める"
+    },
+    "features": {
+      "title": "成功のために設計されたコア機能",
+      "subtitle": "あなたの就職活動を加速するために設計されたツールをご確認ください。"
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "dashboard": "ダッシュボード",
+      "resumeUpload": "履歴書のアップロード",
+      "resumeAnalysis": "履歴書分析",
+      "atsScore": "ATSスコア",
+      "jobMatch": "求人マッチング",
+      "interviewCoach": "面接コーチ",
+      "interviewHistory": "面接練習履歴",
+      "profile": "プロフィール設定",
+      "settings": "アカウント設定"
+    },
+    "welcome": {
+      "title": "おかえりなさい",
+      "subtitle": "現在のキャリアステータスと準備状況の概要です。",
+      "readiness": "AIキャリア準備指数"
+    },
+    "stats": {
+      "resumes": "履歴書アップロード数",
+      "atsScore": "目標ATSスコア",
+      "interviews": "練習セッション数",
+      "completeness": "プロフィール完成度"
+    }
+  },
+  "profile": {
+    "title": "私のプロフェッショナルプロフィール",
+    "subtitle": "AIの推奨事項やATSターゲットをカスタマイズするために、詳細情報を最新の状態に保ちます。",
+    "buttons": {
+      "save": "変更を保存する",
+      "cancel": "キャンセル",
+      "saved": "保存済み",
+      "unsaved": "未保存の変更",
+      "saving": "保存中..."
+    },
+    "sections": {
+      "bio": "自己紹介と所在地",
+      "goals": "希望する職種と給与目標",
+      "projects": "主要プロジェクト",
+      "experience": "職務経歴",
+      "education": "学歴",
+      "certifications": "資格一覧",
+      "languages": "語学力",
+      "achievements": "主な実績",
+      "privacy": "プライバシーと通知"
+    }
+  },
+  "settings": {
+    "title": "アカウント構成設定",
+    "subtitle": "AIモデル、通知設定、連携サービス、ビジュアルテーマを調整します。",
+    "tabs": {
+      "ai": "AI基本設定",
+      "notifications": "通知設定",
+      "security": "セキュリティとプライバシー",
+      "connected": "連携済みアカウント",
+      "engine": "AIエンジン",
+      "resumeJob": "履歴書と求人設定",
+      "appearance": "外観とアクセス",
+      "data": "データとストレージ",
+      "danger": "危険ゾーン"
+    },
+    "ai": {
+      "language": "AI応答言語",
+      "personality": "AI人格/トーン",
+      "coachStyle": "コーチングスタイル",
+      "responseLength": "フィードバック詳細度",
+      "saveConversations": "会話を自動保存する",
+      "useMemory": "AIメモリコンテキストを使用する",
+      "improveResponses": "応答を自動的に改善する"
+    }
+  },
+  "ats": {
+    "title": "ATSスコアチェッカー",
+    "subtitle": "履歴書のフォーマットを現代の解析システム基準でスキャンし、スコアを検証します。",
+    "ring": "ATS準備指数",
+    "scoreLabel": "現在のスコア"
+  },
+  "jobMatch": {
+    "title": "AI求人マッチスキャナー",
+    "subtitle": "求人票を貼り付けて、一致率スコアを即座に判定します。"
+  },
+  "interview": {
+    "title": "AI模擬面接コーチ",
+    "subtitle": "リアルタイムの個別フィードバックで、技術的・行動的模擬面接を練習します。"
+  },
+  "status": {
+    "verified": "検証済み",
+    "connected": "連携済み",
+    "notLinked": "未連携",
+    "notConnected": "未接続"
+  },
+  "alerts": {
+    "success": "アクションが正常に完了しました！",
+    "error": "エラーが発生しました。もう一度お試しください。",
+    "saved": "すべての変更が保存されました。",
+    "loading": "データを読み込み中..."
+  }
+}

@@ -5,8 +5,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, FileText, Bot, Briefcase, TrendingUp } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 export default function Hero() {
+  const { t } = useTranslation();
   const scrollToFeatures = () => {
     const element = document.getElementById("features");
     if (element) {
@@ -73,17 +75,14 @@ export default function Hero() {
               variants={itemVariants}
               className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] md:leading-[1.05]"
             >
-              Land More Interviews <br />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-indigo-600 dark:from-violet-400 dark:to-indigo-400">
-                with AI Career Copilot
-              </span>
+              {t("landing.hero.title")}
             </motion.h1>
 
             <motion.p
               variants={itemVariants}
               className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed font-normal"
             >
-              AI Career Copilot analyzes your resume, improves ATS score, matches jobs, and prepares you for interviews using Generative AI.
+              {t("landing.hero.subtitle")}
             </motion.p>
 
             <motion.div
@@ -92,7 +91,7 @@ export default function Hero() {
             >
               <Link href="/sign-up" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full sm:w-auto text-base font-semibold px-8 py-6 rounded-xl bg-primary hover:bg-primary/95 shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20 transition-all duration-200 group">
-                  Get Started
+                  {t("landing.hero.cta")}
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>

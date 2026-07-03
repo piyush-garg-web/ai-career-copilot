@@ -258,6 +258,7 @@ export async function POST(req) {
       jobPreferences,
       accessibilitySettings,
       appearanceSettings,
+      preferredLanguage,
       education,
       experience,
       projects,
@@ -397,6 +398,7 @@ export async function POST(req) {
         ...(jobPreferences !== undefined && { jobPreferences }),
         ...(accessibilitySettings !== undefined && { accessibilitySettings }),
         ...(appearanceSettings !== undefined && { appearanceSettings }),
+        ...(preferredLanguage !== undefined && { preferredLanguage }),
       },
     });
 

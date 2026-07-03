@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "home": "Home",
+    "dashboard": "Pannello",
+    "profile": "Profilo",
+    "settings": "Impostazioni",
+    "signIn": "Accedi",
+    "signUp": "Registrati",
+    "logout": "Esci",
+    "backToHome": "Torna alla Home",
+    "privacy": "Informativa sulla privacy",
+    "terms": "Termini di servizio"
+  },
+  "landing": {
+    "hero": {
+      "title": "Il tuo Copilota di Carriera basato su IA",
+      "subtitle": "Analizza curricula, verifica i punteggi ATS, trova corrispondenze di lavoro ed esercitati in simulazioni di colloquio con feedback in tempo reale di Google Gemini.",
+      "cta": "Inizia Gratis"
+    },
+    "features": {
+      "title": "Funzionalità Chiave per il tuo Successo",
+      "subtitle": "Scopri gli strumenti progettati per accelerare la tua ricerca di lavoro."
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "dashboard": "Pannello",
+      "resumeUpload": "Carica Curriculum",
+      "resumeAnalysis": "Analisi Curriculum",
+      "atsScore": "Punteggio ATS",
+      "jobMatch": "Match di Lavoro",
+      "interviewCoach": "Coach di Colloquio",
+      "interviewHistory": "Cronologia Colloqui",
+      "profile": "Il Mio Profilo",
+      "settings": "Impostazioni Account"
+    },
+    "welcome": {
+      "title": "Bentornato",
+      "subtitle": "Ecco una panoramica del tuo stato professionale e della tua prontezza attuali.",
+      "readiness": "Prontezza di Carriera con IA"
+    },
+    "stats": {
+      "resumes": "Curricula Caricati",
+      "atsScore": "Punteggio ATS Obiettivo",
+      "interviews": "Sessioni di Pratica",
+      "completeness": "Configurazione Profilo"
+    }
+  },
+  "profile": {
+    "title": "Il Mio Profilo Professionale",
+    "subtitle": "Mantieni i tuoi dettagli aggiornati per personalizzare le raccomandazioni IA e il target ATS.",
+    "buttons": {
+      "save": "Salva Modifiche Profilo",
+      "cancel": "Annulla",
+      "saved": "Salvato",
+      "unsaved": "Modifiche Non Salvate",
+      "saving": "Salvataggio modifiche..."
+    },
+    "sections": {
+      "bio": "Biografia & Localizzazione",
+      "goals": "Lavoro dei Sogni & Obiettivi Salariali",
+      "projects": "Registro dei Progetti",
+      "experience": "Esperienza Professionale",
+      "education": "Percorso di Studi",
+      "certifications": "Elenco Certificazioni",
+      "languages": "Competenze Linguistiche",
+      "achievements": "Traguardi Chiave",
+      "privacy": "Privacy & Notifiche"
+    }
+  },
+  "settings": {
+    "title": "Configurazioni Account",
+    "subtitle": "Regola i tuoi modelli di IA, i parametri di notifica, le integrazioni esterne e i temi grafici.",
+    "tabs": {
+      "ai": "Preferenze IA",
+      "notifications": "Notifiche",
+      "security": "Sicurezza & Privacy",
+      "connected": "Account Collegati",
+      "engine": "Motore IA",
+      "resumeJob": "Curriculum & Lavoro",
+      "appearance": "Aspetto & Accesso",
+      "data": "Dati & Archiviazione",
+      "danger": "Zona di Pericolo"
+    },
+    "ai": {
+      "language": "Lingua di risposta IA",
+      "personality": "Personalità/Tono IA",
+      "coachStyle": "Stile di Coaching",
+      "responseLength": "Livello di Dettaglio Feedback",
+      "saveConversations": "Salva conversazioni automaticamente",
+      "useMemory": "Usa contesto memoria IA",
+      "improveResponses": "Migliora risposte automaticamente"
+    }
+  },
+  "ats": {
+    "title": "Verificatore Punteggio ATS",
+    "subtitle": "Scansiona il tuo curriculum rispetto ai moderni criteri di analisi.",
+    "ring": "Indice di Prontezza ATS",
+    "scoreLabel": "Il Tuo Punteggio"
+  },
+  "jobMatch": {
+    "title": "Scanner Match di Lavoro IA",
+    "subtitle": "Incolla la descrizione di una posizione per confrontare allineamenti istantaneamente."
+  },
+  "interview": {
+    "title": "Coach di Simulazione Colloquio IA",
+    "subtitle": "Esercitati su domande di colloquio tecniche o comportamentali con feedback personalizzato."
+  },
+  "status": {
+    "verified": "Verificato",
+    "connected": "Collegato",
+    "notLinked": "Non Collegato",
+    "notConnected": "Non Connesso"
+  },
+  "alerts": {
+    "success": "Azione completata con successo!",
+    "error": "Si è verificato un errore, riprova.",
+    "saved": "Tutte le modifiche salvate.",
+    "loading": "Caricamento dati..."
+  }
+}

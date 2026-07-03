@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { useAccent } from "@/components/shared/AccentColorProvider";
+import { useTranslation, SUPPORTED_LANGUAGES } from "@/lib/i18n/LanguageProvider";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -66,6 +67,7 @@ export default function SettingsPage() {
   const { user, isLoaded } = useUser();
   const { setAccentColor } = useAccent();
   const { openUserProfile } = useClerk();
+  const { changeLanguage } = useTranslation();
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -94,6 +96,7 @@ export default function SettingsPage() {
   // Settings State Schema with complete user custom configuration preferences
   const [profile, setProfile] = useState({
     theme: "SYSTEM",
+    preferredLanguage: "en",
     githubUrl: "",
     linkedinUrl: "",
     portfolioUrl: "",
@@ -202,6 +205,7 @@ export default function SettingsPage() {
             const res = {
               ...prev,
               theme: userData.theme || prev.theme,
+              preferredLanguage: userData.preferredLanguage || "en",
               githubUrl: userData.githubUrl || "",
               linkedinUrl: userData.linkedinUrl || "",
               portfolioUrl: userData.portfolioUrl || "",
@@ -251,15 +255,31 @@ export default function SettingsPage() {
     loadSettingsAndData();
   }, [setTheme]);
 
-  // Monitor modifications to set unsaved flag
   useEffect(() => {
     if (!savedProfile) return;
     const isDirty = !deepEqual(profile, savedProfile);
     setSaveStatus(isDirty ? "Unsaved" : "Saved");
   }, [profile, savedProfile]);
 
+  useEffect(() => {
+    if (locale && profile.preferredLanguage !== locale) {
+      setProfile((prev) => ({ ...prev, preferredLanguage: locale }));
+      setSavedProfile((prevSaved) => {
+        if (!prevSaved) return null;
+        return { ...prevSaved, preferredLanguage: locale };
+      });
+    }
+  }, [locale]);
+
   // Handle Form changes
   const updateNestedField = (section, field, value) => {
+    if (field === null) {
+      setProfile((prev) => ({
+        ...prev,
+        [section]: value
+      }));
+      return;
+    }
     setProfile((prev) => ({
       ...prev,
       [section]: {
@@ -837,14 +857,20 @@ export default function SettingsPage() {
 
                     {/* Custom Language select */}
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-foreground">Preferred AI Language</label>
+                      <label className="text-xs font-bold text-foreground">Preferred Application & AI Language</label>
                       <select
-                        value={profile.aiPreferences.language}
-                        onChange={(e) => updateNestedField("aiPreferences", "language", e.target.value)}
+                        value={profile.preferredLanguage || "en"}
+                        onChange={(e) => {
+                          const langCode = e.target.value;
+                          updateNestedField("preferredLanguage", null, langCode);
+                          changeLanguage(langCode);
+                        }}
                         className="w-full h-10 px-3 text-xs rounded-xl border border-border/40 bg-background text-foreground font-semibold focus:outline-none focus:border-indigo-500"
                       >
-                        {["English", "Spanish", "French", "German", "Mandarin", "Japanese", "Hindi"].map((opt) => (
-                          <option key={opt} value={opt}>{opt}</option>
+                        {SUPPORTED_LANGUAGES.map((lang) => (
+                          <option key={lang.code} value={lang.code}>
+                            {lang.nativeName} ({lang.name})
+                          </option>
                         ))}
                       </select>
                     </div>

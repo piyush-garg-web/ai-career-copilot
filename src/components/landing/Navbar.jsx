@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
+import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Sparkles } from "lucide-react";
 
 import { useRouter, usePathname } from "next/navigation";
 import { useUser, useClerk } from "@clerk/nextjs";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 // Inline Custom SVG for GitHub
 const GithubIcon = ({ className }) => (
@@ -27,6 +29,7 @@ const GithubIcon = ({ className }) => (
 );
 
 export default function Navbar() {
+  const { t } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -94,25 +97,25 @@ export default function Navbar() {
               onClick={() => scrollToSection("features")}
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
             >
-              Features
+              {t("nav.features")}
             </button>
             <button
               onClick={() => scrollToSection("how-it-works")}
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
             >
-              How It Works
+              {t("nav.howItWorks")}
             </button>
             <button
               onClick={() => scrollToSection("reviews")}
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
             >
-              Reviews
+              {t("nav.reviews")}
             </button>
             <button
               onClick={() => scrollToSection("faq")}
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
             >
-              FAQ
+              {t("nav.faq")}
             </button>
             <Link
               href="https://github.com/piyushgarg6702-cyber/ai-career-copilot"
@@ -127,13 +130,14 @@ export default function Navbar() {
 
           {/* Desktop Action Buttons */}
           <div className="hidden md:flex items-center space-x-4">
+            <LanguageSwitcher />
             <ThemeToggle />
 
             {isLoaded && isSignedIn && user ? (
               <>
                 <Link href="/dashboard">
                   <Button className="font-medium text-sm bg-primary hover:bg-primary/95 shadow-md hover:shadow-lg transition-all duration-200">
-                    Dashboard
+                    {t("nav.dashboard")}
                   </Button>
                 </Link>
                 <div className="pl-2 flex items-center border-l border-border/50 h-8">
@@ -142,14 +146,14 @@ export default function Navbar() {
                     onClick={() => signOut()}
                     className="text-xs font-semibold text-muted-foreground hover:text-foreground cursor-pointer rounded-xl h-8 px-2"
                   >
-                    Sign Out
+                    {t("nav.logout")}
                   </Button>
                 </div>
               </>
             ) : (
               <Link href="/sign-in">
                 <Button className="font-medium text-sm bg-primary hover:bg-primary/95 shadow-md hover:shadow-lg transition-all duration-200">
-                  Sign In
+                  {t("nav.signIn")}
                 </Button>
               </Link>
             )}
@@ -157,6 +161,7 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <div className="flex md:hidden items-center space-x-2">
+            <LanguageSwitcher />
             <ThemeToggle />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

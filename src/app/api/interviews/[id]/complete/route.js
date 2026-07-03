@@ -71,7 +71,10 @@ export async function POST(req, { params }) {
       session.role,
       session.difficulty,
       dialogueLogs,
-      dbUser.aiPreferences || {}
+      {
+        ...(dbUser.aiPreferences || {}),
+        preferredLanguage: dbUser.preferredLanguage || "en"
+      }
     );
 
     // Save final report card in InterviewSession

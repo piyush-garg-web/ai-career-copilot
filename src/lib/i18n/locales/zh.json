@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "home": "首页",
+    "dashboard": "控制台",
+    "profile": "个人档案",
+    "settings": "账户设置",
+    "signIn": "登录",
+    "signUp": "注册",
+    "logout": "退出登录",
+    "backToHome": "返回首页",
+    "privacy": "隐私政策",
+    "terms": "服务条款"
+  },
+  "landing": {
+    "hero": {
+      "title": "您的 AI 职业生涯副驾驶",
+      "subtitle": "通过 Google Gemini 提供的实时反馈，分析简历、检查 ATS 分数、匹配工作并进行模拟面试练习。",
+      "cta": "免费开始使用"
+    },
+    "features": {
+      "title": "为您的成功打造的核心功能",
+      "subtitle": "探索专为加速您的职业搜索而设计的工具。"
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "dashboard": "控制台",
+      "resumeUpload": "上传简历",
+      "resumeAnalysis": "简历分析",
+      "atsScore": "ATS 分数",
+      "jobMatch": "工作匹配",
+      "interviewCoach": "面试教练",
+      "interviewHistory": "模拟面试历史",
+      "profile": "我的个人档案",
+      "settings": "账户设置"
+    },
+    "welcome": {
+      "title": "欢迎回来",
+      "subtitle": "这是您当前职业状态和准备情况的概览。",
+      "readiness": "AI 职业准备度"
+    },
+    "stats": {
+      "resumes": "已上传简历",
+      "atsScore": "目标 ATS 分数",
+      "interviews": "练习次数",
+      "completeness": "个人档案设置"
+    }
+  },
+  "profile": {
+    "title": "我的专业个人档案",
+    "subtitle": "保持您的详细信息最新，以自定义您的 AI 建议和 ATS 定向目标。",
+    "buttons": {
+      "save": "保存个人档案更改",
+      "cancel": "取消",
+      "saved": "已保存",
+      "unsaved": "未保存的更改",
+      "saving": "正在保存更改..."
+    },
+    "sections": {
+      "bio": "个人简介与位置",
+      "goals": "梦想工作与薪资目标",
+      "projects": "特色项目日志",
+      "experience": "专业工作经验",
+      "education": "教育背景",
+      "certifications": "证书列表",
+      "languages": "语言能力",
+      "achievements": "关键成就",
+      "privacy": "隐私与通知"
+    }
+  },
+  "settings": {
+    "title": "账户配置",
+    "subtitle": "调整您的 AI 模型、通知参数、关联的集成和主题属性。",
+    "tabs": {
+      "ai": "AI 偏好设置",
+      "notifications": "通知",
+      "security": "安全与隐私",
+      "connected": "已关联的账户",
+      "engine": "AI 引擎",
+      "resumeJob": "简历与工作设置",
+      "appearance": "外观与辅助功能",
+      "data": "数据与存储",
+      "danger": "危险区域"
+    },
+    "ai": {
+      "language": "AI 回复语言",
+      "personality": "AI 人格/语气",
+      "coachStyle": "教练辅导风格",
+      "responseLength": "回复详细程度",
+      "saveConversations": "自动保存 AI 对话",
+      "useMemory": "使用 AI 记忆上下文",
+      "improveResponses": "自动改进回答"
+    }
+  },
+  "ats": {
+    "title": "ATS 分数检查器",
+    "subtitle": "根据现代解析器标准扫描您的简历格式，以检查您的指数得分。",
+    "ring": "ATS 准备度指数",
+    "scoreLabel": "您的分数"
+  },
+  "jobMatch": {
+    "title": "AI 工作匹配扫描器",
+    "subtitle": "粘贴职位描述，即可立即使工作匹配度对齐。"
+  },
+  "interview": {
+    "title": "AI 模拟面试教练",
+    "subtitle": "通过实时的个性化反馈，练习专业技术和行为面试题。"
+  },
+  "status": {
+    "verified": "已验证",
+    "connected": "已连接",
+    "notLinked": "未关联",
+    "notConnected": "未连接"
+  },
+  "alerts": {
+    "success": "操作成功完成！",
+    "error": "发生错误，请重试。",
+    "saved": "所有更改已保存。",
+    "loading": "数据加载中..."
+  }
+}

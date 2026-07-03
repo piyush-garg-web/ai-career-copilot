@@ -6,9 +6,11 @@ import { usePathname } from "next/navigation";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Briefcase } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 import { navigationItems } from "./sidebar";
 
 export function MobileNav({ isOpen, onClose }) {
+  const { t } = useTranslation();
   const pathname = usePathname();
 
   const isLinkActive = (item) => {
@@ -72,7 +74,22 @@ export function MobileNav({ isOpen, onClose }) {
                         : "text-muted-foreground group-hover:text-foreground"
                     )}
                   />
-                  <span>{item.name}</span>
+                  <span>
+                    {(() => {
+                      const nameMap = {
+                        "Dashboard": "dashboard.sidebar.dashboard",
+                        "My Resumes": "dashboard.sidebar.resumeUpload",
+                        "Resume Analysis": "dashboard.sidebar.resumeAnalysis",
+                        "ATS Score": "dashboard.sidebar.atsScore",
+                        "Job Match": "dashboard.sidebar.jobMatch",
+                        "Interview Coach": "dashboard.sidebar.interviewCoach",
+                        "Interview History": "dashboard.sidebar.interviewHistory",
+                        "Profile": "dashboard.sidebar.profile",
+                        "Settings": "dashboard.sidebar.settings"
+                      };
+                      return nameMap[item.name] ? t(nameMap[item.name]) : item.name;
+                    })()}
+                  </span>
                 </Link>
               );
             })}

@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "dashboard": "Dashboard",
+    "profile": "Profil",
+    "settings": "Einstellungen",
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "logout": "Abmelden",
+    "backToHome": "Zurück zur Startseite",
+    "privacy": "Datenschutzerklärung",
+    "terms": "Nutzungsbedingungen"
+  },
+  "landing": {
+    "hero": {
+      "title": "Ihr KI-gestützter Karriere-Copilot",
+      "subtitle": "Analysieren Sie Lebensläufe, überprüfen Sie ATS-Scores, gleichen Sie Stellenanzeigen ab und üben Sie simulierte Vorstellungsgespräche mit Echtzeit-Feedback von Google Gemini.",
+      "cta": "Kostenlos starten"
+    },
+    "features": {
+      "title": "Kernfunktionen für Ihren Erfolg",
+      "subtitle": "Entdecken Sie die Werkzeuge, die Ihre Karriereentwicklung beschleunigen."
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "resumeUpload": "Lebenslauf hochladen",
+      "resumeAnalysis": "Analyse",
+      "atsScore": "ATS-Score",
+      "jobMatch": "Stellenabgleich",
+      "interviewCoach": "Interview-Coach",
+      "interviewHistory": "Interview-Verlauf",
+      "profile": "Mein Profil",
+      "settings": "Konto-Einstellungen"
+    },
+    "welcome": {
+      "title": "Willkommen zurück",
+      "subtitle": "Hier ist eine Übersicht über Ihren aktuellen Berufsstatus und Ihre Bereitschaft.",
+      "readiness": "KI-Karrierebereitschaft"
+    },
+    "stats": {
+      "resumes": "Hochgeladene Lebensläufe",
+      "atsScore": "Ziel-ATS-Score",
+      "interviews": "Übungssitzungen",
+      "completeness": "Profil-Einrichtung"
+    }
+  },
+  "profile": {
+    "title": "Mein berufliches Profil",
+    "subtitle": "Halten Sie Ihre Daten aktuell, um Ihre KI-Empfehlungen und die ATS-Ausrichtung anzupassen.",
+    "buttons": {
+      "save": "Profil speichern",
+      "cancel": "Abbrechen",
+      "saved": "Gespeichert",
+      "unsaved": "Ungespeicherte Änderungen",
+      "saving": "Änderungen werden gespeichert..."
+    },
+    "sections": {
+      "bio": "Biografie & Standort",
+      "goals": "Traumjob & Gehaltsziele",
+      "projects": "Projektprotokolle",
+      "experience": "Berufserfahrung",
+      "education": "Ausbildung",
+      "certifications": "Zertifikate",
+      "languages": "Sprachen",
+      "achievements": "Erfolge",
+      "privacy": "Datenschutz & Benachrichtigungen"
+    }
+  },
+  "settings": {
+    "title": "Kontokonfigurationen",
+    "subtitle": "Passen Sie Ihre KI-Modelle, Benachrichtigungsparameter, Integrationen und Design-Einstellungen an.",
+    "tabs": {
+      "ai": "KI-Präferenzen",
+      "notifications": "Benachrichtigungen",
+      "security": "Sicherheit & Datenschutz",
+      "connected": "Verbundene Konten",
+      "engine": "KI-Engine",
+      "resumeJob": "Lebenslauf & Job",
+      "appearance": "Erscheinungsbild",
+      "data": "Daten & Speicher",
+      "danger": "Gefahrenzone"
+    },
+    "ai": {
+      "language": "KI-Antwortsprache",
+      "personality": "KI-Persönlichkeit/Ton",
+      "coachStyle": "Coaching-Stil",
+      "responseLength": "Detaillierungsgrad",
+      "saveConversations": "Gespräche automatisch speichern",
+      "useMemory": "KI-Gedächtniskontext nutzen",
+      "improveResponses": "Antworten automatisch optimieren"
+    }
+  },
+  "ats": {
+    "title": "ATS-Score-Prüfer",
+    "subtitle": "Scannen Sie Ihren Lebenslauf nach modernen Parser-Kriterien, um Ihren Score zu testen.",
+    "ring": "ATS-Bereitschaftsindex",
+    "scoreLabel": "Ihr Score"
+  },
+  "jobMatch": {
+    "title": "KI-Job-Abgleich",
+    "subtitle": "Fügen Sie eine Stellenbeschreibung ein, um die Übereinstimmung sofort zu vergleichen."
+  },
+  "interview": {
+    "title": "KI-Interview-Coach",
+    "subtitle": "Üben Sie technische und verhaltensbasierte Interviewfragen mit Echtzeit-Feedback."
+  },
+  "status": {
+    "verified": "Verifiziert",
+    "connected": "Verbunden",
+    "notLinked": "Nicht verknüpft",
+    "notConnected": "Nicht verbunden"
+  },
+  "alerts": {
+    "success": "Aktion erfolgreich abgeschlossen!",
+    "error": "Ein Fehler ist aufgetreten, bitte versuchen Sie es erneut.",
+    "saved": "Alle Änderungen gespeichert.",
+    "loading": "Daten werden geladen..."
+  }
+}

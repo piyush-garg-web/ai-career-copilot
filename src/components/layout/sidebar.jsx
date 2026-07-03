@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 import {
   LayoutDashboard,
   FileText,
@@ -68,6 +69,7 @@ export const navigationItems = [
 ];
 
 export function Sidebar({ className }) {
+  const { t } = useTranslation();
   const pathname = usePathname();
 
   const isLinkActive = (item) => {
@@ -145,7 +147,22 @@ export function Sidebar({ className }) {
                       : "text-muted-foreground group-hover:text-foreground"
                   )}
                 />
-                <span className="relative">{item.name}</span>
+                <span className="relative">
+                  {(() => {
+                    const nameMap = {
+                      "Dashboard": "dashboard.sidebar.dashboard",
+                      "My Resumes": "dashboard.sidebar.resumeUpload",
+                      "Resume Analysis": "dashboard.sidebar.resumeAnalysis",
+                      "ATS Score": "dashboard.sidebar.atsScore",
+                      "Job Match": "dashboard.sidebar.jobMatch",
+                      "Interview Coach": "dashboard.sidebar.interviewCoach",
+                      "Interview History": "dashboard.sidebar.interviewHistory",
+                      "Profile": "dashboard.sidebar.profile",
+                      "Settings": "dashboard.sidebar.settings"
+                    };
+                    return nameMap[item.name] ? t(nameMap[item.name]) : item.name;
+                  })()}
+                </span>
               </Link>
             );
           })}

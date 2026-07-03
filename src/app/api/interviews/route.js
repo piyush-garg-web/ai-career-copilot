@@ -62,7 +62,10 @@ export async function POST(req) {
       type,
       difficulty,
       count: questionCount,
-      aiPreferences: dbUser.aiPreferences || {},
+      aiPreferences: {
+        ...(dbUser.aiPreferences || {}),
+        preferredLanguage: dbUser.preferredLanguage || "en"
+      },
     });
 
     const parsedQuestions = aiQuestionsData.questions || [];

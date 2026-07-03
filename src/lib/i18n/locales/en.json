@@ -1,0 +1,170 @@
+{
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "settings": "Settings",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "logout": "Log Out",
+    "backToHome": "Back to Home",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "features": "Features",
+    "howItWorks": "How It Works",
+    "reviews": "Reviews",
+    "faq": "FAQ"
+  },
+  "landing": {
+    "hero": {
+      "title": "Your AI-Powered Career Copilot",
+      "subtitle": "Analyze resumes, check ATS scores, match jobs, and practice mock interviews with real-time feedback powered by Google Gemini.",
+      "cta": "Get Started Free"
+    },
+    "features": {
+      "title": "Core Features Built for Your Success",
+      "subtitle": "Discover the tools designed to accelerate your career search."
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "resumeUpload": "Upload Resume",
+      "resumeAnalysis": "Resume Analysis",
+      "atsScore": "ATS Score",
+      "jobMatch": "Job Match",
+      "interviewCoach": "Interview Coach",
+      "interviewHistory": "Interview History",
+      "profile": "My Profile",
+      "settings": "Account Settings"
+    },
+    "welcome": {
+      "title": "Welcome back",
+      "subtitle": "Here's an overview of your resume improvements and interview coach prep.",
+      "readiness": "AI Career Readiness"
+    },
+    "stats": {
+      "resumes": "Uploaded Resumes",
+      "atsScore": "Target ATS Score",
+      "interviews": "Practice Sessions",
+      "completeness": "Profile Completion",
+      "resumeScore": "Resume Score",
+      "atsScoreCard": "ATS Score",
+      "jobMatchCard": "Job Match %",
+      "interviewScoreCard": "Interview Score",
+      "latestResumeOptimization": "Latest resume optimization",
+      "noResumeAnalyzedYet": "No resume analyzed yet",
+      "strongAtsCompatibility": "Strong ATS compatibility",
+      "needsKeywordBooster": "Needs keyword booster",
+      "pendingAnalysis": "Pending analysis",
+      "matchCompatibilityScan": "Match compatibility scan",
+      "noMatchScanRun": "No match scan run",
+      "excellentResponseQuality": "Excellent response quality",
+      "requiresCoachingPractice": "Requires coaching practice",
+      "noCoachSessionCompleted": "No coach session completed"
+    },
+    "metadata": {
+      "title": "Resume Metadata",
+      "lastUpload": "Last Upload Date",
+      "lastAnalyzed": "Last Analyzed Resume"
+    },
+    "weeklyTrend": {
+      "title": "Weekly Analytics Trend",
+      "desc": "Performance indicators plotted across core coaching parameters."
+    },
+    "suggestions": {
+      "title": "Recent AI Suggestions"
+    },
+    "insights": {
+      "title": "Coaching Insights"
+    },
+    "activity": {
+      "title": "Recent Activity",
+      "desc": "Your recent updates and system analysis logs.",
+      "viewAll": "View all",
+      "empty": "No recent activity logs found."
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "desc": "Launch key workflows instantly.",
+      "upload": "Upload Resume",
+      "uploadDesc": "Upload a PDF or Word document.",
+      "analyze": "Analyze Resume",
+      "analyzeDesc": "Run ATS scanning & optimizations.",
+      "interview": "Start Interview",
+      "interviewDesc": "Practice behavioral & technical questions."
+    }
+  },
+  "profile": {
+    "title": "My Professional Profile",
+    "subtitle": "Keep your details updated to customize your AI recommendations and ATS targeting.",
+    "buttons": {
+      "save": "Save Profile Changes",
+      "cancel": "Cancel",
+      "saved": "Saved",
+      "unsaved": "Unsaved Changes",
+      "saving": "Saving changes..."
+    },
+    "sections": {
+      "bio": "Biography & Location",
+      "goals": "Dream Job & Salary Goals",
+      "projects": "Featured Project Logs",
+      "experience": "Professional Experience",
+      "education": "Education Background",
+      "certifications": "Certifications List",
+      "languages": "Language Proficiencies",
+      "achievements": "Key Achievements",
+      "privacy": "Privacy & Notifications"
+    }
+  },
+  "settings": {
+    "title": "Account Configurations",
+    "subtitle": "Adjust your AI models, notification parameters, linked integrations, and theme parameters.",
+    "tabs": {
+      "ai": "AI Preferences",
+      "notifications": "Notifications",
+      "security": "Security & Privacy",
+      "connected": "Connected Accounts",
+      "engine": "AI Engine",
+      "resumeJob": "Resume & Job",
+      "appearance": "Appearance & Access",
+      "data": "Data & Storage",
+      "danger": "Danger Zone"
+    },
+    "ai": {
+      "language": "AI Response Language",
+      "personality": "AI Personality/Tone",
+      "coachStyle": "Coaching Style Mode",
+      "responseLength": "Detail Feedback Level",
+      "saveConversations": "Auto Save AI Conversations",
+      "useMemory": "Use AI Memory Context",
+      "improveResponses": "Auto Improve Responses"
+    }
+  },
+  "ats": {
+    "title": "ATS Score Checker",
+    "subtitle": "Scan your resume formats against modern parser criteria to check index scoring.",
+    "ring": "ATS Readiness Index",
+    "scoreLabel": "Your Score"
+  },
+  "jobMatch": {
+    "title": "AI Job Match Scanner",
+    "subtitle": "Paste a job description to compare matching score alignments instantly."
+  },
+  "interview": {
+    "title": "AI Mock Interview Coach",
+    "subtitle": "Practice real technical and behavioral interview formats with real-time feedback."
+  },
+  "status": {
+    "verified": "Verified",
+    "connected": "Connected",
+    "notLinked": "Not Linked",
+    "notConnected": "Not Connected"
+  },
+  "alerts": {
+    "success": "Action completed successfully!",
+    "error": "An error occurred, please try again.",
+    "saved": "All changes persisted.",
+    "loading": "Loading data..."
+  }
+}

@@ -62,7 +62,10 @@ export async function POST(req) {
       resume.parsedData || {},
       content.trim(),
       resume.id,
-      dbUser.aiPreferences || {}
+      {
+        ...(dbUser.aiPreferences || {}),
+        preferredLanguage: dbUser.preferredLanguage || "en"
+      }
     );
 
     // Save JobDescription first (saves parsed title & company)

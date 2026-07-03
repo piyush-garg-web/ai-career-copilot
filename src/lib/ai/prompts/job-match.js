@@ -35,8 +35,27 @@ Rules:
  * @param {string} jobDescription 
  * @returns {string}
  */
+const langMap = {
+  en: "English",
+  hi: "Hindi",
+  es: "Spanish",
+  fr: "French",
+  de: "German",
+  pt: "Portuguese",
+  it: "Italian",
+  ja: "Japanese",
+  ko: "Korean",
+  zh: "Chinese",
+  ar: "Arabic",
+  ru: "Russian"
+};
+
+function resolveLanguage(aiPreferences = {}) {
+  return aiPreferences.language || langMap[aiPreferences.preferredLanguage] || "English";
+}
+
 export function buildJobMatchPrompt(rawText, parsedData, jobDescription, aiPreferences = {}) {
-  const language = aiPreferences.language || "English";
+  const language = resolveLanguage(aiPreferences);
   const personality = aiPreferences.personality || "Professional";
   const responseLength = aiPreferences.responseLength || "Balanced";
   const coachStyle = aiPreferences.coachStyle || "Technical Interview";

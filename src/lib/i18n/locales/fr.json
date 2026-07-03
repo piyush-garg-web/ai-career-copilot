@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "dashboard": "Tableau de bord",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "logout": "Se déconnecter",
+    "backToHome": "Retour à l'accueil",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions d'utilisation"
+  },
+  "landing": {
+    "hero": {
+      "title": "Votre copilote de carrière propulsé par l'IA",
+      "subtitle": "Analysez des CV, vérifiez les scores ATS, faites correspondre les offres d'emploi et entraînez-vous à des entretiens blancs avec des retours en temps réel de Google Gemini.",
+      "cta": "Commencer gratuitement"
+    },
+    "features": {
+      "title": "Fonctionnalités clés conçues pour votre réussite",
+      "subtitle": "Découvrez les outils conçus pour accélérer votre recherche d'emploi."
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "dashboard": "Tableau de bord",
+      "resumeUpload": "Télécharger un CV",
+      "resumeAnalysis": "Analyse de CV",
+      "atsScore": "Score ATS",
+      "jobMatch": "Match d'Emplois",
+      "interviewCoach": "Coach d'Entretiens",
+      "interviewHistory": "Historique d'Entretiens",
+      "profile": "Mon Profil",
+      "settings": "Paramètres du Compte"
+    },
+    "welcome": {
+      "title": "Bon retour",
+      "subtitle": "Voici un aperçu de votre situation et de votre préparation professionnelles actuelles.",
+      "readiness": "Préparation de carrière avec l'IA"
+    },
+    "stats": {
+      "resumes": "CV Téléchargés",
+      "atsScore": "Score ATS Ciblé",
+      "interviews": "Sessions de Pratique",
+      "completeness": "Configuration du Profil"
+    }
+  },
+  "profile": {
+    "title": "Mon Profil Professionnel",
+    "subtitle": "Gardez vos informations à jour pour personnaliser vos recommandations IA et cibler vos scores ATS.",
+    "buttons": {
+      "save": "Enregistrer les modifications",
+      "cancel": "Annuler",
+      "saved": "Enregistré",
+      "unsaved": "Modifications non enregistrées",
+      "saving": "Enregistrement..."
+    },
+    "sections": {
+      "bio": "Biographie & Localisation",
+      "goals": "Emploi de Rêve & Objectifs de Salaire",
+      "projects": "Historique des Projets",
+      "experience": "Expérience Professionnelle",
+      "education": "Parcours Académique",
+      "certifications": "Certifications obtenues",
+      "languages": "Compétences Linguistiques",
+      "achievements": "Réalisations Clés",
+      "privacy": "Confidentialité & Notifications"
+    }
+  },
+  "settings": {
+    "title": "Configurations du Compte",
+    "subtitle": "Ajustez vos modèles d'IA, vos paramètres de notification, vos intégrations et vos thèmes graphiques.",
+    "tabs": {
+      "ai": "Préférences d'IA",
+      "notifications": "Notifications",
+      "security": "Sécurité & Confidentialité",
+      "connected": "Comptes Connectés",
+      "engine": "Moteur d'IA",
+      "resumeJob": "CV & Emploi",
+      "appearance": "Apparence & Accès",
+      "data": "Données & Stockage",
+      "danger": "Zone de Danger"
+    },
+    "ai": {
+      "language": "Langue de l'IA",
+      "personality": "Personnalité/Ton de l'IA",
+      "coachStyle": "Style du Coach",
+      "responseLength": "Niveau de détail des retours",
+      "saveConversations": "Sauvegarder automatiquement",
+      "useMemory": "Utiliser le contexte mémoire d'IA",
+      "improveResponses": "Améliorer les réponses d'IA"
+    }
+  },
+  "ats": {
+    "title": "Vérificateur de score ATS",
+    "subtitle": "Scannez votre CV par rapport aux critères modernes des analyseurs automatiques.",
+    "ring": "Indice de Préparation ATS",
+    "scoreLabel": "Votre Score"
+  },
+  "jobMatch": {
+    "title": "Comparateur d'Emplois IA",
+    "subtitle": "Collez une description de poste pour comparer instantanément les correspondances."
+  },
+  "interview": {
+    "title": "Coach d'Entretiens Blancs IA",
+    "subtitle": "Entraînez-vous à des entretiens techniques ou comportementaux avec des retours personnalisés."
+  },
+  "status": {
+    "verified": "Vérifié",
+    "connected": "Connecté",
+    "notLinked": "Non lié",
+    "notConnected": "Non connecté"
+  },
+  "alerts": {
+    "success": "Action effectuée avec succès !",
+    "error": "Une erreur est survenue, veuillez réessayer.",
+    "saved": "Modifications enregistrées.",
+    "loading": "Chargement des données..."
+  }
+}

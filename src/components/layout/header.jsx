@@ -6,6 +6,8 @@ import { useUser, useClerk } from "@clerk/nextjs";
 import { Bell, Menu, Search, User, Settings, LogOut, Sparkles, FileText, CheckCircle2, Target, Mic } from "lucide-react";
 import { toast } from "sonner";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
+import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,32 +20,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const getRouteTitle = (path) => {
-  if (path === "/dashboard") return "Dashboard";
-  if (path === "/resume") return "My Resumes";
-  if (path.startsWith("/resume/analysis")) return "Resume Analysis";
-  if (path.startsWith("/ats-score")) return "ATS Score";
-  if (path.startsWith("/job-match")) return "Job Match";
-  if (path.startsWith("/interview/history")) return "Interview History";
-  if (path.startsWith("/interview")) return "Interview Coach";
-  if (path === "/profile") return "Profile";
-  if (path === "/settings") return "Settings";
+const getRouteTitle = (path, t) => {
+  if (path === "/dashboard") return t("dashboard.sidebar.dashboard");
+  if (path === "/resume") return t("dashboard.sidebar.resumeUpload");
+  if (path.startsWith("/resume/analysis")) return t("dashboard.sidebar.resumeAnalysis");
+  if (path.startsWith("/ats-score")) return t("dashboard.sidebar.atsScore");
+  if (path.startsWith("/job-match")) return t("dashboard.sidebar.jobMatch");
+  if (path.startsWith("/interview/history")) return t("dashboard.sidebar.interviewHistory");
+  if (path.startsWith("/interview")) return t("dashboard.sidebar.interviewCoach");
+  if (path === "/profile") return t("dashboard.sidebar.profile");
+  if (path === "/settings") return t("dashboard.sidebar.settings");
   
   const segments = path.split("/").filter(Boolean);
   if (segments[0] === "resume" && segments[1]) {
-    return "Resume Details";
+    return t("dashboard.sidebar.resumeUpload");
   }
   if (segments[0] === "job-match" && segments[1]) {
-    return "Match Analysis";
+    return t("dashboard.sidebar.jobMatch");
   }
   if (segments[0] === "interview" && segments[1]) {
-    return "Interview Session";
+    return t("dashboard.sidebar.interviewCoach");
   }
 
   return "AI Career Copilot";
 };
 
 export function Header({ onMenuClick }) {
+  const { t } = useTranslation();
   const pathname = usePathname();
   const router = useRouter();
   const { user, isLoaded } = useUser();
@@ -217,11 +220,11 @@ export function Header({ onMenuClick }) {
           </span>
           <span>/</span>
           <span className="text-foreground font-semibold">
-            {getRouteTitle(pathname)}
+            {getRouteTitle(pathname, t)}
           </span>
         </div>
         <h1 className="text-lg font-bold text-foreground lg:hidden">
-          {getRouteTitle(pathname)}
+          {getRouteTitle(pathname, t)}
         </h1>
       </div>
 
@@ -292,6 +295,8 @@ export function Header({ onMenuClick }) {
             </div>
           )}
         </div>
+
+        <LanguageSwitcher />
 
         {/* Theme Toggle */}
         <ThemeToggle />

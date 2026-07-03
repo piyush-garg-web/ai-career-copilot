@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "dashboard": "Tablero",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarse",
+    "logout": "Cerrar sesión",
+    "backToHome": "Volver al inicio",
+    "privacy": "Política de privacidad",
+    "terms": "Términos de servicio"
+  },
+  "landing": {
+    "hero": {
+      "title": "Tu Copiloto de Carrera impulsado por IA",
+      "subtitle": "Analiza currículums, verifica puntajes ATS, busca coincidencias de empleo y practica entrevistas simuladas con comentarios en tiempo real de Google Gemini.",
+      "cta": "Comenzar gratis"
+    },
+    "features": {
+      "title": "Características principales para tu éxito",
+      "subtitle": "Descubre las herramientas diseñadas para acelerar tu búsqueda de empleo."
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "dashboard": "Tablero",
+      "resumeUpload": "Subir Currículum",
+      "resumeAnalysis": "Análisis de Currículum",
+      "atsScore": "Puntaje ATS",
+      "jobMatch": "Coincidencia de Empleo",
+      "interviewCoach": "Preparador de Entrevistas",
+      "interviewHistory": "Historial de Entrevistas",
+      "profile": "Mi Perfil",
+      "settings": "Configuración de Cuenta"
+    },
+    "welcome": {
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Aquí tienes un resumen de tu estado y preparación profesional actual.",
+      "readiness": "Preparación de Carrera con IA"
+    },
+    "stats": {
+      "resumes": "Currículums Subidos",
+      "atsScore": "Puntaje ATS Objetivo",
+      "interviews": "Sesiones de Práctica",
+      "completeness": "Configuración de Perfil"
+    }
+  },
+  "profile": {
+    "title": "Mi Perfil Profesional",
+    "subtitle": "Mantén tus datos actualizados para personalizar tus recomendaciones de IA y objetivos ATS.",
+    "buttons": {
+      "save": "Guardar cambios de perfil",
+      "cancel": "Cancelar",
+      "saved": "Guardado",
+      "unsaved": "Cambios sin guardar",
+      "saving": "Guardando cambios..."
+    },
+    "sections": {
+      "bio": "Biografía y Ubicación",
+      "goals": "Trabajo de Ensueño y Metas de Salario",
+      "projects": "Registro de Proyectos Destacados",
+      "experience": "Experiencia Profesional",
+      "education": "Historial Académico",
+      "certifications": "Lista de Certificaciones",
+      "languages": "Competencia Lingüística",
+      "achievements": "Logros Clave",
+      "privacy": "Privacidad y Notificaciones"
+    }
+  },
+  "settings": {
+    "title": "Configuraciones de Cuenta",
+    "subtitle": "Ajusta tus modelos de IA, parámetros de notificación, integraciones vinculadas y temas visuales.",
+    "tabs": {
+      "ai": "Preferencias de IA",
+      "notifications": "Notificaciones",
+      "security": "Seguridad y Privacidad",
+      "connected": "Cuentas Conectadas",
+      "engine": "Motor de IA",
+      "resumeJob": "Currículum y Trabajo",
+      "appearance": "Apariencia y Acceso",
+      "data": "Datos y Almacenamiento",
+      "danger": "Zona de Peligro"
+    },
+    "ai": {
+      "language": "Idioma de respuesta de IA",
+      "personality": "Personalidad/Tono de IA",
+      "coachStyle": "Estilo del Preparador",
+      "responseLength": "Nivel de Detalle del Comentario",
+      "saveConversations": "Guardar conversaciones automáticamente",
+      "useMemory": "Usar contexto de memoria de IA",
+      "improveResponses": "Mejorar respuestas automáticamente"
+    }
+  },
+  "ats": {
+    "title": "Verificador de Puntaje ATS",
+    "subtitle": "Escanea el formato de tu currículum frente a criterios de analizadores modernos para verificar tu puntuación.",
+    "ring": "Índice de Preparación ATS",
+    "scoreLabel": "Tu Puntaje"
+  },
+  "jobMatch": {
+    "title": "Escáner de Coincidencia de Empleo IA",
+    "subtitle": "Pega una descripción de trabajo para comparar la puntuación de coincidencia al instante."
+  },
+  "interview": {
+    "title": "Preparador de Entrevistas Simuladas IA",
+    "subtitle": "Practica formatos de entrevista técnicos y de comportamiento con comentarios en tiempo real."
+  },
+  "status": {
+    "verified": "Verificado",
+    "connected": "Conectado",
+    "notLinked": "No Vinculado",
+    "notConnected": "No Conectado"
+  },
+  "alerts": {
+    "success": "¡Acción completada con éxito!",
+    "error": "Ocurrió un error, por favor inténtalo de nuevo.",
+    "saved": "Todos los cambios guardados.",
+    "loading": "Cargando datos..."
+  }
+}

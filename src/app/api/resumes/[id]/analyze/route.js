@@ -61,7 +61,14 @@ export async function POST(req, { params }) {
     console.log(`[RESUME ANALYSIS]: Commencing Gemini AI analysis for Resume ID: ${resumeId}`);
 
     // Call the AI analysis service
-    const analysisResult = await analyzeResumeWithAI(resume.rawText, resume.parsedData || {}, dbUser.aiPreferences || {});
+    const analysisResult = await analyzeResumeWithAI(
+      resume.rawText,
+      resume.parsedData || {},
+      {
+        ...(dbUser.aiPreferences || {}),
+        preferredLanguage: dbUser.preferredLanguage || "en"
+      }
+    );
 
     // Save or update the analysis record in the database
     // We use upsert to avoid duplicate records for the same resume
