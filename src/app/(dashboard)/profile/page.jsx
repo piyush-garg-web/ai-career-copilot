@@ -63,6 +63,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { deepEqual } from "@/lib/utils";
+import { validateProfileData } from "@/lib/validators";
 
 // Constant categories for skill autocomplete/chips re-ordering
 const SKILL_CATEGORIES = [
@@ -122,7 +124,7 @@ export default function ProfilePage() {
     phone: "",
     targetRole: "",
     dreamCompany: "",
-    preferredIndustry: "",
+    targetIndustry: "",
     employmentType: "FULL_TIME",
     expectedSalary: "",
     prefWorkLocation: "",
@@ -143,10 +145,10 @@ export default function ProfilePage() {
       soft: [],
     },
     aiPreferences: {
-      interviewStyle: "Professional",
+      personality: "Professional",
       difficulty: "Medium",
       focusAreas: ["DSA", "Behavioral"],
-      answerLength: "Medium",
+      responseLength: "Balanced",
       enableTips: true,
       enableWeekly: true,
     },
@@ -180,6 +182,8 @@ export default function ProfilePage() {
     achievements: [],
   });
 
+  const [savedProfile, setSavedProfile] = useState(null);
+
   // Auxiliary UI state
   const [skillsInput, setSkillsInput] = useState({ category: "languages", text: "" });
   const [newDreamCompany, setNewDreamCompany] = useState("");
@@ -206,7 +210,7 @@ export default function ProfilePage() {
 
         if (userRes.ok) {
           const userData = await userRes.json();
-          setProfile((prev) => {
+          const getNormalized = (prev) => {
             const normalizedSkills = userData.skills && typeof userData.skills === "object"
               ? { ...prev.skills, ...userData.skills }
               : prev.skills;
@@ -242,6 +246,12 @@ export default function ProfilePage() {
               languages: userData.languages || [],
               achievements: userData.achievements || [],
             };
+          };
+
+          setProfile((prev) => {
+            const res = getNormalized(prev);
+            setSavedProfile(res);
+            return res;
           });
         }
         if (resumesRes.ok) {
@@ -260,6 +270,15 @@ export default function ProfilePage() {
 
   // Trigger POST submission to `/api/user` (Manual Save)
   const triggerSave = async () => {
+    // Client-side input validation
+    const validation = validateProfileData(profile);
+    if (!validation.isValid) {
+      validation.errors.forEach((err) => {
+        toast.error(err, { duration: 5000 });
+      });
+      return;
+    }
+
     setSaveStatus("Saving...");
     setSaving(true);
     try {
@@ -269,8 +288,12 @@ export default function ProfilePage() {
         body: JSON.stringify(profile),
       });
       if (!response.ok) {
-        throw new Error("API failed to save profile modifications.");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "API failed to save profile modifications.");
       }
+      const updatedData = await response.json();
+      setProfile(updatedData);
+      setSavedProfile(updatedData);
       setSaveStatus("Saved");
       toast.success("Profile saved successfully!", {
         description: "Your settings are updated and synchronized.",
@@ -287,52 +310,10 @@ export default function ProfilePage() {
 
   // Monitor modifications to flag unsaved status
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-    setSaveStatus("Unsaved");
-  }, [
-    profile.bio,
-    profile.location,
-    profile.country,
-    profile.timezone,
-    profile.linkedinUrl,
-    profile.githubUrl,
-    profile.portfolioUrl,
-    profile.leetcodeUrl,
-    profile.hackerrankUrl,
-    profile.codeforcesUrl,
-    profile.twitterUrl,
-    profile.mediumUrl,
-    profile.behanceUrl,
-    profile.dribbbleUrl,
-    profile.dob,
-    profile.preferredContact,
-    profile.phone,
-    profile.targetRole,
-    profile.dreamCompany,
-    profile.preferredIndustry,
-    profile.employmentType,
-    profile.expectedSalary,
-    profile.prefWorkLocation,
-    profile.openToRelocation,
-    profile.yearsOfExperience,
-    profile.noticePeriod,
-    profile.currentStatus,
-    profile.experienceLevel,
-    profile.skills,
-    profile.aiPreferences,
-    profile.notificationSettings,
-    profile.privacySettings,
-    profile.careerGoalsTimeline,
-    profile.education,
-    profile.experience,
-    profile.projects,
-    profile.certifications,
-    profile.languages,
-    profile.achievements,
-  ]);
+    if (!savedProfile) return;
+    const isDirty = !deepEqual(profile, savedProfile);
+    setSaveStatus(isDirty ? "Unsaved" : "Saved");
+  }, [profile, savedProfile]);
 
   // Warning check for unsaved pages navigation
   useEffect(() => {
@@ -580,9 +561,50 @@ export default function ProfilePage() {
   const educationCount = profile.education.length;
   const skillsCount = Object.values(profile.skills).reduce((acc, curr) => acc + curr.length, 0);
   const resumesCount = resumes.length;
-  const primaryResume = resumes.find(r => r.isPrimary) || resumes[0];
+  const primaryResume = resumes.find(r => r.id === profile.resumePreferences?.defaultResumeId) || resumes.find(r => r.isPrimary) || resumes[0];
   const primaryAtsScore = primaryResume?.analysis?.atsScore || 0;
   const primaryOverallScore = primaryResume?.analysis?.overallScore || 0;
+
+  const calculateAIReadinessScore = () => {
+    let score = 0;
+    
+    // 1. Resume uploaded (20 points)
+    if (resumesCount > 0) score += 20;
+
+    // 2. ATS Score (20 points)
+    if (primaryAtsScore) {
+      score += Math.round((primaryAtsScore / 100) * 20);
+    }
+
+    // 3. Skills (15 points)
+    score += Math.min(skillsCount * 3, 15);
+
+    // 4. Projects (10 points)
+    score += Math.min(projectCount * 5, 10);
+
+    // 5. Experience (10 points)
+    if (experienceCount > 0) score += 10;
+
+    // 6. Education (10 points)
+    if (educationCount > 0) score += 10;
+
+    // 7. Completed Interviews (10 points)
+    const completedInterviews = profile.interviewSessions?.filter(s => s.status === "COMPLETED")?.length || 0;
+    score += Math.min(completedInterviews * 5, 10);
+
+    // 8. GitHub connected (2.5 points)
+    if (profile.githubUrl) score += 2.5;
+
+    // 9. LinkedIn connected (2.5 points)
+    if (profile.linkedinUrl) score += 2.5;
+
+    // 10. Profile completion (10 points)
+    score += Math.round(completeness * 0.1);
+
+    return Math.min(Math.round(score), 100);
+  };
+
+  const aiReadinessScore = calculateAIReadinessScore();
 
   if (loading) {
     return (
@@ -955,10 +977,10 @@ export default function ProfilePage() {
                       <div className="space-y-1.5">
                         <label className="text-xs font-bold text-foreground">Preferred Industry</label>
                         <input
-                          name="preferredIndustry"
+                          name="targetIndustry"
                           type="text"
                           placeholder="e.g. SaaS, Fintech"
-                          value={profile.preferredIndustry || ""}
+                          value={profile.targetIndustry || ""}
                           onChange={handleFieldChange}
                           className="w-full h-10 px-3 py-2 text-xs rounded-xl border border-border/40 bg-background/50 focus:border-indigo-500 focus:outline-none placeholder-muted-foreground/60 font-semibold text-foreground"
                         />
@@ -1740,8 +1762,8 @@ export default function ProfilePage() {
                       <div className="space-y-1.5">
                         <label className="text-xs font-bold text-foreground">Mock Interview Coach Style</label>
                         <select
-                          value={profile.aiPreferences.interviewStyle || "Professional"}
-                          onChange={(e) => handleNestedFieldChange("aiPreferences", "interviewStyle", e.target.value)}
+                          value={profile.aiPreferences.personality || "Professional"}
+                          onChange={(e) => handleNestedFieldChange("aiPreferences", "personality", e.target.value)}
                           className="w-full h-10 px-3 py-2 text-xs rounded-xl border border-border/40 bg-background/50 focus:border-indigo-500 focus:outline-none font-semibold text-foreground"
                         >
                           <option value="Friendly">Friendly & Encouraging</option>
@@ -1768,12 +1790,12 @@ export default function ProfilePage() {
                       <div className="space-y-1.5">
                         <label className="text-xs font-bold text-foreground">Preferred AI Response Depth</label>
                         <select
-                          value={profile.aiPreferences.answerLength || "Medium"}
-                          onChange={(e) => handleNestedFieldChange("aiPreferences", "answerLength", e.target.value)}
+                          value={profile.aiPreferences.responseLength || "Balanced"}
+                          onChange={(e) => handleNestedFieldChange("aiPreferences", "responseLength", e.target.value)}
                           className="w-full h-10 px-3 py-2 text-xs rounded-xl border border-border/40 bg-background/50 focus:border-indigo-500 focus:outline-none font-semibold text-foreground"
                         >
-                          <option value="Short">Short & Concise</option>
-                          <option value="Medium">Standard Feedback</option>
+                          <option value="Concise">Short & Concise</option>
+                          <option value="Balanced">Standard Feedback</option>
                           <option value="Detailed">Detailed code/STAR breakdown</option>
                         </select>
                       </div>
@@ -1965,6 +1987,17 @@ export default function ProfilePage() {
               <Activity className="w-4.5 h-4.5 text-indigo-400 animate-pulse" />
               AI Readiness Scorecard
             </h4>
+
+            {/* Overall AI Readiness Score */}
+            <div className="space-y-1.5 pb-2 border-b border-border/20">
+              <div className="flex justify-between items-center text-xs font-bold">
+                <span className="text-indigo-400 font-extrabold uppercase tracking-wider text-[10px]">Aggregate AI Readiness Score</span>
+                <span className="text-foreground font-black text-sm">{aiReadinessScore}%</span>
+              </div>
+              <div className="w-full bg-accent/20 h-2.5 rounded-full overflow-hidden">
+                <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-full rounded-full transition-all duration-500" style={{ width: `${aiReadinessScore}%` }} />
+              </div>
+            </div>
 
             {/* ATS Readiness Gauge */}
             <div className="space-y-1.5">

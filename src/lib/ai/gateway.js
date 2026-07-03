@@ -86,6 +86,7 @@ class AIGateway {
 
     // Load persisted cache & stats if available
     this._loadCache();
+    this._loadStats();
   }
 
   /**
@@ -102,6 +103,50 @@ class AIGateway {
       }
     } catch (e) {
       console.warn("[AI GATEWAY]: Could not load persisted cache (likely read-only FS or malformed JSON):", e.message);
+    }
+  }
+
+  /**
+   * Internal helper to parse and load statistics from persisted logs.
+   */
+  _loadStats() {
+    try {
+      if (fs.existsSync(this.usageFilePath)) {
+        const raw = fs.readFileSync(this.usageFilePath, "utf8");
+        const logs = JSON.parse(raw);
+        if (Array.isArray(logs) && logs.length > 0) {
+          let requests = logs.length;
+          let successes = 0;
+          let failures = 0;
+          let fallbacks = 0;
+          let totalDurationMs = 0;
+          let cacheHits = 0;
+          let quotaErrors = 0;
+
+          logs.forEach((log) => {
+            if (log.success) successes++;
+            else failures++;
+            
+            if (log.cacheHit) cacheHits++;
+            if (log.fallbackUsed) fallbacks++;
+            if (log.durationMs) totalDurationMs += log.durationMs;
+            if (log.errorType === "QUOTA_EXHAUSTED") quotaErrors++;
+          });
+
+          this.stats = {
+            requests,
+            successes,
+            failures,
+            fallbacks,
+            totalDurationMs,
+            cacheHits,
+            quotaErrors,
+          };
+          console.log(`[AI GATEWAY]: Initialized stats from persisted usage logs. Requests: ${requests}`);
+        }
+      }
+    } catch (e) {
+      console.warn("[AI GATEWAY]: Could not load persisted stats:", e.message);
     }
   }
 
@@ -406,13 +451,24 @@ class AIGateway {
     };
   }
 
-  /**
-   * Development-only method to reset metrics and cache.
-   */
   clearCache() {
     this.cache.clear();
-    this._saveCache();
-    console.log("[AI GATEWAY]: Cache cleared.");
+    try {
+      if (fs.existsSync(this.cacheFilePath)) fs.unlinkSync(this.cacheFilePath);
+      if (fs.existsSync(this.usageFilePath)) fs.unlinkSync(this.usageFilePath);
+    } catch (e) {
+      console.warn("[AI GATEWAY]: Error clearing disk caches:", e.message);
+    }
+    this.stats = {
+      requests: 0,
+      successes: 0,
+      failures: 0,
+      fallbacks: 0,
+      totalDurationMs: 0,
+      cacheHits: 0,
+      quotaErrors: 0,
+    };
+    console.log("[AI GATEWAY]: Cache and usage logs cleared, stats reset.");
   }
 }
 

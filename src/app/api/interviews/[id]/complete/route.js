@@ -96,6 +96,17 @@ export async function POST(req, { params }) {
       },
     });
 
+    if (dbUser.aiPreferences?.autoSaveConversations === false) {
+      console.log(`[PRIVACY SYNC]: autoSaveConversations is false. Purging raw dialogue transcript for session: ${session.id}`);
+      const questionIds = questions.map((q) => q.id);
+      await db.answer.updateMany({
+        where: { questionId: { in: questionIds } },
+        data: {
+          content: "[PURGED FOR PRIVACY]",
+        },
+      });
+    }
+
     console.log(`[COMPLETE SESSION API SUCCESS]: Closed session ${session.id} with final score: ${scorecard.overallScore}%`);
 
     return NextResponse.json({

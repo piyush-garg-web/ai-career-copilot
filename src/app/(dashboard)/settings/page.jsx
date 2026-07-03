@@ -9,6 +9,8 @@ import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { deepEqual } from "@/lib/utils";
+import { validateProfileData } from "@/lib/validators";
 import {
   Settings,
   Sparkles,
@@ -186,7 +188,7 @@ export default function SettingsPage() {
     }
   });
 
-  const isInitialMount = useRef(true);
+  const [savedProfile, setSavedProfile] = useState(null);
 
   // Fetch Settings, Resumes & API Gateway stats
   useEffect(() => {
@@ -197,7 +199,7 @@ export default function SettingsPage() {
         if (userRes.ok) {
           const userData = await userRes.json();
           setProfile((prev) => {
-            return {
+            const res = {
               ...prev,
               theme: userData.theme || prev.theme,
               githubUrl: userData.githubUrl || "",
@@ -216,6 +218,8 @@ export default function SettingsPage() {
               appearanceSettings: userData.appearanceSettings ? { ...prev.appearanceSettings, ...userData.appearanceSettings } : prev.appearanceSettings,
               privacySettings: userData.privacySettings ? { ...prev.privacySettings, ...userData.privacySettings } : prev.privacySettings,
             };
+            setSavedProfile(res);
+            return res;
           });
 
           if (userData.theme) {
@@ -249,12 +253,10 @@ export default function SettingsPage() {
 
   // Monitor modifications to set unsaved flag
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-    setSaveStatus("Unsaved");
-  }, [profile]);
+    if (!savedProfile) return;
+    const isDirty = !deepEqual(profile, savedProfile);
+    setSaveStatus(isDirty ? "Unsaved" : "Saved");
+  }, [profile, savedProfile]);
 
   // Handle Form changes
   const updateNestedField = (section, field, value) => {
@@ -287,37 +289,34 @@ export default function SettingsPage() {
 
   // Submit Settings POST API
   const handleSaveSettings = async () => {
+    // Client-side validation
+    const validation = validateProfileData(profile);
+    if (!validation.isValid) {
+      validation.errors.forEach((err) => {
+        toast.error(err, { duration: 5000 });
+      });
+      return;
+    }
+
     setSaving(true);
     setSaveStatus("Saving...");
     try {
       const response = await fetch("/api/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          theme: profile.theme,
-          githubUrl: profile.githubUrl,
-          linkedinUrl: profile.linkedinUrl,
-          portfolioUrl: profile.portfolioUrl,
-          leetcodeUrl: profile.leetcodeUrl,
-          hackerrankUrl: profile.hackerrankUrl,
-          codeforcesUrl: profile.codeforcesUrl,
-          aiPreferences: profile.aiPreferences,
-          notificationSettings: profile.notificationSettings,
-          securitySettings: profile.securitySettings,
-          connectedAccounts: profile.connectedAccounts,
-          resumePreferences: profile.resumePreferences,
-          jobPreferences: profile.jobPreferences,
-          accessibilitySettings: profile.accessibilitySettings,
-          appearanceSettings: profile.appearanceSettings,
-          privacySettings: profile.privacySettings
-        }),
+        body: JSON.stringify(profile),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to write configurations to database.");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to write configurations to database.");
       }
 
+      const updatedData = await response.json();
+      setProfile(updatedData);
+      setSavedProfile(updatedData);
       setSaveStatus("Saved");
+      
       toast.success("Settings saved successfully!", {
         description: "Your configurations are synchronized.",
       });
@@ -328,6 +327,137 @@ export default function SettingsPage() {
       });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const [tempInputs, setTempInputs] = useState({});
+  const [connecting, setConnecting] = useState({});
+
+  // Synchronize input fields with profile state on change
+  useEffect(() => {
+    if (profile) {
+      setTempInputs({
+        github: profile.githubUrl || "",
+        linkedin: profile.linkedinUrl || "",
+        portfolio: profile.portfolioUrl || "",
+        leetcode: profile.leetcodeUrl || "",
+        hackerrank: profile.hackerrankUrl || "",
+        codeforces: profile.codeforcesUrl || "",
+      });
+    }
+  }, [
+    profile?.githubUrl,
+    profile?.linkedinUrl,
+    profile?.portfolioUrl,
+    profile?.leetcodeUrl,
+    profile?.hackerrankUrl,
+    profile?.codeforcesUrl,
+  ]);
+
+  const handleConnectAccount = async (provider) => {
+    const val = tempInputs[provider];
+    if (!val) {
+      toast.error(`Please enter a valid URL or handle for ${provider}.`);
+      return;
+    }
+
+    setConnecting(prev => ({ ...prev, [provider]: true }));
+    try {
+      const res = await fetch("/api/user/connected-accounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ provider, value: val }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Verification failed.");
+      }
+
+      const responseData = await res.json();
+      
+      const dbFieldsMap = {
+        github: "githubUrl",
+        linkedin: "linkedinUrl",
+        portfolio: "portfolioUrl",
+        leetcode: "leetcodeUrl",
+        hackerrank: "hackerrankUrl",
+        codeforces: "codeforcesUrl",
+      };
+      const field = dbFieldsMap[provider];
+
+      setProfile(prev => {
+        const next = {
+          ...prev,
+          connectedAccounts: responseData.connectedAccounts,
+          ...(field && { [field]: responseData.url || val })
+        };
+        setSavedProfile(prevSaved => {
+          if (!prevSaved) return null;
+          return {
+            ...prevSaved,
+            connectedAccounts: responseData.connectedAccounts,
+            ...(field && { [field]: responseData.url || val })
+          };
+        });
+        return next;
+      });
+
+      toast.success(`${provider} connected successfully!`);
+    } catch (err) {
+      toast.error(`Failed to connect ${provider}: ${err.message}`);
+    } finally {
+      setConnecting(prev => ({ ...prev, [provider]: false }));
+    }
+  };
+
+  const handleDisconnectAccount = async (provider) => {
+    setConnecting(prev => ({ ...prev, [provider]: true }));
+    try {
+      const res = await fetch(`/api/user/connected-accounts?provider=${provider}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "Disconnection failed.");
+      }
+
+      const responseData = await res.json();
+
+      const dbFieldsMap = {
+        github: "githubUrl",
+        linkedin: "linkedinUrl",
+        portfolio: "portfolioUrl",
+        leetcode: "leetcodeUrl",
+        hackerrank: "hackerrankUrl",
+        codeforces: "codeforcesUrl",
+      };
+      const field = dbFieldsMap[provider];
+
+      setProfile(prev => {
+        const next = {
+          ...prev,
+          connectedAccounts: responseData.connectedAccounts,
+          ...(field && { [field]: "" })
+        };
+        setSavedProfile(prevSaved => {
+          if (!prevSaved) return null;
+          return {
+            ...prevSaved,
+            connectedAccounts: responseData.connectedAccounts,
+            ...(field && { [field]: "" })
+          };
+        });
+        return next;
+      });
+
+      setTempInputs(prev => ({ ...prev, [provider]: "" }));
+      toast.success(`${provider} disconnected successfully.`);
+    } catch (err) {
+      toast.error(`Failed to disconnect ${provider}: ${err.message}`);
+    } finally {
+      setConnecting(prev => ({ ...prev, [provider]: false }));
     }
   };
 
@@ -382,10 +512,20 @@ export default function SettingsPage() {
   // Clear AI Gateway Local Cache
   const handleClearCache = async () => {
     try {
-      const res = await fetch("/api/ai/health"); // In development triggers status, can clear
-      toast.success("AI Gateway Cache Reset successfully!", {
-        description: "Request index and cached response payloads cleared.",
-      });
+      const res = await fetch("/api/ai/health", { method: "DELETE" });
+      if (res.ok) {
+        toast.success("AI Gateway Cache Reset successfully!", {
+          description: "Request index and cached response payloads cleared.",
+        });
+        // Refresh metrics
+        const healthRes = await fetch("/api/ai/health");
+        if (healthRes.ok) {
+          const healthData = await healthRes.json();
+          setApiMetrics((prev) => ({ ...prev, ...healthData }));
+        }
+      } else {
+        throw new Error();
+      }
     } catch (err) {
       toast.error("Failed to clear gateway cache.");
     }
@@ -879,7 +1019,16 @@ export default function SettingsPage() {
 
                       <div className="space-y-1">
                         <span className="text-muted-foreground block">Phone Verification Status</span>
-                        <span className="text-muted-foreground/60">Not Connected (Add via Clerk settings)</span>
+                        {(() => {
+                          const verifiedPhoneObj = user?.phoneNumbers?.find(p => p.verification?.status === "verified");
+                          return verifiedPhoneObj ? (
+                            <span className="text-emerald-400 flex items-center gap-1">
+                              <CheckCircle className="w-3.5 h-3.5" /> Verified ({verifiedPhoneObj.phoneNumber})
+                            </span>
+                          ) : (
+                            <span className="text-muted-foreground/60">Not Connected (Add via Clerk settings)</span>
+                          );
+                        })()}
                       </div>
                     </div>
 
@@ -989,7 +1138,10 @@ export default function SettingsPage() {
                     {/* Developer Social Links */}
                     {accountsMapping.map((item) => {
                       const Icon = item.icon;
-                      const hasValue = !!profile[item.dbField];
+                      const accountInfo = profile.connectedAccounts?.[item.key];
+                      const isConnected = !!accountInfo?.connected;
+                      const isOAuth = !!accountInfo?.isOAuth;
+                      const isConnecting = !!connecting[item.key];
                       return (
                         <div key={item.key} className="p-4 border border-border/40 bg-accent/20 rounded-2xl flex flex-col justify-between gap-3 text-xs font-bold">
                           <div className="flex items-center justify-between gap-2">
@@ -1003,9 +1155,9 @@ export default function SettingsPage() {
                               </div>
                             </div>
                             <span className={`px-2.5 py-1 rounded-xl text-[9px] font-black uppercase tracking-wider ${
-                              hasValue ? "bg-emerald-500/10 text-emerald-500" : "bg-muted/60 text-muted-foreground/60"
+                              isConnected ? (isOAuth ? "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20" : "bg-emerald-500/10 text-emerald-500") : "bg-muted/60 text-muted-foreground/60"
                             }`}>
-                              {hasValue ? "Connected" : "Not Connected"}
+                              {isConnected ? (isOAuth ? "OAuth Connected" : "Connected") : "Not Connected"}
                             </span>
                           </div>
 
@@ -1013,17 +1165,36 @@ export default function SettingsPage() {
                             <input
                               type="text"
                               placeholder={item.placeholder}
-                              value={profile[item.dbField] || ""}
-                              onChange={(e) => setProfile(prev => ({ ...prev, [item.dbField]: e.target.value }))}
-                              className="w-full h-8 px-3 text-[10px] rounded-xl border border-border/40 bg-background text-foreground font-semibold focus:outline-none focus:border-indigo-500"
+                              value={isOAuth ? (accountInfo?.username ? `@${accountInfo.username} (Synced via Clerk)` : "Linked via Clerk login") : (tempInputs[item.key] || "")}
+                              onChange={(e) => setTempInputs(prev => ({ ...prev, [item.key]: e.target.value }))}
+                              disabled={isConnected || isConnecting || isOAuth}
+                              className="w-full h-8 px-3 text-[10px] rounded-xl border border-border/40 bg-background text-foreground font-semibold focus:outline-none focus:border-indigo-500 disabled:opacity-50"
                             />
-                            {hasValue && (
+                            {isOAuth ? (
                               <Button
                                 type="button"
-                                onClick={() => setProfile(prev => ({ ...prev, [item.dbField]: "" }))}
+                                onClick={() => openUserProfile()}
+                                className="h-8 rounded-xl px-3 bg-indigo-600/10 text-indigo-400 hover:bg-indigo-600/20 text-[9px] font-black uppercase tracking-wider cursor-pointer shrink-0 border border-indigo-500/20"
+                              >
+                                Manage Profile
+                              </Button>
+                            ) : isConnected ? (
+                              <Button
+                                type="button"
+                                onClick={() => handleDisconnectAccount(item.key)}
+                                disabled={isConnecting}
                                 className="h-8 rounded-xl px-3 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 text-[9px] font-black uppercase tracking-wider cursor-pointer shrink-0 border border-rose-500/20"
                               >
-                                Clear
+                                {isConnecting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Disconnect"}
+                              </Button>
+                            ) : (
+                              <Button
+                                type="button"
+                                onClick={() => handleConnectAccount(item.key)}
+                                disabled={isConnecting || !tempInputs[item.key]}
+                                className="h-8 rounded-xl px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-[9px] font-black uppercase tracking-wider cursor-pointer shrink-0"
+                              >
+                                {isConnecting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Verify"}
                               </Button>
                             )}
                           </div>

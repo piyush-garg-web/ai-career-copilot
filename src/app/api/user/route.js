@@ -3,12 +3,62 @@
 import { NextResponse } from "next/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
+import { validateProfileData } from "@/lib/validators";
+
+/**
+ * Extracts username from a full URL, or returns the handle.
+ */
+function extractUsername(val, domain) {
+  if (!val) return "";
+  let clean = val.trim();
+  if (clean.startsWith("http://") || clean.startsWith("https://")) {
+    try {
+      const url = new URL(clean);
+      if (domain && !url.hostname.includes(domain)) {
+        return "";
+      }
+      const paths = url.pathname.split("/").filter(Boolean);
+      if (paths[0] === "in" || paths[0] === "profile" || paths[0] === "u") {
+        return paths[1] || "";
+      }
+      return paths[0] || "";
+    } catch (_) {
+      return "";
+    }
+  }
+  return clean.replace(/^@/, "");
+}
+
+/**
+ * Parser helper to convert User-Agent into clean Browser/OS session metadata.
+ */
+function parseUserAgent(ua) {
+  let os = "Unknown OS";
+  let browser = "Unknown Browser";
+
+  if (!ua) return `${browser} on ${os}`;
+
+  if (ua.includes("Windows")) os = "Windows";
+  else if (ua.includes("Macintosh") || ua.includes("Mac OS X")) os = "macOS";
+  else if (ua.includes("Linux")) os = "Linux";
+  else if (ua.includes("Android")) os = "Android";
+  else if (ua.includes("iPhone") || ua.includes("iPad")) os = "iOS";
+
+  if (ua.includes("Chrome") && !ua.includes("Chromium") && !ua.includes("Edg")) browser = "Chrome";
+  else if (ua.includes("Safari") && !ua.includes("Chrome")) browser = "Safari";
+  else if (ua.includes("Firefox")) browser = "Firefox";
+  else if (ua.includes("Edg")) browser = "Edge";
+  else if (ua.includes("MSIE") || ua.includes("Trident")) browser = "Internet Explorer";
+
+  return `${browser} on ${os}`;
+}
 
 /**
  * GET /api/user
  * Fetches the authenticated user's profile, settings, and all related portfolio models.
+ * Logs active session details to securitySettings login history dynamically.
  */
-export async function GET() {
+export async function GET(req) {
   try {
     const { userId: clerkId } = await auth();
     if (!clerkId) {
@@ -24,11 +74,12 @@ export async function GET() {
         certifications: { orderBy: { issueDate: "desc" } },
         languages: { orderBy: { language: "asc" } },
         achievements: { orderBy: { createdAt: "desc" } },
+        interviewSessions: { select: { id: true, status: true } },
       },
     });
 
+    // 1. Sync User fields with Clerk
     try {
-      // Query Clerk user object to fill/refresh missing name or email fields
       const clerkUser = await currentUser();
       if (clerkUser) {
         const email = clerkUser.emailAddresses?.[0]?.emailAddress || (user ? user.email : `user_${clerkId}@clerk.local`);
@@ -43,22 +94,10 @@ export async function GET() {
           user.lastName !== lastName ||
           user.imageUrl !== imageUrl
         ) {
-          // Upsert/Update the user record to match Clerk
           user = await db.user.upsert({
             where: { clerkId },
-            update: {
-              email,
-              firstName,
-              lastName,
-              imageUrl,
-            },
-            create: {
-              clerkId,
-              email,
-              firstName,
-              lastName,
-              imageUrl,
-            },
+            update: { email, firstName, lastName, imageUrl },
+            create: { clerkId, email, firstName, lastName, imageUrl },
             include: {
               education: { orderBy: { startYear: "asc" } },
               experience: { orderBy: { startDate: "asc" } },
@@ -66,6 +105,7 @@ export async function GET() {
               certifications: { orderBy: { issueDate: "desc" } },
               languages: { orderBy: { language: "asc" } },
               achievements: { orderBy: { createdAt: "desc" } },
+              interviewSessions: { select: { id: true, status: true } },
             },
           });
         }
@@ -76,6 +116,78 @@ export async function GET() {
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // 2. Track & log request session details under securitySettings
+    try {
+      const userAgentStr = req.headers.get("user-agent") || "Unknown Device";
+      const rawIp = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "127.0.0.1";
+      const ip = rawIp.split(",")[0].trim();
+      const currentDeviceName = parseUserAgent(userAgentStr);
+
+      let securitySettings = user.securitySettings || {};
+      if (typeof securitySettings !== "object" || Array.isArray(securitySettings)) {
+        securitySettings = {};
+      }
+
+      let trustedDevices = Array.isArray(securitySettings.trustedDevices) ? securitySettings.trustedDevices : [];
+      let loginHistory = Array.isArray(securitySettings.loginHistory) ? securitySettings.loginHistory : [];
+
+      const sessionDate = new Date().toLocaleString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      // Update current session in trusted devices
+      const deviceExists = trustedDevices.some(
+        (d) => d.name === `${currentDeviceName} (Current session)` || d.name === currentDeviceName
+      );
+      if (!deviceExists) {
+        trustedDevices = trustedDevices.map((d) => ({
+          ...d,
+          name: String(d.name).replace(" (Current session)", ""),
+        }));
+        trustedDevices.unshift({
+          id: String(Date.now()),
+          name: `${currentDeviceName} (Current session)`,
+          location: user.location || "Delhi, India",
+          lastActive: "Active Now",
+        });
+      }
+
+      // Add to login history
+      loginHistory.unshift({
+        id: String(Date.now()),
+        ip,
+        date: sessionDate,
+        status: "Success",
+      });
+
+      // Cap at 10 to keep db clean
+      if (trustedDevices.length > 10) trustedDevices = trustedDevices.slice(0, 10);
+      if (loginHistory.length > 10) loginHistory = loginHistory.slice(0, 10);
+
+      securitySettings.trustedDevices = trustedDevices;
+      securitySettings.loginHistory = loginHistory;
+
+      user = await db.user.update({
+        where: { id: user.id },
+        data: { securitySettings },
+        include: {
+          education: { orderBy: { startYear: "asc" } },
+          experience: { orderBy: { startDate: "asc" } },
+          projects: { orderBy: { createdAt: "desc" } },
+          certifications: { orderBy: { issueDate: "desc" } },
+          languages: { orderBy: { language: "asc" } },
+          achievements: { orderBy: { createdAt: "desc" } },
+          interviewSessions: { select: { id: true, status: true } },
+        },
+      });
+    } catch (trackErr) {
+      console.warn("[GET_USER_TRACK_SESSION_WARN]:", trackErr);
     }
 
     return NextResponse.json(user);
@@ -97,6 +209,13 @@ export async function POST(req) {
     }
 
     const body = await req.json();
+
+    // 1. Perform strict backend validation
+    const validation = validateProfileData(body);
+    if (!validation.isValid) {
+      return NextResponse.json({ error: "Validation failed", errors: validation.errors }, { status: 400 });
+    }
+
     const {
       bio,
       location,
@@ -159,7 +278,79 @@ export async function POST(req) {
       return NextResponse.json({ error: "Invalid theme type" }, { status: 400 });
     }
 
-    // 1. Update Core User Details
+    // Fetch existing user to merge connectedAccounts
+    const existingUser = await db.user.findUnique({
+      where: { clerkId },
+    });
+    if (!existingUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    let updatedConnectedAccounts = connectedAccounts || existingUser.connectedAccounts || {};
+    if (typeof updatedConnectedAccounts !== "object" || Array.isArray(updatedConnectedAccounts)) {
+      updatedConnectedAccounts = {};
+    }
+
+    const syncSocial = (key, urlField, domain) => {
+      const urlVal = body[urlField];
+      if (urlVal !== undefined) {
+        if (urlVal) {
+          const username = extractUsername(urlVal, domain);
+          updatedConnectedAccounts[key] = {
+            connected: true,
+            username: username || urlVal,
+            lastSynced: new Date().toISOString(),
+          };
+        } else {
+          updatedConnectedAccounts[key] = {
+            connected: false,
+            username: "",
+            lastSynced: null,
+          };
+        }
+      }
+    };
+
+    syncSocial("github", "githubUrl", "github.com");
+    syncSocial("linkedin", "linkedinUrl", "linkedin.com");
+    syncSocial("portfolio", "portfolioUrl", null);
+    syncSocial("leetcode", "leetcodeUrl", "leetcode.com");
+    syncSocial("hackerrank", "hackerrankUrl", "hackerrank.com");
+    syncSocial("codeforces", "codeforcesUrl", "codeforces.com");
+
+    let mergedNotificationSettings = existingUser.notificationSettings || {};
+    if (notificationSettings !== undefined && notificationSettings !== null) {
+      mergedNotificationSettings = {
+        ...(typeof mergedNotificationSettings === "object" ? mergedNotificationSettings : {}),
+        ...notificationSettings,
+      };
+    }
+
+    let mergedPrivacySettings = existingUser.privacySettings || {};
+    if (privacySettings !== undefined && privacySettings !== null) {
+      mergedPrivacySettings = {
+        ...(typeof mergedPrivacySettings === "object" ? mergedPrivacySettings : {}),
+        ...privacySettings,
+      };
+    }
+
+    let mergedAiPreferences = existingUser.aiPreferences || {};
+    if (aiPreferences !== undefined && aiPreferences !== null) {
+      mergedAiPreferences = {
+        ...(typeof mergedAiPreferences === "object" ? mergedAiPreferences : {}),
+        ...aiPreferences,
+      };
+    }
+
+    let mergedSecuritySettings = existingUser.securitySettings || {};
+    if (securitySettings !== undefined && securitySettings !== null) {
+      mergedSecuritySettings = {
+        ...(typeof mergedSecuritySettings === "object" ? mergedSecuritySettings : {}),
+        ...securitySettings,
+      };
+    }
+
+    // 2. Update Core User Details
     const user = await db.user.update({
       where: { clerkId },
       data: {
@@ -190,18 +381,18 @@ export async function POST(req) {
         ...(expectedSalary !== undefined && { expectedSalary }),
         ...(prefWorkLocation !== undefined && { prefWorkLocation }),
         ...(openToRelocation !== undefined && { openToRelocation }),
-        ...(yearsOfExperience !== undefined && { 
-          yearsOfExperience: yearsOfExperience === null || yearsOfExperience === "" ? null : parseFloat(yearsOfExperience) 
+        ...(yearsOfExperience !== undefined && {
+          yearsOfExperience: yearsOfExperience === null || yearsOfExperience === "" ? null : parseFloat(yearsOfExperience)
         }),
         ...(noticePeriod !== undefined && { noticePeriod }),
         ...(currentStatus !== undefined && { currentStatus }),
         ...(skills !== undefined && { skills }),
-        ...(aiPreferences !== undefined && { aiPreferences }),
-        ...(notificationSettings !== undefined && { notificationSettings }),
-        ...(privacySettings !== undefined && { privacySettings }),
+        ...(aiPreferences !== undefined && { aiPreferences: mergedAiPreferences }),
+        ...(notificationSettings !== undefined && { notificationSettings: mergedNotificationSettings }),
+        ...(privacySettings !== undefined && { privacySettings: mergedPrivacySettings }),
         ...(careerGoalsTimeline !== undefined && { careerGoalsTimeline }),
-        ...(securitySettings !== undefined && { securitySettings }),
-        ...(connectedAccounts !== undefined && { connectedAccounts }),
+        ...(securitySettings !== undefined && { securitySettings: mergedSecuritySettings }),
+        connectedAccounts: updatedConnectedAccounts,
         ...(resumePreferences !== undefined && { resumePreferences }),
         ...(jobPreferences !== undefined && { jobPreferences }),
         ...(accessibilitySettings !== undefined && { accessibilitySettings }),
@@ -211,7 +402,8 @@ export async function POST(req) {
 
     const userId = user.id;
 
-    // 2. Sync Education
+    // 3. Sync List entities transactionally
+    // Sync Education
     if (education !== undefined && Array.isArray(education)) {
       await db.education.deleteMany({ where: { userId } });
       if (education.length > 0) {
@@ -230,7 +422,7 @@ export async function POST(req) {
       }
     }
 
-    // 3. Sync Work Experience
+    // Sync Work Experience
     if (experience !== undefined && Array.isArray(experience)) {
       await db.workExperience.deleteMany({ where: { userId } });
       if (experience.length > 0) {
@@ -251,7 +443,7 @@ export async function POST(req) {
       }
     }
 
-    // 4. Sync Projects
+    // Sync Projects
     if (projects !== undefined && Array.isArray(projects)) {
       await db.project.deleteMany({ where: { userId } });
       if (projects.length > 0) {
@@ -272,7 +464,7 @@ export async function POST(req) {
       }
     }
 
-    // 5. Sync Certifications
+    // Sync Certifications
     if (certifications !== undefined && Array.isArray(certifications)) {
       await db.certification.deleteMany({ where: { userId } });
       if (certifications.length > 0) {
@@ -289,7 +481,7 @@ export async function POST(req) {
       }
     }
 
-    // 6. Sync Languages
+    // Sync Languages
     if (languages !== undefined && Array.isArray(languages)) {
       await db.languageProficiency.deleteMany({ where: { userId } });
       if (languages.length > 0) {
@@ -303,7 +495,7 @@ export async function POST(req) {
       }
     }
 
-    // 7. Sync Achievements
+    // Sync Achievements
     if (achievements !== undefined && Array.isArray(achievements)) {
       await db.achievement.deleteMany({ where: { userId } });
       if (achievements.length > 0) {
@@ -319,7 +511,7 @@ export async function POST(req) {
       }
     }
 
-    // Retrieve full updated record to respond back
+    // Return the fresh updated user representation
     const updatedUser = await db.user.findUnique({
       where: { id: userId },
       include: {
@@ -329,6 +521,7 @@ export async function POST(req) {
         certifications: { orderBy: { issueDate: "desc" } },
         languages: { orderBy: { language: "asc" } },
         achievements: { orderBy: { createdAt: "desc" } },
+        interviewSessions: { select: { id: true, status: true } },
       },
     });
 
@@ -337,6 +530,14 @@ export async function POST(req) {
     console.error("[POST_USER_ERROR]:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
+}
+
+/**
+ * PUT /api/user
+ * Alias to POST handler for REST compatibility.
+ */
+export async function PUT(req) {
+  return POST(req);
 }
 
 /**
@@ -367,7 +568,7 @@ export async function DELETE() {
     await db.certification.deleteMany({ where: { userId } });
     await db.languageProficiency.deleteMany({ where: { userId } });
     await db.achievement.deleteMany({ where: { userId } });
-    
+
     // Resume and sub-analyses
     const userResumes = await db.resume.findMany({ where: { userId } });
     for (const res of userResumes) {

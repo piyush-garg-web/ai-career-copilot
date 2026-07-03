@@ -112,6 +112,8 @@ export function buildAnswerEvaluationPrompt(questionContent, questionType, userA
   const personality = aiPreferences.personality || "Professional";
   const responseLength = aiPreferences.responseLength || "Balanced";
   const coachStyle = aiPreferences.coachStyle || "Technical Interview";
+  const autoImprove = !!aiPreferences.autoImproveResponses;
+  const useMemory = !!aiPreferences.useMemory;
 
   return `
 Question Type: ${questionType}
@@ -124,6 +126,7 @@ CRITICAL INSTRUCTIONS FOR CUSTOMIZATION & MULTILINGUAL SUPPORT:
 1. OUTPUT LANGUAGE: You MUST write the content for all free-form text fields in the output JSON (specifically: "strengths", "improvements", "improvedAnswer", and "feedback") in the language: "${language}".
 2. COACH STYLE / TONE: Adopt a "${coachStyle}" coaching style and "${personality}" tone when providing feedback.
 3. DETAIL LEVEL: Adjust the detail level of your observations to: "${responseLength}".
+${autoImprove ? "4. DYNAMIC IMPROVEMENT: Leverage advanced industry standards to make the candidate's improvedAnswer exceptionally polished and structurally optimized (STAR methodology).\n" : ""}${useMemory ? "5. PROFILE CONTEXT MEMORY: Relate candidate's answer flaws or suggestions back to their long-term career goals and targeted skills where appropriate.\n" : ""}
 `;
 }
 

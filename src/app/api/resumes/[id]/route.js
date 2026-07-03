@@ -105,8 +105,30 @@ export async function PATCH(req, { params }) {
         data: { isPrimary: false },
       });
       updateData.isPrimary = true;
+
+      let resumePreferences = dbUser.resumePreferences || {};
+      if (typeof resumePreferences !== "object" || Array.isArray(resumePreferences)) {
+        resumePreferences = {};
+      }
+      resumePreferences.defaultResumeId = resumeId;
+      await db.user.update({
+        where: { id: dbUser.id },
+        data: { resumePreferences },
+      });
     } else if (body.isPrimary === false) {
       updateData.isPrimary = false;
+
+      let resumePreferences = dbUser.resumePreferences || {};
+      if (typeof resumePreferences !== "object" || Array.isArray(resumePreferences)) {
+        resumePreferences = {};
+      }
+      if (resumePreferences.defaultResumeId === resumeId) {
+        resumePreferences.defaultResumeId = "";
+        await db.user.update({
+          where: { id: dbUser.id },
+          data: { resumePreferences },
+        });
+      }
     }
 
     const updated = await db.resume.update({
