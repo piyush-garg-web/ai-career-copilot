@@ -194,7 +194,6 @@ export default function ProfilePage() {
 
   const isInitialMount = useRef(true);
   const autoSaveTimer = useRef(null);
-  const lastSavedProfileRef = useRef(null);
 
   // Fetch complete profile & resumes
   useEffect(() => {
@@ -207,30 +206,29 @@ export default function ProfilePage() {
 
         if (userRes.ok) {
           const userData = await userRes.json();
-          // Build merged profile object so we can snapshot it as the "last saved" baseline
-          const mergedProfile = (() => {
+          setProfile((prev) => {
             const normalizedSkills = userData.skills && typeof userData.skills === "object"
-              ? { ...profile.skills, ...userData.skills }
-              : profile.skills;
+              ? { ...prev.skills, ...userData.skills }
+              : prev.skills;
 
             const normalizedAi = userData.aiPreferences && typeof userData.aiPreferences === "object"
-              ? { ...profile.aiPreferences, ...userData.aiPreferences }
-              : profile.aiPreferences;
+              ? { ...prev.aiPreferences, ...userData.aiPreferences }
+              : prev.aiPreferences;
 
             const normalizedNotif = userData.notificationSettings && typeof userData.notificationSettings === "object"
-              ? { ...profile.notificationSettings, ...userData.notificationSettings }
-              : profile.notificationSettings;
+              ? { ...prev.notificationSettings, ...userData.notificationSettings }
+              : prev.notificationSettings;
 
             const normalizedPrivacy = userData.privacySettings && typeof userData.privacySettings === "object"
-              ? { ...profile.privacySettings, ...userData.privacySettings }
-              : profile.privacySettings;
+              ? { ...prev.privacySettings, ...userData.privacySettings }
+              : prev.privacySettings;
 
             const normalizedTimeline = userData.careerGoalsTimeline && typeof userData.careerGoalsTimeline === "object"
-              ? { ...profile.careerGoalsTimeline, ...userData.careerGoalsTimeline }
-              : profile.careerGoalsTimeline;
+              ? { ...prev.careerGoalsTimeline, ...userData.careerGoalsTimeline }
+              : prev.careerGoalsTimeline;
 
             return {
-              ...profile,
+              ...prev,
               ...userData,
               skills: normalizedSkills,
               aiPreferences: normalizedAi,
@@ -244,16 +242,7 @@ export default function ProfilePage() {
               languages: userData.languages || [],
               achievements: userData.achievements || [],
             };
-          })();
-
-          setProfile(mergedProfile);
-          // snapshot baseline so navigation back doesn't incorrectly mark unsaved
-          try {
-            lastSavedProfileRef.current = JSON.stringify(mergedProfile);
-            setSaveStatus("Saved");
-          } catch (e) {
-            // ignore
-          }
+          });
         }
         if (resumesRes.ok) {
           const resumesData = await resumesRes.json();
@@ -282,12 +271,6 @@ export default function ProfilePage() {
       if (!response.ok) {
         throw new Error("API failed to save profile modifications.");
       }
-      // Snapshot current profile as saved baseline
-      try {
-        lastSavedProfileRef.current = JSON.stringify(profile);
-      } catch (e) {
-        // ignore
-      }
       setSaveStatus("Saved");
       toast.success("Profile saved successfully!", {
         description: "Your settings are updated and synchronized.",
@@ -303,27 +286,53 @@ export default function ProfilePage() {
   };
 
   // Monitor modifications to flag unsaved status
-  // Compare current profile to last saved snapshot to determine saved/unsaved state
   useEffect(() => {
-    try {
-      const current = JSON.stringify(profile || {});
-      if (!lastSavedProfileRef.current) {
-        // First meaningful load — treat current state as saved baseline
-        lastSavedProfileRef.current = current;
-        setSaveStatus("Saved");
-        return;
-      }
-
-      if (current === lastSavedProfileRef.current) {
-        setSaveStatus("Saved");
-      } else {
-        setSaveStatus("Unsaved");
-      }
-    } catch (err) {
-      // Fall back to conservative behavior
-      setSaveStatus("Unsaved");
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
     }
-  }, [profile]);
+    setSaveStatus("Unsaved");
+  }, [
+    profile.bio,
+    profile.location,
+    profile.country,
+    profile.timezone,
+    profile.linkedinUrl,
+    profile.githubUrl,
+    profile.portfolioUrl,
+    profile.leetcodeUrl,
+    profile.hackerrankUrl,
+    profile.codeforcesUrl,
+    profile.twitterUrl,
+    profile.mediumUrl,
+    profile.behanceUrl,
+    profile.dribbbleUrl,
+    profile.dob,
+    profile.preferredContact,
+    profile.phone,
+    profile.targetRole,
+    profile.dreamCompany,
+    profile.preferredIndustry,
+    profile.employmentType,
+    profile.expectedSalary,
+    profile.prefWorkLocation,
+    profile.openToRelocation,
+    profile.yearsOfExperience,
+    profile.noticePeriod,
+    profile.currentStatus,
+    profile.experienceLevel,
+    profile.skills,
+    profile.aiPreferences,
+    profile.notificationSettings,
+    profile.privacySettings,
+    profile.careerGoalsTimeline,
+    profile.education,
+    profile.experience,
+    profile.projects,
+    profile.certifications,
+    profile.languages,
+    profile.achievements,
+  ]);
 
   // Warning check for unsaved pages navigation
   useEffect(() => {

@@ -319,10 +319,10 @@ export function InterviewHistoryView({ initialSessions }) {
                         >
                           Cancel
                         </Button>
-                              <Link href={`/interview/${sess.id}/results`}>
-                                <Eye className="w-3.5 h-3.5" />
-                                View Report
-                              </Link>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
 
                 <CardFooter className="pt-3 border-t border-border/40 flex items-center justify-between gap-2.5 bg-muted/20 px-4 py-3">
                   <Badge variant="outline" className={badge.className}>
@@ -356,19 +356,6 @@ export function InterviewHistoryView({ initialSessions }) {
                         </Link>
                       </Button>
                     )}
-
-                    {/* View Transcript (if any messages exist) */}
-                    <Button
-                      asChild
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 rounded-xl border border-border/40 text-xs font-bold gap-1.5 text-foreground hover:bg-accent cursor-pointer"
-                    >
-                      <Link href={`/interview/${sess.id}/transcript`}>
-                        <MessageSquare className="w-3.5 h-3.5 text-indigo-400" />
-                        View Transcript
-                      </Link>
-                    </Button>
 
                     {/* Retry mock */}
                     <Button

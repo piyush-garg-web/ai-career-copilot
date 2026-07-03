@@ -144,18 +144,6 @@ export function InterviewResultView({ session, questions }) {
               Retry Interview
             </Link>
           </Button>
-          {/* View Transcript */}
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            className="rounded-xl border-border/40 font-semibold text-xs h-9 cursor-pointer ml-2"
-          >
-            <Link href={`/interview/${session.id}/transcript`}>
-              <MessageSquare className="w-3.5 h-3.5 mr-1 text-muted-foreground" />
-              View Transcript
-            </Link>
-          </Button>
         </div>
       </div>
 
