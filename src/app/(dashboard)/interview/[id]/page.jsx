@@ -51,9 +51,11 @@ export default async function ActiveInterviewPage({ params }) {
     redirect(`/interview/${session.id}/results`);
   }
 
+  const autoSaveConversations = !!dbUser.aiPreferences?.autoSaveConversations;
+
   return (
     <div className="container mx-auto py-2">
-      <InterviewSessionFlow session={session} questions={session.questions} />
+      <InterviewSessionFlow session={session} questions={session.questions} autoSaveConversations={autoSaveConversations} />
     </div>
   );
 }

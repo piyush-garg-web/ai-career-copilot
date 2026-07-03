@@ -30,7 +30,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-export function InterviewSessionFlow({ session, questions }) {
+export function InterviewSessionFlow({ session, questions, autoSaveConversations = false }) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answerText, setAnswerText] = useState("");
@@ -59,6 +59,7 @@ export function InterviewSessionFlow({ session, questions }) {
   });
 
   const chatEndRef = useRef(null);
+  const lastSavedMessageCount = useRef(0);
 
   // Timer interval logic
   useEffect(() => {
@@ -72,6 +73,70 @@ export function InterviewSessionFlow({ session, questions }) {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isEvaluating]);
+
+  // Autosave batching, status and retry logic
+  const messageQueueRef = useRef([]);
+  const flushTimerRef = useRef(null);
+  const [autosaveStatus, setAutosaveStatus] = useState("idle"); // idle | saving | saved | failed
+  const [lastAutosaveAt, setLastAutosaveAt] = useState(null);
+
+  const sendBatch = (batch, attempt = 1) => {
+    setAutosaveStatus("saving");
+    return fetch(`/api/interviews/${session.id}/messages`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(batch.map((m) => ({ sender: m.sender, content: m.content, metadata: m.metadata || {} }))),
+    }).then((res) => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    }).then((json) => {
+      setAutosaveStatus("saved");
+      setLastAutosaveAt(Date.now());
+      return json;
+    }).catch((err) => {
+      if (attempt >= 4) {
+        setAutosaveStatus("failed");
+        console.warn("Autosave batch failed after retries:", err);
+        return Promise.reject(err);
+      }
+      const delay = Math.pow(2, attempt) * 1000;
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          sendBatch(batch, attempt + 1).then(resolve).catch(reject);
+        }, delay);
+      });
+    });
+  };
+
+  const flushQueue = () => {
+    if (messageQueueRef.current.length === 0) return;
+    const batch = [...messageQueueRef.current];
+    messageQueueRef.current = [];
+    sendBatch(batch)
+      .then(() => {
+        lastSavedMessageCount.current += batch.length;
+      })
+      .catch((err) => {
+        console.warn("Final autosave failed, re-queueing messages", err);
+        // put back and try later
+        messageQueueRef.current = [...batch, ...messageQueueRef.current];
+        if (flushTimerRef.current) clearTimeout(flushTimerRef.current);
+        flushTimerRef.current = setTimeout(flushQueue, 5000);
+      });
+  };
+
+  useEffect(() => {
+    if (!autoSaveConversations) return;
+    if (messages.length > lastSavedMessageCount.current) {
+      const newMsgs = messages.slice(lastSavedMessageCount.current);
+      messageQueueRef.current.push(...newMsgs);
+      if (flushTimerRef.current) clearTimeout(flushTimerRef.current);
+      flushTimerRef.current = setTimeout(flushQueue, 1500);
+    }
+    return () => {
+      if (flushTimerRef.current) clearTimeout(flushTimerRef.current);
+    };
+  }, [messages, autoSaveConversations, session.id]);
 
   const formatTime = (totalSecs) => {
     const m = Math.floor(totalSecs / 60);
@@ -217,6 +282,23 @@ export function InterviewSessionFlow({ session, questions }) {
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border/40 bg-card/60 text-xs font-semibold text-muted-foreground">
             <Clock className="w-3.5 h-3.5 text-indigo-400" />
             <span>{formatTime(secondsElapsed)}</span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-border/40 bg-card/40 text-xs font-semibold text-muted-foreground">
+            {autosaveStatus === "saving" ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-400" />
+            ) : autosaveStatus === "saved" ? (
+              <Check className="w-3.5 h-3.5 text-emerald-400" />
+            ) : autosaveStatus === "failed" ? (
+              <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+            ) : (
+              <MessageSquare className="w-3.5 h-3.5 text-muted-foreground" />
+            )}
+            <div className="flex flex-col text-left leading-tight">
+              <span className="text-[11px]">Auto-save</span>
+              <span className="text-[10px] text-muted-foreground">
+                {autosaveStatus === "saved" && lastAutosaveAt ? `Saved ${new Date(lastAutosaveAt).toLocaleTimeString()}` : autosaveStatus}
+              </span>
+            </div>
           </div>
         </div>
       </div>

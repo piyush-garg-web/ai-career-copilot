@@ -66,6 +66,7 @@ export default function SettingsPage() {
   const { openUserProfile } = useClerk();
   
   const [loading, setLoading] = useState(true);
+  
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState("Saved");
   const [activeTab, setActiveTab] = useState("ai");
@@ -187,6 +188,7 @@ export default function SettingsPage() {
   });
 
   const isInitialMount = useRef(true);
+  const lastSavedProfileRef = useRef(null);
 
   // Fetch Settings, Resumes & API Gateway stats
   useEffect(() => {
@@ -196,30 +198,34 @@ export default function SettingsPage() {
         const userRes = await fetch("/api/user");
         if (userRes.ok) {
           const userData = await userRes.json();
-          setProfile((prev) => {
-            return {
-              ...prev,
-              theme: userData.theme || prev.theme,
-              githubUrl: userData.githubUrl || "",
-              linkedinUrl: userData.linkedinUrl || "",
-              portfolioUrl: userData.portfolioUrl || "",
-              leetcodeUrl: userData.leetcodeUrl || "",
-              hackerrankUrl: userData.hackerrankUrl || "",
-              codeforcesUrl: userData.codeforcesUrl || "",
-              aiPreferences: userData.aiPreferences ? { ...prev.aiPreferences, ...userData.aiPreferences } : prev.aiPreferences,
-              notificationSettings: userData.notificationSettings ? { ...prev.notificationSettings, ...userData.notificationSettings } : prev.notificationSettings,
-              securitySettings: userData.securitySettings ? { ...prev.securitySettings, ...userData.securitySettings } : prev.securitySettings,
-              connectedAccounts: userData.connectedAccounts ? { ...prev.connectedAccounts, ...userData.connectedAccounts } : prev.connectedAccounts,
-              resumePreferences: userData.resumePreferences ? { ...prev.resumePreferences, ...userData.resumePreferences } : prev.resumePreferences,
-              jobPreferences: userData.jobPreferences ? { ...prev.jobPreferences, ...userData.jobPreferences } : prev.jobPreferences,
-              accessibilitySettings: userData.accessibilitySettings ? { ...prev.accessibilitySettings, ...userData.accessibilitySettings } : prev.accessibilitySettings,
-              appearanceSettings: userData.appearanceSettings ? { ...prev.appearanceSettings, ...userData.appearanceSettings } : prev.appearanceSettings,
-              privacySettings: userData.privacySettings ? { ...prev.privacySettings, ...userData.privacySettings } : prev.privacySettings,
-            };
-          });
+          // build merged settings snapshot so we can treat it as saved baseline
+          const mergedSettings = (() => ({
+            ...profile,
+            theme: userData.theme || profile.theme,
+            githubUrl: userData.githubUrl || "",
+            linkedinUrl: userData.linkedinUrl || "",
+            portfolioUrl: userData.portfolioUrl || "",
+            leetcodeUrl: userData.leetcodeUrl || "",
+            hackerrankUrl: userData.hackerrankUrl || "",
+            codeforcesUrl: userData.codeforcesUrl || "",
+            aiPreferences: userData.aiPreferences ? { ...profile.aiPreferences, ...userData.aiPreferences } : profile.aiPreferences,
+            notificationSettings: userData.notificationSettings ? { ...profile.notificationSettings, ...userData.notificationSettings } : profile.notificationSettings,
+            securitySettings: userData.securitySettings ? { ...profile.securitySettings, ...userData.securitySettings } : profile.securitySettings,
+            connectedAccounts: userData.connectedAccounts ? { ...profile.connectedAccounts, ...userData.connectedAccounts } : profile.connectedAccounts,
+            resumePreferences: userData.resumePreferences ? { ...profile.resumePreferences, ...userData.resumePreferences } : profile.resumePreferences,
+            jobPreferences: userData.jobPreferences ? { ...profile.jobPreferences, ...userData.jobPreferences } : profile.jobPreferences,
+            accessibilitySettings: userData.accessibilitySettings ? { ...profile.accessibilitySettings, ...userData.accessibilitySettings } : profile.accessibilitySettings,
+            appearanceSettings: userData.appearanceSettings ? { ...profile.appearanceSettings, ...userData.appearanceSettings } : profile.appearanceSettings,
+            privacySettings: userData.privacySettings ? { ...profile.privacySettings, ...userData.privacySettings } : profile.privacySettings,
+          }))();
 
-          if (userData.theme) {
-            setTheme(userData.theme.toLowerCase());
+          setProfile(mergedSettings);
+          try {
+            lastSavedProfileRef.current = JSON.stringify(mergedSettings);
+            if (userData.theme) setTheme(userData.theme.toLowerCase());
+            setSaveStatus("Saved");
+          } catch (e) {
+            // ignore
           }
         }
 
@@ -248,12 +254,23 @@ export default function SettingsPage() {
   }, [setTheme]);
 
   // Monitor modifications to set unsaved flag
+  // Use a serialized snapshot of the last saved settings to determine unsaved state
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
+    try {
+      const current = JSON.stringify(profile || {});
+      if (!lastSavedProfileRef.current) {
+        lastSavedProfileRef.current = current;
+        setSaveStatus("Saved");
+        return;
+      }
+      if (current === lastSavedProfileRef.current) {
+        setSaveStatus("Saved");
+      } else {
+        setSaveStatus("Unsaved");
+      }
+    } catch (err) {
+      setSaveStatus("Unsaved");
     }
-    setSaveStatus("Unsaved");
   }, [profile]);
 
   // Handle Form changes
@@ -316,7 +333,11 @@ export default function SettingsPage() {
       if (!response.ok) {
         throw new Error("Failed to write configurations to database.");
       }
-
+      try {
+        lastSavedProfileRef.current = JSON.stringify(profile);
+      } catch (e) {
+        // ignore
+      }
       setSaveStatus("Saved");
       toast.success("Settings saved successfully!", {
         description: "Your configurations are synchronized.",
@@ -850,8 +871,8 @@ export default function SettingsPage() {
 
                   <div className="space-y-4">
                     {/* Clerk redirect notice */}
-                    <div className="p-3.5 border border-indigo-500/20 bg-indigo-500/5 rounded-xl flex gap-2.5 items-start text-xs font-bold leading-relaxed justify-between items-center">
-                      <div className="flex gap-2.5 items-start">
+                    <div className="p-3.5 border border-indigo-500/20 bg-indigo-500/5 rounded-xl flex gap-2.5 text-xs font-bold leading-relaxed justify-between items-center">
+                      <div className="flex gap-2.5 items-center">
                         <Key className="w-4.5 h-4.5 text-indigo-400 shrink-0 mt-0.5" />
                         <div className="space-y-1">
                           <span className="text-indigo-300 block">Manage credentials in Clerk</span>
@@ -947,7 +968,31 @@ export default function SettingsPage() {
                       <Link2 className="w-4.5 h-4.5 text-indigo-400" />
                       Connected Integrations & Social Portfolios
                     </h3>
-                    <p className="text-xs text-muted-foreground">Authorize and connect social integrations to populate your background profile details dynamically.</p>
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="text-xs text-muted-foreground">Authorize and connect social integrations to populate your background profile details dynamically.</p>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            try {
+                              const res = await fetch('/api/user/sync-accounts', { method: 'POST' });
+                              if (!res.ok) throw new Error('Sync failed');
+                              const data = await res.json();
+                              if (data.connectedAccounts) {
+                                setProfile(prev => ({ ...prev, connectedAccounts: data.connectedAccounts }));
+                                toast.success('Connected accounts synced');
+                              }
+                            } catch (err) {
+                              console.error('Sync accounts error', err);
+                              toast.error('Failed to sync accounts');
+                            }
+                          }}
+                          className="h-8 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] uppercase tracking-wider cursor-pointer"
+                        >
+                          Sync Accounts
+                        </button>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
