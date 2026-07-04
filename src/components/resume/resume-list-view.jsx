@@ -27,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/shared/page-header";
 import { Input } from "@/components/ui/input";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 const formatFileSize = (bytes) => {
   if (!bytes || bytes === 0) return "0 Bytes";
@@ -37,26 +38,27 @@ const formatFileSize = (bytes) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 };
 
-const getStatusBadge = (status) => {
+const getStatusBadge = (status, t) => {
   switch (status) {
     case "UPLOADED":
-      return { label: "Uploaded", className: "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 border-blue-500/20" };
+      return { label: t("resume.status.uploaded"), className: "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 border-blue-500/20" };
     case "PARSING":
-      return { label: "Parsing", className: "bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 border-amber-500/20" };
+      return { label: t("resume.status.parsing"), className: "bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 border-amber-500/20" };
     case "PARSED":
-      return { label: "Parsed", className: "bg-teal-500/10 text-teal-500 hover:bg-teal-500/20 border-teal-500/20" };
+      return { label: t("resume.status.parsed"), className: "bg-teal-500/10 text-teal-500 hover:bg-teal-500/20 border-teal-500/20" };
     case "ANALYZING":
-      return { label: "Analyzing", className: "bg-indigo-500/10 text-indigo-500 hover:bg-indigo-500/20 border-indigo-500/20" };
+      return { label: t("resume.status.analyzing"), className: "bg-indigo-500/10 text-indigo-500 hover:bg-indigo-500/20 border-indigo-500/20" };
     case "ANALYZED":
-      return { label: "Analyzed", className: "bg-green-500/10 text-green-500 hover:bg-green-500/20 border-green-500/20" };
+      return { label: t("resume.status.analyzed"), className: "bg-green-500/10 text-green-500 hover:bg-green-500/20 border-green-500/20" };
     case "ERROR":
-      return { label: "Error", className: "bg-destructive/10 text-destructive hover:bg-destructive/20 border-destructive/20" };
+      return { label: t("resume.status.error"), className: "bg-destructive/10 text-destructive hover:bg-destructive/20 border-destructive/20" };
     default:
       return { label: status, className: "bg-muted text-muted-foreground border-border/40" };
   }
 };
 
 export function ResumeListView({ initialResumes }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const { user } = useUser();
   const [resumes, setResumes] = useState(initialResumes);
@@ -87,13 +89,13 @@ export function ResumeListView({ initialResumes }) {
             isPrimary: r.id === id,
           }))
         );
-        toast.success("Primary resume updated successfully.");
+        toast.success(t("resume.success.primaryUpdated"));
         router.refresh();
       } else {
-        toast.error("Failed to update primary status.");
+        toast.error(t("resume.errors.primaryUpdate"));
       }
     } catch (e) {
-      toast.error("Error setting primary resume.");
+      toast.error(t("resume.errors.primaryUpdateUnexpected"));
     } finally {
       setBusy(id, false);
     }
@@ -117,13 +119,13 @@ export function ResumeListView({ initialResumes }) {
         setResumes((prev) =>
           prev.map((r) => (r.id === id ? { ...r, fileName: data.resume.fileName } : r))
         );
-        toast.success("Resume renamed successfully.");
+        toast.success(t("resume.success.renamed"));
         setEditingId(null);
       } else {
-        toast.error("Failed to rename resume.");
+        toast.error(t("resume.errors.rename"));
       }
     } catch (e) {
-      toast.error("Error renaming resume.");
+      toast.error(t("resume.errors.renameUnexpected"));
     } finally {
       setBusy(id, false);
     }
@@ -139,15 +141,15 @@ export function ResumeListView({ initialResumes }) {
       if (res.ok) {
         const data = await res.json();
         setResumes((prev) => [data.resume, ...prev]);
-        toast.success("Resume duplicated successfully.", {
-          description: `Created copy: ${data.resume.fileName}`,
+        toast.success(t("resume.success.duplicated"), {
+          description: t("resume.success.duplicatedDesc", { name: data.resume.fileName }),
         });
         router.refresh();
       } else {
-        toast.error("Failed to duplicate resume.");
+        toast.error(t("resume.errors.duplicate"));
       }
     } catch (e) {
-      toast.error("Error duplicating resume.");
+      toast.error(t("resume.errors.duplicateUnexpected"));
     } finally {
       setBusy(id, false);
     }
@@ -162,14 +164,14 @@ export function ResumeListView({ initialResumes }) {
       });
       if (res.ok) {
         setResumes((prev) => prev.filter((r) => r.id !== id));
-        toast.success("Resume document deleted successfully.");
+        toast.success(t("resume.success.deleted"));
         setDeletingId(null);
         router.refresh();
       } else {
-        toast.error("Failed to delete resume.");
+        toast.error(t("resume.errors.delete"));
       }
     } catch (e) {
-      toast.error("Error deleting resume.");
+      toast.error(t("resume.errors.deleteUnexpected"));
     } finally {
       setBusy(id, false);
     }
@@ -178,14 +180,14 @@ export function ResumeListView({ initialResumes }) {
   return (
     <div className="space-y-6">
       <PageHeader
-        title={user?.firstName ? `Hey ${user.firstName}! My Resumes` : "My Resumes"}
-        description="View and manage your uploaded resumes or upload a new version."
+        title={user?.firstName ? t("resume.list.titleWithUser", { name: user.firstName }) : t("resume.list.title")}
+        description={t("resume.list.description")}
         actions={
           resumes.length > 0 && (
             <Button asChild className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium gap-1.5 shadow-sm shadow-blue-500/10 cursor-pointer h-9 text-xs">
               <Link href="/resume/upload">
                 <Plus className="w-4 h-4" />
-                Upload Resume
+                {t("resume.list.uploadBtn")}
               </Link>
             </Button>
           )
@@ -200,15 +202,15 @@ export function ResumeListView({ initialResumes }) {
               <FileText className="w-9 h-9" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-foreground">No resumes uploaded yet</h3>
+              <h3 className="text-xl font-bold text-foreground">{t("resume.list.empty.title")}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed font-semibold">
-                Your portfolio looks fresh! Upload your resume in PDF or Word formats to scan ATS scores and start simulated interview coaching.
+                {t("resume.list.empty.desc")}
               </p>
             </div>
             <Button asChild className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold gap-1.5 shadow-md shadow-blue-600/10 cursor-pointer h-10 px-5">
               <Link href="/resume/upload">
                 <Plus className="w-4.5 h-4.5" />
-                Upload your first resume
+                {t("resume.list.empty.btn")}
               </Link>
             </Button>
           </CardContent>
@@ -217,7 +219,7 @@ export function ResumeListView({ initialResumes }) {
         /* Resume List Grid */
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {resumes.map((resume) => {
-            const badge = getStatusBadge(resume.status);
+            const badge = getStatusBadge(resume.status, t);
             const isEditing = editingId === resume.id;
             const isDeleting = deletingId === resume.id;
             const isLoading = loadingMap[resume.id];
@@ -233,7 +235,7 @@ export function ResumeListView({ initialResumes }) {
                 {resume.isPrimary && (
                   <div className="absolute top-0 right-0 bg-blue-600 text-white text-[9px] font-black uppercase px-2.5 py-0.5 rounded-bl-lg shadow-sm shadow-blue-600/10 flex items-center gap-1 z-10">
                     <Star className="w-2.5 h-2.5 fill-white" />
-                    Primary
+                    {t("resume.list.card.primaryTag")}
                   </div>
                 )}
 
@@ -251,7 +253,7 @@ export function ResumeListView({ initialResumes }) {
                             onChange={(e) => setNewName(e.target.value)}
                             className="h-7 text-xs font-semibold px-2 rounded-lg"
                             autoFocus
-                            placeholder="Enter resume name..."
+                            placeholder={t("resume.list.card.renamePlaceholder")}
                           />
                           <Button
                             size="icon"
@@ -283,14 +285,14 @@ export function ResumeListView({ initialResumes }) {
                               setNewName(resume.fileName);
                             }}
                             className="text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity p-0.5 cursor-pointer"
-                            title="Rename document"
+                            title={t("resume.list.card.renameTitle")}
                           >
                             <Edit2 className="w-3 h-3" />
                           </button>
                         </div>
                       )}
                       <span className="text-[10px] font-semibold text-muted-foreground/80 tracking-wide uppercase mt-0.5 block">
-                        {resume.fileType} Document
+                        {t("resume.list.card.documentType", { type: resume.fileType })}
                       </span>
                     </div>
                   </div>
@@ -301,7 +303,7 @@ export function ResumeListView({ initialResumes }) {
                   <div className="grid grid-cols-2 gap-2 text-xs font-medium text-muted-foreground">
                     <div className="flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
-                      <span>{new Date(resume.createdAt).toLocaleDateString("en-US")}</span>
+                      <span>{new Date(resume.createdAt).toLocaleDateString()}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <HardDrive className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
@@ -314,7 +316,7 @@ export function ResumeListView({ initialResumes }) {
                     <div className="p-2.5 rounded-xl bg-destructive/10 text-destructive border border-destructive/20 text-[11px] font-semibold flex flex-col gap-2">
                       <div className="flex gap-1.5 items-center">
                         <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-                        <span>Delete this resume document permanently?</span>
+                        <span>{t("resume.list.card.deleteConfirm")}</span>
                       </div>
                       <div className="flex justify-end gap-1.5">
                         <Button
@@ -323,7 +325,7 @@ export function ResumeListView({ initialResumes }) {
                           onClick={() => handleDelete(resume.id)}
                           className="h-6 rounded-lg text-[10px] px-2.5 font-bold cursor-pointer"
                         >
-                          Confirm
+                          {t("resume.list.card.deleteBtn")}
                         </Button>
                         <Button
                           size="sm"
@@ -331,7 +333,7 @@ export function ResumeListView({ initialResumes }) {
                           onClick={() => setDeletingId(null)}
                           className="h-6 rounded-lg text-[10px] px-2.5 font-bold cursor-pointer bg-transparent border-destructive/20 hover:bg-destructive/10"
                         >
-                          Cancel
+                          {t("common.cancel")}
                         </Button>
                       </div>
                     </div>
@@ -351,7 +353,7 @@ export function ResumeListView({ initialResumes }) {
                         variant="ghost"
                         size="icon"
                         className="w-7 h-7 rounded-lg border border-border/30 hover:bg-indigo-500/10 hover:text-indigo-500 hover:border-indigo-500/25"
-                        title="View AI analysis report"
+                        title={t("resume.list.card.viewAnalysisTitle")}
                       >
                         <Link href="/resume/analysis">
                           <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
@@ -368,7 +370,7 @@ export function ResumeListView({ initialResumes }) {
                         size="icon"
                         onClick={() => handleSetPrimary(resume.id)}
                         className="w-7 h-7 rounded-lg hover:bg-blue-500/10 hover:text-blue-500 border border-transparent hover:border-blue-500/25 cursor-pointer"
-                        title="Set as primary resume"
+                        title={t("resume.list.card.setPrimaryTitle")}
                       >
                         <Star className="w-3.5 h-3.5 text-muted-foreground/60 hover:text-blue-500" />
                       </Button>
@@ -380,7 +382,7 @@ export function ResumeListView({ initialResumes }) {
                       size="icon"
                       onClick={() => handleDuplicate(resume.id)}
                       className="w-7 h-7 rounded-lg hover:bg-teal-500/10 hover:text-teal-500 border border-transparent hover:border-teal-500/25 cursor-pointer"
-                      title="Duplicate resume"
+                      title={t("resume.list.card.duplicateTitle")}
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -396,7 +398,7 @@ export function ResumeListView({ initialResumes }) {
                       variant="ghost"
                       size="icon"
                       className="w-7 h-7 rounded-lg border border-transparent hover:bg-accent cursor-pointer"
-                      title="Download document"
+                      title={t("resume.list.card.downloadTitle")}
                       aria-label="Download resume document"
                     >
                       <a href={resume.fileUrl} download={resume.fileName} target="_blank" rel="noreferrer">
@@ -410,7 +412,7 @@ export function ResumeListView({ initialResumes }) {
                       variant="ghost"
                       size="icon"
                       className="w-7 h-7 rounded-lg border border-transparent hover:bg-accent cursor-pointer"
-                      title="View details"
+                      title={t("resume.list.card.viewDetailsTitle")}
                       aria-label="View resume details and parsed text"
                     >
                       <Link href={`/resume/${resume.id}`}>
@@ -425,7 +427,7 @@ export function ResumeListView({ initialResumes }) {
                         size="icon"
                         onClick={() => setDeletingId(resume.id)}
                         className="w-7 h-7 rounded-lg hover:bg-destructive/10 hover:text-destructive border border-transparent hover:border-destructive/25 cursor-pointer"
-                        title="Delete resume"
+                        title={t("resume.list.card.deleteTitle")}
                       >
                         <Trash2 className="w-3.5 h-3.5 text-muted-foreground/60 hover:text-destructive" />
                       </Button>

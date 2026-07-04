@@ -53,13 +53,10 @@ export function LanguageProvider({ children }) {
           const res = await fetch("/api/user");
           if (res.ok) {
             const userData = await res.json();
-            const guestLang = localStorage.getItem("pref_lang");
+            const dbLang = userData.preferredLanguage || "en";
+            const guestLang = localStorage.getItem("pref_lang") || "en";
             
-            if (userData.preferredLanguage) {
-              if (userData.preferredLanguage !== locale) {
-                setLocale(userData.preferredLanguage);
-              }
-            } else if (guestLang && guestLang !== "en") {
+            if (dbLang === "en" && guestLang !== "en") {
               // Sync guest preference to DB
               await fetch("/api/user", {
                 method: "POST",
@@ -67,6 +64,8 @@ export function LanguageProvider({ children }) {
                 body: JSON.stringify({ preferredLanguage: guestLang }),
               });
               setLocale(guestLang);
+            } else if (dbLang !== locale) {
+              setLocale(dbLang);
             }
           }
         } catch (e) {

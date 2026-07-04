@@ -3,21 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    },
-    "jsx": "preserve",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": false,
-    "noEmit": true,
-    "incremental": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "ignoreDeprecations": "6.0",
-    "resolveJsonModule": true,
-    "isolatedModules": true
+    }
   },
-  "include": ["src/**/*.js", "src/**/*.jsx"],
   "exclude": ["node_modules"]
 }

@@ -29,8 +29,10 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 export function InterviewSessionFlow({ session, questions }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answerText, setAnswerText] = useState("");
@@ -86,7 +88,7 @@ export function InterviewSessionFlow({ session, questions }) {
   const handleSubmitAnswer = async () => {
     const candidateInput = answerText.trim();
     if (!candidateInput || candidateInput.length < 10) {
-      toast.error("Please provide a slightly more detailed response (minimum 10 characters).");
+      toast.error(t("interview.session.toasts.tooShort"));
       return;
     }
 
@@ -103,7 +105,7 @@ export function InterviewSessionFlow({ session, questions }) {
 
     setAnswerText("");
     setIsEvaluating(true);
-    toast.info("Gemini AI is assessing your answer metrics...");
+    toast.info(t("interview.session.toasts.assessing"));
 
     try {
       const response = await fetch(`/api/interviews/${session.id}/answer`, {
@@ -117,7 +119,7 @@ export function InterviewSessionFlow({ session, questions }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to submit answer.");
+        throw new Error(errorData.error || t("interview.session.toasts.unexpected"));
       }
 
       const data = await response.json();
@@ -145,10 +147,10 @@ export function InterviewSessionFlow({ session, questions }) {
         },
       ]);
 
-      toast.success("Response recorded!");
+      toast.success(t("interview.session.toasts.recorded"));
     } catch (err) {
       console.error("Submit Answer Failure:", err);
-      toast.error(err.message || "Failed to submit answer.");
+      toast.error(err.message || t("interview.session.toasts.unexpected"));
     } finally {
       setIsEvaluating(false);
     }
@@ -175,7 +177,7 @@ export function InterviewSessionFlow({ session, questions }) {
   // Complete Mock Interview Session
   const handleFinishInterview = async () => {
     setIsCompleting(true);
-    toast.info("Mock evaluation session closing. Compiling final metrics...");
+    toast.info(t("interview.session.toasts.completing"));
 
     try {
       const response = await fetch(`/api/interviews/${session.id}/complete`, {
@@ -188,14 +190,14 @@ export function InterviewSessionFlow({ session, questions }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to finalize session.");
+        throw new Error(errorData.error || t("interview.session.toasts.completeFailed"));
       }
 
-      toast.success("Interview completed! Loading scorecard...");
+      toast.success(t("interview.session.toasts.completed"));
       router.push(`/interview/${session.id}/results`);
     } catch (err) {
       console.error("Complete Session Failure:", err);
-      toast.error(err.message || "Failed to compile overall scorecard.");
+      toast.error(err.message || t("interview.session.toasts.completeFailed"));
       setIsCompleting(false);
     }
   };
@@ -208,7 +210,7 @@ export function InterviewSessionFlow({ session, questions }) {
       {/* Session Header */}
       <div className="flex items-center justify-between gap-4">
         <div className="space-y-1 min-w-0">
-          <span className="text-[10px] font-bold text-indigo-400 tracking-wider uppercase">Simulated Chat Room</span>
+          <span className="text-[10px] font-bold text-indigo-400 tracking-wider uppercase">{t("interview.session.chatRoom")}</span>
           <h1 className="text-lg font-extrabold text-foreground truncate max-w-md">
             {session.title}
           </h1>
@@ -224,9 +226,9 @@ export function InterviewSessionFlow({ session, questions }) {
       {/* Progress indicators */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-[10px] font-bold text-muted-foreground uppercase">
-          <span>Practice session progress</span>
+          <span>{t("interview.session.progressLabel")}</span>
           <span>
-            {scores.count} / {questions.length} Answers Evaluated ({remainingCount} Remaining)
+            {t("interview.session.progressStatus", { count: scores.count, total: questions.length, remaining: remainingCount })}
           </span>
         </div>
         <Progress value={progressPercentage} className="h-1.5 bg-accent" />
@@ -246,7 +248,7 @@ export function InterviewSessionFlow({ session, questions }) {
                     </div>
                     <div className="p-3 bg-muted/40 rounded-2xl rounded-tl-none border border-border/20 text-xs font-semibold leading-relaxed space-y-1 text-foreground">
                       <div className="flex items-center justify-between gap-4 pb-1">
-                        <span className="text-[9px] uppercase font-bold text-indigo-400">Interviewer</span>
+                        <span className="text-[9px] uppercase font-bold text-indigo-400">{t("interview.session.interviewer")}</span>
                         <Badge variant="outline" className="text-[8px] px-1 py-0 bg-background text-indigo-400 font-extrabold uppercase scale-90 border-indigo-500/25">
                           {msg.type}
                         </Badge>
@@ -273,20 +275,20 @@ export function InterviewSessionFlow({ session, questions }) {
                     <div className="flex items-center justify-between">
                       <span className="text-[9px] uppercase tracking-wider font-extrabold text-indigo-400 flex items-center gap-1">
                         <ThumbsUp className="w-3.5 h-3.5" />
-                        Response Evaluation
+                        {t("interview.session.feedbackTitle")}
                       </span>
-                      <span className="text-xs font-black text-indigo-400">Score: {evalData.score}%</span>
+                      <span className="text-xs font-black text-indigo-400">{t("interview.result.scorePercent", { val: evalData.score })}</span>
                     </div>
                     <p className="text-muted-foreground">{evalData.feedback}</p>
                     <div className="grid grid-cols-2 gap-3 pt-1">
                       <div className="space-y-1 text-[11px]">
-                        <span className="text-emerald-500 font-bold block">✓ Strengths</span>
+                        <span className="text-emerald-500 font-bold block">{t("interview.session.strengths")}</span>
                         <ul className="list-disc list-inside space-y-0.5 text-muted-foreground font-semibold">
                           {evalData.strengths.slice(0, 2).map((s, idx) => <li key={idx}>{s}</li>)}
                         </ul>
                       </div>
                       <div className="space-y-1 text-[11px]">
-                        <span className="text-amber-500 font-bold block">⚠ Improvements</span>
+                        <span className="text-amber-500 font-bold block">{t("interview.session.improvements")}</span>
                         <ul className="list-disc list-inside space-y-0.5 text-muted-foreground font-semibold">
                           {evalData.improvements.slice(0, 2).map((i, idx) => <li key={idx}>{i}</li>)}
                         </ul>
@@ -321,7 +323,7 @@ export function InterviewSessionFlow({ session, questions }) {
               {isCompleting && (
                 <div className="absolute inset-0 bg-background/90 z-20 flex flex-col items-center justify-center gap-2">
                   <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
-                  <span className="text-xs font-bold">Compiling Mock Session Report Card...</span>
+                  <span className="text-xs font-bold">{t("interview.session.compiling")}</span>
                 </div>
               )}
             </AnimatePresence>
@@ -334,7 +336,7 @@ export function InterviewSessionFlow({ session, questions }) {
                     onClick={handleFinishInterview}
                     className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs h-10 shadow-md shadow-indigo-500/10 cursor-pointer gap-1.5"
                   >
-                    Complete Practice & Grade
+                    {t("interview.session.completeBtn")}
                     <Check className="w-4 h-4" />
                   </Button>
                 ) : (
@@ -342,7 +344,7 @@ export function InterviewSessionFlow({ session, questions }) {
                     onClick={handleNextQuestion}
                     className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs h-10 shadow-md shadow-indigo-500/10 cursor-pointer gap-1.5"
                   >
-                    Prepare Next Question
+                    {t("interview.session.nextBtn")}
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 )}
@@ -351,7 +353,7 @@ export function InterviewSessionFlow({ session, questions }) {
               /* Text Response Input */
               <div className="space-y-3">
                 <Textarea
-                  placeholder="Type your response to the interviewer's question..."
+                  placeholder={t("interview.session.inputPlaceholder")}
                   value={answerText}
                   onChange={(e) => setAnswerText(e.target.value)}
                   rows={2}
@@ -359,13 +361,13 @@ export function InterviewSessionFlow({ session, questions }) {
                   className="rounded-xl border-border/40 bg-background/30 text-xs font-semibold leading-relaxed resize-none focus-visible:ring-indigo-500/30 min-h-[60px]"
                 />
                 <div className="flex justify-between items-center text-[10px] text-muted-foreground font-semibold">
-                  <span>Enter 10+ characters to evaluate response alignment.</span>
+                  <span>{t("interview.session.inputTip")}</span>
                   <Button
                     onClick={handleSubmitAnswer}
                     disabled={isEvaluating || answerText.trim().length < 10}
                     className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold h-7 px-4 shadow-sm text-[10px] cursor-pointer"
                   >
-                    Submit Answer
+                    {t("interview.session.submitBtn")}
                   </Button>
                 </div>
               </div>
@@ -377,14 +379,14 @@ export function InterviewSessionFlow({ session, questions }) {
         <Card className="border border-border/40 bg-card/60 backdrop-blur-sm p-5 rounded-2xl lg:col-span-4 space-y-4">
           <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
             <Activity className="w-4.5 h-4.5 text-indigo-400" />
-            Live Session Scores
+            {t("interview.session.liveScores")}
           </h4>
 
           <div className="space-y-3.5">
             {/* Technical */}
             <div className="space-y-1">
               <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
-                <span>Technical Accuracy</span>
+                <span>{t("interview.session.techAccuracy")}</span>
                 <span className="text-foreground">{scores.technical}%</span>
               </div>
               <Progress value={scores.technical} className="h-1 bg-accent" />
@@ -393,7 +395,7 @@ export function InterviewSessionFlow({ session, questions }) {
             {/* Communication */}
             <div className="space-y-1">
               <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
-                <span>Communication Clarity</span>
+                <span>{t("interview.session.commClarity")}</span>
                 <span className="text-foreground">{scores.communication}%</span>
               </div>
               <Progress value={scores.communication} className="h-1 bg-accent" />
@@ -402,7 +404,7 @@ export function InterviewSessionFlow({ session, questions }) {
             {/* Confidence */}
             <div className="space-y-1">
               <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
-                <span>Confidence Index</span>
+                <span>{t("interview.session.confidenceIndex")}</span>
                 <span className="text-foreground">{scores.confidence}%</span>
               </div>
               <Progress value={scores.confidence} className="h-1 bg-accent" />
@@ -411,7 +413,7 @@ export function InterviewSessionFlow({ session, questions }) {
             {/* Problem Solving */}
             <div className="space-y-1">
               <div className="flex justify-between text-[10px] font-bold text-muted-foreground">
-                <span>Problem Solving Quotient</span>
+                <span>{t("interview.session.solveQuotient")}</span>
                 <span className="text-foreground">{scores.problemSolving}%</span>
               </div>
               <Progress value={scores.problemSolving} className="h-1 bg-accent" />
@@ -421,7 +423,7 @@ export function InterviewSessionFlow({ session, questions }) {
           <Separator className="bg-border/20" />
 
           <p className="text-[9px] text-muted-foreground font-semibold leading-relaxed">
-            Live metric scores will average and update instantly as soon as you submit response evaluations to the interviewer.
+            {t("interview.session.scoresTip")}
           </p>
         </Card>
       </div>

@@ -67,7 +67,7 @@ export default function SettingsPage() {
   const { user, isLoaded } = useUser();
   const { setAccentColor } = useAccent();
   const { openUserProfile } = useClerk();
-  const { t, changeLanguage } = useTranslation();
+  const { t, changeLanguage, locale } = useTranslation();
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

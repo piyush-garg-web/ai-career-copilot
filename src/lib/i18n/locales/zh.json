@@ -1,121 +1,1140 @@
 {
+  "common": {
+    "loading": "正在加载...",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "submit": "提交",
+    "search": "搜索",
+    "results": "结果",
+    "noResults": "未找到匹配结果。",
+    "searchLanguage": "搜索语言...",
+    "noLanguagesFound": "未找到语言",
+    "toggleMenu": "切换菜单",
+    "complete": "完成",
+    "justNow": "刚才",
+    "minutesAgo": "{{count}} 分钟前",
+    "hoursAgo": "{{count}} 小时前",
+    "daysAgo": "{{count}} 天前",
+    "none": "无"
+  },
   "nav": {
     "home": "首页",
-    "dashboard": "控制台",
-    "profile": "个人档案",
-    "settings": "账户设置",
+    "dashboard": "仪表板",
+    "profile": "公司简介",
+    "settings": "设置",
     "signIn": "登录",
     "signUp": "注册",
-    "logout": "退出登录",
+    "logout": "退出",
     "backToHome": "返回首页",
     "privacy": "隐私政策",
-    "terms": "服务条款"
+    "terms": "服务条款",
+    "features": "特点",
+    "howItWorks": "它是如何运作的",
+    "reviews": "评论",
+    "faq": "常见问题解答"
   },
   "landing": {
     "hero": {
-      "title": "您的 AI 职业生涯副驾驶",
-      "subtitle": "通过 Google Gemini 提供的实时反馈，分析简历、检查 ATS 分数、匹配工作并进行模拟面试练习。",
+      "title": "您的人工智能职业副驾驶",
+      "subtitle": "分析简历、检查 ATS 分数、匹配职位，并利用 Google Gemini 提供的实时反馈练习模拟面试。",
       "cta": "免费开始使用"
     },
     "features": {
-      "title": "为您的成功打造的核心功能",
-      "subtitle": "探索专为加速您的职业搜索而设计的工具。"
+      "title": "为您的成功而打造的核心功能",
+      "subtitle": "探索旨在加速您的职业搜索的工具。",
+      "loginPrompt": "请登录才能使用此功能。",
+      "explore": "探索 →",
+      "items": {
+        "resume": {
+          "title": "人工智能简历分析",
+          "description": "针对经验、项目影响、结构和格式指标生成全面的部分审核。"
+        },
+        "ats": {
+          "title": "ATS分数",
+          "description": "计算行业合规评级，以确保您的简历通过自动人力资源筛选系统。"
+        },
+        "health": {
+          "title": "恢复健康",
+          "description": "对语法完整性、章节结构、格式润色和文档可读性规则进行评分。"
+        },
+        "suggestions": {
+          "title": "人工智能建议",
+          "description": "提供逐字替换想法、主动动词建议和实时拼写更正。"
+        },
+        "jobMatch": {
+          "title": "职位匹配",
+          "description": "将您的技能直接与目标职位发布进行比较，以计算总体一致性指数。"
+        },
+        "missingSkills": {
+          "title": "缺失技能检测",
+          "description": "准确指出您需要列出哪些编程框架、认证或工具包。"
+        },
+        "interview": {
+          "title": "面试教练",
+          "description": "进行直接根据您的背景和首选难度量身定制的交互式口语模拟课程。"
+        },
+        "history": {
+          "title": "采访记录",
+          "description": "重新访问并回顾之前完成的课程，以比较答案评分并跟踪表现。"
+        },
+        "analytics": {
+          "title": "分析仪表板",
+          "description": "一个集中式中心，包含图表、当前任务列表和最近的匹配进度检查。"
+        },
+        "darkMode": {
+          "title": "深色模式",
+          "description": "完全集成的深色和浅色模式 UI，支持自动操作系统覆盖。"
+        },
+        "responsive": {
+          "title": "响应式设计",
+          "description": "优化的网格对齐方式为手机、平板电脑和大屏幕提供标准支持。"
+        }
+      }
+    },
+    "stats": {
+      "resumeAnalyses": {
+        "label": "恢复分析",
+        "description": "针对全球求职者进行了优化"
+      },
+      "atsImprovement": {
+        "label": "ATS改进",
+        "description": "平均成功分数提高率"
+      },
+      "interviewQuestions": {
+        "label": "面试问题",
+        "description": "由AI引擎回答并评分"
+      },
+      "uptime": {
+        "label": "正常运行时间服务等级协议",
+        "description": "高性能数据库集群"
+      }
+    },
+    "howItWorks": {
+      "sectionTitle": "工作流程",
+      "title": "简单的互动之旅",
+      "subtitle": "了解 AI Career Copilot 如何逐步指导您从原始简历文档审核到模拟面试准备。",
+      "steps": {
+        "one": {
+          "title": "第 1 步：上传简历",
+          "description": "通过我们闪电般快速的文件上传网关，安全地上传 PDF 或 Word 格式（最多 10MB）的简历。"
+        },
+        "two": {
+          "title": "第二步：人工智能解析简历",
+          "description": "我们的本地解析器动态提取结构化原始文本并将其提交给 Gemini AI 引擎进行评估。"
+        },
+        "three": {
+          "title": "第 3 步：分析 ATS 分数",
+          "description": "获取突出显示章节完成情况、可读性分数和语法优化目标的即时指标。"
+        },
+        "four": {
+          "title": "第 4 步：匹配职位描述",
+          "description": "粘贴目标职位发布以比较语义匹配指标、缺失的技能和关键字。"
+        },
+        "five": {
+          "title": "第五步：练习面试",
+          "description": "运行定制的语音到文本的行为和技术模拟，接收每个答案的结构化反馈。"
+        },
+        "six": {
+          "title": "第六步：获得更多面试机会",
+          "description": "使用优化的关键字和增强的信心进行申请，超越自动过滤器和招聘经理的期望。"
+        }
+      }
+    },
+    "faq": {
+      "sectionTitle": "支持",
+      "title": "常见问题解答",
+      "subtitle": "快速回答有关我们的 AI 管道、安全模型、文件支持和数据隐私政策的标准问题。",
+      "items": {
+        "one": {
+          "question": "人工智能分析如何运作？",
+          "answer": "当您上传简历时，我们的本地解析器会从您的文档（PDF 或 DOCX）中提取原始文本。然后，该文本由我们的 Google Gemini AI 管道进行安全处理，该管道将其与行业标准 ATS 过滤规则进行比较，并对语法、格式完整性和关键字强度等部分进行评分。"
+        },
+        "two": {
+          "question": "我的简历安全吗？",
+          "answer": "是的，您的简历文件得到安全处理。我们将文档上传到 UploadThing 托管的私有存储桶中，只有经过身份验证的用户帐户才能检索或解析它们。您的个人信息始终受到保护。"
+        },
+        "three": {
+          "question": "支持哪些文件格式？",
+          "answer": "我们完全支持上传最大 10MB 的标准 PDF (.pdf) 和 Microsoft Word (.docx) 文档。我们在本地解析格式化数据以提取干净的文本以进行人工智能评估。"
+        },
+        "four": {
+          "question": "我可以分析多份简历吗？",
+          "answer": "绝对地！您可以将多份简历或版本草稿上传到仪表板。您可以将任何上传的内容切换为您的“主要”简历，然后该简历将作为职位描述匹配和模拟面试的基础文档。"
+        },
+        "five": {
+          "question": "我的数据是私人的吗？",
+          "answer": "是的，您的数据是私人的并锁定到您的个人帐户。我们不会将您的简历详细信息、绩效报告或模拟面试记录出售给第三方数据库。所有身份验证门均由 Clerk 中间件身份验证令牌保护。"
+        }
+      }
+    },
+    "comparison": {
+      "sectionTitle": "比较",
+      "title": "为什么选择AI职业副驾驶？",
+      "subtitle": "了解我们的智能生成式 AI 引擎如何超越传统、过时的简历审核和面试准备工作流程。",
+      "table": {
+        "capability": "能力",
+        "traditional": "传统评论",
+        "copilot": "副驾驶"
+      },
+      "rows": {
+        "instantAI": {
+          "feature": "即时人工智能分析",
+          "traditional": "等待反馈的天/周",
+          "copilot": "10秒内实时反馈"
+        },
+        "ats": {
+          "feature": "ATS 优化评分",
+          "traditional": "基于通用模板的猜测",
+          "copilot": "精准计算匹配85+解析过滤器"
+        },
+        "jobMatch": {
+          "feature": "量身定制的职位匹配",
+          "traditional": "与职位列表进行手动比较",
+          "copilot": "语义技能差距检测突出显示缺失的关键字"
+        },
+        "interview": {
+          "feature": "AI模拟面试辅导",
+          "traditional": "昂贵的专业评审教练",
+          "copilot": "带有评分日志的基于动态 STAR 的会话"
+        },
+        "actionItems": {
+          "feature": "情境感知行动项目",
+          "traditional": "模糊模板（“使动词更强”）",
+          "copilot": "精确的逐字主动动词替换技巧"
+        },
+        "multiResume": {
+          "feature": "多简历版本检查",
+          "traditional": "个人电脑上分散的文件",
+          "copilot": "集中存储数据库进行版本比较"
+        }
+      }
+    },
+    "productPreview": {
+      "sectionTitle": "产品展示",
+      "title": "查看正在运行的平台",
+      "subtitle": "虚拟游览专为优化您的职业道路而构建的高保真功能和 AI 界面。",
+      "tabs": {
+        "dashboard": "仪表板",
+        "resumeAnalysis": "简历分析",
+        "ats": "ATS 分数和健康状况",
+        "jobMatch": "职位匹配",
+        "interview": "面试教练"
+      }
+    },
+    "footer": {
+      "ctaTitle": "准备好在下一次面试中取得好成绩了吗？",
+      "ctaDescription": "与成千上万的求职者一起使用 AI Career Copilot 来优化他们的申请文档、通过筛选机器人并练习行为模拟。",
+      "ctaButton": "免费开始使用",
+      "description": "您的人工智能职业助理旨在优化简历、评估 ATS 合规评级、分析技能差距并通过模拟面试小组为您提供指导。",
+      "product": "产品展示",
+      "features": "特点",
+      "howItWorks": "它是如何运作的",
+      "developers": "开发商",
+      "faq": "常见问题解答",
+      "legal": "法律及联系方式",
+      "contactSupport": "联系支持人员",
+      "changeAppearance": "改变外观："
+    },
+    "testimonials": {
+      "loginPrompt": "请登录以分享您的经验。"
+    },
+    "reviews": {
+      "sectionTitle": "社区评论",
+      "title": "用户评价",
+      "subtitle": "来自专业人士的真实反馈，他们使用 AI Career Copilot 加快了职业搜索和面试技巧。",
+      "basedOn": "基于 {{count}} {{reviews}}",
+      "review": "评论",
+      "reviews": "评论",
+      "sharedExperience": "你已经分享了你的经验！",
+      "howIsJobHunt": "你找工作的进展如何？",
+      "manageFeedback": "使用右侧的选项管理或编辑您的实时反馈。",
+      "submitFeedbackHelp": "提交您的评分和反馈，以帮助其他开发人员找到他们的下一个角色。",
+      "editMyReview": "编辑我的评论",
+      "writeReview": "写评论",
+      "showingCount": "显示 {{count}} 条评论（共 {{total}} 条）",
+      "sort": "排序：",
+      "sortBy": "排序依据",
+      "sortNewest": "最新第一",
+      "sortHighest": "最高评价",
+      "sortLowest": "最低评分",
+      "emptyState": "尚未提交评论。成为第一个分享您想法的人！",
+      "yourReviewLabel": "您的评论",
+      "loadMore": "加载更多评论",
+      "loading": "正在加载...",
+      "anonymousCandidate": "求职者",
+      "defaultAuthor": "候选人",
+      "form": {
+        "updateReview": "更新评论",
+        "submitReview": "提交评论",
+        "titlePlaceholder": "示例：令人难以置信的面试评分！",
+        "detailsPlaceholder": "分享您使用 ATS 记分卡解析器、工作匹配和对话面试会话的经验...",
+        "descLength": "{{count}} / 500"
+      },
+      "modal": {
+        "editDescription": "更新您对使用 AI Career Copilot 的评分和评论。",
+        "newDescription": "提交您的评分。您的评论将实时显示在我们的社区板上。",
+        "deleting": "正在删除...",
+        "delete": "删除"
+      }
+    }
+  },
+  "header": {
+    "documentDetails": "文件详情",
+    "viewNotifications": "查看通知",
+    "notifications": "通知",
+    "markRead": "标记已读",
+    "clearAll": "全部清除",
+    "allCaughtUp": "都追上了！",
+    "searchNoResults": "没有找到搜索结果。",
+    "notificationsMarkedRead": "所有通知均标记为已读。",
+    "notificationsCleared": "所有通知均已清除。",
+    "signOutSuccess": "退出成功",
+    "signOutError": "退出失败",
+    "searchPages": {
+      "dashboard": "仪表板",
+      "dashboardDesc": "主要指标和辅导概述",
+      "resumes": "我的简历",
+      "resumesDesc": "上传并列出简历文件",
+      "ats": "ATS 分数优化器",
+      "atsDesc": "评分检查和优化历史记录",
+      "interview": "人工智能面试教练",
+      "interviewDesc": "开始自定义模拟会话",
+      "history": "采访记录",
+      "historyDesc": "审查练习记分卡",
+      "profile": "我的个人资料",
+      "profileDesc": "职业目标角色和详细信息",
+      "settings": "设置",
+      "settingsDesc": "外观设置和主题"
     }
   },
   "dashboard": {
     "sidebar": {
-      "dashboard": "控制台",
+      "dashboard": "仪表板",
       "resumeUpload": "上传简历",
       "resumeAnalysis": "简历分析",
-      "atsScore": "ATS 分数",
-      "jobMatch": "工作匹配",
+      "atsScore": "ATS分数",
+      "jobMatch": "职位匹配",
       "interviewCoach": "面试教练",
-      "interviewHistory": "模拟面试历史",
-      "profile": "我的个人档案",
+      "interviewHistory": "采访记录",
+      "profile": "我的个人资料",
       "settings": "账户设置"
     },
     "welcome": {
       "title": "欢迎回来",
-      "subtitle": "这是您当前职业状态和准备情况的概览。",
-      "readiness": "AI 职业准备度"
+      "subtitle": "以下是您的简历改进和面试教练准备的概述。",
+      "readiness": "人工智能职业准备",
+      "defaultUser": "那里"
     },
     "stats": {
-      "resumes": "已上传简历",
+      "resumes": "上传的简历",
       "atsScore": "目标 ATS 分数",
-      "interviews": "练习次数",
-      "completeness": "个人档案设置"
+      "interviews": "练习课",
+      "completeness": "个人资料完成",
+      "completenessHint": "在“个人资料”选项卡中填写您的目标角色、目标和体验详细信息，以调整 AI 指标。",
+      "resumeScore": "简历分数",
+      "atsScoreCard": "ATS分数",
+      "jobMatchCard": "职位匹配%",
+      "interviewScoreCard": "面试成绩",
+      "latestResumeOptimization": "最新简历优化",
+      "noResumeAnalyzedYet": "尚未分析简历",
+      "strongAtsCompatibility": "强大的ATS兼容性",
+      "needsKeywordBooster": "需要关键词助推器",
+      "pendingAnalysis": "待分析",
+      "matchCompatibilityScan": "匹配兼容性扫描",
+      "noMatchScanRun": "没有匹配扫描运行",
+      "excellentResponseQuality": "出色的响应质量",
+      "requiresCoachingPractice": "需要教练练习",
+      "noCoachSessionCompleted": "没有完成教练课程",
+      "noUploadsYet": "还没有上传"
+    },
+    "metadata": {
+      "title": "简历元数据",
+      "lastUpload": "最后上传日期",
+      "lastAnalyzed": "最后分析的简历"
+    },
+    "weeklyTrend": {
+      "title": "每周分析趋势",
+      "desc": "跨核心辅导参数绘制的绩效指标。"
+    },
+    "suggestions": {
+      "title": "最近的人工智能建议",
+      "default": {
+        "one": "上传您的第一份简历以获得详细的人工智能反馈建议。",
+        "two": "练习模拟面试以获得有针对性的回应建议。",
+        "three": "与职位匹配以发现技术能力差距。"
+      }
+    },
+    "insights": {
+      "title": "教练见解",
+      "default": {
+        "one": "通过添加报告中突出显示的缺失关键字来提高 ATS 分数。",
+        "two": "ATS评分优化！继续匹配职位描述以查找自定义差距。",
+        "three": "练习模拟面试以评估技术交付和置信水平。",
+        "four": "强化答案中的解题关键词，提高面试指数。",
+        "five": "定制您的简历项目以更好地符合工作要求。",
+        "six": "通过指标和技术细节量化简历要点成就。"
+      }
+    },
+    "activity": {
+      "title": "最近的活动",
+      "desc": "您最近的更新和系统分析日志。",
+      "viewAll": "查看全部",
+      "empty": "未找到最近的活动日志。",
+      "resumeAnalyzed": {
+        "title": "简历分析",
+        "desc": "为“{{fileName}}”计算的记分卡。得分：{{score}}/100。"
+      },
+      "resumeParsed": {
+        "title": "简历解析",
+        "desc": "从“{{fileName}}”中提取的内容。准备分析。"
+      },
+      "jobMatch": {
+        "title": "职位匹配已扫描",
+        "desc": "与“{{company}}”匹配。对齐方式：{{score}}%。"
+      },
+      "interviewCompleted": {
+        "title": "面试完成",
+        "desc": "“{{role}}”练习已评分。得分：{{score}}%。"
+      },
+      "interviewStarted": {
+        "title": "面试开始",
+        "desc": "“{{role}}”的辅导课程目前正在进行中。"
+      }
+    },
+    "quickActions": {
+      "title": "快速行动",
+      "desc": "立即启动关键工作流程。",
+      "upload": "上传简历",
+      "uploadDesc": "上传 PDF 或 Word 文档。",
+      "analyze": "分析简历",
+      "analyzeDesc": "运行 ATS 扫描和优化。",
+      "interview": "开始面试",
+      "interviewDesc": "练习行为和技术问题。",
+      "complete": "完成"
+    },
+    "reviews": {
+      "title": "社区评论和评级",
+      "description": "告诉我们 AI Career Copilot 如何帮助您寻找职业。您想写多少评论就写多少！",
+      "write": "写评论",
+      "editTitle": "编辑您的评论",
+      "newTitle": "撰写新评论",
+      "yourRating": "您的评价：",
+      "reviewTitle": "评论标题",
+      "reviewDetails": "评论详情",
+      "titlePlaceholder": "例如出色的 ATS 扫描工具！",
+      "detailsPlaceholder": "分享您对 AI Career Copilot 如何帮助您的想法...",
+      "maxCharacters": "最多 500 个字符",
+      "cancel": "取消",
+      "saveChanges": "保存更改",
+      "submitReview": "提交评论",
+      "saving": "正在保存...",
+      "yourReviews": "您提交的评论 ({{count}})",
+      "empty": "您尚未提交任何评论。点击上方“写评论”分享您的体验！",
+      "edit": "编辑",
+      "delete": "删除",
+      "validation": {
+        "rating": "请选择星级。",
+        "titleRequired": "评论标题为必填项。",
+        "titleLength": "标题不得超过 100 个字符。",
+        "descriptionRequired": "需要审核描述。",
+        "descriptionLength": "描述不得超过 500 个字符。"
+      },
+      "success": {
+        "submitted": "审核提交成功！",
+        "updated": "评论更新成功！",
+        "deleted": "评论删除成功。"
+      },
+      "errors": {
+        "save": "无法保存评论。",
+        "saveUnexpected": "保存时发生错误。",
+        "delete": "删除评论失败。",
+        "deleteUnexpected": "删除时发生错误。"
+      },
+      "confirmDelete": "您确定要删除此评论吗？此操作无法撤消。"
     }
   },
   "profile": {
-    "title": "我的专业个人档案",
-    "subtitle": "保持您的详细信息最新，以自定义您的 AI 建议和 ATS 定向目标。",
+    "title": "我的职业简介",
+    "subtitle": "及时更新您的详细信息，以定制您的 AI 推荐和 ATS 定位。",
+    "loading": "正在同步 AI 配置文件仪表板...",
+    "pageTitle": "嘿{{name}}！欢迎来到您的人工智能职业简介",
+    "defaultUser": "那里",
+    "pageDescription": "配置您的详细简历、职业目标时间表和模型设置，以个性化 AI Copilot。",
+    "statusLabel": "状态：",
+    "saveButton": "保存更改",
+    "savedState": "设置已同步",
+    "complete": "完成",
+    "checklistTitle": "出色的设置清单",
     "buttons": {
-      "save": "保存个人档案更改",
+      "save": "保存配置文件更改",
       "cancel": "取消",
       "saved": "已保存",
       "unsaved": "未保存的更改",
       "saving": "正在保存更改..."
     },
     "sections": {
-      "bio": "个人简介与位置",
-      "goals": "梦想工作与薪资目标",
+      "bio": "传记及地点",
+      "goals": "梦想工作和薪资目标",
       "projects": "特色项目日志",
-      "experience": "专业工作经验",
+      "experience": "专业经验",
       "education": "教育背景",
-      "certifications": "证书列表",
+      "certifications": "认证列表",
       "languages": "语言能力",
-      "achievements": "关键成就",
-      "privacy": "隐私与通知"
+      "achievements": "主要成就",
+      "privacy": "隐私和通知",
+      "personal": "个人信息和社交链接",
+      "preferences": "职业偏好和时间表",
+      "experienceWithCount": "工作经验 ({{count}})",
+      "educationWithCount": "教育 ({{count}})",
+      "projectsWithCount": "特色项目 ({{count}})",
+      "skillsWithCount": "分类投资组合技能 ({{count}})",
+      "certificationsWithCount": "认证和语言 ({{count}})",
+      "aiPersonalization": "AI个性化偏好",
+      "privacyPreferences": "隐私和通知首选项"
     }
   },
   "settings": {
     "title": "账户配置",
-    "subtitle": "调整您的 AI 模型、通知参数、关联的集成和主题属性。",
+    "subtitle": "调整您的 AI 模型、通知参数、链接集成和主题参数。",
+    "loading": "正在同步设置仪表板...",
+    "pageTitle": "设置",
+    "pageTitleWithName": "嘿{{name}}！设置",
+    "pageDescription": "管理详细的视觉主题、主动后备 AI 模型、通知参数和数据集成。",
+    "searchPlaceholder": "搜索所有设置...",
+    "unsavedBanner": "您的设置仪表板中有未保存的更改。",
+    "saveChanges": "保存更改",
+    "cards": {
+      "configuration": {
+        "label": "设置配置",
+        "title": "SaaS 定制",
+        "description": "微调帐户行为。"
+      },
+      "personalization": {
+        "label": "人工智能个性化",
+        "title": "提示配置文件",
+        "description": "自动对齐自定义提示。"
+      },
+      "billing": {
+        "label": "计费层",
+        "title": "入门免费计划",
+        "badge": "免费",
+        "description": "适用标准费率限制。",
+        "button": "升级"
+      }
+    },
     "tabs": {
-      "ai": "AI 偏好设置",
+      "ai": "人工智能偏好",
       "notifications": "通知",
       "security": "安全与隐私",
-      "connected": "已关联的账户",
-      "engine": "AI 引擎",
-      "resumeJob": "简历与工作设置",
-      "appearance": "外观与辅助功能",
+      "connected": "关联账户",
+      "engine": "人工智能引擎",
+      "resumeJob": "简历和工作",
+      "appearance": "外观与访问",
       "data": "数据与存储",
-      "danger": "危险区域"
+      "danger": "危险区"
     },
     "ai": {
-      "language": "AI 回复语言",
-      "personality": "AI 人格/语气",
-      "coachStyle": "教练辅导风格",
-      "responseLength": "回复详细程度",
-      "saveConversations": "自动保存 AI 对话",
-      "useMemory": "使用 AI 记忆上下文",
-      "improveResponses": "自动改进回答"
+      "language": "人工智能响应语言",
+      "personality": "AI个性/语气",
+      "coachStyle": "教练风格模式",
+      "responseLength": "详细反馈级别",
+      "saveConversations": "自动保存人工智能对话",
+      "useMemory": "使用AI记忆上下文",
+      "improveResponses": "自动改进响应"
+    },
+    "accounts": {
+      "github": {
+        "label": "GitHub 简介",
+        "desc": "同步公共回购贡献",
+        "placeholder": "例如https://github.com/用户名"
+      },
+      "linkedin": {
+        "label": "领英连接",
+        "desc": "同步专业成就",
+        "placeholder": "例如https://linkedin.com/in/用户名"
+      },
+      "portfolio": {
+        "label": "作品集 URL 链接",
+        "desc": "链接自定义个人登陆页面",
+        "placeholder": "例如https://myportfolio.dev"
+      },
+      "leetcode": {
+        "label": "LeetCode活动",
+        "desc": "导入算法统计配置文件",
+        "placeholder": "例如leetcode_用户名"
+      },
+      "hackerrank": {
+        "label": "黑客排行榜",
+        "desc": "导入技能认证资料",
+        "placeholder": "例如hackerrank_用户名"
+      },
+      "codeforces": {
+        "label": "Codeforces 手柄",
+        "desc": "导入评级级别统计数据",
+        "placeholder": "例如codeforces_句柄"
+      }
     }
   },
   "ats": {
-    "title": "ATS 分数检查器",
-    "subtitle": "根据现代解析器标准扫描您的简历格式，以检查您的指数得分。",
-    "ring": "ATS 准备度指数",
-    "scoreLabel": "您的分数"
+    "toasts": {
+      "preparingPrint": "正在准备 ATS 记分卡报告打印视图..."
+    },
+    "title": "ATS 分数优化器",
+    "description": "验证简历与解析引擎的兼容性，优化关键字密度并识别结构差距。",
+    "downloadBtn": "下载 ATS 报告",
+    "grade": "ATS级",
+    "currentScore": "您当前的分数",
+    "targetInfo": "目标分数高于 80% 以绕过初始解析过滤器。",
+    "benchmarkTitle": "行业 ATS 基准比较",
+    "averageAts": "平均 ATS 分数",
+    "yourCurrentAts": "您当前的 ATS 分数",
+    "topScore": "行业得分前 10%",
+    "trendTitle": "ATS 随时间的变化趋势",
+    "trendDesc": "显示进度和优化的扫描历史记录。",
+    "trendEmpty": "上传并扫描多份简历以绘制趋势图。",
+    "checklist": {
+      "title": "ATS 结构清单",
+      "desc": "必要的检查以确保无错误解析。",
+      "layout": "布局格式",
+      "sections": "章节索引",
+      "keywords": "关键词密度",
+      "grammar": "主动语法",
+      "readability": "解析器可读性",
+      "clean": "干净",
+      "needsReview": "需求审查",
+      "complete": "完成",
+      "missing": "缺少信息",
+      "optimized": "优化",
+      "low": "低密度",
+      "valid": "有效",
+      "grammarReview": "语法复习",
+      "high": "高",
+      "lowIndex": "低指数"
+    },
+    "empty": {
+      "title": "尚未上传简历",
+      "desc": "上传您的投资组合简历，立即获得解析扫描结果和优化关键字清单。",
+      "btn": "上传简历"
+    },
+    "history": {
+      "title": "恢复ATS优化历史",
+      "scoreTitle": "ATS分数",
+      "booster": "缺少要优化的关键字（ATS Booster）",
+      "boosterEmpty": "未检测到缺失关键字！您的简历针对 ATS 术语进行了很好的优化。",
+      "summary": "分数总结",
+      "readyForAnalysis": "此简历已准备好进行分析，但您尚未对其运行 ATS 分析器。",
+      "processing": "该简历目前正在处理中。解析完成后，您可以运行 ATS 分析记分卡。",
+      "viewDetails": "查看优化详情",
+      "runAnalysis": "运行 ATS 分析",
+      "manage": "管理简历"
+    }
   },
   "jobMatch": {
-    "title": "AI 工作匹配扫描器",
-    "subtitle": "粘贴职位描述，即可立即使工作匹配度对齐。"
+    "toasts": {
+      "selectResume": "请选择要匹配的简历。",
+      "pasteDesc": "请粘贴职位描述文本。",
+      "tooShort": "职位描述文字太短。请粘贴完整的描述。",
+      "analyzing": "Gemini AI 正在分析对齐方式并比较关键词。请按住...",
+      "success": "岗位匹配完成！",
+      "error": "无法计算职位描述匹配。",
+      "unexpected": "无法编译 AI 职位匹配报告。",
+      "preparingPrint": "正在准备工作匹配 PDF 报告..."
+    },
+    "form": {
+      "pageTitle": "嘿{{name}}！简历和工作匹配器",
+      "pageTitleGeneric": "简历和工作匹配器",
+      "pageDesc": "将您的简历详细信息与任何职位描述进行比较，以发现关键关键字差距并进行匹配。",
+      "noResumesTitle": "未找到简历",
+      "noResumesDesc": "您必须先上传您的简历文件，然后才能将其与工作职位进行比较。",
+      "uploadBtn": "上传简历",
+      "title": "工作匹配比较表",
+      "desc": "选择您上传的一份简历并粘贴目标职位描述以运行一致性检查。",
+      "selectResumeLabel": "1. 选择继续",
+      "selectResumePlaceholder": "选择您的一份简历...",
+      "requiresParsing": "（需要解析文本）",
+      "pasteDescLabel": "2. 粘贴职位描述",
+      "pasteDescPlaceholder": "在此处粘贴目标职位描述（职责、技能、资格、关键字标签）...",
+      "minLength": "最小长度：100 个字符。直接粘贴原始文本块。",
+      "submitBtn": "分析匹配对齐",
+      "matching": "匹配简历...",
+      "matchingDesc": "双子座会根据职位描述要求交叉参考你的经验。"
+    },
+    "result": {
+      "back": "比较另一份工作",
+      "title": "匹配报告",
+      "targetJob": "目标职位简介",
+      "targetCompany": "目标公司",
+      "matched": "匹配 {{date}}",
+      "downloadBtn": "下载PDF报告",
+      "viewResumes": "查看简历",
+      "overallScore": "比赛总得分",
+      "roleFitSummary": "角色契合执行摘要",
+      "noSummary": "未生成比较摘要。",
+      "alignSuccess": "关键词对齐与目标配置文件匹配",
+      "alignImpact": "预计 ATS 优化影响：+12%",
+      "priority": "优先改进",
+      "minorEdits": "小修改",
+      "tailoringRequired": "需要定制简历",
+      "density": "关键词密度",
+      "boostNeeded": "需要提升",
+      "optimal": "最优",
+      "atsImprovement": "ATS改进",
+      "atsPotential": "{{val}}% 的潜在分数",
+      "actions": "定制动作",
+      "tasksPending": "{{count}} 待处理任务",
+      "breakdownTitle": "资格赛明细表",
+      "techSkillsFit": "技术技能适合",
+      "experienceFit": "专业经验匹配",
+      "projectsFit": "学术项目和代码相关性",
+      "educationFit": "教育协调",
+      "softSkillsFit": "行为和软技能指数",
+      "matchedSkillsTitle": "匹配的技能和能力",
+      "noMatchedSkills": "没有记录匹配的技能。",
+      "missingSkillsTitle": "缺少所需技能",
+      "allSkillsMatched": "没有！您拥有所有必需的技能。",
+      "strengthsTitle": "候选人的优势和优势",
+      "noStrengths": "没有记录任何强度。",
+      "weaknessesTitle": "对齐差距和弱点",
+      "noWeaknesses": "没有记录任何弱点。",
+      "suggestionsTitle": "可行的定制建议",
+      "suggestionsDesc": "更新简历时检查操作，以更好地匹配此目标角色描述",
+      "noSuggestions": "没有生成任何建议。",
+      "strongMatch": "强匹配",
+      "moderateMatch": "中等匹配",
+      "weakMatch": "弱匹配"
+    }
   },
   "interview": {
-    "title": "AI 模拟面试教练",
-    "subtitle": "通过实时的个性化反馈，练习专业技术和行为面试题。"
+    "title": "AI模拟面试教练",
+    "subtitle": "通过实时反馈练习真正的技术和行为面试形式。",
+    "toasts": {
+      "selectResume": "请选择一份简历作为问题的基础。",
+      "studying": "Gemini AI 正在研究您的背景并格式化个性化问题......",
+      "sessionEntering": "问题产生！进入会议室...",
+      "setupFailed": "无法生成模拟面试问题。"
+    },
+    "setup": {
+      "pageTitle": "嘿{{name}}！人工智能面试教练",
+      "pageTitleGeneric": "人工智能面试教练",
+      "pageDesc": "构建定制的模拟面试课程并记录答案，以接收结构化的、主动指导的反馈。",
+      "noResumesTitle": "未找到简历",
+      "noResumesDesc": "在练习模拟面试之前，您必须先上传简历文件。",
+      "uploadBtn": "上传简历",
+      "title": "配置练习课程",
+      "desc": "根据您的经验水平或粘贴要求设计模拟面试。",
+      "sessionSummary": "会议总结",
+      "historyBtn": "历史",
+      "resumeLabel": "1. 选择简历个人资料",
+      "resumePlaceholder": "选择您的一份简历...",
+      "jobLabel": "2.目标工作目标（可选）",
+      "jobPlaceholder": "选择职位描述目标...",
+      "generalMock": "普通专业模拟（无目标JD）",
+      "jobAt": "在 {{company}}",
+      "typeLabel": "面试类型",
+      "typeMixed": "混合焦点",
+      "typeTech": "技术问题",
+      "typeBeh": "行为问题（人力资源）",
+      "diffLabel": "难度等级",
+      "diffEasy": "简单（入门）",
+      "diffMedium": "中型（标准）",
+      "diffHard": "硬（高级）",
+      "countLabel": "问题数",
+      "countExpress": "3 个问题（快速）",
+      "countFast": "5 个问题（快速）",
+      "countStandard": "10 个问题（标准）",
+      "countDeep": "15 个问题（深度）",
+      "beginBtn": "开始人工智能练习课程",
+      "durationExpress": "5-8分钟",
+      "durationFast": "10-15 分钟",
+      "durationStandard": "20-25 分钟",
+      "durationDeep": "30-40 分钟",
+      "crafting": "制定个性化面试...",
+      "craftingDesc": "Gemini正在研究你的能力，编制技术场景，配置评估目标。",
+      "easyDesc": "入门查询检查基本技术概念和基本简历声明。",
+      "mediumDesc": "标准行业模拟问题模拟专业中级工程师的行为场景。",
+      "hardDesc": "高压高级小组检查架构设计、系统约束和复杂的领导场景。",
+      "estDuration": "预计。持续时间",
+      "questionFocus": "问题焦点",
+      "diffSetting": "难度设定",
+      "diffDescLabel": "难度描述",
+      "scoredCategoriesTitle": "评分类别",
+      "scoredCategories": {
+        "tech": "技术能力",
+        "comm": "通信和语音传输",
+        "star": "STAR行为场景逻辑",
+        "solve": "解决问题的结构步骤"
+      }
+    },
+    "session": {
+      "toasts": {
+        "tooShort": "请提供稍微详细一点的回复（至少 10 个字符）。",
+        "assessing": "Gemini AI 正在评估您的答案指标...",
+        "recorded": "回复已记录！",
+        "unexpected": "未能提交答案。",
+        "completing": "模拟评估会议结束。正在编制最终指标...",
+        "completed": "面试完成！正在加载记分卡...",
+        "completeFailed": "未能编制总体记分卡。"
+      },
+      "chatRoom": "模拟聊天室",
+      "progressLabel": "练习进度",
+      "progressStatus": "已评估 {{count}} / {{total}} 答案（剩余 {{remaining}}）",
+      "interviewer": "面试官",
+      "feedbackTitle": "反应评估",
+      "strengths": "✓ 优势",
+      "improvements": "⚠ 改进",
+      "compiling": "正在编制模拟会议报告卡...",
+      "completeBtn": "完成练习和评分",
+      "nextBtn": "准备下一个问题",
+      "inputPlaceholder": "输入您对面试官问题的回答...",
+      "inputTip": "输入 10 个以上字符来评估响应对齐情况。",
+      "submitBtn": "提交答案",
+      "liveScores": "现场比赛分数",
+      "techAccuracy": "技术准确性",
+      "commClarity": "沟通清晰度",
+      "confidenceIndex": "信心指数",
+      "solveQuotient": "解决问题的商数",
+      "scoresTip": "当您向面试官提交回复评估后，实时指标分数将立即平均并更新。"
+    },
+    "result": {
+      "back": "练习另一次面试",
+      "completedAt": "已完成 {{date}}",
+      "download": "下载PDF报告",
+      "retry": "重试面试",
+      "sessionScore": "会话分数",
+      "excellent": "优秀的实践！",
+      "solid": "扎实的努力。",
+      "needsImprovement": "需要改进。",
+      "scoreRank": "在测试的投资组合会话中排名高于 {{val}}%。",
+      "categoryTitle": "详细类别细分",
+      "tech": "技术",
+      "clarity": "清晰度",
+      "confidence": "信心",
+      "solve": "解决问题",
+      "behavioral": "行为方面",
+      "adviceLabel": "绩效建议",
+      "noAdvice": "没有记录一般教练总结建议。",
+      "strengthsTitle": "观察到的优势",
+      "noStrengths": "没有记录任何强度。",
+      "gapsTitle": "重点增长领域",
+      "noGaps": "没有记录任何弱点。",
+      "stepsTitle": "推荐的后续步骤和职业建议",
+      "stepsDesc": "可行的成长准备任务",
+      "dialogueReviewTitle": "逐题对话复习",
+      "questionNumber": "问题#{{order}} • {{type}}",
+      "scorePercent": "得分：{{val}}%",
+      "yourResponse": "您的回应",
+      "noResponse": "（没有记录回应）",
+      "aiFeedback": "AI评分反馈",
+      "noFeedback": "没有记录反馈。",
+      "accuracy": "准确度",
+      "answerStrengths": "答案的优势",
+      "improvements": "改进建议",
+      "idealAnswer": "理想答案模板",
+      "toasts": {
+        "preparing": "正在准备 PDF 打印记分卡..."
+      }
+    },
+    "history": {
+      "back": "返回面试教练",
+      "title": "访谈历史记录",
+      "desc": "检查整体卡牌评级、对话细节以及根据过去的实践量身定制的职业教练见解。",
+      "totalSessions": "总练习次数",
+      "avgScore": "平均练习成绩",
+      "highestScore": "得分最高的小组",
+      "totalTime": "总练习时间",
+      "trendsTitle": "练习成绩趋势",
+      "trendsDesc": "您的总体评分的时间顺序表示。",
+      "trendsEmpty": "完成多个会话以绘制收视率趋势图。",
+      "filters": {
+        "all": "全部",
+        "completed": "仅已完成",
+        "technical": "仅限技术",
+        "behavioral": "仅限行为"
+      },
+      "empty": {
+        "title": "没有找到练习课",
+        "desc": "您尚未开始或完成任何与您的过滤器匹配的会话。让我们开始您的第一次面试辅导课程吧！",
+        "btn": "开始模拟会话"
+      },
+      "card": {
+        "difficulty": "{{role}} 角色 • 难度：{{difficulty}}",
+        "duration": "持续时间：{{val}}",
+        "deleteConfirm": "永久删除此会话日志历史记录吗？",
+        "confirmBtn": "确认",
+        "cancelBtn": "取消",
+        "viewReport": "查看报告",
+        "resumeSession": "恢复会话",
+        "retryTitle": "重试练习",
+        "deleteTitle": "删除会话"
+      },
+      "status": {
+        "active": "进行中",
+        "completed": "已完成 • 分数：{{score}}%",
+        "abandoned": "被遗弃"
+      },
+      "toasts": {
+        "deleted": "采访会话删除成功。",
+        "deleteFailed": "无法删除采访会话。",
+        "deleteError": "删除访谈会话时出错。"
+      }
+    }
   },
   "status": {
     "verified": "已验证",
     "connected": "已连接",
-    "notLinked": "未关联",
+    "notLinked": "未链接",
     "notConnected": "未连接"
   },
   "alerts": {
-    "success": "操作成功完成！",
+    "success": "行动成功完成！",
     "error": "发生错误，请重试。",
-    "saved": "所有更改已保存。",
-    "loading": "数据加载中..."
+    "saved": "所有的变化都持续存在。",
+    "loading": "正在加载数据..."
+  },
+  "auth": {
+    "signIn": {
+      "title": "欢迎回来",
+      "subtitle": "登录以继续您的职业旅程。"
+    },
+    "signUp": {
+      "title": "创建您的帐户",
+      "subtitle": "加入 AI Career Copilot，开始优化您的个人资料。"
+    }
+  },
+  "resume": {
+    "status": {
+      "uploaded": "已上传",
+      "parsing": "解析",
+      "parsed": "已解析",
+      "analyzing": "分析中",
+      "analyzed": "已分析",
+      "error": "错误"
+    },
+    "success": {
+      "primaryUpdated": "主简历更新成功。",
+      "renamed": "简历重命名成功。",
+      "duplicated": "简历复制成功。",
+      "duplicatedDesc": "创建副本：{{name}}",
+      "deleted": "恢复文档已成功删除。"
+    },
+    "errors": {
+      "primaryUpdate": "无法更新主要状态。",
+      "primaryUpdateUnexpected": "设置主简历时出错。",
+      "rename": "重命名简历失败。",
+      "renameUnexpected": "重命名简历时出错。",
+      "duplicate": "复制简历失败。",
+      "duplicateUnexpected": "复制简历时出错。",
+      "delete": "删除简历失败。",
+      "deleteUnexpected": "删除简历时出错。"
+    },
+    "list": {
+      "title": "我的简历",
+      "titleWithUser": "嘿{{name}}！我的简历",
+      "description": "查看和管理您上传的简历或上传新版本。",
+      "uploadBtn": "上传简历",
+      "empty": {
+        "title": "尚未上传简历",
+        "desc": "你的作品集看起来很新鲜！上传 PDF 或 Word 格式的简历，扫描 ATS 分数并开始模拟面试辅导。",
+        "btn": "上传您的第一份简历"
+      },
+      "card": {
+        "primaryTag": "小学",
+        "renamePlaceholder": "输入简历名称...",
+        "renameTitle": "重命名文档",
+        "documentType": "{{type}} 文档",
+        "deleteConfirm": "永久删除此简历文档吗？",
+        "deleteBtn": "确认",
+        "viewAnalysisTitle": "查看AI分析报告",
+        "setPrimaryTitle": "设置为主简历",
+        "duplicateTitle": "简历重复",
+        "downloadTitle": "下载文件",
+        "viewDetailsTitle": "查看详情",
+        "deleteTitle": "删除简历"
+      }
+    },
+    "upload": {
+      "dropHere": "将您的文件放在此处",
+      "dragHere": "将您的简历拖放到此处",
+      "or": "或",
+      "browse": "浏览文件",
+      "fromComputer": "从您的计算机",
+      "supportedFormats": "支持的格式：PDF、DOCX（最大 10MB）",
+      "validating": "正在验证文件...",
+      "uploading": "正在上传文件...",
+      "parsing": "正在提取纯文本...",
+      "processing": "加工",
+      "success": {
+        "title": "上传成功！",
+        "desc": "“{{name}}”已安全保存到您的个人资料中。稍后将重定向您..."
+      },
+      "error": {
+        "title": "上传被阻止",
+        "tryAgain": "再试一次"
+      },
+      "toasts": {
+        "retrieveIdError": "上传成功，但无法检索简历数据库 ID。",
+        "trackingError": "上传跟踪错误",
+        "success": "恢复上传并解析成功！",
+        "extractError": "无法从简历中提取纯文本。",
+        "parsingFailed": "解析失败",
+        "unexpectedUploadError": "上传期间发生意外错误。",
+        "uploadFailed": "上传失败"
+      },
+      "validation": {
+        "noFile": "未选择文件。",
+        "unsupportedType": "不支持的文件类型。仅允许 PDF 和 DOCX 文件。",
+        "tooLarge": "文件太大。允许的最大大小为 10MB。"
+      }
+    },
+    "analysis": {
+      "toasts": {
+        "analyzeError": "无法分析文档。",
+        "success": "AI简历分析成功完成！",
+        "unexpectedError": "AI 分析期间发生意外错误。",
+        "failed": "AI分析失败",
+        "reanalyzing": "Gemini AI 正在重新分析您的简历。请按住...",
+        "reanalyzeSuccess": "恢复重新解析成功！",
+        "reanalyzeError": "AI 分析期间出现问题。",
+        "preparingPrint": "正在准备报告打印视图..."
+      },
+      "error": {
+        "title": "分析引擎错误",
+        "tryAgain": "再试一次"
+      },
+      "loading": {
+        "title": "正在初始化 AI 分析...",
+        "titleRunning": "正在分析文档...",
+        "desc": "Gemini 正在评估您的体验描述、索引技术关键字并起草建议。",
+        "descRunning": "Gemini AI 正在阅读结构、语法和 ATS 关键字差距。这将需要几秒钟。"
+      },
+      "dashboard": {
+        "back": "返回我的简历",
+        "title": "人工智能简历分析",
+        "uploaded": "已上传 {{date}}",
+        "analyzed": "分析了 {{date}}",
+        "downloadPdf": "下载PDF报告",
+        "analyzeAgain": "再次分析",
+        "summary": "人工智能执行摘要",
+        "gradeTitle": "恢复成绩",
+        "overallScore": "总分",
+        "gradeDesc": "根据 ATS 结构、经验影响和项目详细信息扫描进行评分。",
+        "benchmarks": "主要投资组合基准",
+        "percentile": "估计百分位",
+        "percentileBetter": "优于 {{count}}% 的申请人",
+        "percentileTop": "前 {{count}}%",
+        "priority": "改进优先级",
+        "priorityDesc": "建议行动的紧迫性",
+        "atsIncrease": "ATS 分数增加",
+        "atsIncreasePoints": "+{{count}} 积分",
+        "atsIncreaseDesc": "有优化建议：{{val}}",
+        "health": {
+          "title": "内容健康状况",
+          "formatting": "格式化",
+          "grammar": "语法",
+          "keywords": "关键词",
+          "length": "长度",
+          "sections": "部分",
+          "pass": "通行证",
+          "warning": "警告",
+          "review": "评论",
+          "complete": "完成",
+          "low": "低",
+          "medium": "中等",
+          "high": "高",
+          "optimized": "优化",
+          "full": "满",
+          "check": "检查"
+        },
+        "metrics": {
+          "ats": {
+            "title": "ATS兼容性",
+            "desc": "测量解析器可读性和格式优化。"
+          },
+          "skills": {
+            "title": "技能与关键词",
+            "desc": "衡量技术能力的密度和相关性。"
+          },
+          "experience": {
+            "title": "工作经验",
+            "desc": "衡量动作动词、影响陈述和数字。"
+          },
+          "education": {
+            "title": "学术背景",
+            "desc": "衡量证书布局和学位索引。"
+          },
+          "projects": {
+            "title": "重点项目",
+            "desc": "衡量技术深度、范围和代码可见性。"
+          },
+          "grammar": {
+            "title": "语法和措辞",
+            "desc": "测量拼写、主动语气和语法结构。"
+          }
+        },
+        "strengths": {
+          "title": "主要优势",
+          "empty": "没有记录任何强度。"
+        },
+        "weaknesses": {
+          "title": "内容差距和弱点",
+          "empty": "没有记录任何弱点。"
+        },
+        "missingKeywords": {
+          "title": "缺少 ATS 关键字",
+          "desc": "添加这些关键能力以提高您的 ATS 分数",
+          "disabled": "突出显示缺失的关键字已被禁用。",
+          "empty": "未检测到缺失关键字。好工作！"
+        },
+        "suggestions": {
+          "title": "可行的建议",
+          "desc": "更新简历文件时核对建议",
+          "disabled": "自动生成建议已禁用。",
+          "empty": "没有可用的建议。"
+        }
+      }
+    },
+    "details": {
+      "toasts": {
+        "deleteError": "删除简历失败。",
+        "deleteSuccess": "恢复删除成功。",
+        "deleteErrorUnexpected": "删除时发生错误。"
+      },
+      "back": "返回简历",
+      "uploaded": "已上传 {{date}}",
+      "downloadBtn": "下载文件",
+      "deleteBtn": "删除简历",
+      "deleteDialog": {
+        "title": "删除简历",
+        "desc": "您确定要删除“{{name}}”吗？此操作将从您的数据库中永久删除它并且无法撤消。",
+        "deleting": "正在删除...",
+        "confirm": "确认删除"
+      },
+      "tabs": {
+        "structured": "结构化信息",
+        "raw": "原始文本",
+        "json": "JSON 树"
+      },
+      "unknownCandidate": "未知候选人",
+      "noLocation": "未列出位置",
+      "linkedin": "领英个人资料",
+      "github": "GitHub 简介",
+      "summary": "专业总结",
+      "skills": "核心能力和技能",
+      "experience": "专业经验",
+      "education": "教育",
+      "projects": "重点项目",
+      "certifications": "认证和课程",
+      "languages": "语言",
+      "noRawText": "没有为此简历提取原始文本。",
+      "metadata": {
+        "title": "文档元数据",
+        "status": "解析状态",
+        "format": "文件格式",
+        "size": "文件大小",
+        "provider": "存储提供商"
+      }
+    }
   }
 }

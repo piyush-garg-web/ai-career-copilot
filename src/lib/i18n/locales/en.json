@@ -16,7 +16,8 @@
     "justNow": "Just now",
     "minutesAgo": "{{count}}m ago",
     "hoursAgo": "{{count}}h ago",
-    "daysAgo": "{{count}}d ago"
+    "daysAgo": "{{count}}d ago",
+    "none": "None"
   },
   "nav": {
     "home": "Home",
@@ -136,6 +137,45 @@
     },
     "testimonials": {
       "loginPrompt": "Please sign in to share your experience."
+    },
+    "reviews": {
+      "sectionTitle": "Community Reviews",
+      "title": "User Testimonials",
+      "subtitle": "Real feedback from professionals who have accelerated their career search and interview skills using AI Career Copilot.",
+      "basedOn": "Based on {{count}} {{reviews}}",
+      "review": "Review",
+      "reviews": "Reviews",
+      "sharedExperience": "You've shared your experience!",
+      "howIsJobHunt": "How has your job hunt been?",
+      "manageFeedback": "Manage or edit your live feedback using the options on the right.",
+      "submitFeedbackHelp": "Submit your rating and feedback to help other developers find their next role.",
+      "editMyReview": "Edit My Review",
+      "writeReview": "Write a Review",
+      "showingCount": "Showing {{count}} of {{total}} Reviews",
+      "sort": "Sort:",
+      "sortBy": "Sort by",
+      "sortNewest": "Newest First",
+      "sortHighest": "Highest Rated",
+      "sortLowest": "Lowest Rated",
+      "emptyState": "No reviews have been submitted yet. Be the first to share your thoughts!",
+      "yourReviewLabel": "Your Review",
+      "loadMore": "Load More Reviews",
+      "loading": "Loading...",
+      "anonymousCandidate": "Job Candidate",
+      "defaultAuthor": "Candidate",
+      "form": {
+        "updateReview": "Update Review",
+        "submitReview": "Submit Review",
+        "titlePlaceholder": "Example: Incredible interview grading!",
+        "detailsPlaceholder": "Share your experience using the ATS scorecard parser, job matches, and the conversational interview sessions...",
+        "descLength": "{{count}} / 500"
+      },
+      "modal": {
+        "editDescription": "Update your rating and comment about using AI Career Copilot.",
+        "newDescription": "Submit your rating. Your review will appear live on our community board.",
+        "deleting": "Deleting...",
+        "delete": "Delete"
+      }
     }
   },
   "header": {
@@ -204,7 +244,8 @@
       "noMatchScanRun": "No match scan run",
       "excellentResponseQuality": "Excellent response quality",
       "requiresCoachingPractice": "Requires coaching practice",
-      "noCoachSessionCompleted": "No coach session completed"
+      "noCoachSessionCompleted": "No coach session completed",
+      "noUploadsYet": "No uploads yet"
     },
     "metadata": {
       "title": "Resume Metadata",
@@ -216,16 +257,49 @@
       "desc": "Performance indicators plotted across core coaching parameters."
     },
     "suggestions": {
-      "title": "Recent AI Suggestions"
+      "title": "Recent AI Suggestions",
+      "default": {
+        "one": "Upload your first resume to get detailed AI feedback suggestions.",
+        "two": "Practice mock interviews to get targeted responses recommendations.",
+        "three": "Match against jobs to find technical capability gaps."
+      }
     },
     "insights": {
-      "title": "Coaching Insights"
+      "title": "Coaching Insights",
+      "default": {
+        "one": "Improve ATS score by adding missing keywords highlighted in your report.",
+        "two": "ATS score is optimized! Continue matching to job descriptions to find custom gaps.",
+        "three": "Practice mock interviews to evaluate technical delivery and confidence levels.",
+        "four": "Strengthen problem-solving keywords in answers to raise interview index.",
+        "five": "Customize your resume projects to better align with job requirements.",
+        "six": "Quantify resume bullet achievements with metrics and technical details."
+      }
     },
     "activity": {
       "title": "Recent Activity",
       "desc": "Your recent updates and system analysis logs.",
       "viewAll": "View all",
-      "empty": "No recent activity logs found."
+      "empty": "No recent activity logs found.",
+      "resumeAnalyzed": {
+        "title": "Resume Analyzed",
+        "desc": "Scorecard computed for \"{{fileName}}\". Score: {{score}}/100."
+      },
+      "resumeParsed": {
+        "title": "Resume Parsed",
+        "desc": "Content extracted from \"{{fileName}}\". Ready for analysis."
+      },
+      "jobMatch": {
+        "title": "Job Match Scanned",
+        "desc": "Matched against \"{{company}}\". Alignment: {{score}}%."
+      },
+      "interviewCompleted": {
+        "title": "Interview Completed",
+        "desc": "Practice session for \"{{role}}\" graded. Score: {{score}}%."
+      },
+      "interviewStarted": {
+        "title": "Interview Started",
+        "desc": "Coaching session for \"{{role}}\" is currently active."
+      }
     },
     "quickActions": {
       "title": "Quick Actions",
@@ -307,7 +381,16 @@
       "certifications": "Certifications List",
       "languages": "Language Proficiencies",
       "achievements": "Key Achievements",
-      "privacy": "Privacy & Notifications"
+      "privacy": "Privacy & Notifications",
+      "personal": "Personal Information & Social Links",
+      "preferences": "Career Preferences & Timelines",
+      "experienceWithCount": "Work Experience ({{count}})",
+      "educationWithCount": "Education ({{count}})",
+      "projectsWithCount": "Featured Projects ({{count}})",
+      "skillsWithCount": "Categorized Portfolio Skills ({{count}})",
+      "certificationsWithCount": "Certifications & Languages ({{count}})",
+      "aiPersonalization": "AI Personalization Preferences",
+      "privacyPreferences": "Privacy & Notification Preferences"
     }
   },
   "settings": {
@@ -380,7 +463,178 @@
   },
   "interview": {
     "title": "AI Mock Interview Coach",
-    "subtitle": "Practice real technical and behavioral interview formats with real-time feedback."
+    "subtitle": "Practice real technical and behavioral interview formats with real-time feedback.",
+    "toasts": {
+      "selectResume": "Please select a resume to base the questions on.",
+      "studying": "Gemini AI is studying your background and formatting personalized questions...",
+      "sessionEntering": "Questions generated! Entering session room...",
+      "setupFailed": "Failed to generate mock interview questions."
+    },
+    "setup": {
+      "pageTitle": "Hey {{name}}! AI Interview Coach",
+      "pageTitleGeneric": "AI Interview Coach",
+      "pageDesc": "Build custom mock interview sessions and record answers to receive structured, active-coaching feedback.",
+      "noResumesTitle": "No Resumes Found",
+      "noResumesDesc": "You must upload your resume document first before practicing mock interview rounds.",
+      "uploadBtn": "Upload Resume",
+      "title": "Configure Practice Session",
+      "desc": "Design a mock interview targeted to your experience levels or pasted requirements.",
+      "sessionSummary": "Session Summary",
+      "historyBtn": "History",
+      "resumeLabel": "1. Select Resume Profile",
+      "resumePlaceholder": "Select one of your resumes...",
+      "jobLabel": "2. Target Job Target (Optional)",
+      "jobPlaceholder": "Select a job description target...",
+      "generalMock": "General Professional Mock (No target JD)",
+      "jobAt": "at {{company}}",
+      "typeLabel": "Interview Type",
+      "typeMixed": "Mixed Focus",
+      "typeTech": "Technical Questions",
+      "typeBeh": "Behavioral Questions (HR)",
+      "diffLabel": "Difficulty Level",
+      "diffEasy": "Easy (Starter)",
+      "diffMedium": "Medium (Standard)",
+      "diffHard": "Hard (Senior)",
+      "countLabel": "Question Count",
+      "countExpress": "3 Questions (Express)",
+      "countFast": "5 Questions (Fast)",
+      "countStandard": "10 Questions (Standard)",
+      "countDeep": "15 Questions (Deep)",
+      "beginBtn": "Begin AI Practice Session",
+      "durationExpress": "5-8 Minutes",
+      "durationFast": "10-15 Minutes",
+      "durationStandard": "20-25 Minutes",
+      "durationDeep": "30-40 Minutes",
+      "crafting": "Crafting Personalized Interview...",
+      "craftingDesc": "Gemini is researching your competencies, compiling technical scenarios, and configuring evaluation targets.",
+      "easyDesc": "Starter queries checking foundational technical concepts and basic resume declarations.",
+      "mediumDesc": "Standard industry mock questions simulating professional Mid-level engineer behavioral scenarios.",
+      "hardDesc": "High-pressure Senior panels checking architecture design, systems constraints, and complex leadership scenarios.",
+      "estDuration": "Est. Duration",
+      "questionFocus": "Question Focus",
+      "diffSetting": "Difficulty Setting",
+      "diffDescLabel": "Difficulty Description",
+      "scoredCategoriesTitle": "Scored Categories",
+      "scoredCategories": {
+        "tech": "Technical Competencies",
+        "comm": "Communication & Tone Delivery",
+        "star": "STAR behavioral scenario logic",
+        "solve": "Problem solving structural steps"
+      }
+    },
+    "session": {
+      "toasts": {
+        "tooShort": "Please provide a slightly more detailed response (minimum 10 characters).",
+        "assessing": "Gemini AI is assessing your answer metrics...",
+        "recorded": "Response recorded!",
+        "unexpected": "Failed to submit answer.",
+        "completing": "Mock evaluation session closing. Compiling final metrics...",
+        "completed": "Interview completed! Loading scorecard...",
+        "completeFailed": "Failed to compile overall scorecard."
+      },
+      "chatRoom": "Simulated Chat Room",
+      "progressLabel": "Practice session progress",
+      "progressStatus": "{{count}} / {{total}} Answers Evaluated ({{remaining}} Remaining)",
+      "interviewer": "Interviewer",
+      "feedbackTitle": "Response Evaluation",
+      "strengths": "✓ Strengths",
+      "improvements": "⚠ Improvements",
+      "compiling": "Compiling Mock Session Report Card...",
+      "completeBtn": "Complete Practice & Grade",
+      "nextBtn": "Prepare Next Question",
+      "inputPlaceholder": "Type your response to the interviewer's question...",
+      "inputTip": "Enter 10+ characters to evaluate response alignment.",
+      "submitBtn": "Submit Answer",
+      "liveScores": "Live Session Scores",
+      "techAccuracy": "Technical Accuracy",
+      "commClarity": "Communication Clarity",
+      "confidenceIndex": "Confidence Index",
+      "solveQuotient": "Problem Solving Quotient",
+      "scoresTip": "Live metric scores will average and update instantly as soon as you submit response evaluations to the interviewer."
+    },
+    "result": {
+      "back": "Practice Another Interview",
+      "completedAt": "Completed {{date}}",
+      "download": "Download PDF Report",
+      "retry": "Retry Interview",
+      "sessionScore": "Session Score",
+      "excellent": "Excellent Practice!",
+      "solid": "Solid Effort.",
+      "needsImprovement": "Needs Improvement.",
+      "scoreRank": "Ranks higher than {{val}}% of tested portfolio sessions.",
+      "categoryTitle": "Detailed Category Breakdown",
+      "tech": "Technical",
+      "clarity": "Clarity",
+      "confidence": "Confidence",
+      "solve": "Problem Solving",
+      "behavioral": "Behavioral",
+      "adviceLabel": "Performance Advice",
+      "noAdvice": "No general coaching summary advice recorded.",
+      "strengthsTitle": "Observed Strengths",
+      "noStrengths": "No strengths recorded.",
+      "gapsTitle": "Focus Growth Areas",
+      "noGaps": "No weaknesses recorded.",
+      "stepsTitle": "Recommended Next Steps & Career Advice",
+      "stepsDesc": "Actionable prep tasks for growth",
+      "dialogueReviewTitle": "Question-by-Question Dialogue Review",
+      "questionNumber": "Question #{{order}} • {{type}}",
+      "scorePercent": "Score: {{val}}%",
+      "yourResponse": "Your Response",
+      "noResponse": "(No response recorded)",
+      "aiFeedback": "AI Grading Feedback",
+      "noFeedback": "No feedback recorded.",
+      "accuracy": "Accuracy",
+      "answerStrengths": "Answer Strengths",
+      "improvements": "Improvement Suggestions",
+      "idealAnswer": "Ideal Answer Template",
+      "toasts": {
+        "preparing": "Preparing PDF print scorecard..."
+      }
+    },
+    "history": {
+      "back": "Back to Interview Coach",
+      "title": "Interview History Logs",
+      "desc": "Inspect overall card ratings, dialogue details, and tailored career coach insights from past practices.",
+      "totalSessions": "Total Practice Sessions",
+      "avgScore": "Average Practice Score",
+      "highestScore": "Highest Scored Panel",
+      "totalTime": "Total Practice Time",
+      "trendsTitle": "Practice score trends",
+      "trendsDesc": "Chronological representation of your overall ratings scores.",
+      "trendsEmpty": "Complete multiple sessions to chart ratings trends.",
+      "filters": {
+        "all": "All",
+        "completed": "Completed Only",
+        "technical": "Technical Only",
+        "behavioral": "Behavioral Only"
+      },
+      "empty": {
+        "title": "No practice sessions found",
+        "desc": "You haven't started or completed any sessions matching your filter yet. Let's run your first interview coaching session!",
+        "btn": "Start mock session"
+      },
+      "card": {
+        "difficulty": "{{role}} role • Difficulty: {{difficulty}}",
+        "duration": "Duration: {{val}}",
+        "deleteConfirm": "Delete this session log history permanently?",
+        "confirmBtn": "Confirm",
+        "cancelBtn": "Cancel",
+        "viewReport": "View Report",
+        "resumeSession": "Resume Session",
+        "retryTitle": "Retry practice session",
+        "deleteTitle": "Delete session"
+      },
+      "status": {
+        "active": "In Progress",
+        "completed": "Completed • Score: {{score}}%",
+        "abandoned": "Abandoned"
+      },
+      "toasts": {
+        "deleted": "Interview session deleted successfully.",
+        "deleteFailed": "Failed to delete interview session.",
+        "deleteError": "Error deleting interview session."
+      }
+    }
   },
   "status": {
     "verified": "Verified",
@@ -402,6 +656,351 @@
     "signUp": {
       "title": "Create your account",
       "subtitle": "Join AI Career Copilot and start optimizing your profile."
+    }
+  },
+  "resume": {
+    "status": {
+      "uploaded": "Uploaded",
+      "parsing": "Parsing",
+      "parsed": "Parsed",
+      "analyzing": "Analyzing",
+      "analyzed": "Analyzed",
+      "error": "Error"
+    },
+    "success": {
+      "primaryUpdated": "Primary resume updated successfully.",
+      "renamed": "Resume renamed successfully.",
+      "duplicated": "Resume duplicated successfully.",
+      "duplicatedDesc": "Created copy: {{name}}",
+      "deleted": "Resume document deleted successfully."
+    },
+    "errors": {
+      "primaryUpdate": "Failed to update primary status.",
+      "primaryUpdateUnexpected": "Error setting primary resume.",
+      "rename": "Failed to rename resume.",
+      "renameUnexpected": "Error renaming resume.",
+      "duplicate": "Failed to duplicate resume.",
+      "duplicateUnexpected": "Error duplicating resume.",
+      "delete": "Failed to delete resume.",
+      "deleteUnexpected": "Error deleting resume."
+    },
+    "list": {
+      "title": "My Resumes",
+      "titleWithUser": "Hey {{name}}! My Resumes",
+      "description": "View and manage your uploaded resumes or upload a new version.",
+      "uploadBtn": "Upload Resume",
+      "empty": {
+        "title": "No resumes uploaded yet",
+        "desc": "Your portfolio looks fresh! Upload your resume in PDF or Word formats to scan ATS scores and start simulated interview coaching.",
+        "btn": "Upload your first resume"
+      },
+      "card": {
+        "primaryTag": "Primary",
+        "renamePlaceholder": "Enter resume name...",
+        "renameTitle": "Rename document",
+        "documentType": "{{type}} Document",
+        "deleteConfirm": "Delete this resume document permanently?",
+        "deleteBtn": "Confirm",
+        "viewAnalysisTitle": "View AI analysis report",
+        "setPrimaryTitle": "Set as primary resume",
+        "duplicateTitle": "Duplicate resume",
+        "downloadTitle": "Download document",
+        "viewDetailsTitle": "View details",
+        "deleteTitle": "Delete resume"
+      }
+    },
+    "upload": {
+      "dropHere": "Drop your file here",
+      "dragHere": "Drag & drop your resume here",
+      "or": "or",
+      "browse": "browse files",
+      "fromComputer": "from your computer",
+      "supportedFormats": "Supported formats: PDF, DOCX (Max 10MB)",
+      "validating": "Validating file...",
+      "uploading": "Uploading file...",
+      "parsing": "Extracting plain text...",
+      "processing": "Processing",
+      "success": {
+        "title": "Upload Successful!",
+        "desc": "\"{{name}}\" has been safely saved to your profile. Redirecting you shortly..."
+      },
+      "error": {
+        "title": "Upload Blocked",
+        "tryAgain": "Try again"
+      },
+      "toasts": {
+        "retrieveIdError": "Upload succeeded, but could not retrieve resume database ID.",
+        "trackingError": "Upload tracking error",
+        "success": "Resume uploaded and parsed successfully!",
+        "extractError": "Failed to extract plain text from resume.",
+        "parsingFailed": "Parsing failed",
+        "unexpectedUploadError": "An unexpected error occurred during upload.",
+        "uploadFailed": "Upload failed"
+      },
+      "validation": {
+        "noFile": "No file selected.",
+        "unsupportedType": "Unsupported file type. Only PDF and DOCX files are allowed.",
+        "tooLarge": "File is too large. The maximum allowed size is 10MB."
+      }
+    },
+    "analysis": {
+      "toasts": {
+        "analyzeError": "Failed to analyze document.",
+        "success": "AI Resume Analysis completed successfully!",
+        "unexpectedError": "An unexpected error occurred during AI analysis.",
+        "failed": "AI Analysis failed",
+        "reanalyzing": "Gemini AI is re-analyzing your resume. Please hold...",
+        "reanalyzeSuccess": "Resume re-analyzed successfully!",
+        "reanalyzeError": "Something went wrong during AI analysis.",
+        "preparingPrint": "Preparing report print view..."
+      },
+      "error": {
+        "title": "Analysis Engine Error",
+        "tryAgain": "Try Again"
+      },
+      "loading": {
+        "title": "Initializing AI Analysis...",
+        "titleRunning": "Analyzing Document...",
+        "desc": "Gemini is assessing your experience descriptions, indexing technical keywords, and drafting suggestions.",
+        "descRunning": "Gemini AI is reading structure, grammar, and ATS keyword gaps. This will take a few seconds."
+      },
+      "dashboard": {
+        "back": "Back to My Resumes",
+        "title": "AI Resume Analysis",
+        "uploaded": "Uploaded {{date}}",
+        "analyzed": "Analyzed {{date}}",
+        "downloadPdf": "Download PDF Report",
+        "analyzeAgain": "Analyze Again",
+        "summary": "AI Executive Summary",
+        "gradeTitle": "Resume Grade",
+        "overallScore": "Overall Score",
+        "gradeDesc": "Grade based on ATS structure, experiences impact, and project details scan.",
+        "benchmarks": "Key Portfolio Benchmarks",
+        "percentile": "Estimated Percentile",
+        "percentileBetter": "Better than {{count}}% of applicants",
+        "percentileTop": "Top {{count}}%",
+        "priority": "Improvement Priority",
+        "priorityDesc": "Urgency of suggestions action",
+        "atsIncrease": "ATS Score Increase",
+        "atsIncreasePoints": "+{{count}} Points",
+        "atsIncreaseDesc": "With optimization suggestions: {{val}}",
+        "health": {
+          "title": "Content Health Status",
+          "formatting": "Formatting",
+          "grammar": "Grammar",
+          "keywords": "Keywords",
+          "length": "Length",
+          "sections": "Sections",
+          "pass": "Pass",
+          "warning": "Warning",
+          "review": "Review",
+          "complete": "Complete",
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High",
+          "optimized": "Optimized",
+          "full": "Full",
+          "check": "Check"
+        },
+        "metrics": {
+          "ats": { "title": "ATS Compatibility", "desc": "Measures parser readability and formatting optimization." },
+          "skills": { "title": "Skills & Keywords", "desc": "Measures density and relevance of technical competencies." },
+          "experience": { "title": "Work Experience", "desc": "Measures action verbs, impact statements, and numbers." },
+          "education": { "title": "Academic Background", "desc": "Measures credentials layout and degree indexing." },
+          "projects": { "title": "Key Projects", "desc": "Measures technical depth, scope, and code visibility." },
+          "grammar": { "title": "Grammar & Phrasing", "desc": "Measures spelling, active tone, and syntax structure." }
+        },
+        "strengths": {
+          "title": "Key Strengths",
+          "empty": "No strengths recorded."
+        },
+        "weaknesses": {
+          "title": "Content Gaps & Weaknesses",
+          "empty": "No weaknesses recorded."
+        },
+        "missingKeywords": {
+          "title": "Missing ATS Keywords",
+          "desc": "Add these key competencies to improve your ATS score",
+          "disabled": "Highlight missing keywords is disabled.",
+          "empty": "No missing keywords detected. Good job!"
+        },
+        "suggestions": {
+          "title": "Actionable Suggestions",
+          "desc": "Check off suggestions as you update your resume file",
+          "disabled": "Auto Generate suggestions is disabled.",
+          "empty": "No suggestions available."
+        }
+      }
+    },
+    "details": {
+      "toasts": {
+        "deleteError": "Failed to delete the resume.",
+        "deleteSuccess": "Resume deleted successfully.",
+        "deleteErrorUnexpected": "An error occurred while deleting."
+      },
+      "back": "Back to Resumes",
+      "uploaded": "Uploaded {{date}}",
+      "downloadBtn": "Download File",
+      "deleteBtn": "Delete Resume",
+      "deleteDialog": {
+        "title": "Delete Resume",
+        "desc": "Are you absolutely sure you want to delete \"{{name}}\"? This action will permanently remove it from your database and cannot be undone.",
+        "deleting": "Deleting...",
+        "confirm": "Confirm Delete"
+      },
+      "tabs": {
+        "structured": "Structured Info",
+        "raw": "Raw Text",
+        "json": "JSON Tree"
+      },
+      "unknownCandidate": "Unknown Candidate",
+      "noLocation": "No location listed",
+      "linkedin": "LinkedIn Profile",
+      "github": "GitHub Profile",
+      "summary": "Professional Summary",
+      "skills": "Core Competencies & Skills",
+      "experience": "Professional Experience",
+      "education": "Education",
+      "projects": "Key Projects",
+      "certifications": "Certifications & Courses",
+      "languages": "Languages",
+      "noRawText": "No raw text extracted for this resume.",
+      "metadata": {
+        "title": "Document Metadata",
+        "status": "Parsing Status",
+        "format": "Document Format",
+        "size": "File Size",
+        "provider": "Storage Provider"
+      }
+    }
+  },
+  "ats": {
+    "toasts": {
+      "preparingPrint": "Preparing ATS scorecards report print view..."
+    },
+    "title": "ATS Score Optimizer",
+    "description": "Verify compatibility of your resumes with parsing engines, optimize keyword density, and identify structural gaps.",
+    "downloadBtn": "Download ATS Report",
+    "grade": "ATS Grade",
+    "currentScore": "Your Current score",
+    "targetInfo": "Target a score above 80% to bypass initial parsing filters.",
+    "benchmarkTitle": "Industry ATS Benchmarks Comparison",
+    "averageAts": "Average ATS Score",
+    "yourCurrentAts": "Your Current ATS Score",
+    "topScore": "Top 10% Industry Score",
+    "trendTitle": "ATS Trend Over Time",
+    "trendDesc": "History of scans showing progress and optimizations.",
+    "trendEmpty": "Upload and scan multiple resumes to plot a trend chart.",
+    "checklist": {
+      "title": "ATS Structural Checklist",
+      "desc": "Essential checks to ensure error-free parsing.",
+      "layout": "Layout formatting",
+      "sections": "Section indexing",
+      "keywords": "Keyword density",
+      "grammar": "Active grammar",
+      "readability": "Parser readability",
+      "clean": "Clean",
+      "needsReview": "Needs Review",
+      "complete": "Complete",
+      "missing": "Missing Info",
+      "optimized": "Optimized",
+      "low": "Low Density",
+      "valid": "Valid",
+      "grammarReview": "Grammar Review",
+      "high": "High",
+      "lowIndex": "Low Index"
+    },
+    "empty": {
+      "title": "No Resumes Uploaded Yet",
+      "desc": "Upload your portfolio resume to get immediate parsing scan results and optimization keyword checklists.",
+      "btn": "Upload Resume"
+    },
+    "history": {
+      "title": "Resume ATS Optimization History",
+      "scoreTitle": "ATS Score",
+      "booster": "Missing Keywords to Optimize (ATS Booster)",
+      "boosterEmpty": "No missing keywords detected! Your resume is well optimized for ATS terms.",
+      "summary": "Score Summary",
+      "readyForAnalysis": "This resume is ready for analysis, but you haven't run the ATS analyzer on it yet.",
+      "processing": "This resume is currently processing. Once parsing completes, you can run the ATS analysis scorecard.",
+      "viewDetails": "View Optimization Details",
+      "runAnalysis": "Run ATS Analysis",
+      "manage": "Manage Resume"
+    }
+  },
+  "jobMatch": {
+    "toasts": {
+      "selectResume": "Please select a resume to match.",
+      "pasteDesc": "Please paste the job description text.",
+      "tooShort": "Job description text is too short. Please paste a complete description.",
+      "analyzing": "Gemini AI is analyzing the alignment and comparing keywords. Please hold...",
+      "success": "Job match completed!",
+      "error": "Failed to calculate job description match.",
+      "unexpected": "Failed to compile AI Job Match report.",
+      "preparingPrint": "Preparing Job Match PDF report..."
+    },
+    "form": {
+      "pageTitle": "Hey {{name}}! Resume & Job Matcher",
+      "pageTitleGeneric": "Resume & Job Matcher",
+      "pageDesc": "Compare your resume details against any job description to discover key keyword gaps and fit alignment.",
+      "noResumesTitle": "No Resumes Found",
+      "noResumesDesc": "You must upload your resume document first before comparing it with job roles.",
+      "uploadBtn": "Upload Resume",
+      "title": "Job Match Comparison Form",
+      "desc": "Select one of your uploaded resumes and paste the target job description to run an alignment check.",
+      "selectResumeLabel": "1. Select Resume",
+      "selectResumePlaceholder": "Select one of your resumes...",
+      "requiresParsing": "(Requires parsing text)",
+      "pasteDescLabel": "2. Paste Job Description",
+      "pasteDescPlaceholder": "Paste the target job description here (responsibilities, skills, qualifications, keyword tags)...",
+      "minLength": "Minimum length: 100 characters. Paste raw text blocks directly.",
+      "submitBtn": "Analyze Match Alignment",
+      "matching": "Matching Resume...",
+      "matchingDesc": "Gemini is cross-referencing your experience bullets against the job description requirements."
+    },
+    "result": {
+      "back": "Compare Another Job",
+      "title": "Matching Report",
+      "targetJob": "Target Job Profile",
+      "targetCompany": "Target Company",
+      "matched": "Matched {{date}}",
+      "downloadBtn": "Download PDF Report",
+      "viewResumes": "View Resumes",
+      "overallScore": "Overall Match Score",
+      "roleFitSummary": "Role Fit Executive Summary",
+      "noSummary": "No comparison summary generated.",
+      "alignSuccess": "Keywords alignment matches target profile",
+      "alignImpact": "Estimated ATS Optimization impact: +12%",
+      "priority": "Priority Improvements",
+      "minorEdits": "Minor Edits",
+      "tailoringRequired": "Resume Tailoring Required",
+      "density": "Keyword Density",
+      "boostNeeded": "Boost Needed",
+      "optimal": "Optimal",
+      "atsImprovement": "ATS Improvement",
+      "atsPotential": "Potential score of {{val}}%",
+      "actions": "Tailoring Actions",
+      "tasksPending": "{{count}} Tasks Pending",
+      "breakdownTitle": "Qualifications Match Breakdown",
+      "techSkillsFit": "Technical Skills Fit",
+      "experienceFit": "Professional Experience Match",
+      "projectsFit": "Academic Projects & Code Relevance",
+      "educationFit": "Education Alignment",
+      "softSkillsFit": "Behavioral & Soft Skills Index",
+      "matchedSkillsTitle": "Matched Skills & Competencies",
+      "noMatchedSkills": "No matched skills recorded.",
+      "missingSkillsTitle": "Missing Required Skills",
+      "allSkillsMatched": "None! You possess all required skills.",
+      "strengthsTitle": "Candidate Advantages & Strengths",
+      "noStrengths": "No strengths recorded.",
+      "weaknessesTitle": "Alignment Gaps & Weaknesses",
+      "noWeaknesses": "No weaknesses recorded.",
+      "suggestionsTitle": "Actionable Tailoring Suggestions",
+      "suggestionsDesc": "Check off actions as you update your resume to better match this target role description",
+      "noSuggestions": "No suggestions generated.",
+      "strongMatch": "Strong Match",
+      "moderateMatch": "Moderate Match",
+      "weakMatch": "Weak Match"
     }
   }
 }

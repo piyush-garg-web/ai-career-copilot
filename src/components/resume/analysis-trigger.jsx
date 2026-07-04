@@ -6,8 +6,10 @@ import { Loader2, Sparkles, AlertTriangle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 export function AnalysisTrigger({ resumeId }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [error, setError] = useState("");
 
@@ -22,18 +24,18 @@ export function AnalysisTrigger({ resumeId }) {
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.error || "Failed to analyze document.");
+          throw new Error(errorData.error || t("resume.analysis.toasts.analyzeError"));
         }
 
         if (active) {
-          toast.success("AI Resume Analysis completed successfully!");
+          toast.success(t("resume.analysis.toasts.success"));
           router.refresh();
         }
       } catch (err) {
         if (active) {
           console.error("AI Auto-trigger analysis error:", err);
-          setError(err.message || "An unexpected error occurred during AI analysis.");
-          toast.error("AI Analysis failed");
+          setError(err.message || t("resume.analysis.toasts.unexpectedError"));
+          toast.error(t("resume.analysis.toasts.failed"));
         }
       }
     };
@@ -43,7 +45,7 @@ export function AnalysisTrigger({ resumeId }) {
     return () => {
       active = false;
     };
-  }, [resumeId, router]);
+  }, [resumeId, router, t]);
 
   return (
     <Card className="border-border/40 bg-card/60 backdrop-blur-md max-w-lg mx-auto shadow-sm">
@@ -53,7 +55,7 @@ export function AnalysisTrigger({ resumeId }) {
             <div className="w-12 h-12 rounded-2xl bg-destructive/10 flex items-center justify-center text-destructive mb-2">
               <AlertTriangle className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-foreground">Analysis Engine Error</h3>
+            <h3 className="text-lg font-bold text-foreground">{t("resume.analysis.error.title")}</h3>
             <p className="text-xs text-muted-foreground font-semibold leading-relaxed max-w-xs">
               {error}
             </p>
@@ -65,7 +67,7 @@ export function AnalysisTrigger({ resumeId }) {
               variant="outline"
               className="rounded-xl border-border/40 text-xs font-semibold px-4 h-9 cursor-pointer"
             >
-              Try Again
+              {t("resume.analysis.error.tryAgain")}
             </Button>
           </>
         ) : (
@@ -75,10 +77,10 @@ export function AnalysisTrigger({ resumeId }) {
             </div>
             <h3 className="text-lg font-bold text-foreground flex items-center gap-2 justify-center">
               <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />
-              Initializing AI Analysis...
+              {t("resume.analysis.loading.title")}
             </h3>
             <p className="text-xs text-muted-foreground font-semibold max-w-xs leading-relaxed">
-              Gemini is assessing your experience descriptions, indexing technical keywords, and drafting suggestions.
+              {t("resume.analysis.loading.desc")}
             </p>
           </>
         )}

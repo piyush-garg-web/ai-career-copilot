@@ -1,121 +1,1140 @@
 {
+  "common": {
+    "loading": "Carregando...",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "submit": "Enviar",
+    "search": "Pesquisar",
+    "results": "Resultados",
+    "noResults": "Nenhum resultado correspondente encontrado.",
+    "searchLanguage": "Idioma de pesquisa...",
+    "noLanguagesFound": "Nenhum idioma encontrado",
+    "toggleMenu": "Alternar menu",
+    "complete": "Completo",
+    "justNow": "Agora mesmo",
+    "minutesAgo": "{{count}}m atrás",
+    "hoursAgo": "{{count}}h atrás",
+    "daysAgo": "{{count}}d atrás",
+    "none": "Nenhum"
+  },
   "nav": {
-    "home": "Início",
+    "home": "Página inicial",
     "dashboard": "Painel",
     "profile": "Perfil",
     "settings": "Configurações",
     "signIn": "Entrar",
-    "signUp": "Cadastrar-se",
+    "signUp": "Inscreva-se",
     "logout": "Sair",
-    "backToHome": "Voltar para o Início",
+    "backToHome": "De volta para casa",
     "privacy": "Política de Privacidade",
-    "terms": "Termos de Serviço"
+    "terms": "Termos de Serviço",
+    "features": "Recursos",
+    "howItWorks": "Como funciona",
+    "reviews": "Comentários",
+    "faq": "Perguntas frequentes"
   },
   "landing": {
     "hero": {
-      "title": "Seu Copiloto de Carreira impulsionado por IA",
-      "subtitle": "Analise currículos, verifique pontuações ATS, combine empregos e pratique entrevistas simuladas com feedbacks em tempo real do Google Gemini.",
-      "cta": "Começar Grátis"
+      "title": "Seu copiloto de carreira alimentado por IA",
+      "subtitle": "Analise currículos, verifique pontuações ATS, combine empregos e pratique entrevistas simuladas com feedback em tempo real com tecnologia do Google Gemini.",
+      "cta": "Comece gratuitamente"
     },
     "features": {
-      "title": "Recursos Principais Criados para Seu Sucesso",
-      "subtitle": "Descubra ferramentas criadas para acelerar sua busca profissional."
+      "title": "Recursos principais criados para o seu sucesso",
+      "subtitle": "Descubra as ferramentas desenvolvidas para acelerar sua busca de carreira.",
+      "loginPrompt": "Faça login para usar este recurso.",
+      "explore": "Explorar →",
+      "items": {
+        "resume": {
+          "title": "Análise de currículo de IA",
+          "description": "Gera auditorias de seção completas para experiência, impacto do projeto, estrutura e métricas de formatação."
+        },
+        "ats": {
+          "title": "Pontuação ATS",
+          "description": "Calcula uma classificação de conformidade do setor para garantir que seu currículo seja aprovado nos sistemas automáticos de triagem de RH."
+        },
+        "health": {
+          "title": "Retomar Saúde",
+          "description": "Avalia a integridade gramatical, a estrutura da seção, o aprimoramento da formatação e as regras de legibilidade do documento."
+        },
+        "suggestions": {
+          "title": "Sugestões de IA",
+          "description": "Oferece ideias de substituição palavra por palavra, sugestões de verbos ativos e correções ortográficas em tempo real."
+        },
+        "jobMatch": {
+          "title": "Correspondência de trabalho",
+          "description": "Compara suas habilidades diretamente com as ofertas de emprego desejadas para calcular o índice geral de alinhamento."
+        },
+        "missingSkills": {
+          "title": "Detecção de habilidades ausentes",
+          "description": "Indica exatamente quais estruturas de programação, certificações ou kits de ferramentas você precisa listar."
+        },
+        "interview": {
+          "title": "Treinador de entrevista",
+          "description": "Conduza sessões simuladas orais interativas adaptadas diretamente ao seu histórico e dificuldade preferida."
+        },
+        "history": {
+          "title": "Histórico de entrevistas",
+          "description": "Revisite e revise sessões concluídas anteriormente para comparar as classificações das respostas e acompanhar o desempenho."
+        },
+        "analytics": {
+          "title": "Painel analítico",
+          "description": "Um hub centralizado com gráficos, listas de tarefas atuais e verificações de progresso correspondentes recentes."
+        },
+        "darkMode": {
+          "title": "Modo escuro",
+          "description": "Uma interface de usuário de modo claro e escuro totalmente integrada que oferece suporte a substituições automáticas do sistema operacional."
+        },
+        "responsive": {
+          "title": "Design Responsivo",
+          "description": "Alinhamentos de grade otimizados que fornecem suporte padrão para celulares, tablets e telas grandes."
+        }
+      }
+    },
+    "stats": {
+      "resumeAnalyses": {
+        "label": "Retomar análises",
+        "description": "Otimizado para quem procura carreira em todo o mundo"
+      },
+      "atsImprovement": {
+        "label": "Melhoria ATS",
+        "description": "Taxa média de melhoria da pontuação de sucesso"
+      },
+      "interviewQuestions": {
+        "label": "Perguntas da entrevista",
+        "description": "Respondido e avaliado por mecanismos de IA"
+      },
+      "uptime": {
+        "label": "SLA de tempo de atividade",
+        "description": "Clustering de banco de dados de alto desempenho"
+      }
+    },
+    "howItWorks": {
+      "sectionTitle": "Fluxo de trabalho",
+      "title": "Jornada Simples e Interativa",
+      "subtitle": "Veja como o AI Career Copilot o orienta passo a passo, desde a auditoria de documentos de currículo bruto até a preparação para uma entrevista simulada.",
+      "steps": {
+        "one": {
+          "title": "Etapa 1: enviar currículo",
+          "description": "Carregue seu currículo com segurança em formato PDF ou Word (até 10 MB) por meio de nosso portal de upload de arquivos extremamente rápido."
+        },
+        "two": {
+          "title": "Etapa 2: currículo de análise de IA",
+          "description": "Nosso analisador local extrai texto bruto estruturado dinamicamente e o envia para avaliação pelos mecanismos Gemini AI."
+        },
+        "three": {
+          "title": "Etapa 3: analisar a pontuação ATS",
+          "description": "Obtenha métricas instantâneas destacando a conclusão da seção, pontuações de legibilidade e metas de otimização gramatical."
+        },
+        "four": {
+          "title": "Etapa 4: Corresponder à descrição do trabalho",
+          "description": "Cole ofertas de emprego desejadas para comparar métricas de correspondência semântica, habilidades ausentes e palavras-chave."
+        },
+        "five": {
+          "title": "Etapa 5: praticar entrevistas",
+          "description": "Execute simulações comportamentais e técnicas personalizadas de voz para texto, recebendo feedback estruturado por resposta."
+        },
+        "six": {
+          "title": "Etapa 6: conseguir mais entrevistas",
+          "description": "Inscreva-se com palavras-chave otimizadas e confiança aprimorada, superando os filtros automatizados e as expectativas dos gerentes de contratação."
+        }
+      }
+    },
+    "faq": {
+      "sectionTitle": "Suporte",
+      "title": "Perguntas frequentes",
+      "subtitle": "Respostas rápidas a perguntas padrão sobre nosso pipeline de IA, modelos de segurança, suporte a arquivos e políticas de privacidade de dados.",
+      "items": {
+        "one": {
+          "question": "Como funciona a análise de IA?",
+          "answer": "Quando você carrega seu currículo, nosso analisador local extrai o texto bruto do seu documento (PDF ou DOCX). Este texto é então processado com segurança por nosso pipeline de IA do Google Gemini, que o compara com as regras de filtragem ATS padrão do setor e avalia seções de gramática, integridade de formatação e força de palavras-chave."
+        },
+        "two": {
+          "question": "Meu currículo está seguro?",
+          "answer": "Sim, seus arquivos de currículo são tratados com segurança. Carregamos os documentos em um bucket privado hospedado por UploadThing e somente contas de usuários autenticados podem recuperá-los ou analisá-los. Suas informações pessoais estão sempre protegidas."
+        },
+        "three": {
+          "question": "Quais formatos de arquivo são suportados?",
+          "answer": "Oferecemos suporte total para uploads de documentos padrão em PDF (.pdf) e Microsoft Word (.docx) de até 10 MB. Analisamos os dados de formatação localmente para extrair texto limpo para avaliação de IA."
+        },
+        "four": {
+          "question": "Posso analisar vários currículos?",
+          "answer": "Absolutamente! Você pode fazer upload de vários currículos ou rascunhos de versões para o seu painel. Você pode alternar qualquer upload para ser seu currículo 'Primário', que servirá como documento base para correspondência de descrições de cargos e sessões de entrevistas simuladas."
+        },
+        "five": {
+          "question": "Meus dados são privados?",
+          "answer": "Sim, seus dados são privados e bloqueados em sua conta pessoal. Não vendemos detalhes de seu currículo, relatórios de desempenho ou transcrições de entrevistas simuladas para bancos de dados de terceiros. Todas as portas de autenticação são protegidas por tokens de autenticação de middleware Clerk."
+        }
+      }
+    },
+    "comparison": {
+      "sectionTitle": "Comparação",
+      "title": "Por que escolher o AI Career Copilot?",
+      "subtitle": "Veja como nosso mecanismo inteligente de IA generativa supera os fluxos de trabalho tradicionais e desatualizados de revisão de currículos e preparação de entrevistas.",
+      "table": {
+        "capability": "Capacidade",
+        "traditional": "Revisão Tradicional",
+        "copilot": "Copiloto"
+      },
+      "rows": {
+        "instantAI": {
+          "feature": "Análise instantânea de IA",
+          "traditional": "Dias/semanas aguardando feedback",
+          "copilot": "Feedback em tempo real em menos de 10 segundos"
+        },
+        "ats": {
+          "feature": "Pontuação de otimização ATS",
+          "traditional": "Suposições baseadas em modelos genéricos",
+          "copilot": "Cálculo de precisão correspondente a mais de 85 filtros de análise"
+        },
+        "jobMatch": {
+          "feature": "Correspondência de trabalho personalizada",
+          "traditional": "Comparação manual com listas de empregos",
+          "copilot": "Detecção semântica de lacunas de habilidade destacando palavras-chave ausentes"
+        },
+        "interview": {
+          "feature": "Treinamento de entrevista simulada de IA",
+          "traditional": "Treinadores de revisão profissionais caros",
+          "copilot": "Sessões dinâmicas baseadas em STAR com registros de avaliação"
+        },
+        "actionItems": {
+          "feature": "Itens de ação baseados no contexto",
+          "traditional": "Modelos vagos (\"tornar os verbos mais fortes\")",
+          "copilot": "Dicas precisas de substituição de verbos ativos, palavra por palavra"
+        },
+        "multiResume": {
+          "feature": "Verificações de versão com vários currículos",
+          "traditional": "Arquivos espalhados em computadores pessoais",
+          "copilot": "Banco de dados de armazenamento centralizado para comparar versões"
+        }
+      }
+    },
+    "productPreview": {
+      "sectionTitle": "Tour do produto",
+      "title": "Veja a plataforma em ação",
+      "subtitle": "Faça um tour virtual pelos recursos de alta fidelidade e interfaces de IA criados para otimizar sua carreira.",
+      "tabs": {
+        "dashboard": "Painel",
+        "resumeAnalysis": "Análise de currículo",
+        "ats": "Pontuação ATS e saúde",
+        "jobMatch": "Correspondência de trabalho",
+        "interview": "Treinador de entrevista"
+      }
+    },
+    "footer": {
+      "ctaTitle": "Pronto para aceitar sua próxima entrevista?",
+      "ctaDescription": "Junte-se a milhares de candidatos a empregos que usam o AI Career Copilot para otimizar seus documentos de candidatura, passar por bots de triagem e praticar simulações comportamentais.",
+      "ctaButton": "Comece gratuitamente",
+      "description": "Seu assistente de carreira com tecnologia de IA, projetado para otimizar currículos, avaliar classificações de conformidade ATS, analisar lacunas de habilidades e orientá-lo por meio de painéis de entrevistas simuladas.",
+      "product": "Produto",
+      "features": "Recursos",
+      "howItWorks": "Como funciona",
+      "developers": "Desenvolvedores",
+      "faq": "Perguntas frequentes",
+      "legal": "Jurídico e contato",
+      "contactSupport": "Contate o suporte",
+      "changeAppearance": "Alterar aparência:"
+    },
+    "testimonials": {
+      "loginPrompt": "Faça login para compartilhar sua experiência."
+    },
+    "reviews": {
+      "sectionTitle": "Avaliações da comunidade",
+      "title": "Depoimentos de usuários",
+      "subtitle": "Feedback real de profissionais que aceleraram suas habilidades de busca de carreira e entrevistas usando AI Career Copilot.",
+      "basedOn": "Baseado em {{count}} {{reviews}}",
+      "review": "Revisão",
+      "reviews": "Comentários",
+      "sharedExperience": "Você compartilhou sua experiência!",
+      "howIsJobHunt": "Como tem sido sua busca por emprego?",
+      "manageFeedback": "Gerencie ou edite seu feedback ao vivo usando as opções à direita.",
+      "submitFeedbackHelp": "Envie sua avaliação e feedback para ajudar outros desenvolvedores a encontrar sua próxima função.",
+      "editMyReview": "Editar minha avaliação",
+      "writeReview": "Escreva um comentário",
+      "showingCount": "Mostrando {{count}} de {{total}} avaliações",
+      "sort": "Classificar:",
+      "sortBy": "Classificar por",
+      "sortNewest": "Mais novo primeiro",
+      "sortHighest": "Mais bem avaliado",
+      "sortLowest": "Classificação mais baixa",
+      "emptyState": "Nenhuma avaliação foi enviada ainda. Seja o primeiro a compartilhar seus pensamentos!",
+      "yourReviewLabel": "Sua avaliação",
+      "loadMore": "Carregar mais avaliações",
+      "loading": "Carregando...",
+      "anonymousCandidate": "Candidato a emprego",
+      "defaultAuthor": "Candidato",
+      "form": {
+        "updateReview": "Revisão de atualização",
+        "submitReview": "Enviar avaliação",
+        "titlePlaceholder": "Exemplo: Avaliação de entrevista incrível!",
+        "detailsPlaceholder": "Compartilhe sua experiência usando o analisador de scorecard ATS, correspondências de empregos e sessões de entrevista conversacional...",
+        "descLength": "{{count}}/500"
+      },
+      "modal": {
+        "editDescription": "Atualize sua classificação e comente sobre o uso do AI Career Copilot.",
+        "newDescription": "Envie sua classificação. Sua avaliação aparecerá ao vivo em nosso quadro da comunidade.",
+        "deleting": "Excluindo...",
+        "delete": "Excluir"
+      }
+    }
+  },
+  "header": {
+    "documentDetails": "Detalhes do documento",
+    "viewNotifications": "Ver notificações",
+    "notifications": "Notificações",
+    "markRead": "Marcar como lido",
+    "clearAll": "Limpar tudo",
+    "allCaughtUp": "Todos apanhados!",
+    "searchNoResults": "Nenhum resultado de pesquisa encontrado.",
+    "notificationsMarkedRead": "Todas as notificações marcadas como lidas.",
+    "notificationsCleared": "Todas as notificações foram apagadas.",
+    "signOutSuccess": "Desconectado com sucesso",
+    "signOutError": "Falha ao sair",
+    "searchPages": {
+      "dashboard": "Painel",
+      "dashboardDesc": "Principais métricas e visão geral do coaching",
+      "resumes": "Meus currículos",
+      "resumesDesc": "Carregar e listar documentos de currículo",
+      "ats": "Otimizador de pontuação ATS",
+      "atsDesc": "Verificação de pontuação e histórico de otimização",
+      "interview": "Treinador de entrevista de IA",
+      "interviewDesc": "Iniciar sessões simuladas personalizadas",
+      "history": "Histórico de entrevistas",
+      "historyDesc": "Revise os scorecards de prática",
+      "profile": "Meu perfil",
+      "profileDesc": "Funções e detalhes do alvo de carreira",
+      "settings": "Configurações",
+      "settingsDesc": "Configurações de aparência e tema"
     }
   },
   "dashboard": {
     "sidebar": {
       "dashboard": "Painel",
-      "resumeUpload": "Enviar Currículo",
-      "resumeAnalysis": "Análise de Currículo",
+      "resumeUpload": "Carregar currículo",
+      "resumeAnalysis": "Análise de currículo",
       "atsScore": "Pontuação ATS",
-      "jobMatch": "Match de Vagas",
-      "interviewCoach": "Coach de Entrevistas",
-      "interviewHistory": "Histórico de Treinos",
-      "profile": "Meu Perfil",
-      "settings": "Configurações de Conta"
+      "jobMatch": "Correspondência de trabalho",
+      "interviewCoach": "Treinador de entrevista",
+      "interviewHistory": "Histórico de entrevistas",
+      "profile": "Meu perfil",
+      "settings": "Configurações da conta"
     },
     "welcome": {
-      "title": "Bem-vindo de volta",
-      "subtitle": "Aqui está um resumo do seu status e prontidão profissional atuais.",
-      "readiness": "Prontidão de Carreira com IA"
+      "title": "Bem vindo de volta",
+      "subtitle": "Aqui está uma visão geral das melhorias no seu currículo e na preparação do coach para entrevistas.",
+      "readiness": "Preparação para carreira em IA",
+      "defaultUser": "lá"
     },
     "stats": {
-      "resumes": "Currículos Enviados",
-      "atsScore": "Pontuação ATS Alvo",
-      "interviews": "Sessões de Prática",
-      "completeness": "Configuração do Perfil"
+      "resumes": "Currículos enviados",
+      "atsScore": "Pontuação ATS alvo",
+      "interviews": "Sessões Práticas",
+      "completeness": "Conclusão do perfil",
+      "completenessHint": "Preencha sua função alvo, metas e detalhes de experiência na guia Perfil para alinhar as métricas de IA.",
+      "resumeScore": "Retomar pontuação",
+      "atsScoreCard": "Pontuação ATS",
+      "jobMatchCard": "% de correspondência de trabalho",
+      "interviewScoreCard": "Pontuação da entrevista",
+      "latestResumeOptimization": "Otimização de currículo mais recente",
+      "noResumeAnalyzedYet": "Nenhum currículo analisado ainda",
+      "strongAtsCompatibility": "Forte compatibilidade ATS",
+      "needsKeywordBooster": "Precisa de reforço de palavras-chave",
+      "pendingAnalysis": "Análise pendente",
+      "matchCompatibilityScan": "Verificação de compatibilidade de correspondência",
+      "noMatchScanRun": "Nenhuma execução de verificação de correspondência",
+      "excellentResponseQuality": "Excelente qualidade de resposta",
+      "requiresCoachingPractice": "Requer prática de coaching",
+      "noCoachSessionCompleted": "Nenhuma sessão de coaching concluída",
+      "noUploadsYet": "Ainda não há envios"
+    },
+    "metadata": {
+      "title": "Retomar metadados",
+      "lastUpload": "Data do último upload",
+      "lastAnalyzed": "Último currículo analisado"
+    },
+    "weeklyTrend": {
+      "title": "Tendência analítica semanal",
+      "desc": "Indicadores de desempenho traçados através dos principais parâmetros de coaching."
+    },
+    "suggestions": {
+      "title": "Sugestões recentes de IA",
+      "default": {
+        "one": "Carregue seu primeiro currículo para obter sugestões detalhadas de feedback de IA.",
+        "two": "Pratique entrevistas simuladas para obter recomendações de respostas direcionadas.",
+        "three": "Compare os empregos para encontrar lacunas de capacidade técnica."
+      }
+    },
+    "insights": {
+      "title": "Informações de treinamento",
+      "default": {
+        "one": "Melhore a pontuação ATS adicionando palavras-chave ausentes destacadas em seu relatório.",
+        "two": "A pontuação ATS está otimizada! Continue combinando as descrições dos cargos para encontrar lacunas personalizadas.",
+        "three": "Pratique entrevistas simuladas para avaliar a entrega técnica e os níveis de confiança.",
+        "four": "Fortaleça palavras-chave de resolução de problemas nas respostas para aumentar o índice de entrevistas.",
+        "five": "Personalize seus projetos de currículo para melhor alinhá-los aos requisitos do trabalho.",
+        "six": "Quantifique as conquistas do currículo com métricas e detalhes técnicos."
+      }
+    },
+    "activity": {
+      "title": "Atividade recente",
+      "desc": "Suas atualizações recentes e registros de análise do sistema.",
+      "viewAll": "Ver tudo",
+      "empty": "Nenhum registro de atividade recente encontrado.",
+      "resumeAnalyzed": {
+        "title": "Currículo analisado",
+        "desc": "Scorecard calculado para \"{{fileName}}\". Pontuação: {{score}}/100."
+      },
+      "resumeParsed": {
+        "title": "Currículo analisado",
+        "desc": "Conteúdo extraído de \"{{fileName}}\". Pronto para análise."
+      },
+      "jobMatch": {
+        "title": "Correspondência de trabalho verificada",
+        "desc": "Comparado com \"{{company}}\". Alinhamento: {{score}}%."
+      },
+      "interviewCompleted": {
+        "title": "Entrevista concluída",
+        "desc": "Sessão prática para nota \"{{role}}\". Pontuação: {{score}}%."
+      },
+      "interviewStarted": {
+        "title": "Entrevista iniciada",
+        "desc": "A sessão de coaching para \"{{role}}\" está ativa no momento."
+      }
+    },
+    "quickActions": {
+      "title": "Ações rápidas",
+      "desc": "Inicie os principais fluxos de trabalho instantaneamente.",
+      "upload": "Carregar currículo",
+      "uploadDesc": "Carregue um documento PDF ou Word.",
+      "analyze": "Analisar currículo",
+      "analyzeDesc": "Execute varreduras e otimizações ATS.",
+      "interview": "Iniciar entrevista",
+      "interviewDesc": "Pratique questões comportamentais e técnicas.",
+      "complete": "Completo"
+    },
+    "reviews": {
+      "title": "Críticas e classificações da comunidade",
+      "description": "Conte-nos como o AI Career Copilot está ajudando na sua busca de carreira. Escreva quantos comentários desejar!",
+      "write": "Escreva um comentário",
+      "editTitle": "Edite sua avaliação",
+      "newTitle": "Escreva uma nova avaliação",
+      "yourRating": "Sua avaliação:",
+      "reviewTitle": "Título da revisão",
+      "reviewDetails": "Detalhes da revisão",
+      "titlePlaceholder": "por exemplo Excelentes ferramentas de verificação ATS!",
+      "detailsPlaceholder": "Compartilhe sua opinião sobre como o AI Career Copilot ajuda você...",
+      "maxCharacters": "Máximo de 500 caracteres",
+      "cancel": "Cancelar",
+      "saveChanges": "Salvar alterações",
+      "submitReview": "Enviar avaliação",
+      "saving": "Salvando...",
+      "yourReviews": "Suas avaliações enviadas ({{count}})",
+      "empty": "Você ainda não enviou nenhuma avaliação. Clique em “Escrever um comentário” acima para compartilhar sua experiência!",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "validation": {
+        "rating": "Selecione uma classificação por estrelas.",
+        "titleRequired": "O título da revisão é obrigatório.",
+        "titleLength": "O título deve ter 100 caracteres ou menos.",
+        "descriptionRequired": "A descrição da revisão é obrigatória.",
+        "descriptionLength": "A descrição deve ter 500 caracteres ou menos."
+      },
+      "success": {
+        "submitted": "Comentário enviado com sucesso!",
+        "updated": "Revisão atualizada com sucesso!",
+        "deleted": "Revisão excluída com sucesso."
+      },
+      "errors": {
+        "save": "Falha ao salvar a avaliação.",
+        "saveUnexpected": "Ocorreu um erro ao salvar.",
+        "delete": "Falha ao excluir a avaliação.",
+        "deleteUnexpected": "Ocorreu um erro ao excluir."
+      },
+      "confirmDelete": "Tem certeza de que deseja excluir este comentário? Esta ação não pode ser desfeita."
     }
   },
   "profile": {
-    "title": "Meu Perfil Profissional",
-    "subtitle": "Mantenha suas informações atualizadas para personalizar as recomendações de IA e metas de ATS.",
+    "title": "Meu perfil profissional",
+    "subtitle": "Mantenha seus dados atualizados para personalizar suas recomendações de IA e segmentação de ATS.",
+    "loading": "Sincronizando o painel do perfil AI...",
+    "pageTitle": "Olá, {{name}}! Bem-vindo ao seu perfil de carreira em IA",
+    "defaultUser": "lá",
+    "pageDescription": "Configure seus perfis detalhados de currículo, metas de carreira e configurações de modelo para personalizar o AI Copilot.",
+    "statusLabel": "Estado:",
+    "saveButton": "Salvar alterações",
+    "savedState": "Configurações sincronizadas",
+    "complete": "Completo",
+    "checklistTitle": "Lista de verificação de configuração excelente",
     "buttons": {
-      "save": "Salvar Alterações do Perfil",
+      "save": "Salvar alterações de perfil",
       "cancel": "Cancelar",
       "saved": "Salvo",
-      "unsaved": "Alterações Não Salvas",
+      "unsaved": "Alterações não salvas",
       "saving": "Salvando alterações..."
     },
     "sections": {
-      "bio": "Biografia & Localização",
-      "goals": "Emprego dos Sonhos & Metas Salariais",
-      "projects": "Registro de Projetos",
+      "bio": "Biografia e localização",
+      "goals": "Emprego dos sonhos e metas salariais",
+      "projects": "Registros de projetos em destaque",
       "experience": "Experiência Profissional",
-      "education": "Formação Acadêmica",
+      "education": "Histórico educacional",
       "certifications": "Lista de Certificações",
-      "languages": "Proficiência em Idiomas",
-      "achievements": "Principais Conquistas",
-      "privacy": "Privacidade & Notificações"
+      "languages": "Proficiências linguísticas",
+      "achievements": "Principais conquistas",
+      "privacy": "Privacidade e notificações",
+      "personal": "Informações pessoais e links sociais",
+      "preferences": "Preferências e cronogramas de carreira",
+      "experienceWithCount": "Experiência Profissional ({{count}})",
+      "educationWithCount": "Educação ({{count}})",
+      "projectsWithCount": "Projetos em destaque ({{count}})",
+      "skillsWithCount": "Habilidades de portfólio categorizadas ({{count}})",
+      "certificationsWithCount": "Certificações e idiomas ({{count}})",
+      "aiPersonalization": "Preferências de personalização de IA",
+      "privacyPreferences": "Preferências de privacidade e notificação"
     }
   },
   "settings": {
-    "title": "Configurações do Usuário",
-    "subtitle": "Ajuste seus modelos de IA, parâmetros de notificação, conexões externas e temas visuais.",
+    "title": "Configurações de conta",
+    "subtitle": "Ajuste seus modelos de IA, parâmetros de notificação, integrações vinculadas e parâmetros de tema.",
+    "loading": "Sincronizando painel de configurações...",
+    "pageTitle": "Configurações",
+    "pageTitleWithName": "Olá, {{name}}! Configurações",
+    "pageDescription": "Gerencie seus temas visuais detalhados, modelos de IA substitutos ativos, parâmetros de notificação e integrações de dados.",
+    "searchPlaceholder": "Pesquisar todas as configurações...",
+    "unsavedBanner": "Você tem alterações não salvas em seu painel de configurações.",
+    "saveChanges": "Salvar alterações",
+    "cards": {
+      "configuration": {
+        "label": "Configuração de configurações",
+        "title": "Personalizações SaaS",
+        "description": "Ajuste os comportamentos da conta."
+      },
+      "personalization": {
+        "label": "Personalização de IA",
+        "title": "Perfis de prompt",
+        "description": "Alinhar automaticamente prompts personalizados."
+      },
+      "billing": {
+        "label": "Nível de faturamento",
+        "title": "Plano gratuito inicial",
+        "badge": "Grátis",
+        "description": "Aplicam-se limites de taxa padrão.",
+        "button": "Atualizar"
+      }
+    },
     "tabs": {
       "ai": "Preferências de IA",
       "notifications": "Notificações",
-      "security": "Segurança & Privacidade",
-      "connected": "Contas Conectadas",
+      "security": "Segurança e privacidade",
+      "connected": "Contas conectadas",
       "engine": "Motor de IA",
-      "resumeJob": "Currículo & Vagas",
-      "appearance": "Aparência & Acesso",
-      "data": "Dados & Armazenamento",
-      "danger": "Zona de Perigo"
+      "resumeJob": "Currículo e trabalho",
+      "appearance": "Aparência e acesso",
+      "data": "Dados e armazenamento",
+      "danger": "Zona de perigo"
     },
     "ai": {
-      "language": "Idioma de Resposta da IA",
-      "personality": "Personalidade/Tom da IA",
-      "coachStyle": "Estilo de Mentoria",
-      "responseLength": "Nível de Detalhe dos Feedbacks",
-      "saveConversations": "Salvar conversas automaticamente",
-      "useMemory": "Usar contexto de memória da IA",
-      "improveResponses": "Melhorar respostas automaticamente"
+      "language": "Linguagem de resposta de IA",
+      "personality": "Personalidade/tom da IA",
+      "coachStyle": "Modo de estilo de treinamento",
+      "responseLength": "Nível de feedback detalhado",
+      "saveConversations": "Salvar automaticamente conversas de IA",
+      "useMemory": "Use o contexto de memória AI",
+      "improveResponses": "Melhorar automaticamente as respostas"
+    },
+    "accounts": {
+      "github": {
+        "label": "Perfil GitHub",
+        "desc": "Sincronizar contribuições de repositório público",
+        "placeholder": "por exemplo https://github.com/nomedeusuário"
+      },
+      "linkedin": {
+        "label": "LinkedIn Conectar",
+        "desc": "Sincronize realizações profissionais",
+        "placeholder": "por exemplo https://linkedin.com/in/nomedeusuário"
+      },
+      "portfolio": {
+        "label": "Link URL do portfólio",
+        "desc": "Vincule páginas de destino pessoais personalizadas",
+        "placeholder": "por exemplo https://meuportfólio.dev"
+      },
+      "leetcode": {
+        "label": "Atividade LeetCode",
+        "desc": "Importar perfil de estatísticas algorítmicas",
+        "placeholder": "por exemplo leetcode_username"
+      },
+      "hackerrank": {
+        "label": "Quadro HackerRank",
+        "desc": "Perfil de certificação de habilidade de importação",
+        "placeholder": "por exemplo hackerrank_username"
+      },
+      "codeforces": {
+        "label": "Identificador de forças de código",
+        "desc": "Importar estatísticas de níveis de classificação",
+        "placeholder": "por exemplo codeforces_handle"
+      }
     }
   },
   "ats": {
-    "title": "Verificador de Score ATS",
-    "subtitle": "Verifique a formatação do seu currículo em relação aos sistemas modernos de análise.",
-    "ring": "Índice de Prontidão ATS",
-    "scoreLabel": "Seu Score"
+    "toasts": {
+      "preparingPrint": "Preparando visualização de impressão do relatório de scorecards ATS..."
+    },
+    "title": "Otimizador de pontuação ATS",
+    "description": "Verifique a compatibilidade de seus currículos com mecanismos de análise, otimize a densidade de palavras-chave e identifique lacunas estruturais.",
+    "downloadBtn": "Baixe o relatório ATS",
+    "grade": "Grau ATS",
+    "currentScore": "Sua pontuação atual",
+    "targetInfo": "Almeje uma pontuação acima de 80% para ignorar os filtros de análise iniciais.",
+    "benchmarkTitle": "Comparação de benchmarks de ATS da indústria",
+    "averageAts": "Pontuação média ATS",
+    "yourCurrentAts": "Sua pontuação ATS atual",
+    "topScore": "Pontuação dos 10% principais do setor",
+    "trendTitle": "Tendência ATS ao longo do tempo",
+    "trendDesc": "Histórico de varreduras mostrando progresso e otimizações.",
+    "trendEmpty": "Carregue e digitalize vários currículos para traçar um gráfico de tendências.",
+    "checklist": {
+      "title": "Lista de Verificação Estrutural ATS",
+      "desc": "Verificações essenciais para garantir uma análise sem erros.",
+      "layout": "Formatação de layout",
+      "sections": "Indexação de seção",
+      "keywords": "Densidade de palavras-chave",
+      "grammar": "Gramática ativa",
+      "readability": "Legibilidade do analisador",
+      "clean": "Limpar",
+      "needsReview": "Revisão de necessidades",
+      "complete": "Completo",
+      "missing": "Informações ausentes",
+      "optimized": "Otimizado",
+      "low": "Baixa Densidade",
+      "valid": "Válido",
+      "grammarReview": "Revisão gramatical",
+      "high": "Alto",
+      "lowIndex": "Índice Baixo"
+    },
+    "empty": {
+      "title": "Nenhum currículo enviado ainda",
+      "desc": "Carregue seu currículo de portfólio para obter resultados imediatos de análise de análise e listas de verificação de palavras-chave de otimização.",
+      "btn": "Carregar currículo"
+    },
+    "history": {
+      "title": "Retomar histórico de otimização ATS",
+      "scoreTitle": "Pontuação ATS",
+      "booster": "Palavras-chave ausentes para otimizar (ATS Booster)",
+      "boosterEmpty": "Nenhuma palavra-chave faltante foi detectada! Seu currículo está bem otimizado para os termos ATS.",
+      "summary": "Resumo da pontuação",
+      "readyForAnalysis": "Este currículo está pronto para análise, mas você ainda não executou o analisador ATS nele.",
+      "processing": "Este currículo está em processamento. Depois que a análise for concluída, você poderá executar o scorecard de análise ATS.",
+      "viewDetails": "Ver detalhes da otimização",
+      "runAnalysis": "Execute a análise ATS",
+      "manage": "Gerenciar currículo"
+    }
   },
   "jobMatch": {
-    "title": "Scanner de Match de Vagas IA",
-    "subtitle": "Cole uma descrição de vaga para comparar o nível de alinhamento instantaneamente."
+    "toasts": {
+      "selectResume": "Selecione um currículo correspondente.",
+      "pasteDesc": "Cole o texto da descrição do trabalho.",
+      "tooShort": "O texto da descrição do trabalho é muito curto. Cole uma descrição completa.",
+      "analyzing": "Gemini AI está analisando o alinhamento e comparando palavras-chave. Por favor, espere...",
+      "success": "Correspondência de trabalho concluída!",
+      "error": "Falha ao calcular a correspondência da descrição do cargo.",
+      "unexpected": "Falha ao compilar o relatório AI Job Match.",
+      "preparingPrint": "Preparando relatório PDF de correspondência de trabalho..."
+    },
+    "form": {
+      "pageTitle": "Olá, {{name}}! Currículo e correspondência de empregos",
+      "pageTitleGeneric": "Currículo e correspondência de empregos",
+      "pageDesc": "Compare os detalhes do seu currículo com qualquer descrição de cargo para descobrir lacunas nas principais palavras-chave e ajustar o alinhamento.",
+      "noResumesTitle": "Nenhum currículo encontrado",
+      "noResumesDesc": "Você deve carregar seu documento de currículo primeiro, antes de compará-lo com as funções.",
+      "uploadBtn": "Carregar currículo",
+      "title": "Formulário de comparação de correspondência de trabalho",
+      "desc": "Selecione um dos currículos enviados e cole a descrição do cargo de destino para executar uma verificação de alinhamento.",
+      "selectResumeLabel": "1. Selecione Currículo",
+      "selectResumePlaceholder": "Selecione um de seus currículos...",
+      "requiresParsing": "(Requer análise de texto)",
+      "pasteDescLabel": "2. Cole a descrição do trabalho",
+      "pasteDescPlaceholder": "Cole a descrição do cargo alvo aqui (responsabilidades, habilidades, qualificações, tags de palavras-chave)...",
+      "minLength": "Comprimento mínimo: 100 caracteres. Cole blocos de texto bruto diretamente.",
+      "submitBtn": "Analisar alinhamento de correspondência",
+      "matching": "Currículo correspondente...",
+      "matchingDesc": "Gemini está comparando seus marcadores de experiência com os requisitos da descrição do cargo."
+    },
+    "result": {
+      "back": "Compare outro trabalho",
+      "title": "Relatório de correspondência",
+      "targetJob": "Perfil de trabalho alvo",
+      "targetCompany": "Empresa Alvo",
+      "matched": "{{date}} correspondente",
+      "downloadBtn": "Baixe o relatório em PDF",
+      "viewResumes": "Ver currículos",
+      "overallScore": "Pontuação geral da partida",
+      "roleFitSummary": "Resumo executivo de adequação à função",
+      "noSummary": "Nenhum resumo de comparação gerado.",
+      "alignSuccess": "O alinhamento das palavras-chave corresponde ao perfil alvo",
+      "alignImpact": "Impacto estimado da otimização ATS: +12%",
+      "priority": "Melhorias Prioritárias",
+      "minorEdits": "Edições menores",
+      "tailoringRequired": "É necessário retomar a adaptação",
+      "density": "Densidade de palavras-chave",
+      "boostNeeded": "Impulso necessário",
+      "optimal": "Ideal",
+      "atsImprovement": "Melhoria ATS",
+      "atsPotential": "Pontuação potencial de {{val}}%",
+      "actions": "Ações de adaptação",
+      "tasksPending": "{{count}} Tarefas pendentes",
+      "breakdownTitle": "Análise das partidas de qualificação",
+      "techSkillsFit": "Ajuste de habilidades técnicas",
+      "experienceFit": "Correspondência de Experiência Profissional",
+      "projectsFit": "Projetos Acadêmicos e Relevância do Código",
+      "educationFit": "Alinhamento Educacional",
+      "softSkillsFit": "Índice de habilidades comportamentais e interpessoais",
+      "matchedSkillsTitle": "Habilidades e competências correspondentes",
+      "noMatchedSkills": "Nenhuma habilidade correspondente registrada.",
+      "missingSkillsTitle": "Faltando habilidades necessárias",
+      "allSkillsMatched": "Nenhum! Você possui todas as habilidades necessárias.",
+      "strengthsTitle": "Vantagens e pontos fortes do candidato",
+      "noStrengths": "Nenhum ponto forte registrado.",
+      "weaknessesTitle": "Lacunas e fraquezas de alinhamento",
+      "noWeaknesses": "Nenhuma fraqueza registrada.",
+      "suggestionsTitle": "Sugestões de adaptação acionáveis",
+      "suggestionsDesc": "Marque as ações ao atualizar seu currículo para melhor corresponder à descrição da função alvo",
+      "noSuggestions": "Nenhuma sugestão gerada.",
+      "strongMatch": "Partida Forte",
+      "moderateMatch": "Partida moderada",
+      "weakMatch": "Partida Fraca"
+    }
   },
   "interview": {
-    "title": "Treinador de Entrevista Simulada IA",
-    "subtitle": "Pratique entrevistas técnicas ou comportamentais com feedback personalizado em tempo real."
+    "title": "Treinador de entrevista simulada de IA",
+    "subtitle": "Pratique formatos reais de entrevistas técnicas e comportamentais com feedback em tempo real.",
+    "toasts": {
+      "selectResume": "Selecione um currículo para basear as perguntas.",
+      "studying": "Gemini AI está estudando seu histórico e formatando perguntas personalizadas...",
+      "sessionEntering": "Perguntas geradas! Entrando na sala de sessão...",
+      "setupFailed": "Falha ao gerar perguntas simuladas para entrevista."
+    },
+    "setup": {
+      "pageTitle": "Olá, {{name}}! Treinador de entrevista de IA",
+      "pageTitleGeneric": "Treinador de entrevista de IA",
+      "pageDesc": "Crie sessões de entrevistas simuladas personalizadas e registre respostas para receber feedback de coaching ativo e estruturado.",
+      "noResumesTitle": "Nenhum currículo encontrado",
+      "noResumesDesc": "Você deve enviar seu documento de currículo primeiro, antes de praticar rodadas de entrevistas simuladas.",
+      "uploadBtn": "Carregar currículo",
+      "title": "Configurar sessão prática",
+      "desc": "Crie uma entrevista simulada direcionada aos seus níveis de experiência ou requisitos colados.",
+      "sessionSummary": "Resumo da sessão",
+      "historyBtn": "História",
+      "resumeLabel": "1. Selecione Retomar perfil",
+      "resumePlaceholder": "Selecione um de seus currículos...",
+      "jobLabel": "2. Alvo de trabalho alvo (opcional)",
+      "jobPlaceholder": "Selecione um alvo de descrição de vaga...",
+      "generalMock": "Simulação profissional geral (sem alvo JD)",
+      "jobAt": "em {{company}}",
+      "typeLabel": "Tipo de entrevista",
+      "typeMixed": "Foco Misto",
+      "typeTech": "Perguntas técnicas",
+      "typeBeh": "Perguntas Comportamentais (RH)",
+      "diffLabel": "Nível de dificuldade",
+      "diffEasy": "Fácil (iniciante)",
+      "diffMedium": "Médio (Padrão)",
+      "diffHard": "Difícil (Sênior)",
+      "countLabel": "Contagem de perguntas",
+      "countExpress": "3 perguntas (expresso)",
+      "countFast": "5 perguntas (rápido)",
+      "countStandard": "10 perguntas (padrão)",
+      "countDeep": "15 perguntas (profundas)",
+      "beginBtn": "Comece a sessão prática de IA",
+      "durationExpress": "5-8 minutos",
+      "durationFast": "10-15 minutos",
+      "durationStandard": "20-25 minutos",
+      "durationDeep": "30-40 minutos",
+      "crafting": "Elaborando Entrevista Personalizada...",
+      "craftingDesc": "A Gemini está pesquisando suas competências, compilando cenários técnicos e configurando metas de avaliação.",
+      "easyDesc": "Consultas iniciais, verificando conceitos técnicos fundamentais e declarações básicas de currículo.",
+      "mediumDesc": "Perguntas simuladas padrão do setor, simulando cenários comportamentais de engenheiros profissionais de nível médio.",
+      "hardDesc": "Painéis seniores de alta pressão verificando design de arquitetura, restrições de sistemas e cenários complexos de liderança.",
+      "estDuration": "Husa. Duração",
+      "questionFocus": "Foco da pergunta",
+      "diffSetting": "Configuração de dificuldade",
+      "diffDescLabel": "Descrição da dificuldade",
+      "scoredCategoriesTitle": "Categorias pontuadas",
+      "scoredCategories": {
+        "tech": "Competências Técnicas",
+        "comm": "Comunicação e entrega de tom",
+        "star": "Lógica de cenário comportamental STAR",
+        "solve": "Etapas estruturais de resolução de problemas"
+      }
+    },
+    "session": {
+      "toasts": {
+        "tooShort": "Forneça uma resposta um pouco mais detalhada (mínimo 10 caracteres).",
+        "assessing": "Gemini AI está avaliando suas métricas de resposta...",
+        "recorded": "Resposta registrada!",
+        "unexpected": "Falha ao enviar resposta.",
+        "completing": "Encerramento da sessão de avaliação simulada. Compilando métricas finais...",
+        "completed": "Entrevista concluída! Carregando scorecard...",
+        "completeFailed": "Falha ao compilar o scorecard geral."
+      },
+      "chatRoom": "Sala de bate-papo simulada",
+      "progressLabel": "Progresso da sessão prática",
+      "progressStatus": "{{count}} / {{total}} Respostas avaliadas ({{remaining}} restantes)",
+      "interviewer": "Entrevistador",
+      "feedbackTitle": "Avaliação de Resposta",
+      "strengths": "✓ Pontos fortes",
+      "improvements": "⚠ Melhorias",
+      "compiling": "Compilando boletim de sessão simulada...",
+      "completeBtn": "Prática e nota completas",
+      "nextBtn": "Prepare a próxima pergunta",
+      "inputPlaceholder": "Digite sua resposta à pergunta do entrevistador...",
+      "inputTip": "Insira mais de 10 caracteres para avaliar o alinhamento da resposta.",
+      "submitBtn": "Enviar resposta",
+      "liveScores": "Pontuações da sessão ao vivo",
+      "techAccuracy": "Precisão Técnica",
+      "commClarity": "Clareza na comunicação",
+      "confidenceIndex": "Índice de confiança",
+      "solveQuotient": "Quociente de resolução de problemas",
+      "scoresTip": "As pontuações das métricas ao vivo serão calculadas em média e atualizadas instantaneamente assim que você enviar as avaliações das respostas ao entrevistador."
+    },
+    "result": {
+      "back": "Pratique outra entrevista",
+      "completedAt": "Concluído {{date}}",
+      "download": "Baixe o relatório em PDF",
+      "retry": "Tentar novamente a entrevista",
+      "sessionScore": "Pontuação da sessão",
+      "excellent": "Excelente prática!",
+      "solid": "Esforço Sólido.",
+      "needsImprovement": "Precisa de melhorias.",
+      "scoreRank": "Classificações superiores a {{val}}% das sessões de portfólio testadas.",
+      "categoryTitle": "Divisão detalhada da categoria",
+      "tech": "Técnico",
+      "clarity": "Clareza",
+      "confidence": "Confiança",
+      "solve": "Solução de problemas",
+      "behavioral": "Comportamental",
+      "adviceLabel": "Conselhos sobre desempenho",
+      "noAdvice": "Nenhum conselho geral de resumo de coaching registrado.",
+      "strengthsTitle": "Pontos fortes observados",
+      "noStrengths": "Nenhum ponto forte registrado.",
+      "gapsTitle": "Focar áreas de crescimento",
+      "noGaps": "Nenhuma fraqueza registrada.",
+      "stepsTitle": "Próximas etapas recomendadas e conselhos de carreira",
+      "stepsDesc": "Tarefas de preparação acionáveis para o crescimento",
+      "dialogueReviewTitle": "Revisão do diálogo pergunta por pergunta",
+      "questionNumber": "Pergunta #{{order}} • {{type}}",
+      "scorePercent": "Pontuação: {{val}}%",
+      "yourResponse": "Sua resposta",
+      "noResponse": "(Nenhuma resposta registrada)",
+      "aiFeedback": "Feedback de classificação de IA",
+      "noFeedback": "Nenhum feedback registrado.",
+      "accuracy": "Precisão",
+      "answerStrengths": "Responda aos pontos fortes",
+      "improvements": "Sugestões de melhoria",
+      "idealAnswer": "Modelo de resposta ideal",
+      "toasts": {
+        "preparing": "Preparando scorecard de impressão em PDF..."
+      }
+    },
+    "history": {
+      "back": "Voltar para entrevista com o treinador",
+      "title": "Registros do histórico de entrevistas",
+      "desc": "Inspecione as classificações gerais das cartas, os detalhes do diálogo e as percepções personalizadas do coach de carreira de práticas anteriores.",
+      "totalSessions": "Total de sessões práticas",
+      "avgScore": "Pontuação média de prática",
+      "highestScore": "Painel com pontuação mais alta",
+      "totalTime": "Tempo total de prática",
+      "trendsTitle": "Pratique tendências de pontuação",
+      "trendsDesc": "Representação cronológica de suas pontuações gerais.",
+      "trendsEmpty": "Conclua várias sessões para traçar tendências de classificação.",
+      "filters": {
+        "all": "Todos",
+        "completed": "Concluído apenas",
+        "technical": "Somente Técnico",
+        "behavioral": "Apenas Comportamental"
+      },
+      "empty": {
+        "title": "Nenhuma sessão prática encontrada",
+        "desc": "Você ainda não iniciou ou concluiu nenhuma sessão que corresponda ao seu filtro. Vamos realizar sua primeira sessão de coaching para entrevistas!",
+        "btn": "Iniciar sessão simulada"
+      },
+      "card": {
+        "difficulty": "Função {{role}} • Dificuldade: {{difficulty}}",
+        "duration": "Duração: {{val}}",
+        "deleteConfirm": "Excluir este histórico de log de sessão permanentemente?",
+        "confirmBtn": "Confirmar",
+        "cancelBtn": "Cancelar",
+        "viewReport": "Ver relatório",
+        "resumeSession": "Retomar sessão",
+        "retryTitle": "Tentar novamente a sessão prática",
+        "deleteTitle": "Excluir sessão"
+      },
+      "status": {
+        "active": "Em andamento",
+        "completed": "Concluído • Pontuação: {{score}}%",
+        "abandoned": "Abandonado"
+      },
+      "toasts": {
+        "deleted": "Sessão de entrevista excluída com sucesso.",
+        "deleteFailed": "Falha ao excluir a sessão de entrevista.",
+        "deleteError": "Erro ao excluir a sessão de entrevista."
+      }
+    }
   },
   "status": {
     "verified": "Verificado",
     "connected": "Conectado",
-    "notLinked": "Não Vinculado",
-    "notConnected": "Não Conectado"
+    "notLinked": "Não vinculado",
+    "notConnected": "Não conectado"
   },
   "alerts": {
     "success": "Ação concluída com sucesso!",
-    "error": "Ocorreu um erro, por favor tente novamente.",
-    "saved": "Alterações aplicadas com sucesso.",
+    "error": "Ocorreu um erro, tente novamente.",
+    "saved": "Todas as mudanças persistiram.",
     "loading": "Carregando dados..."
+  },
+  "auth": {
+    "signIn": {
+      "title": "Bem vindo de volta",
+      "subtitle": "Faça login para continuar sua jornada profissional."
+    },
+    "signUp": {
+      "title": "Crie sua conta",
+      "subtitle": "Junte-se ao AI Career Copilot e comece a otimizar seu perfil."
+    }
+  },
+  "resume": {
+    "status": {
+      "uploaded": "Enviado",
+      "parsing": "Análise",
+      "parsed": "Analisado",
+      "analyzing": "Analisando",
+      "analyzed": "Analisado",
+      "error": "Erro"
+    },
+    "success": {
+      "primaryUpdated": "Currículo primário atualizado com sucesso.",
+      "renamed": "Currículo renomeado com sucesso.",
+      "duplicated": "Currículo duplicado com sucesso.",
+      "duplicatedDesc": "Cópia criada: {{name}}",
+      "deleted": "Retomar documento excluído com sucesso."
+    },
+    "errors": {
+      "primaryUpdate": "Falha ao atualizar o status principal.",
+      "primaryUpdateUnexpected": "Erro ao configurar o currículo principal.",
+      "rename": "Falha ao renomear currículo.",
+      "renameUnexpected": "Erro ao renomear currículo.",
+      "duplicate": "Falha ao duplicar currículo.",
+      "duplicateUnexpected": "Erro ao duplicar currículo.",
+      "delete": "Falha ao excluir currículo.",
+      "deleteUnexpected": "Erro ao excluir currículo."
+    },
+    "list": {
+      "title": "Meus currículos",
+      "titleWithUser": "Olá, {{name}}! Meus currículos",
+      "description": "Visualize e gerencie seus currículos enviados ou carregue uma nova versão.",
+      "uploadBtn": "Carregar currículo",
+      "empty": {
+        "title": "Nenhum currículo enviado ainda",
+        "desc": "Seu portfólio parece novo! Carregue seu currículo em formatos PDF ou Word para digitalizar as pontuações ATS e iniciar treinamento de entrevista simulada.",
+        "btn": "Envie seu primeiro currículo"
+      },
+      "card": {
+        "primaryTag": "Primário",
+        "renamePlaceholder": "Digite o nome do currículo...",
+        "renameTitle": "Renomear documento",
+        "documentType": "{{type}} Documento",
+        "deleteConfirm": "Excluir este documento de currículo permanentemente?",
+        "deleteBtn": "Confirmar",
+        "viewAnalysisTitle": "Ver relatório de análise de IA",
+        "setPrimaryTitle": "Definir como currículo principal",
+        "duplicateTitle": "Currículo duplicado",
+        "downloadTitle": "Baixar documento",
+        "viewDetailsTitle": "Ver detalhes",
+        "deleteTitle": "Excluir currículo"
+      }
+    },
+    "upload": {
+      "dropHere": "Solte seu arquivo aqui",
+      "dragHere": "Arraste e solte seu currículo aqui",
+      "or": "ou",
+      "browse": "navegar pelos arquivos",
+      "fromComputer": "do seu computador",
+      "supportedFormats": "Formatos suportados: PDF, DOCX (máx. 10 MB)",
+      "validating": "Validando arquivo...",
+      "uploading": "Carregando arquivo...",
+      "parsing": "Extraindo texto simples...",
+      "processing": "Processamento",
+      "success": {
+        "title": "Carregamento realizado com sucesso!",
+        "desc": "\"{{name}}\" foi salvo com segurança em seu perfil. Redirecionando você em breve..."
+      },
+      "error": {
+        "title": "Envio bloqueado",
+        "tryAgain": "Tente novamente"
+      },
+      "toasts": {
+        "retrieveIdError": "O upload foi bem-sucedido, mas não foi possível recuperar o ID do banco de dados de currículo.",
+        "trackingError": "Erro de rastreamento de upload",
+        "success": "Currículo carregado e analisado com sucesso!",
+        "extractError": "Falha ao extrair texto simples do currículo.",
+        "parsingFailed": "Falha na análise",
+        "unexpectedUploadError": "Ocorreu um erro inesperado durante o upload.",
+        "uploadFailed": "Falha no upload"
+      },
+      "validation": {
+        "noFile": "Nenhum arquivo selecionado.",
+        "unsupportedType": "Tipo de arquivo não suportado. Somente arquivos PDF e DOCX são permitidos.",
+        "tooLarge": "O arquivo é muito grande. O tamanho máximo permitido é 10MB."
+      }
+    },
+    "analysis": {
+      "toasts": {
+        "analyzeError": "Falha ao analisar o documento.",
+        "success": "Análise de currículo de IA concluída com sucesso!",
+        "unexpectedError": "Ocorreu um erro inesperado durante a análise de IA.",
+        "failed": "Falha na análise de IA",
+        "reanalyzing": "Gemini AI está reanalisando seu currículo. Por favor, espere...",
+        "reanalyzeSuccess": "Currículo reanalisado com sucesso!",
+        "reanalyzeError": "Algo deu errado durante a análise da IA.",
+        "preparingPrint": "Preparando visualização de impressão do relatório..."
+      },
+      "error": {
+        "title": "Erro no mecanismo de análise",
+        "tryAgain": "Tente novamente"
+      },
+      "loading": {
+        "title": "Inicializando análise de IA...",
+        "titleRunning": "Analisando Documento...",
+        "desc": "Gemini está avaliando as descrições de sua experiência, indexando palavras-chave técnicas e redigindo sugestões.",
+        "descRunning": "Gemini AI está lendo lacunas de estrutura, gramática e palavras-chave ATS. Isso levará alguns segundos."
+      },
+      "dashboard": {
+        "back": "Voltar para meus currículos",
+        "title": "Análise de currículo de IA",
+        "uploaded": "Carregado {{date}}",
+        "analyzed": "{{date}} analisado",
+        "downloadPdf": "Baixe o relatório em PDF",
+        "analyzeAgain": "Analise novamente",
+        "summary": "Resumo executivo de IA",
+        "gradeTitle": "Retomar nota",
+        "overallScore": "Pontuação geral",
+        "gradeDesc": "Nota baseada na estrutura do ATS, impacto das experiências e verificação de detalhes do projeto.",
+        "benchmarks": "Principais benchmarks do portfólio",
+        "percentile": "Percentil estimado",
+        "percentileBetter": "Melhor que {{count}}% dos candidatos",
+        "percentileTop": "Principais {{count}}%",
+        "priority": "Prioridade de melhoria",
+        "priorityDesc": "Urgência de ação de sugestões",
+        "atsIncrease": "Aumento da pontuação ATS",
+        "atsIncreasePoints": "+{{count}} Pontos",
+        "atsIncreaseDesc": "Com sugestões de otimização: {{val}}",
+        "health": {
+          "title": "Status de integridade do conteúdo",
+          "formatting": "Formatação",
+          "grammar": "Gramática",
+          "keywords": "Palavras-chave",
+          "length": "Comprimento",
+          "sections": "Seções",
+          "pass": "Passe",
+          "warning": "Aviso",
+          "review": "Revisão",
+          "complete": "Completo",
+          "low": "Baixo",
+          "medium": "Médio",
+          "high": "Alto",
+          "optimized": "Otimizado",
+          "full": "Completo",
+          "check": "Verifique"
+        },
+        "metrics": {
+          "ats": {
+            "title": "Compatibilidade ATS",
+            "desc": "Mede a legibilidade do analisador e a otimização da formatação."
+          },
+          "skills": {
+            "title": "Habilidades e palavras-chave",
+            "desc": "Mede a densidade e relevância das competências técnicas."
+          },
+          "experience": {
+            "title": "Experiência Profissional",
+            "desc": "Mede verbos de ação, declarações de impacto e números."
+          },
+          "education": {
+            "title": "Formação Acadêmica",
+            "desc": "Mede o layout das credenciais e a indexação dos diplomas."
+          },
+          "projects": {
+            "title": "Projetos-chave",
+            "desc": "Mede a profundidade técnica, o escopo e a visibilidade do código."
+          },
+          "grammar": {
+            "title": "Gramática e fraseado",
+            "desc": "Mede ortografia, tom ativo e estrutura de sintaxe."
+          }
+        },
+        "strengths": {
+          "title": "Principais pontos fortes",
+          "empty": "Nenhum ponto forte registrado."
+        },
+        "weaknesses": {
+          "title": "Lacunas e fraquezas de conteúdo",
+          "empty": "Nenhuma fraqueza registrada."
+        },
+        "missingKeywords": {
+          "title": "Palavras-chave ATS ausentes",
+          "desc": "Adicione estas competências-chave para melhorar sua pontuação ATS",
+          "disabled": "O destaque de palavras-chave ausentes está desativado.",
+          "empty": "Nenhuma palavra-chave ausente foi detectada. Bom trabalho!"
+        },
+        "suggestions": {
+          "title": "Sugestões acionáveis",
+          "desc": "Marque sugestões ao atualizar seu arquivo de currículo",
+          "disabled": "A geração automática de sugestões está desativada.",
+          "empty": "Nenhuma sugestão disponível."
+        }
+      }
+    },
+    "details": {
+      "toasts": {
+        "deleteError": "Falha ao excluir o currículo.",
+        "deleteSuccess": "Currículo excluído com sucesso.",
+        "deleteErrorUnexpected": "Ocorreu um erro ao excluir."
+      },
+      "back": "Voltar para currículos",
+      "uploaded": "Carregado {{date}}",
+      "downloadBtn": "Baixar arquivo",
+      "deleteBtn": "Excluir currículo",
+      "deleteDialog": {
+        "title": "Excluir currículo",
+        "desc": "Você tem certeza absoluta de que deseja excluir \"{{name}}\"? Esta ação irá removê-lo permanentemente do seu banco de dados e não pode ser desfeita.",
+        "deleting": "Excluindo...",
+        "confirm": "Confirmar exclusão"
+      },
+      "tabs": {
+        "structured": "Informações estruturadas",
+        "raw": "Texto bruto",
+        "json": "Árvore JSON"
+      },
+      "unknownCandidate": "Candidato desconhecido",
+      "noLocation": "Nenhum local listado",
+      "linkedin": "Perfil do LinkedIn",
+      "github": "Perfil GitHub",
+      "summary": "Resumo Profissional",
+      "skills": "Competências e habilidades essenciais",
+      "experience": "Experiência Profissional",
+      "education": "Educação",
+      "projects": "Projetos-chave",
+      "certifications": "Certificações e Cursos",
+      "languages": "Idiomas",
+      "noRawText": "Nenhum texto bruto extraído para este currículo.",
+      "metadata": {
+        "title": "Metadados do documento",
+        "status": "Status de análise",
+        "format": "Formato do documento",
+        "size": "Tamanho do arquivo",
+        "provider": "Provedor de armazenamento"
+      }
+    }
   }
 }

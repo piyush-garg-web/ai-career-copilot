@@ -1,4 +1,24 @@
 {
+  "common": {
+    "loading": "Wird geladen...",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "submit": "Senden",
+    "search": "Suchen",
+    "results": "Ergebnisse",
+    "noResults": "Keine passenden Ergebnisse gefunden.",
+    "searchLanguage": "Sprache suchen...",
+    "noLanguagesFound": "Keine Sprachen gefunden",
+    "toggleMenu": "Menü umschalten",
+    "complete": "Fertig",
+    "justNow": "Gerade eben",
+    "minutesAgo": "vor {{count}} Min.",
+    "hoursAgo": "vor {{count}} Std.",
+    "daysAgo": "vor {{count}} Tg.",
+    "none": "Keine"
+  },
   "nav": {
     "home": "Startseite",
     "dashboard": "Dashboard",
@@ -8,49 +28,804 @@
     "signUp": "Registrieren",
     "logout": "Abmelden",
     "backToHome": "Zurück zur Startseite",
-    "privacy": "Datenschutzerklärung",
-    "terms": "Nutzungsbedingungen"
+    "privacy": "Datenschutzrichtlinie",
+    "terms": "Nutzungsbedingungen",
+    "features": "Funktionen",
+    "howItWorks": "So funktioniert's",
+    "reviews": "Bewertungen",
+    "faq": "FAQ"
   },
   "landing": {
     "hero": {
       "title": "Ihr KI-gestützter Karriere-Copilot",
-      "subtitle": "Analysieren Sie Lebensläufe, überprüfen Sie ATS-Scores, gleichen Sie Stellenanzeigen ab und üben Sie simulierte Vorstellungsgespräche mit Echtzeit-Feedback von Google Gemini.",
+      "subtitle": "Analysieren Sie Lebensläufe, überprüfen Sie ATS-Scores, finden Sie passende Jobs und üben Sie Vorstellungsgespräche mit Echtzeit-Feedback, unterstützt von Google Gemini.",
       "cta": "Kostenlos starten"
     },
     "features": {
       "title": "Kernfunktionen für Ihren Erfolg",
-      "subtitle": "Entdecken Sie die Werkzeuge, die Ihre Karriereentwicklung beschleunigen."
+      "subtitle": "Entdecken Sie die Tools, die Ihre Jobsuche beschleunigen.",
+      "loginPrompt": "Bitte melden Sie sich an, um diese Funktion zu nutzen.",
+      "explore": "Entdecken →",
+      "items": {
+        "resume": {
+          "title": "KI-Lebenslaufanalyse",
+          "description": "Erstellt detaillierte Abschnittsprüfungen für Erfahrung, Projektauswirkungen, Struktur und Formatierungsmetriken."
+        },
+        "ats": {
+          "title": "ATS-Score",
+          "description": "Berechnet eine Branchenkonformitätsbewertung, um sicherzustellen, dass Ihr Lebenslauf automatische HR-Screening-Systeme besteht."
+        },
+        "health": {
+          "title": "Lebenslauf-Gesundheit",
+          "description": "Bewertet Grammatikvollständigkeit, Abschnittsstruktur, Formatierungsfeinschliff und Dokumentlesbarkeitsregeln."
+        },
+        "suggestions": {
+          "title": "KI-Vorschläge",
+          "description": "Bietet Wort-für-Wort-Ersatzideen, Vorschläge für aktive Verben und Rechtschreibkorrekturen in Echtzeit."
+        },
+        "jobMatch": {
+          "title": "Job-Matching",
+          "description": "Vergleicht Ihre Fähigkeiten direkt mit Ziel-Stellenanzeigen, um einen Gesamtübereinstimmungsindex zu berechnen."
+        },
+        "missingSkills": {
+          "title": "Erkennung fehlender Fähigkeiten",
+          "description": "Zeigt genau an, welche Programmier-Frameworks, Zertifizierungen oder Toolkits Sie auflisten müssen."
+        },
+        "interview": {
+          "title": "Interview-Coach",
+          "description": "Führen Sie interaktive mündliche Probesitzungen durch, die direkt auf Ihren Hintergrund und den bevorzugten Schwierigkeitsgrad zugeschnitten sind."
+        },
+        "history": {
+          "title": "Interview-Verlauf",
+          "description": "Überprüfen Sie zuvor abgeschlossene Sitzungen, um Antwortbewertungen zu vergleichen und die Leistung zu verfolgen."
+        },
+        "analytics": {
+          "title": "Analyse-Dashboard",
+          "description": "Eine zentrale Anlaufstelle mit Grafiken, aktuellen Aufgabenlisten und Überprüfungen des jüngsten Matching-Fortschritts."
+        },
+        "darkMode": {
+          "title": "Dunkelmodus",
+          "description": "Eine vollständig integrierte Dunkel- und Hellmodus-Benutzeroberfläche, die automatische Betriebssystemüberschreibungen unterstützt."
+        },
+        "responsive": {
+          "title": "Responsives Design",
+          "description": "Optimierte Rasterausrichtungen, die Standardunterstützung für Mobiltelefone, Tablets und große Bildschirme bieten."
+        }
+      }
+    },
+    "stats": {
+      "resumeAnalyses": {
+        "label": "Lebenslaufanalysen",
+        "description": "Optimiert für Jobsuchende weltweit"
+      },
+      "atsImprovement": {
+        "label": "ATS-Verbesserung",
+        "description": "Durchschnittliche Erfolgsquotenverbesserung"
+      },
+      "interviewQuestions": {
+        "label": "Interviewfragen",
+        "description": "Von KI-Engines beantwortet und bewertet"
+      },
+      "uptime": {
+        "label": "Verfügbarkeits-SLA",
+        "description": "Hochleistungs-Datenbank-Clustering"
+      }
+    },
+    "howItWorks": {
+      "sectionTitle": "Workflow",
+      "title": "Einfache, interaktive Reise",
+      "subtitle": "Erfahren Sie, wie der KI Karriere-Copilot Sie Schritt für Schritt von der Prüfung des Roh-Lebenslaufs bis zur Vorbereitung auf Scheininterviews begleitet.",
+      "steps": {
+        "one": {
+          "title": "Schritt 1: Lebenslauf hochladen",
+          "description": "Laden Sie Ihren Lebenslauf sicher im PDF- oder Word-Format (bis zu 10 MB) über unser blitzschnelles Datei-Upload-Portal hoch."
+        },
+        "two": {
+          "title": "Schritt 2: KI analysiert Lebenslauf",
+          "description": "Unser lokaler Parser extrahiert dynamisch strukturierten Rohtext und übermittelt ihn zur Auswertung an Gemini KI-Engines."
+        },
+        "three": {
+          "title": "Schritt 3: ATS-Score analysieren",
+          "description": "Erhalten Sie sofortige Metriken, die den Abschluss von Abschnitten, Lesbarkeitswerte und Grammatikoptimierungsziele hervorheben."
+        },
+        "four": {
+          "title": "Schritt 4: Stellenbeschreibung abgleichen",
+          "description": "Fügen Sie Ziel-Stellenanzeigen ein, um semantische Matching-Metriken, fehlende Fähigkeiten und Schlüsselwörter zu vergleichen."
+        },
+        "five": {
+          "title": "Schritt 5: Interviews üben",
+          "description": "Führen Sie maßgeschneiderte Sprach-zu-Text-Verhaltens- und technische Simulationen durch und erhalten Sie strukturiertes Feedback pro Antwort."
+        },
+        "six": {
+          "title": "Schritt 6: Mehr Interviews erhalten",
+          "description": "Bewerben Sie sich mit optimierten Schlüsselwörtern und geschliffenem Selbstvertrauen, um automatisierte Filter und die Erwartungen von Personalverantwortlichen zu übertreffen."
+        }
+      }
+    },
+    "faq": {
+      "sectionTitle": "Support",
+      "title": "Häufig gestellte Fragen",
+      "subtitle": "Schnelle Antworten auf Standardfragen zu unserer KI-Pipeline, Sicherheitsmodellen, Dateisupport und Datenschutzrichtlinien.",
+      "items": {
+        "one": {
+          "question": "Wie funktioniert die KI-Analyse?",
+          "answer": "Wenn Sie Ihren Lebenslauf hochladen, extrahiert unser lokaler Parser den Rohtext aus Ihrem Dokument (PDF oder DOCX). Dieser Text wird dann sicher von unserer Google Gemini KI-Pipeline verarbeitet, die ihn mit branchenüblichen ATS-Filterregeln vergleicht und Abschnitte nach Grammatik, Formatierungsvollständigkeit und Keyword-Stärke bewertet."
+        },
+        "two": {
+          "question": "Ist mein Lebenslauf sicher?",
+          "answer": "Ja, Ihre Lebenslaufdateien werden sicher behandelt. Wir laden die Dokumente in einen privaten Bucket hoch, der von UploadThing gehostet wird, und nur authentifizierte Benutzerkonten können sie abrufen oder analysieren. Ihre persönlichen Daten sind jederzeit geschützt."
+        },
+        "three": {
+          "question": "Welche Dateiformate werden unterstützt?",
+          "answer": "Wir unterstützen vollständig den Upload von Standard-PDF- (.pdf) und Microsoft Word- (.docx) Dokumenten bis zu 10 MB. Wir analysieren Formatierungsdaten lokal, um sauberen Text für die KI-Bewertung zu extrahieren."
+        },
+        "four": {
+          "question": "Kann ich mehrere Lebensläufe analysieren?",
+          "answer": "Absolut! Sie können mehrere Lebensläufe oder Entwürfe in Ihr Dashboard hochladen. Sie können jeden Upload als Ihren 'Primär'-Lebenslauf festlegen, der dann als Basisdokument für den Abgleich mit Stellenbeschreibungen und Scheininterviews dient."
+        },
+        "five": {
+          "question": "Sind meine Daten privat?",
+          "answer": "Ja, Ihre Daten sind privat und an Ihr persönliches Konto gebunden. Wir verkaufen Ihre Lebenslaufdetails, Leistungsberichte oder Transkripte von Scheininterviews nicht an Datenbanken Dritter. Alle Authentifizierungs-Gates werden durch Clerk Middleware-Authentifizierungstoken geschützt."
+        }
+      }
+    },
+    "comparison": {
+      "sectionTitle": "Vergleich",
+      "title": "Warum AI Career Copilot wählen?",
+      "subtitle": "Erfahren Sie, wie unsere intelligente Generative KI-Engine traditionelle, veraltete Lebenslaufprüfung und Interviewvorbereitungs-Workflows übertrifft.",
+      "table": {
+        "capability": "Fähigkeit",
+        "traditional": "Traditionelle Überprüfung",
+        "copilot": "Copilot"
+      },
+      "rows": {
+        "instantAI": {
+          "feature": "Sofortige KI-Analyse",
+          "traditional": "Tage/Wochen Wartezeit auf Feedback",
+          "copilot": "Echtzeit-Feedback in unter 10 Sekunden"
+        },
+        "ats": {
+          "feature": "ATS-Optimierungsbewertung",
+          "traditional": "Schätzungen basierend auf generischen Vorlagen",
+          "copilot": "Präzisionsberechnung passend zu über 85 Parsing-Filtern"
+        },
+        "jobMatch": {
+          "feature": "Maßgeschneidertes Job-Matching",
+          "traditional": "Manueller Vergleich mit Stellenanzeigen",
+          "copilot": "Semantische Erkennung von Fähigkeitslücken, die fehlende Schlüsselwörter hervorhebt"
+        },
+        "interview": {
+          "feature": "KI-Scheininterview-Coaching",
+          "traditional": "Kostenintensive professionelle Coaching-Experten",
+          "copilot": "Dynamische STAR-basierte Sitzungen mit Bewertungslogs"
+        },
+        "actionItems": {
+          "feature": "Kontextbezogene Handlungspunkte",
+          "traditional": "Vage Vorlagen (\"Verben stärker machen\")",
+          "copilot": "Präzise Wort-für-Wort-Tipps zum Ersetzen aktiver Verben"
+        },
+        "multiResume": {
+          "feature": "Überprüfung mehrerer Lebenslaufversionen",
+          "traditional": "Verstreute Dateien auf persönlichen Computern",
+          "copilot": "Zentralisierte Speicherdatenbank zum Vergleichen von Versionen"
+        }
+      }
+    },
+    "productPreview": {
+      "sectionTitle": "Produkttour",
+      "title": "Erleben Sie die Plattform in Aktion",
+      "subtitle": "Machen Sie eine virtuelle Tour durch die hochpräzisen Funktionen und KI-Schnittstellen, die entwickelt wurden, um Ihren Karriereweg zu optimieren.",
+      "tabs": {
+        "dashboard": "Dashboard",
+        "resumeAnalysis": "Lebenslaufanalyse",
+        "ats": "ATS-Score & Gesundheit",
+        "jobMatch": "Job-Matching",
+        "interview": "Interview-Coach"
+      }
+    },
+    "footer": {
+      "ctaTitle": "Bereit, Ihr nächstes Interview zu meistern?",
+      "ctaDescription": "Schließen Sie sich Tausenden von Jobkandidaten an, die AI Career Copilot nutzen, um ihre Bewerbungsunterlagen zu optimieren, Screening-Bots zu bestehen und Verhaltenssimulationen zu üben.",
+      "ctaButton": "Kostenlos starten",
+      "description": "Ihr KI-gestützter Karriereassistent, der Lebensläufe optimiert, ATS-Konformitätsbewertungen evaluiert, Fähigkeitslücken analysiert und Sie durch Scheininterview-Panels coacht.",
+      "product": "Produkt",
+      "features": "Funktionen",
+      "howItWorks": "So funktioniert's",
+      "developers": "Entwickler",
+      "faq": "FAQs",
+      "legal": "Rechtliches & Kontakt",
+      "contactSupport": "Support kontaktieren",
+      "changeAppearance": "Erscheinungsbild ändern:"
+    },
+    "testimonials": {
+      "loginPrompt": "Bitte melden Sie sich an, um Ihre Erfahrung zu teilen."
+    },
+    "reviews": {
+      "sectionTitle": "Community-Bewertungen",
+      "title": "Benutzerstimmen",
+      "subtitle": "Echtes Feedback von Fachleuten, die ihre Jobsuche und Interviewfähigkeiten mit AI Career Copilot beschleunigt haben.",
+      "basedOn": "Basierend auf {{count}} {{reviews}}",
+      "review": "Bewertung",
+      "reviews": "Bewertungen",
+      "sharedExperience": "Sie haben Ihre Erfahrung geteilt!",
+      "howIsJobHunt": "Wie war Ihre Jobsuche?",
+      "manageFeedback": "Verwalten oder bearbeiten Sie Ihr Live-Feedback mit den Optionen auf der rechten Seite.",
+      "submitFeedbackHelp": "Senden Sie Ihre Bewertung und Ihr Feedback, um anderen Entwicklern zu helfen, ihre nächste Rolle zu finden.",
+      "editMyReview": "Meine Bewertung bearbeiten",
+      "writeReview": "Eine Bewertung schreiben",
+      "showingCount": "Zeige {{count}} von {{total}} Bewertungen",
+      "sort": "Sortieren:",
+      "sortBy": "Sortieren nach",
+      "sortNewest": "Neueste zuerst",
+      "sortHighest": "Höchstbewertet",
+      "sortLowest": "Niedrigstbewertet",
+      "emptyState": "Es wurden noch keine Bewertungen abgegeben. Seien Sie der Erste, der Ihre Gedanken teilt!",
+      "yourReviewLabel": "Ihre Bewertung",
+      "loadMore": "Weitere Bewertungen laden",
+      "loading": "Wird geladen...",
+      "anonymousCandidate": "Jobkandidat",
+      "defaultAuthor": "Kandidat",
+      "form": {
+        "updateReview": "Bewertung aktualisieren",
+        "submitReview": "Bewertung absenden",
+        "titlePlaceholder": "Beispiel: Unglaubliche Interviewbewertung!",
+        "detailsPlaceholder": "Teilen Sie Ihre Erfahrungen mit dem ATS-Scorecard-Parser, Job-Matches und den konversationellen Interview-Sitzungen...",
+        "descLength": "{{count}} / 500"
+      },
+      "modal": {
+        "editDescription": "Aktualisieren Sie Ihre Bewertung und Ihren Kommentar zur Nutzung von AI Career Copilot.",
+        "newDescription": "Senden Sie Ihre Bewertung ab. Ihre Bewertung wird live auf unserem Community-Board erscheinen.",
+        "deleting": "Wird gelöscht...",
+        "delete": "Löschen"
+      }
     }
   },
   "dashboard": {
     "sidebar": {
       "dashboard": "Dashboard",
       "resumeUpload": "Lebenslauf hochladen",
-      "resumeAnalysis": "Analyse",
+      "resumeAnalysis": "Lebenslaufanalyse",
       "atsScore": "ATS-Score",
-      "jobMatch": "Stellenabgleich",
+      "jobMatch": "Job-Matching",
       "interviewCoach": "Interview-Coach",
       "interviewHistory": "Interview-Verlauf",
       "profile": "Mein Profil",
-      "settings": "Konto-Einstellungen"
+      "settings": "Kontoeinstellungen"
     },
     "welcome": {
       "title": "Willkommen zurück",
-      "subtitle": "Hier ist eine Übersicht über Ihren aktuellen Berufsstatus und Ihre Bereitschaft.",
-      "readiness": "KI-Karrierebereitschaft"
+      "subtitle": "Hier ist eine Übersicht über Ihre Lebenslaufverbesserungen und die Vorbereitung mit dem Interview-Coach.",
+      "readiness": "KI-Karrierebereitschaft",
+      "defaultUser": "dort"
     },
     "stats": {
       "resumes": "Hochgeladene Lebensläufe",
       "atsScore": "Ziel-ATS-Score",
       "interviews": "Übungssitzungen",
-      "completeness": "Profil-Einrichtung"
+      "completeness": "Profilvervollständigung",
+      "completenessHint": "Vervollständigen Sie Ihre Zielrolle, Ziele und Erfahrungsdetails im Profil-Tab, um KI-Metriken auszurichten.",
+      "resumeScore": "Lebenslauf-Score",
+      "atsScoreCard": "ATS-Score",
+      "jobMatchCard": "Job-Match %",
+      "interviewScoreCard": "Interview-Score",
+      "latestResumeOptimization": "Neueste Lebenslaufoptimierung",
+      "noResumeAnalyzedYet": "Noch kein Lebenslauf analysiert",
+      "strongAtsCompatibility": "Starke ATS-Kompatibilität",
+      "needsKeywordBooster": "Benötigt Keyword-Booster",
+      "pendingAnalysis": "Analyse ausstehend",
+      "matchCompatibilityScan": "Kompatibilitätsprüfung durchführen",
+      "noMatchScanRun": "Keine Match-Prüfung durchgeführt",
+      "excellentResponseQuality": "Ausgezeichnete Antwortqualität",
+      "requiresCoachingPractice": "Benötigt Coaching-Übung",
+      "noCoachSessionCompleted": "Keine Coach-Sitzung abgeschlossen",
+      "noUploadsYet": "Noch keine Uploads"
+    },
+    "metadata": {
+      "title": "Lebenslauf-Metadaten",
+      "lastUpload": "Datum des letzten Uploads",
+      "lastAnalyzed": "Zuletzt analysierter Lebenslauf"
+    },
+    "weeklyTrend": {
+      "title": "Wöchentlicher Analysetrend",
+      "desc": "Leistungsindikatoren, die über die wichtigsten Coaching-Parameter aufgetragen sind."
+    },
+    "suggestions": {
+      "title": "Aktuelle KI-Vorschläge",
+      "default": {
+        "one": "Laden Sie Ihren ersten Lebenslauf hoch, um detaillierte KI-Feedback-Vorschläge zu erhalten.",
+        "two": "Üben Sie Scheininterviews, um gezielte Antwortempfehlungen zu erhalten.",
+        "three": "Gleichen Sie mit Jobs ab, um technische Fähigkeitslücken zu finden."
+      }
+    },
+    "insights": {
+      "title": "Coaching-Einblicke",
+      "default": {
+        "one": "Verbessern Sie den ATS-Score, indem Sie fehlende Schlüsselwörter hinzufügen, die in Ihrem Bericht hervorgehoben sind.",
+        "two": "ATS-Score ist optimiert! Fahren Sie fort, mit Stellenbeschreibungen abzugleichen, um individuelle Lücken zu finden.",
+        "three": "Üben Sie Scheininterviews, um die technische Umsetzung und das Selbstvertrauen zu bewerten.",
+        "four": "Stärken Sie problemlösende Schlüsselwörter in Antworten, um den Interview-Index zu erhöhen.",
+        "five": "Passen Sie Ihre Lebenslaufprojekte an, um sie besser an die Stellenanforderungen anzupassen.",
+        "six": "Quantifizieren Sie Lebenslauf-Aufzählungspunkte mit Metriken und technischen Details."
+      }
+    },
+    "activity": {
+      "title": "Letzte Aktivitäten",
+      "desc": "Ihre letzten Updates und Systemanalyseprotokolle.",
+      "viewAll": "Alle anzeigen",
+      "empty": "Keine aktuellen Aktivitätsprotokolle gefunden.",
+      "resumeAnalyzed": {
+        "title": "Lebenslauf analysiert",
+        "desc": "Scorecard berechnet für „{{fileName}}“. Score: {{score}}/100."
+      },
+      "resumeParsed": {
+        "title": "Lebenslauf geparst",
+        "desc": "Inhalt extrahiert aus „{{fileName}}“. Bereit zur Analyse."
+      },
+      "jobMatch": {
+        "title": "Job-Match gescannt",
+        "desc": "Abgeglichen mit „{{company}}“. Übereinstimmung: {{score}}%."
+      },
+      "interviewCompleted": {
+        "title": "Interview abgeschlossen",
+        "desc": "Übungssitzung für „{{role}}“ bewertet. Score: {{score}}%."
+      },
+      "interviewStarted": {
+        "title": "Interview gestartet",
+        "desc": "Coaching-Sitzung für „{{role}}“ ist derzeit aktiv."
+      }
+    },
+    "quickActions": {
+      "title": "Schnellaktionen",
+      "desc": "Wichtige Workflows sofort starten.",
+      "upload": "Lebenslauf hochladen",
+      "uploadDesc": "Laden Sie ein PDF- oder Word-Dokument hoch.",
+      "analyze": "Lebenslauf analysieren",
+      "analyzeDesc": "ATS-Scanning & Optimierungen durchführen.",
+      "interview": "Interview starten",
+      "interviewDesc": "Verhaltens- & technische Fragen üben.",
+      "complete": "Fertig"
+    },
+    "reviews": {
+      "title": "Community-Bewertungen & -Ratings",
+      "description": "Erzählen Sie uns, wie AI Career Copilot Ihnen bei Ihrer Jobsuche hilft. Schreiben Sie so viele Bewertungen, wie Sie möchten!",
+      "write": "Eine Bewertung schreiben",
+      "editTitle": "Ihre Bewertung bearbeiten",
+      "newTitle": "Neue Bewertung schreiben",
+      "yourRating": "Ihre Bewertung:",
+      "reviewTitle": "Titel der Bewertung",
+      "reviewDetails": "Details der Bewertung",
+      "titlePlaceholder": "z.B. Hervorragende ATS-Scan-Tools!",
+      "detailsPlaceholder": "Teilen Sie Ihre Gedanken darüber, wie AI Career Copilot Ihnen hilft...",
+      "maxCharacters": "Maximal 500 Zeichen",
+      "cancel": "Abbrechen",
+      "saveChanges": "Änderungen speichern",
+      "submitReview": "Bewertung absenden",
+      "saving": "Wird gespeichert...",
+      "yourReviews": "Ihre abgegebenen Bewertungen ({{count}})",
+      "empty": "Sie haben noch keine Bewertungen abgegeben. Klicken Sie oben auf „Eine Bewertung schreiben“, um Ihre Erfahrung zu teilen!",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "validation": {
+        "rating": "Bitte wählen Sie eine Sternebewertung aus.",
+        "titleRequired": "Der Titel der Bewertung ist erforderlich.",
+        "titleLength": "Der Titel muss 100 Zeichen oder weniger umfassen.",
+        "descriptionRequired": "Die Beschreibung der Bewertung ist erforderlich.",
+        "descriptionLength": "Die Beschreibung muss 500 Zeichen oder weniger umfassen."
+      },
+      "success": {
+        "submitted": "Bewertung erfolgreich übermittelt!",
+        "updated": "Bewertung erfolgreich aktualisiert!",
+        "deleted": "Bewertung erfolgreich gelöscht."
+      },
+      "errors": {
+        "save": "Fehler beim Speichern der Bewertung.",
+        "saveUnexpected": "Beim Speichern ist ein Fehler aufgetreten.",
+        "delete": "Fehler beim Löschen der Bewertung.",
+        "deleteUnexpected": "Beim Löschen ist ein Fehler aufgetreten."
+      },
+      "confirmDelete": "Sind Sie sicher, dass Sie diese Bewertung löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+    }
+  },
+  "settings": {
+    "title": "Kontoeinstellungen",
+    "subtitle": "Passen Sie Ihre KI-Modelle, Benachrichtigungsparameter, verknüpften Integrationen und Designparameter an.",
+    "loading": "Einstellungen-Dashboard wird synchronisiert...",
+    "pageTitle": "Einstellungen",
+    "pageTitleWithName": "Hallo {{name}}! Einstellungen",
+    "pageDescription": "Verwalten Sie Ihre detaillierten visuellen Themen, aktiven Fallback-KI-Modelle, Benachrichtigungsparameter und Datenintegrationen.",
+    "searchPlaceholder": "Alle Einstellungen durchsuchen...",
+    "unsavedBanner": "Sie haben ungespeicherte Änderungen in Ihrem Einstellungen-Dashboard.",
+    "saveChanges": "Änderungen speichern",
+    "cards": {
+      "configuration": {
+        "label": "Einstellungen-Konfiguration",
+        "title": "SaaS-Anpassungen",
+        "description": "Kontoverhalten feinabstimmen."
+      },
+      "personalization": {
+        "label": "KI-Personalisierung",
+        "title": "Prompt-Profile",
+        "description": "Benutzerdefinierte Prompts automatisch anpassen."
+      },
+      "billing": {
+        "label": "Abrechnungsstufe",
+        "title": "Kostenloser Starter-Plan",
+        "badge": "Kostenlos",
+        "description": "Es gelten Standard-Ratenbegrenzungen.",
+        "button": "Upgrade"
+      }
+    },
+    "tabs": {
+      "ai": "KI-Präferenzen",
+      "notifications": "Benachrichtigungen",
+      "security": "Sicherheit & Datenschutz",
+      "connected": "Verbundene Konten",
+      "engine": "KI-Engine",
+      "resumeJob": "Lebenslauf & Job",
+      "appearance": "Erscheinungsbild & Zugriff",
+      "data": "Daten & Speicher",
+      "danger": "Gefahrenzone"
+    },
+    "ai": {
+      "language": "KI-Antwortsprache",
+      "personality": "KI-Persönlichkeit/Ton",
+      "coachStyle": "Coaching-Stil-Modus",
+      "responseLength": "Detaillierungsgrad des Feedbacks",
+      "saveConversations": "KI-Konversationen automatisch speichern",
+      "useMemory": "KI-Speicher-Kontext verwenden",
+      "improveResponses": "Antworten automatisch verbessern"
+    },
+    "accounts": {
+      "github": {
+        "label": "GitHub-Profil",
+        "desc": "Öffentliche Repo-Beiträge synchronisieren",
+        "placeholder": "z.B. https://github.com/username"
+      },
+      "linkedin": {
+        "label": "LinkedIn-Verbindung",
+        "desc": "Berufliche Erfolge synchronisieren",
+        "placeholder": "z.B. https://linkedin.com/in/username"
+      },
+      "portfolio": {
+        "label": "Portfolio-URL-Link",
+        "desc": "Benutzerdefinierte persönliche Landingpages verknüpfen",
+        "placeholder": "z.B. https://myportfolio.dev"
+      },
+      "leetcode": {
+        "label": "LeetCode-Aktivität",
+        "desc": "Algorithmisches Statistikprofil importieren",
+        "placeholder": "z.B. leetcode_username"
+      },
+      "hackerrank": {
+        "label": "HackerRank-Board",
+        "desc": "Fähigkeitszertifizierungsprofil importieren",
+        "placeholder": "z.B. hackerrank_username"
+      },
+      "codeforces": {
+        "label": "Codeforces-Handle",
+        "desc": "Statistiken zu Bewertungsstufen importieren",
+        "placeholder": "z.B. codeforces_handle"
+      }
+    }
+  },
+  "ats": {
+    "toasts": {
+      "preparingPrint": "Druckansicht des ATS-Scorecard-Berichts wird vorbereitet..."
+    },
+    "title": "ATS-Score-Optimierer",
+    "description": "Überprüfen Sie die Kompatibilität Ihrer Lebensläufe mit Parsing-Engines, optimieren Sie die Keyword-Dichte und identifizieren Sie strukturelle Lücken.",
+    "downloadBtn": "ATS-Bericht herunterladen",
+    "grade": "ATS-Note",
+    "currentScore": "Ihr aktueller Score",
+    "targetInfo": "Streben Sie einen Score über 80 % an, um anfängliche Parsing-Filter zu umgehen.",
+    "benchmarkTitle": "Vergleich der ATS-Branchen-Benchmarks",
+    "averageAts": "Durchschnittlicher ATS-Score",
+    "yourCurrentAts": "Ihr aktueller ATS-Score",
+    "topScore": "Top 10 % Branchen-Score",
+    "trendTitle": "ATS-Trend im Zeitverlauf",
+    "trendDesc": "Verlauf der Scans, der Fortschritt und Optimierungen zeigt.",
+    "trendEmpty": "Laden Sie mehrere Lebensläufe hoch und scannen Sie sie, um ein Trenddiagramm zu erstellen.",
+    "checklist": {
+      "title": "ATS-Struktur-Checkliste",
+      "desc": "Wesentliche Prüfungen zur Sicherstellung eines fehlerfreien Parsings.",
+      "layout": "Layout-Formatierung",
+      "sections": "Abschnittsindizierung",
+      "keywords": "Keyword-Dichte",
+      "grammar": "Aktive Grammatik",
+      "readability": "Parser-Lesbarkeit",
+      "clean": "Sauber",
+      "needsReview": "Überprüfung erforderlich",
+      "complete": "Vollständig",
+      "missing": "Fehlende Informationen",
+      "optimized": "Optimiert",
+      "low": "Geringe Dichte",
+      "valid": "Gültig",
+      "grammarReview": "Grammatikprüfung",
+      "high": "Hoch",
+      "lowIndex": "Niedriger Index"
+    },
+    "empty": {
+      "title": "Noch keine Lebensläufe hochgeladen",
+      "desc": "Laden Sie Ihren Portfolio-Lebenslauf hoch, um sofortige Parsing-Scan-Ergebnisse und Keyword-Optimierungs-Checklisten zu erhalten.",
+      "btn": "Lebenslauf hochladen"
+    },
+    "history": {
+      "title": "Verlauf der Lebenslauf-ATS-Optimierung",
+      "scoreTitle": "ATS-Score",
+      "booster": "Fehlende Keywords zur Optimierung (ATS-Booster)",
+      "boosterEmpty": "Keine fehlenden Keywords erkannt! Ihr Lebenslauf ist gut für ATS-Begriffe optimiert.",
+      "summary": "Score-Zusammenfassung",
+      "readyForAnalysis": "Dieser Lebenslauf ist bereit zur Analyse, aber Sie haben den ATS-Analysator noch nicht darauf ausgeführt.",
+      "processing": "Dieser Lebenslauf wird derzeit verarbeitet. Sobald das Parsing abgeschlossen ist, können Sie die ATS-Analyse-Scorecard ausführen.",
+      "viewDetails": "Optimierungsdetails anzeigen",
+      "runAnalysis": "ATS-Analyse ausführen",
+      "manage": "Lebenslauf verwalten"
+    }
+  },
+  "jobMatch": {
+    "toasts": {
+      "selectResume": "Bitte wählen Sie einen Lebenslauf zum Abgleichen aus.",
+      "pasteDesc": "Bitte fügen Sie den Text der Stellenbeschreibung ein.",
+      "tooShort": "Der Text der Stellenbeschreibung ist zu kurz. Bitte fügen Sie eine vollständige Beschreibung ein.",
+      "analyzing": "Gemini AI analysiert die Übereinstimmung und vergleicht Keywords. Bitte warten Sie...",
+      "success": "Job-Match abgeschlossen!",
+      "error": "Fehler beim Berechnen der Übereinstimmung mit der Stellenbeschreibung.",
+      "unexpected": "Fehler beim Kompilieren des AI Job Match Berichts.",
+      "preparingPrint": "Job-Match-PDF-Bericht wird vorbereitet..."
+    },
+    "form": {
+      "pageTitle": "Hallo {{name}}! Lebenslauf- & Job-Matcher",
+      "pageTitleGeneric": "Lebenslauf- & Job-Matcher",
+      "pageDesc": "Vergleichen Sie Ihre Lebenslaufdetails mit jeder Stellenbeschreibung, um wichtige Keyword-Lücken und Passgenauigkeit zu entdecken.",
+      "noResumesTitle": "Keine Lebensläufe gefunden",
+      "noResumesDesc": "Sie müssen zuerst Ihr Lebenslaufdokument hochladen, bevor Sie es mit Stellenprofilen vergleichen können.",
+      "uploadBtn": "Lebenslauf hochladen",
+      "title": "Job-Match-Vergleichsformular",
+      "desc": "Wählen Sie einen Ihrer hochgeladenen Lebensläufe aus und fügen Sie die Ziel-Stellenbeschreibung ein, um eine Übereinstimmungsprüfung durchzuführen.",
+      "selectResumeLabel": "1. Lebenslauf auswählen",
+      "selectResumePlaceholder": "Wählen Sie einen Ihrer Lebensläufe aus...",
+      "requiresParsing": "(Erfordert Parsing-Text)",
+      "pasteDescLabel": "2. Stellenbeschreibung einfügen",
+      "pasteDescPlaceholder": "Fügen Sie hier die Ziel-Stellenbeschreibung ein (Verantwortlichkeiten, Fähigkeiten, Qualifikationen, Keyword-Tags)...",
+      "minLength": "Mindestlänge: 100 Zeichen. Fügen Sie Rohtextblöcke direkt ein.",
+      "submitBtn": "Übereinstimmung analysieren",
+      "matching": "Lebenslauf wird abgeglichen...",
+      "matchingDesc": "Gemini gleicht Ihre Erfahrungsaufzählungen mit den Anforderungen der Stellenbeschreibung ab."
+    },
+    "result": {
+      "back": "Anderen Job vergleichen",
+      "title": "Abgleichsbericht",
+      "targetJob": "Ziel-Jobprofil",
+      "targetCompany": "Zielunternehmen",
+      "matched": "Abgeglichen am {{date}}",
+      "downloadBtn": "PDF-Bericht herunterladen",
+      "viewResumes": "Lebensläufe anzeigen",
+      "overallScore": "Gesamt-Übereinstimmungs-Score",
+      "roleFitSummary": "Zusammenfassung der Rollenpassung",
+      "noSummary": "Keine Vergleichszusammenfassung generiert.",
+      "alignSuccess": "Keyword-Übereinstimmung passt zum Zielprofil",
+      "alignImpact": "Geschätzter ATS-Optimierungseffekt: +12%",
+      "priority": "Prioritäre Verbesserungen",
+      "minorEdits": "Kleinere Bearbeitungen",
+      "tailoringRequired": "Anpassung des Lebenslaufs erforderlich",
+      "density": "Keyword-Dichte",
+      "boostNeeded": "Boost erforderlich",
+      "optimal": "Optimal",
+      "atsImprovement": "ATS-Verbesserung",
+      "atsPotential": "Potenzieller Score von {{val}}%",
+      "actions": "Anpassungsmaßnahmen",
+      "tasksPending": "{{count}} Aufgaben ausstehend",
+      "breakdownTitle": "Aufschlüsselung der Qualifikationsübereinstimmung",
+      "techSkillsFit": "Passung der technischen Fähigkeiten",
+      "experienceFit": "Passung der Berufserfahrung",
+      "projectsFit": "Akademische Projekte & Code-Relevanz",
+      "educationFit": "Ausbildungsübereinstimmung",
+      "softSkillsFit": "Index für Verhaltens- & Soft Skills",
+      "matchedSkillsTitle": "Abgeglichene Fähigkeiten & Kompetenzen",
+      "noMatchedSkills": "Keine abgeglichenen Fähigkeiten erfasst.",
+      "missingSkillsTitle": "Fehlende erforderliche Fähigkeiten",
+      "allSkillsMatched": "Keine! Sie besitzen alle erforderlichen Fähigkeiten.",
+      "strengthsTitle": "Kandidatenvorteile & Stärken",
+      "noStrengths": "Keine Stärken erfasst.",
+      "weaknessesTitle": "Übereinstimmungslücken & Schwächen",
+      "noWeaknesses": "Keine Schwächen erfasst.",
+      "suggestionsTitle": "Umsetzbare Anpassungsvorschläge",
+      "suggestionsDesc": "Haken Sie Maßnahmen ab, während Sie Ihren Lebenslauf aktualisieren, um ihn besser an diese Zielrollenbeschreibung anzupassen.",
+      "noSuggestions": "Keine Vorschläge generiert.",
+      "strongMatch": "Starke Übereinstimmung",
+      "moderateMatch": "Moderate Übereinstimmung",
+      "weakMatch": "Schwache Übereinstimmung"
+    }
+  },
+  "interview": {
+    "title": "KI-Scheininterview-Coach",
+    "subtitle": "Üben Sie echte technische und verhaltensbezogene Interviewformate mit Echtzeit-Feedback.",
+    "toasts": {
+      "selectResume": "Bitte wählen Sie einen Lebenslauf aus, auf dem die Fragen basieren sollen.",
+      "studying": "Gemini AI analysiert Ihren Hintergrund und formuliert personalisierte Fragen...",
+      "sessionEntering": "Fragen generiert! Betreten des Sitzungsraums...",
+      "setupFailed": "Fehler beim Generieren von Scheininterviewfragen."
+    },
+    "setup": {
+      "pageTitle": "Hallo {{name}}! KI-Interview-Coach",
+      "pageTitleGeneric": "KI-Interview-Coach",
+      "pageDesc": "Erstellen Sie benutzerdefinierte Scheininterviewsitzungen und zeichnen Sie Antworten auf, um strukturiertes, aktives Coaching-Feedback zu erhalten.",
+      "noResumesTitle": "Keine Lebensläufe gefunden",
+      "noResumesDesc": "Sie müssen zuerst Ihr Lebenslaufdokument hochladen, bevor Sie Scheininterviewrunden üben können.",
+      "uploadBtn": "Lebenslauf hochladen",
+      "title": "Übungssitzung konfigurieren",
+      "desc": "Entwerfen Sie ein Scheininterview, das auf Ihre Erfahrungsstufen oder eingefügten Anforderungen zugeschnitten ist.",
+      "sessionSummary": "Sitzungszusammenfassung",
+      "historyBtn": "Verlauf",
+      "resumeLabel": "1. Lebenslaufprofil auswählen",
+      "resumePlaceholder": "Wählen Sie einen Ihrer Lebensläufe aus...",
+      "jobLabel": "2. Ziel-Job (Optional)",
+      "jobPlaceholder": "Wählen Sie eine Ziel-Stellenbeschreibung aus...",
+      "generalMock": "Allgemeines professionelles Scheininterview (ohne Ziel-JD)",
+      "jobAt": "bei {{company}}",
+      "typeLabel": "Interviewtyp",
+      "typeMixed": "Gemischter Fokus",
+      "typeTech": "Technische Fragen",
+      "typeBeh": "Verhaltensfragen (HR)",
+      "diffLabel": "Schwierigkeitsgrad",
+      "diffEasy": "Einfach (Anfänger)",
+      "diffMedium": "Mittel (Standard)",
+      "diffHard": "Schwer (Senior)",
+      "countLabel": "Anzahl der Fragen",
+      "countExpress": "3 Fragen (Express)",
+      "countFast": "5 Fragen (Schnell)",
+      "countStandard": "10 Fragen (Standard)",
+      "countDeep": "15 Fragen (Tiefgehend)",
+      "beginBtn": "KI-Übungssitzung starten",
+      "durationExpress": "5-8 Minuten",
+      "durationFast": "10-15 Minuten",
+      "durationStandard": "20-25 Minuten",
+      "durationDeep": "30-40 Minuten",
+      "crafting": "Personalisiertes Interview wird erstellt...",
+      "craftingDesc": "Gemini recherchiert Ihre Kompetenzen, erstellt technische Szenarien und konfiguriert Bewertungsziele.",
+      "easyDesc": "Anfängerfragen zur Überprüfung grundlegender technischer Konzepte und grundlegender Lebenslaufangaben.",
+      "mediumDesc": "Standard-Branchen-Scheinfragen, die verhaltensbezogene Szenarien für Ingenieure auf mittlerer Ebene simulieren.",
+      "hardDesc": "Hochdruck-Senior-Panels zur Überprüfung von Architekturdesign, Systembeschränkungen und komplexen Führungsszenarien.",
+      "estDuration": "Geschätzte Dauer",
+      "questionFocus": "Fragenschwerpunkt",
+      "diffSetting": "Schwierigkeitseinstellung",
+      "diffDescLabel": "Schwierigkeitsbeschreibung",
+      "scoredCategoriesTitle": "Bewertete Kategorien",
+      "scoredCategories": {
+        "tech": "Technische Kompetenzen",
+        "comm": "Kommunikation & Tonfall",
+        "star": "STAR-Verhaltensszenario-Logik",
+        "solve": "Strukturelle Schritte zur Problemlösung"
+      }
+    },
+    "session": {
+      "toasts": {
+        "tooShort": "Bitte geben Sie eine etwas detailliertere Antwort (mindestens 10 Zeichen).",
+        "assessing": "Gemini AI bewertet Ihre Antwortmetriken...",
+        "recorded": "Antwort aufgezeichnet!",
+        "unexpected": "Fehler beim Senden der Antwort.",
+        "completing": "Scheinbewertungssitzung wird geschlossen. Endgültige Metriken werden kompiliert...",
+        "completed": "Interview abgeschlossen! Scorecard wird geladen...",
+        "completeFailed": "Fehler beim Kompilieren der Gesamt-Scorecard."
+      },
+      "chatRoom": "Simulierter Chatraum",
+      "progressLabel": "Fortschritt der Übungssitzung",
+      "progressStatus": "{{count}} / {{total}} Antworten bewertet ({{remaining}} verbleibend)",
+      "interviewer": "Interviewer",
+      "feedbackTitle": "Antwortbewertung",
+      "strengths": "✓ Stärken",
+      "improvements": "⚠ Verbesserungen",
+      "compiling": "Scheinsitzungs-Zeugnis wird erstellt...",
+      "completeBtn": "Übung abschließen & bewerten",
+      "nextBtn": "Nächste Frage vorbereiten",
+      "inputPlaceholder": "Geben Sie Ihre Antwort auf die Frage des Interviewers ein...",
+      "inputTip": "Geben Sie mehr als 10 Zeichen ein, um die Antwortübereinstimmung zu bewerten.",
+      "submitBtn": "Antwort absenden",
+      "liveScores": "Live-Sitzungsergebnisse",
+      "techAccuracy": "Technische Genauigkeit",
+      "commClarity": "Kommunikationsklarheit",
+      "confidenceIndex": "Vertrauensindex",
+      "solveQuotient": "Problemlösungsquotient",
+      "scoresTip": "Live-Metrik-Scores werden sofort gemittelt und aktualisiert, sobald Sie Antwortbewertungen an den Interviewer senden."
+    },
+    "result": {
+      "back": "Ein weiteres Interview üben",
+      "completedAt": "Abgeschlossen am {{date}}",
+      "download": "PDF-Bericht herunterladen",
+      "retry": "Interview wiederholen",
+      "sessionScore": "Sitzungsergebnis",
+      "excellent": "Ausgezeichnete Übung!",
+      "solid": "Solide Leistung.",
+      "needsImprovement": "Verbesserungsbedürftig.",
+      "scoreRank": "Rangiert höher als {{val}}% der getesteten Portfolio-Sitzungen.",
+      "categoryTitle": "Detaillierte Kategorieaufschlüsselung",
+      "tech": "Technisch",
+      "clarity": "Klarheit",
+      "confidence": "Vertrauen",
+      "solve": "Problemlösung",
+      "behavioral": "Verhaltensbezogen",
+      "adviceLabel": "Leistungsberatung",
+      "noAdvice": "Keine allgemeine Coaching-Zusammenfassung aufgezeichnet.",
+      "strengthsTitle": "Beobachtete Stärken",
+      "noStrengths": "Keine Stärken erfasst.",
+      "gapsTitle": "Fokus-Wachstumsbereiche",
+      "noGaps": "Keine Schwächen erfasst.",
+      "stepsTitle": "Empfohlene nächste Schritte & Karriereberatung",
+      "stepsDesc": "Umsetzbare Vorbereitungsaufgaben für Wachstum",
+      "dialogueReviewTitle": "Frage-für-Frage-Dialogüberprüfung",
+      "questionNumber": "Frage Nr. {{order}} • {{type}}",
+      "scorePercent": "Score: {{val}}%",
+      "yourResponse": "Ihre Antwort",
+      "noResponse": "(Keine Antwort aufgezeichnet)",
+      "aiFeedback": "KI-Bewertungs-Feedback",
+      "noFeedback": "Kein Feedback aufgezeichnet.",
+      "accuracy": "Genauigkeit",
+      "answerStrengths": "Antwortstärken",
+      "improvements": "Verbesserungsvorschläge",
+      "idealAnswer": "Ideale Antwortvorlage",
+      "toasts": {
+        "preparing": "PDF-Druck-Scorecard wird vorbereitet..."
+      }
+    },
+    "history": {
+      "back": "Zurück zum Interview-Coach",
+      "title": "Interview-Verlaufsprotokolle",
+      "desc": "Überprüfen Sie die Gesamtbewertungen der Karten, Dialogdetails und maßgeschneiderte Karriere-Coach-Einblicke aus früheren Übungen.",
+      "totalSessions": "Gesamtzahl der Übungssitzungen",
+      "avgScore": "Durchschnittlicher Übungs-Score",
+      "highestScore": "Höchstbewertetes Panel",
+      "totalTime": "Gesamte Übungszeit",
+      "trendsTitle": "Übungs-Score-Trends",
+      "trendsDesc": "Chronologische Darstellung Ihrer Gesamtbewertungsergebnisse.",
+      "trendsEmpty": "Schließen Sie mehrere Sitzungen ab, um Bewertungstrends zu erstellen.",
+      "filters": {
+        "all": "Alle",
+        "completed": "Nur abgeschlossen",
+        "technical": "Nur technisch",
+        "behavioral": "Nur verhaltensbezogen"
+      },
+      "empty": {
+        "title": "Keine Übungssitzungen gefunden",
+        "desc": "Sie haben noch keine Sitzungen gestartet oder abgeschlossen, die Ihrem Filter entsprechen. Lassen Sie uns Ihre erste Interview-Coaching-Sitzung starten!",
+        "btn": "Scheinsitzung starten"
+      },
+      "card": {
+        "difficulty": "{{role}}-Rolle • Schwierigkeit: {{difficulty}}",
+        "duration": "Dauer: {{val}}",
+        "deleteConfirm": "Diesen Sitzungsprotokollverlauf dauerhaft löschen?",
+        "confirmBtn": "Bestätigen",
+        "cancelBtn": "Abbrechen",
+        "viewReport": "Bericht anzeigen",
+        "resumeSession": "Sitzung fortsetzen",
+        "retryTitle": "Übungssitzung wiederholen",
+        "deleteTitle": "Sitzung löschen"
+      },
+      "status": {
+        "active": "In Bearbeitung",
+        "completed": "Abgeschlossen • Score: {{score}}%",
+        "abandoned": "Abgebrochen"
+      },
+      "toasts": {
+        "deleted": "Interviewsitzung erfolgreich gelöscht.",
+        "deleteFailed": "Fehler beim Löschen der Interviewsitzung.",
+        "deleteError": "Fehler beim Löschen der Interviewsitzung."
+      }
     }
   },
   "profile": {
     "title": "Mein berufliches Profil",
-    "subtitle": "Halten Sie Ihre Daten aktuell, um Ihre KI-Empfehlungen und die ATS-Ausrichtung anzupassen.",
+    "subtitle": "Halten Sie Ihre Details aktuell, um Ihre KI-Empfehlungen und ATS-Zielgruppenansprache anzupassen.",
+    "loading": "KI-Profil-Dashboard wird synchronisiert...",
+    "pageTitle": "Hallo {{name}}! Willkommen in Ihrem KI-Karriereprofil",
+    "defaultUser": "dort",
+    "pageDescription": "Konfigurieren Sie Ihre detaillierten Lebenslaufprofile, zeitlichen Karriereziele und Modelleinstellungen, um den KI-Copiloten zu personalisieren.",
+    "statusLabel": "Status:",
+    "saveButton": "Änderungen speichern",
+    "savedState": "Einstellungen synchronisiert",
+    "complete": "Vollständig",
+    "checklistTitle": "Ausstehende Einrichtungs-Checkliste",
     "buttons": {
-      "save": "Profil speichern",
+      "save": "Profiländerungen speichern",
       "cancel": "Abbrechen",
       "saved": "Gespeichert",
       "unsaved": "Ungespeicherte Änderungen",
@@ -59,63 +834,22 @@
     "sections": {
       "bio": "Biografie & Standort",
       "goals": "Traumjob & Gehaltsziele",
-      "projects": "Projektprotokolle",
+      "projects": "Ausgewählte Projektprotokolle",
       "experience": "Berufserfahrung",
-      "education": "Ausbildung",
-      "certifications": "Zertifikate",
-      "languages": "Sprachen",
-      "achievements": "Erfolge",
-      "privacy": "Datenschutz & Benachrichtigungen"
+      "education": "Bildungshintergrund",
+      "certifications": "Zertifizierungsliste",
+      "languages": "Sprachkenntnisse",
+      "achievements": "Wichtige Erfolge",
+      "privacy": "Datenschutz & Benachrichtigungen",
+      "personal": "Persönliche Informationen & soziale Links",
+      "preferences": "Karrierepräferenzen & Zeitpläne",
+      "experienceWithCount": "Berufserfahrung ({{count}})",
+      "educationWithCount": "Bildung ({{count}})",
+      "projectsWithCount": "Ausgewählte Projekte ({{count}})",
+      "skillsWithCount": "Kategorisierte Portfolio-Fähigkeiten ({{count}})",
+      "certificationsWithCount": "Zertifizierungen & Sprachen ({{count}})",
+      "aiPersonalization": "KI-Personalisierungspräferenzen",
+      "privacyPreferences": "Datenschutz- & Benachrichtigungspräferenzen"
     }
-  },
-  "settings": {
-    "title": "Kontokonfigurationen",
-    "subtitle": "Passen Sie Ihre KI-Modelle, Benachrichtigungsparameter, Integrationen und Design-Einstellungen an.",
-    "tabs": {
-      "ai": "KI-Präferenzen",
-      "notifications": "Benachrichtigungen",
-      "security": "Sicherheit & Datenschutz",
-      "connected": "Verbundene Konten",
-      "engine": "KI-Engine",
-      "resumeJob": "Lebenslauf & Job",
-      "appearance": "Erscheinungsbild",
-      "data": "Daten & Speicher",
-      "danger": "Gefahrenzone"
-    },
-    "ai": {
-      "language": "KI-Antwortsprache",
-      "personality": "KI-Persönlichkeit/Ton",
-      "coachStyle": "Coaching-Stil",
-      "responseLength": "Detaillierungsgrad",
-      "saveConversations": "Gespräche automatisch speichern",
-      "useMemory": "KI-Gedächtniskontext nutzen",
-      "improveResponses": "Antworten automatisch optimieren"
-    }
-  },
-  "ats": {
-    "title": "ATS-Score-Prüfer",
-    "subtitle": "Scannen Sie Ihren Lebenslauf nach modernen Parser-Kriterien, um Ihren Score zu testen.",
-    "ring": "ATS-Bereitschaftsindex",
-    "scoreLabel": "Ihr Score"
-  },
-  "jobMatch": {
-    "title": "KI-Job-Abgleich",
-    "subtitle": "Fügen Sie eine Stellenbeschreibung ein, um die Übereinstimmung sofort zu vergleichen."
-  },
-  "interview": {
-    "title": "KI-Interview-Coach",
-    "subtitle": "Üben Sie technische und verhaltensbasierte Interviewfragen mit Echtzeit-Feedback."
-  },
-  "status": {
-    "verified": "Verifiziert",
-    "connected": "Verbunden",
-    "notLinked": "Nicht verknüpft",
-    "notConnected": "Nicht verbunden"
-  },
-  "alerts": {
-    "success": "Aktion erfolgreich abgeschlossen!",
-    "error": "Ein Fehler ist aufgetreten, bitte versuchen Sie es erneut.",
-    "saved": "Alle Änderungen gespeichert.",
-    "loading": "Daten werden geladen..."
   }
 }

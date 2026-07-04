@@ -102,7 +102,7 @@ export async function POST(req, { params }) {
     if (dbUser.aiPreferences?.autoSaveConversations === false) {
       console.log(`[PRIVACY SYNC]: autoSaveConversations is false. Purging raw dialogue transcript for session: ${session.id}`);
       const questionIds = questions.map((q) => q.id);
-      await db.answer.updateMany({
+      await db.interviewAnswer.updateMany({
         where: { questionId: { in: questionIds } },
         data: {
           content: "[PURGED FOR PRIVACY]",

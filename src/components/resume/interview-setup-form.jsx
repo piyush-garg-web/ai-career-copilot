@@ -23,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 import {
   Select,
   SelectContent,
@@ -33,6 +34,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 export function InterviewSetupForm({ resumes, jobDescriptions }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [selectedResumeId, setSelectedResumeId] = useState("");
   const [selectedJobDescId, setSelectedJobDescId] = useState("none");
@@ -44,28 +46,28 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
   // Compute config details dynamically
   const estDuration =
     questionCount === "3"
-      ? "5-8 Minutes"
+      ? t("interview.setup.durationExpress")
       : questionCount === "5"
-      ? "10-15 Minutes"
+      ? t("interview.setup.durationFast")
       : questionCount === "10"
-      ? "20-25 Minutes"
-      : "30-40 Minutes";
+      ? t("interview.setup.durationStandard")
+      : t("interview.setup.durationDeep");
   const diffDescription = difficulty === "Easy"
-    ? "Starter queries checking foundational technical concepts and basic resume declarations."
+    ? t("interview.setup.easyDesc")
     : difficulty === "Medium"
-    ? "Standard industry mock questions simulating professional Mid-level engineer behavioral scenarios."
-    : "High-pressure Senior panels checking architecture design, systems constraints, and complex leadership scenarios.";
+    ? t("interview.setup.mediumDesc")
+    : t("interview.setup.hardDesc");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!selectedResumeId) {
-      toast.error("Please select a resume to base the questions on.");
+      toast.error(t("interview.toasts.selectResume"));
       return;
     }
 
     setIsInitializing(true);
-    toast.info("Gemini AI is studying your background and formatting personalized questions...");
+    toast.info(t("interview.toasts.studying"));
 
     try {
       const response = await fetch("/api/interviews", {
@@ -84,15 +86,15 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to initialize mock interview.");
+        throw new Error(errorData.error || t("interview.toasts.setupFailed"));
       }
 
       const data = await response.json();
-      toast.success("Questions generated! Entering session room...");
+      toast.success(t("interview.toasts.sessionEntering"));
       router.push(`/interview/${data.sessionId}`);
     } catch (err) {
       console.error("Interview setup fail:", err);
-      toast.error(err.message || "Failed to generate mock interview questions.");
+      toast.error(err.message || t("interview.toasts.setupFailed"));
     } finally {
       setIsInitializing(false);
     }
@@ -118,10 +120,10 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
             <div className="space-y-1 text-center animate-pulse">
               <h3 className="text-lg font-bold text-foreground flex items-center gap-2 justify-center">
                 <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
-                Crafting Personalized Interview...
+                {t("interview.setup.crafting")}
               </h3>
               <p className="text-xs text-muted-foreground font-semibold max-w-xs px-4">
-                Gemini is researching your competencies, compiling technical scenarios, and configuring evaluation targets.
+                {t("interview.setup.craftingDesc")}
               </p>
             </div>
           </motion.div>
@@ -135,10 +137,10 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
             <div className="space-y-1">
               <CardTitle className="text-base font-bold flex items-center gap-2">
                 <Settings2 className="w-4.5 h-4.5 text-indigo-400" />
-                Configure Practice Session
+                {t("interview.setup.title")}
               </CardTitle>
               <CardDescription className="text-xs font-semibold leading-relaxed">
-                Design a mock interview targeted to your experience levels or pasted requirements.
+                {t("interview.setup.desc")}
               </CardDescription>
             </div>
 
@@ -150,7 +152,7 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
             >
               <Link href="/interview/history">
                 <History className="w-3.5 h-3.5 text-muted-foreground" />
-                History
+                {t("interview.setup.historyBtn")}
               </Link>
             </Button>
           </CardHeader>
@@ -159,11 +161,11 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
               {/* Resume Selection */}
               <div className="space-y-2">
                 <Label htmlFor="resume-select" className="text-xs font-bold text-foreground">
-                  1. Select Resume Profile
+                  {t("interview.setup.resumeLabel")}
                 </Label>
                 <Select onValueChange={setSelectedResumeId} value={selectedResumeId}>
                   <SelectTrigger id="resume-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
-                    <SelectValue placeholder="Select one of your resumes..." />
+                    <SelectValue placeholder={t("interview.setup.resumePlaceholder")} />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
                     {resumes.map((res) => (
@@ -186,15 +188,15 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
               {/* Target Job Description Selection */}
               <div className="space-y-2">
                 <Label htmlFor="jobdesc-select" className="text-xs font-bold text-foreground">
-                  2. Target Job Target (Optional)
+                  {t("interview.setup.jobLabel")}
                 </Label>
                 <Select onValueChange={setSelectedJobDescId} value={selectedJobDescId}>
                   <SelectTrigger id="jobdesc-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
-                    <SelectValue placeholder="Select a job description target..." />
+                    <SelectValue placeholder={t("interview.setup.jobPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
                     <SelectItem value="none" className="rounded-lg cursor-pointer font-bold text-indigo-400">
-                      General Professional Mock (No target JD)
+                      {t("interview.setup.generalMock")}
                     </SelectItem>
                     {jobDescriptions.map((jd) => (
                       <SelectItem
@@ -204,7 +206,7 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
                       >
                         <span className="flex items-center gap-2">
                           <Briefcase className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
-                          <span>{jd.title} {jd.company ? `at ${jd.company}` : ""}</span>
+                          <span>{jd.title} {jd.company ? t("interview.setup.jobAt", { company: jd.company }) : ""}</span>
                         </span>
                       </SelectItem>
                     ))}
@@ -219,16 +221,16 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
                 {/* Interview Type */}
                 <div className="space-y-2">
                   <Label htmlFor="type-select" className="text-xs font-bold text-foreground">
-                    Interview Type
+                    {t("interview.setup.typeLabel")}
                   </Label>
                   <Select onValueChange={setInterviewType} value={interviewType}>
                     <SelectTrigger id="type-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
-                      <SelectItem value="Mixed" className="rounded-lg cursor-pointer">Mixed Focus</SelectItem>
-                      <SelectItem value="Technical" className="rounded-lg cursor-pointer">Technical Questions</SelectItem>
-                      <SelectItem value="Behavioral" className="rounded-lg cursor-pointer">Behavioral Questions (HR)</SelectItem>
+                      <SelectItem value="Mixed" className="rounded-lg cursor-pointer">{t("interview.setup.typeMixed")}</SelectItem>
+                      <SelectItem value="Technical" className="rounded-lg cursor-pointer">{t("interview.setup.typeTech")}</SelectItem>
+                      <SelectItem value="Behavioral" className="rounded-lg cursor-pointer">{t("interview.setup.typeBeh")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -236,16 +238,16 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
                 {/* Difficulty */}
                 <div className="space-y-2">
                   <Label htmlFor="diff-select" className="text-xs font-bold text-foreground">
-                    Difficulty Level
+                    {t("interview.setup.diffLabel")}
                   </Label>
                   <Select onValueChange={setDifficulty} value={difficulty}>
                     <SelectTrigger id="diff-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
-                      <SelectItem value="Easy" className="rounded-lg cursor-pointer">Easy (Starter)</SelectItem>
-                      <SelectItem value="Medium" className="rounded-lg cursor-pointer">Medium (Standard)</SelectItem>
-                      <SelectItem value="Hard" className="rounded-lg cursor-pointer">Hard (Senior)</SelectItem>
+                      <SelectItem value="Easy" className="rounded-lg cursor-pointer">{t("interview.setup.diffEasy")}</SelectItem>
+                      <SelectItem value="Medium" className="rounded-lg cursor-pointer">{t("interview.setup.diffMedium")}</SelectItem>
+                      <SelectItem value="Hard" className="rounded-lg cursor-pointer">{t("interview.setup.diffHard")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -253,17 +255,17 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
                 {/* Question Count */}
                 <div className="space-y-2">
                   <Label htmlFor="count-select" className="text-xs font-bold text-foreground">
-                    Question Count
+                    {t("interview.setup.countLabel")}
                   </Label>
                   <Select onValueChange={setQuestionCount} value={questionCount}>
                     <SelectTrigger id="count-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
-                      <SelectItem value="3" className="rounded-lg cursor-pointer">3 Questions (Express)</SelectItem>
-                      <SelectItem value="5" className="rounded-lg cursor-pointer">5 Questions (Fast)</SelectItem>
-                      <SelectItem value="10" className="rounded-lg cursor-pointer">10 Questions (Standard)</SelectItem>
-                      <SelectItem value="15" className="rounded-lg cursor-pointer">15 Questions (Deep)</SelectItem>
+                      <SelectItem value="3" className="rounded-lg cursor-pointer">{t("interview.setup.countExpress")}</SelectItem>
+                      <SelectItem value="5" className="rounded-lg cursor-pointer">{t("interview.setup.countFast")}</SelectItem>
+                      <SelectItem value="10" className="rounded-lg cursor-pointer">{t("interview.setup.countStandard")}</SelectItem>
+                      <SelectItem value="15" className="rounded-lg cursor-pointer">{t("interview.setup.countDeep")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -275,7 +277,7 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
                 className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs h-10 shadow-md shadow-indigo-500/10 cursor-pointer gap-1.5 mt-4"
               >
                 <Mic className="w-4 h-4" />
-                Begin AI Practice Session
+                {t("interview.setup.beginBtn")}
               </Button>
             </form>
           </CardContent>
@@ -286,14 +288,14 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
           <Card className="border border-border/40 bg-card/60 backdrop-blur-sm p-5 rounded-2xl space-y-4">
             <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
               <Sliders className="w-4 h-4 text-indigo-400" />
-              Session Summary
+              {t("interview.setup.sessionSummary")}
             </h4>
             
             <div className="space-y-3 text-xs font-semibold text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-indigo-400 shrink-0" />
                 <div>
-                  <span className="block text-[10px] text-muted-foreground/60 uppercase">Est. Duration</span>
+                  <span className="block text-[10px] text-muted-foreground/60 uppercase">{t("interview.setup.estDuration")}</span>
                   <span className="text-foreground">{estDuration}</span>
                 </div>
               </div>
@@ -301,7 +303,7 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
               <div className="flex items-center gap-2">
                 <BookOpen className="w-4 h-4 text-indigo-400 shrink-0" />
                 <div>
-                  <span className="block text-[10px] text-muted-foreground/60 uppercase">Question Focus</span>
+                  <span className="block text-[10px] text-muted-foreground/60 uppercase">{t("interview.setup.questionFocus")}</span>
                   <span className="text-foreground">{interviewType} Questions</span>
                 </div>
               </div>
@@ -309,7 +311,7 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
               <div className="flex items-center gap-2">
                 <HelpCircle className="w-4 h-4 text-indigo-400 shrink-0" />
                 <div>
-                  <span className="block text-[10px] text-muted-foreground/60 uppercase">Difficulty Setting</span>
+                  <span className="block text-[10px] text-muted-foreground/60 uppercase">{t("interview.setup.diffSetting")}</span>
                   <span className="text-foreground">{difficulty}</span>
                 </div>
               </div>
@@ -318,19 +320,19 @@ export function InterviewSetupForm({ resumes, jobDescriptions }) {
             <Separator className="bg-border/20" />
 
             <div className="space-y-1.5 text-[10px] font-bold text-muted-foreground">
-              <span className="uppercase text-muted-foreground/60 block">Difficulty Description</span>
+              <span className="uppercase text-muted-foreground/60 block">{t("interview.setup.diffDescLabel")}</span>
               <p className="leading-relaxed font-semibold italic">{diffDescription}</p>
             </div>
           </Card>
 
           {/* Question categories checklist summary */}
           <Card className="border border-border/40 bg-card/60 backdrop-blur-sm p-5 rounded-2xl space-y-3">
-            <h4 className="text-xs font-bold text-foreground">Scored Categories</h4>
+            <h4 className="text-xs font-bold text-foreground">{t("interview.setup.scoredCategoriesTitle")}</h4>
             <div className="space-y-2 text-[11px] font-semibold text-muted-foreground">
-              <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />Technical Competencies</div>
-              <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />Communication & Tone Delivery</div>
-              <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />STAR behavioral scenario logic</div>
-              <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />Problem solving structural steps</div>
+              <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />{t("interview.setup.scoredCategories.tech")}</div>
+              <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />{t("interview.setup.scoredCategories.comm")}</div>
+              <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />{t("interview.setup.scoredCategories.star")}</div>
+              <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />{t("interview.setup.scoredCategories.solve")}</div>
             </div>
           </Card>
         </div>

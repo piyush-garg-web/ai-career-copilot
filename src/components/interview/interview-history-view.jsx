@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 const formatDuration = (totalSecs) => {
   if (!totalSecs) return "0s";
@@ -31,20 +32,21 @@ const formatDuration = (totalSecs) => {
   return m > 0 ? `${m}m ${s}s` : `${s}s`;
 };
 
-const getStatusBadge = (status, score) => {
+const getStatusBadge = (status, score, t) => {
   switch (status) {
     case "ACTIVE":
-      return { label: "In Progress", className: "bg-blue-500/10 text-blue-400 border-blue-500/20" };
+      return { label: t("interview.history.status.active"), className: "bg-blue-500/10 text-blue-400 border-blue-500/20" };
     case "COMPLETED":
-      return { label: `Completed • Score: ${score || 0}%`, className: "bg-green-500/10 text-green-400 border-green-500/20" };
+      return { label: t("interview.history.status.completed", { score: score || 0 }), className: "bg-green-500/10 text-green-400 border-green-500/20" };
     case "ABANDONED":
-      return { label: "Abandoned", className: "bg-muted text-muted-foreground border-border/40" };
+      return { label: t("interview.history.status.abandoned"), className: "bg-muted text-muted-foreground border-border/40" };
     default:
       return { label: status, className: "bg-muted text-muted-foreground border-border/40" };
   }
 };
 
 export function InterviewHistoryView({ initialSessions }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [sessions, setSessions] = useState(initialSessions);
   const [activeFilter, setActiveFilter] = useState("all");
@@ -78,14 +80,14 @@ export function InterviewHistoryView({ initialSessions }) {
       });
       if (res.ok) {
         setSessions((prev) => prev.filter((s) => s.id !== id));
-        toast.success("Interview session deleted successfully.");
+        toast.success(t("interview.history.toasts.deleted"));
         setDeletingId(null);
         router.refresh();
       } else {
-        toast.error("Failed to delete interview session.");
+        toast.error(t("interview.history.toasts.deleteFailed"));
       }
     } catch (e) {
-      toast.error("Error deleting interview session.");
+      toast.error(t("interview.history.toasts.deleteError"));
     }
   };
 
@@ -106,13 +108,13 @@ export function InterviewHistoryView({ initialSessions }) {
           className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground font-semibold transition-colors mb-1"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          Back to Interview Coach
+          {t("interview.history.back")}
         </Link>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">Interview History Logs</h1>
+            <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">{t("interview.history.title")}</h1>
             <p className="text-xs text-muted-foreground font-medium">
-              Inspect overall card ratings, dialogue details, and tailored career coach insights from past practices.
+              {t("interview.history.desc")}
             </p>
           </div>
         </div>
@@ -123,7 +125,7 @@ export function InterviewHistoryView({ initialSessions }) {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-4 rounded-xl flex items-center justify-between">
             <div>
-              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Total Practice Sessions</span>
+              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{t("interview.history.totalSessions")}</span>
               <p className="text-xl font-black text-foreground">{totalSessions}</p>
             </div>
             <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-500"><Activity className="w-5 h-5" /></div>
@@ -131,7 +133,7 @@ export function InterviewHistoryView({ initialSessions }) {
           
           <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-4 rounded-xl flex items-center justify-between">
             <div>
-              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Average Practice Score</span>
+              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{t("interview.history.avgScore")}</span>
               <p className="text-xl font-black text-indigo-400">{avgScore}%</p>
             </div>
             <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-500"><Award className="w-5 h-5" /></div>
@@ -139,7 +141,7 @@ export function InterviewHistoryView({ initialSessions }) {
 
           <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-4 rounded-xl flex items-center justify-between">
             <div>
-              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Highest Scored Panel</span>
+              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{t("interview.history.highestScore")}</span>
               <p className="text-xl font-black text-emerald-400">{maxScore}%</p>
             </div>
             <div className="p-2.5 rounded-xl bg-green-500/10 text-green-500"><CheckCircle2 className="w-5 h-5" /></div>
@@ -147,7 +149,7 @@ export function InterviewHistoryView({ initialSessions }) {
 
           <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-4 rounded-xl flex items-center justify-between">
             <div>
-              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Total Practice Time</span>
+              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">{t("interview.history.totalTime")}</span>
               <p className="text-xl font-black text-teal-400">{formatDuration(totalPracticeTime)}</p>
             </div>
             <div className="p-2.5 rounded-xl bg-teal-500/10 text-teal-500"><Clock className="w-5 h-5" /></div>
@@ -161,9 +163,9 @@ export function InterviewHistoryView({ initialSessions }) {
           <div className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-indigo-400" />
-              Practice score trends
+              {t("interview.history.trendsTitle")}
             </CardTitle>
-            <CardDescription className="text-xs">Chronological representation of your overall ratings scores.</CardDescription>
+            <CardDescription className="text-xs">{t("interview.history.trendsDesc")}</CardDescription>
           </div>
           <div className="h-44 pt-4 flex justify-center items-center">
             {chartPoints.length > 1 ? (
@@ -192,7 +194,7 @@ export function InterviewHistoryView({ initialSessions }) {
                 ))}
               </svg>
             ) : (
-              <p className="text-xs text-muted-foreground font-semibold italic">Complete multiple sessions to chart ratings trends.</p>
+              <p className="text-xs text-muted-foreground font-semibold italic">{t("interview.history.trendsEmpty")}</p>
             )}
           </div>
         </Card>
@@ -208,7 +210,7 @@ export function InterviewHistoryView({ initialSessions }) {
               variant={activeFilter === f ? "default" : "outline"}
               className="h-8 rounded-xl px-4 text-xs font-bold capitalize cursor-pointer"
             >
-              {f}
+              {t(`interview.history.filters.${f}`)}
             </Button>
           ))}
         </div>
@@ -222,15 +224,15 @@ export function InterviewHistoryView({ initialSessions }) {
               <ClipboardCheck className="w-9 h-9" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-foreground">No practice sessions found</h3>
+              <h3 className="text-xl font-bold text-foreground">{t("interview.history.empty.title")}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed font-semibold">
-                You haven&apos;t started or completed any sessions matching your filter yet. Let&apos;s run your first interview coaching session!
+                {t("interview.history.empty.desc")}
               </p>
             </div>
             <Button asChild className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold gap-1.5 cursor-pointer shadow-md shadow-indigo-500/10 h-10 px-5">
               <Link href="/interview">
                 <Sparkles className="w-4.5 h-4.5 animate-pulse" />
-                Start mock session
+                {t("interview.history.empty.btn")}
               </Link>
             </Button>
           </CardContent>
@@ -239,7 +241,7 @@ export function InterviewHistoryView({ initialSessions }) {
         /* Sessions List Grid */
         <div className="grid gap-5 sm:grid-cols-2">
           {filteredSessions.map((sess) => {
-            const badge = getStatusBadge(sess.status, sess.overallScore);
+            const badge = getStatusBadge(sess.status, sess.overallScore, t);
             const isDeleting = deletingId === sess.id;
 
             // Extrapolate detailed category scores for older history entries
@@ -263,7 +265,7 @@ export function InterviewHistoryView({ initialSessions }) {
                         {sess.title}
                       </CardTitle>
                       <span className="text-[10px] font-semibold text-muted-foreground/80 tracking-wide uppercase mt-0.5 block">
-                        {sess.role} role • Difficulty: {sess.difficulty || "Medium"}
+                        {t("interview.history.card.difficulty", { role: sess.role, difficulty: sess.difficulty || "Medium" })}
                       </span>
                     </div>
                   </div>
@@ -277,7 +279,7 @@ export function InterviewHistoryView({ initialSessions }) {
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
-                      <span>Duration: {formatDuration(sess.duration)}</span>
+                      <span>{t("interview.history.card.duration", { val: formatDuration(sess.duration) })}</span>
                     </div>
                   </div>
 
@@ -285,15 +287,15 @@ export function InterviewHistoryView({ initialSessions }) {
                   {sess.status === "COMPLETED" && (
                     <div className="grid grid-cols-3 gap-2 bg-muted/30 p-2.5 rounded-xl border border-border/10 text-[10px] font-bold text-center">
                       <div>
-                        <span className="text-muted-foreground block text-[8px] uppercase">Tech</span>
+                        <span className="text-muted-foreground block text-[8px] uppercase">{t("interview.result.tech")}</span>
                         <span className="text-indigo-400">{tech}%</span>
                       </div>
                       <div className="border-l border-border/20">
-                        <span className="text-muted-foreground block text-[8px] uppercase">Clarity</span>
+                        <span className="text-muted-foreground block text-[8px] uppercase">{t("interview.result.clarity")}</span>
                         <span className="text-teal-400">{comm}%</span>
                       </div>
                       <div className="border-l border-border/20">
-                        <span className="text-muted-foreground block text-[8px] uppercase">Confidence</span>
+                        <span className="text-muted-foreground block text-[8px] uppercase">{t("interview.result.confidence")}</span>
                         <span className="text-amber-400">{conf}%</span>
                       </div>
                     </div>
@@ -301,7 +303,7 @@ export function InterviewHistoryView({ initialSessions }) {
 
                   {isDeleting && (
                     <div className="p-2.5 rounded-xl bg-destructive/10 text-destructive border border-destructive/20 text-[11px] font-semibold flex flex-col gap-2">
-                      <span>Delete this session log history permanently?</span>
+                      <span>{t("interview.history.card.deleteConfirm")}</span>
                       <div className="flex justify-end gap-1.5">
                         <Button
                           size="sm"
@@ -309,7 +311,7 @@ export function InterviewHistoryView({ initialSessions }) {
                           onClick={() => handleDeleteSession(sess.id)}
                           className="h-6 rounded-lg text-[10px] px-2.5 font-bold cursor-pointer"
                         >
-                          Confirm
+                          {t("interview.history.card.confirmBtn")}
                         </Button>
                         <Button
                           size="sm"
@@ -317,7 +319,7 @@ export function InterviewHistoryView({ initialSessions }) {
                           onClick={() => setDeletingId(null)}
                           className="h-6 rounded-lg text-[10px] px-2.5 font-bold bg-transparent border-destructive/20 hover:bg-destructive/10 cursor-pointer"
                         >
-                          Cancel
+                          {t("interview.history.card.cancelBtn")}
                         </Button>
                       </div>
                     </div>
@@ -340,7 +342,7 @@ export function InterviewHistoryView({ initialSessions }) {
                       >
                         <Link href={`/interview/${sess.id}/results`}>
                           <Eye className="w-3.5 h-3.5" />
-                          View Report
+                          {t("interview.history.card.viewReport")}
                         </Link>
                       </Button>
                     ) : (
@@ -352,7 +354,7 @@ export function InterviewHistoryView({ initialSessions }) {
                       >
                         <Link href={`/interview/${sess.id}`}>
                           <ArrowRight className="w-3.5 h-3.5 text-indigo-400" />
-                          Resume Session
+                          {t("interview.history.card.resumeSession")}
                         </Link>
                       </Button>
                     )}
@@ -363,7 +365,7 @@ export function InterviewHistoryView({ initialSessions }) {
                       variant="ghost"
                       size="icon"
                       className="w-8 h-8 rounded-xl border border-border/40 hover:bg-accent cursor-pointer text-muted-foreground hover:text-foreground"
-                      title="Retry practice session"
+                      title={t("interview.history.card.retryTitle")}
                     >
                       <Link href="/interview">
                         <RotateCcw className="w-3.5 h-3.5" />
@@ -377,7 +379,7 @@ export function InterviewHistoryView({ initialSessions }) {
                         size="icon"
                         onClick={() => setDeletingId(sess.id)}
                         className="w-8 h-8 rounded-xl border border-border/40 hover:bg-destructive/10 text-muted-foreground hover:text-destructive cursor-pointer"
-                        title="Delete session"
+                        title={t("interview.history.card.deleteTitle")}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </Button>

@@ -26,6 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { PageHeader } from "@/components/shared/page-header";
 import { toast } from "sonner";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 const formatFileSize = (bytes) => {
   if (!bytes || bytes === 0) return "0 Bytes";
@@ -36,20 +37,20 @@ const formatFileSize = (bytes) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 };
 
-const getStatusBadge = (status) => {
+const getStatusBadge = (status, t) => {
   switch (status) {
     case "UPLOADED":
-      return { label: "Uploaded", className: "bg-blue-500/10 text-blue-400 border-blue-500/20" };
+      return { label: t("resume.status.uploaded"), className: "bg-blue-500/10 text-blue-400 border-blue-500/20" };
     case "PARSING":
-      return { label: "Parsing", className: "bg-amber-500/10 text-amber-400 border-amber-500/20" };
+      return { label: t("resume.status.parsing"), className: "bg-amber-500/10 text-amber-400 border-amber-500/20" };
     case "PARSED":
-      return { label: "Parsed", className: "bg-teal-500/10 text-teal-400 border-teal-500/20" };
+      return { label: t("resume.status.parsed"), className: "bg-teal-500/10 text-teal-400 border-teal-500/20" };
     case "ANALYZING":
-      return { label: "Analyzing", className: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20" };
+      return { label: t("resume.status.analyzing"), className: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20" };
     case "ANALYZED":
-      return { label: "Analyzed", className: "bg-green-500/10 text-green-400 border-green-500/20" };
+      return { label: t("resume.status.analyzed"), className: "bg-green-500/10 text-green-400 border-green-500/20" };
     case "ERROR":
-      return { label: "Error", className: "bg-destructive/10 text-destructive border-destructive/20" };
+      return { label: t("resume.status.error"), className: "bg-destructive/10 text-destructive border-destructive/20" };
     default:
       return { label: status, className: "bg-muted text-muted-foreground border-border/40" };
   }
@@ -64,6 +65,7 @@ const getGrade = (score) => {
 };
 
 export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
+  const { t } = useTranslation();
   const router = useRouter();
 
   // Find latest analyzed scorecard
@@ -84,7 +86,7 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
 
   const handlePrint = () => {
     window.print();
-    toast.success("Preparing ATS scorecards report print view...");
+    toast.success(t("ats.toasts.preparingPrint"));
   };
 
   // Compile SVG line graph coordinates for the analyzed resumes (limit to 5)
@@ -110,8 +112,8 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
       `}</style>
 
       <PageHeader
-        title="ATS Score Optimizer"
-        description="Verify compatibility of your resumes with parsing engines, optimize keyword density, and identify structural gaps."
+        title={t("ats.title")}
+        description={t("ats.description")}
         actions={
           analyzedResumes.length > 0 && (
             <Button
@@ -121,7 +123,7 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
               className="rounded-xl border-border/40 font-semibold text-xs h-9 cursor-pointer print:hidden"
             >
               <Download className="w-3.5 h-3.5 mr-1.5" />
-              Download ATS Report
+              {t("ats.downloadBtn")}
             </Button>
           )
         }
@@ -132,17 +134,17 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
           {/* Executive Grade & Benchmark Summary */}
           <Card className="border-border/40 bg-card/60 backdrop-blur-sm shadow-sm p-6 flex flex-col justify-between items-center text-center">
             <div className="space-y-2">
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">ATS Grade</span>
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{t("ats.grade")}</span>
               <div className="w-16 h-16 rounded-full border border-indigo-500/30 flex items-center justify-center text-2xl font-black bg-indigo-500/5 text-indigo-400">
                 {currentGrade}
               </div>
             </div>
             <div className="space-y-1.5 pt-4">
               <span className="text-2xl font-black text-foreground">{currentAts}%</span>
-              <span className="text-[10px] text-muted-foreground font-semibold block">Your Current score</span>
+              <span className="text-[10px] text-muted-foreground font-semibold block">{t("ats.currentScore")}</span>
             </div>
             <p className="text-[10px] text-muted-foreground font-semibold pt-2 leading-relaxed">
-              Target a score above 80% to bypass initial parsing filters.
+              {t("ats.targetInfo")}
             </p>
           </Card>
 
@@ -150,14 +152,14 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
           <Card className="border-border/40 bg-card/60 backdrop-blur-sm shadow-sm p-6 space-y-4 lg:col-span-3">
             <h3 className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5 text-indigo-400">
               <ShieldCheck className="w-4 h-4" />
-              Industry ATS Benchmarks Comparison
+              {t("ats.benchmarkTitle")}
             </h3>
             
             <div className="space-y-3 pt-2">
               {/* Average ATS */}
               <div className="space-y-1">
                 <div className="flex justify-between text-[11px] font-bold">
-                  <span className="text-muted-foreground">Average ATS Score</span>
+                  <span className="text-muted-foreground">{t("ats.averageAts")}</span>
                   <span className="text-foreground">{benchmarkAverage}%</span>
                 </div>
                 <Progress value={benchmarkAverage} className="h-1.5 bg-accent" />
@@ -166,7 +168,7 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
               {/* Your ATS */}
               <div className="space-y-1">
                 <div className="flex justify-between text-[11px] font-bold">
-                  <span className="text-indigo-400">Your Current ATS Score</span>
+                  <span className="text-indigo-400">{t("ats.yourCurrentAts")}</span>
                   <span className="text-indigo-400">{currentAts}%</span>
                 </div>
                 <Progress value={currentAts} className="h-2 bg-indigo-600/30 [&>div]:bg-indigo-600" />
@@ -175,7 +177,7 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
               {/* Top 10% */}
               <div className="space-y-1">
                 <div className="flex justify-between text-[11px] font-bold">
-                  <span className="text-emerald-400">Top 10% Industry Score</span>
+                  <span className="text-emerald-400">{t("ats.topScore")}</span>
                   <span className="text-emerald-400">{top10Percent}%</span>
                 </div>
                 <Progress value={top10Percent} className="h-1.5 bg-accent" />
@@ -193,10 +195,10 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
             <div>
               <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-cyan-400" />
-                ATS Trend Over Time
+                {t("ats.trendTitle")}
               </CardTitle>
               <CardDescription className="text-xs">
-                History of scans showing progress and optimizations.
+                {t("ats.trendDesc")}
               </CardDescription>
             </div>
             <div className="h-44 pt-4 flex justify-center items-center">
@@ -232,7 +234,7 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
                   ))}
                 </svg>
               ) : (
-                <p className="text-xs text-muted-foreground font-semibold italic">Upload and scan multiple resumes to plot a trend chart.</p>
+                <p className="text-xs text-muted-foreground font-semibold italic">{t("ats.trendEmpty")}</p>
               )}
             </div>
           </Card>
@@ -240,9 +242,9 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
           {/* ATS Checklist Cards */}
           <Card className="border-border/40 bg-card/60 backdrop-blur-sm shadow-sm p-6 lg:col-span-5 space-y-4">
             <div>
-              <CardTitle className="text-sm font-bold">ATS Structural Checklist</CardTitle>
+              <CardTitle className="text-sm font-bold">{t("ats.checklist.title")}</CardTitle>
               <CardDescription className="text-xs">
-                Essential checks to ensure error-free parsing.
+                {t("ats.checklist.desc")}
               </CardDescription>
             </div>
             
@@ -250,50 +252,50 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
               <div className="flex items-center justify-between border-b border-border/20 pb-2">
                 <span className="flex items-center gap-1.5">
                   {hasFormatting ? <Check className="w-4 h-4 text-green-500" /> : <X className="w-4 h-4 text-rose-500" />}
-                  Layout formatting
+                  {t("ats.checklist.layout")}
                 </span>
                 <Badge variant="outline" className={hasFormatting ? "bg-green-500/10 text-green-500" : "bg-rose-500/10 text-rose-500"}>
-                  {hasFormatting ? "Clean" : "Needs Review"}
+                  {hasFormatting ? t("ats.checklist.clean") : t("ats.checklist.needsReview")}
                 </Badge>
               </div>
 
               <div className="flex items-center justify-between border-b border-border/20 pb-2">
                 <span className="flex items-center gap-1.5">
                   {hasSections ? <Check className="w-4 h-4 text-green-500" /> : <X className="w-4 h-4 text-rose-500" />}
-                  Section indexing
+                  {t("ats.checklist.sections")}
                 </span>
                 <Badge variant="outline" className={hasSections ? "bg-green-500/10 text-green-500" : "bg-rose-500/10 text-rose-500"}>
-                  {hasSections ? "Complete" : "Missing Info"}
+                  {hasSections ? t("ats.checklist.complete") : t("ats.checklist.missing")}
                 </Badge>
               </div>
 
               <div className="flex items-center justify-between border-b border-border/20 pb-2">
                 <span className="flex items-center gap-1.5">
                   {hasKeywords ? <Check className="w-4 h-4 text-green-500" /> : <X className="w-4 h-4 text-rose-500" />}
-                  Keyword density
+                  {t("ats.checklist.keywords")}
                 </span>
                 <Badge variant="outline" className={hasKeywords ? "bg-green-500/10 text-green-500" : "bg-rose-500/10 text-rose-500"}>
-                  {hasKeywords ? "Optimized" : "Low Density"}
+                  {hasKeywords ? t("ats.checklist.optimized") : t("ats.checklist.low")}
                 </Badge>
               </div>
 
               <div className="flex items-center justify-between border-b border-border/20 pb-2">
                 <span className="flex items-center gap-1.5">
                   {hasGrammar ? <Check className="w-4 h-4 text-green-500" /> : <X className="w-4 h-4 text-rose-500" />}
-                  Active grammar
+                  {t("ats.checklist.grammar")}
                 </span>
                 <Badge variant="outline" className={hasGrammar ? "bg-green-500/10 text-green-500" : "bg-rose-500/10 text-rose-500"}>
-                  {hasGrammar ? "Valid" : "Grammar Review"}
+                  {hasGrammar ? t("ats.checklist.valid") : t("ats.checklist.grammarReview")}
                 </Badge>
               </div>
 
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
                   {hasReadability ? <Check className="w-4 h-4 text-green-500" /> : <X className="w-4 h-4 text-rose-500" />}
-                  Parser readability
+                  {t("ats.checklist.readability")}
                 </span>
                 <Badge variant="outline" className={hasReadability ? "bg-green-500/10 text-green-500" : "bg-rose-500/10 text-rose-500"}>
-                  {hasReadability ? "High" : "Low Index"}
+                  {hasReadability ? t("ats.checklist.high") : t("ats.checklist.lowIndex")}
                 </Badge>
               </div>
             </div>
@@ -309,15 +311,15 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
               <Gauge className="w-9 h-9" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-bold text-foreground">No Resumes Uploaded Yet</h3>
+              <h3 className="text-xl font-bold text-foreground">{t("ats.empty.title")}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed font-semibold">
-                Upload your portfolio resume to get immediate parsing scan results and optimization keyword checklists.
+                {t("ats.empty.desc")}
               </p>
             </div>
             <Button asChild className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold gap-1.5 cursor-pointer shadow-md shadow-blue-500/10 h-10 px-5">
               <Link href="/resume/upload">
                 <Plus className="w-4.5 h-4.5" />
-                Upload Resume
+                {t("ats.empty.btn")}
               </Link>
             </Button>
           </CardContent>
@@ -325,10 +327,10 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
       ) : (
         /* Scorecards list */
         <div className="space-y-4">
-          <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">Resume ATS Optimization History</h2>
+          <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">{t("ats.history.title")}</h2>
           <div className="grid gap-4 grid-cols-1">
             {resumes.map((res) => {
-              const badge = getStatusBadge(res.status);
+              const badge = getStatusBadge(res.status, t);
               const analysis = res.analysis;
               const missingKeywords = analysis?.keywords?.missingKeywords || [];
 
@@ -349,7 +351,7 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
                         <div className="flex items-center gap-3 text-[10px] text-muted-foreground/80 mt-1">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
-                            {new Date(res.createdAt).toLocaleDateString("en-US")}
+                            {new Date(res.createdAt).toLocaleDateString()}
                           </span>
                           <span>•</span>
                           <span className="flex items-center gap-1">
@@ -368,7 +370,7 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                         {/* ATS Circle Gauge */}
                         <div className="md:col-span-1 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-border/20 pb-4 md:pb-0 md:pr-6">
-                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">ATS Score</span>
+                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">{t("ats.history.scoreTitle")}</span>
                           <div className="relative flex items-center justify-center w-24 h-24">
                             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                               <circle
@@ -396,7 +398,7 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
                             <span className="absolute text-lg font-black text-foreground">{analysis.atsScore}%</span>
                           </div>
                           <span className="text-[10px] text-muted-foreground font-semibold mt-3 text-center">
-                            {analysis.atsScore >= 80 ? "Optimized" : "Needs Review"}
+                            {analysis.atsScore >= 80 ? t("ats.checklist.optimized") : t("ats.checklist.needsReview")}
                           </span>
                         </div>
 
@@ -405,7 +407,7 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
                           <div className="space-y-2">
                             <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
                               <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                              Missing Keywords to Optimize (ATS Booster)
+                              {t("ats.history.booster")}
                             </h4>
                             {missingKeywords.length > 0 ? (
                               <div className="flex flex-wrap gap-1.5">
@@ -422,13 +424,13 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
                               </div>
                             ) : (
                               <p className="text-xs text-green-500 font-semibold italic">
-                                No missing keywords detected! Your resume is well optimized for ATS terms.
+                                {t("ats.history.boosterEmpty")}
                               </p>
                             )}
                           </div>
 
                           <div className="space-y-1">
-                            <h4 className="text-xs font-bold text-foreground">Score Summary</h4>
+                            <h4 className="text-xs font-bold text-foreground">{t("ats.history.summary")}</h4>
                             <p className="text-xs text-muted-foreground font-semibold leading-relaxed line-clamp-2">
                               {analysis.summary}
                             </p>
@@ -440,8 +442,8 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
                         <AlertCircle className="w-6 h-6 text-muted-foreground/60 mb-2" />
                         <p className="text-xs text-muted-foreground font-semibold max-w-sm">
                           {res.status === "PARSED"
-                            ? "This resume is ready for analysis, but you haven't run the ATS analyzer on it yet."
-                            : "This resume is currently processing. Once parsing completes, you can run the ATS analysis scorecard."}
+                            ? t("ats.history.readyForAnalysis")
+                            : t("ats.history.processing")}
                         </p>
                       </div>
                     )}
@@ -450,21 +452,21 @@ export function AtsClientView({ resumes, averageAtsScore, analyzedResumes }) {
                     {res.status === "ANALYZED" ? (
                       <Button asChild variant="default" size="sm" className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs h-8 cursor-pointer gap-1">
                         <Link href={`/resume/analysis?id=${res.id}`}>
-                          View Optimization Details
+                          {t("ats.history.viewDetails")}
                           <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                       </Button>
                     ) : res.status === "PARSED" ? (
                       <Button asChild variant="default" size="sm" className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs h-8 cursor-pointer gap-1">
                         <Link href={`/resume/analysis?id=${res.id}`}>
-                          Run ATS Analysis
+                          {t("ats.history.runAnalysis")}
                           <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                       </Button>
                     ) : (
                       <Button asChild variant="outline" size="sm" className="rounded-xl border-border/40 font-semibold text-xs h-8 cursor-pointer">
                         <Link href="/resume">
-                          Manage Resume
+                          {t("ats.history.manage")}
                         </Link>
                       </Button>
                     )}

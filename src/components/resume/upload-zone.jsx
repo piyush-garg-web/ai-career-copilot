@@ -17,8 +17,10 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 export function UploadZone({ onUploadComplete }) {
+  const { t } = useTranslation();
   const [isDragging, setIsDragging] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("IDLE"); // IDLE, VALIDATING, UPLOADING, SUCCESS, ERROR
   const [fileDetails, setFileDetails] = useState(null);
@@ -34,8 +36,8 @@ export function UploadZone({ onUploadComplete }) {
 
       if (!resumeId) {
         setUploadStatus("ERROR");
-        setErrorMessage("Upload succeeded, but could not retrieve resume database ID.");
-        toast.error("Upload tracking error");
+        setErrorMessage(t("resume.upload.toasts.retrieveIdError"));
+        toast.error(t("resume.upload.toasts.trackingError"));
         return;
       }
 
@@ -49,12 +51,12 @@ export function UploadZone({ onUploadComplete }) {
 
         if (!parseResponse.ok) {
           const errorData = await parseResponse.json();
-          throw new Error(errorData.error || "Failed to extract plain text from resume.");
+          throw new Error(errorData.error || t("resume.upload.toasts.extractError"));
         }
 
         setUploadProgress(100);
         setUploadStatus("SUCCESS");
-        toast.success("Resume uploaded and parsed successfully!");
+        toast.success(t("resume.upload.toasts.success"));
         
         if (onUploadComplete && res?.[0]) {
           setTimeout(() => {
@@ -63,14 +65,14 @@ export function UploadZone({ onUploadComplete }) {
         }
       } catch (err) {
         setUploadStatus("ERROR");
-        setErrorMessage(err.message || "Something went wrong during document parsing.");
-        toast.error("Parsing failed");
+        setErrorMessage(err.message || t("resume.upload.toasts.extractError"));
+        toast.error(t("resume.upload.toasts.parsingFailed"));
       }
     },
     onUploadError: (err) => {
       setUploadStatus("ERROR");
-      setErrorMessage(err.message || "An unexpected error occurred during upload.");
-      toast.error("Upload failed");
+      setErrorMessage(err.message || t("resume.upload.toasts.unexpectedUploadError"));
+      toast.error(t("resume.upload.toasts.uploadFailed"));
     },
     onUploadProgress: (progress) => {
       setUploadProgress(progress);
@@ -89,20 +91,20 @@ export function UploadZone({ onUploadComplete }) {
 
   // Helper: Client-side file validation
   const validateFile = (file) => {
-    if (!file) return "No file selected.";
+    if (!file) return t("resume.upload.validation.noFile");
 
     // Allowed extensions
     const allowedExtensions = ["pdf", "docx"];
     const fileExtension = file.name.split(".").pop().toLowerCase();
     
     if (!allowedExtensions.includes(fileExtension)) {
-      return "Unsupported file type. Only PDF and DOCX files are allowed.";
+      return t("resume.upload.validation.unsupportedType");
     }
 
     // Limit size to 10MB
     const maxFileSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxFileSize) {
-      return "File is too large. The maximum allowed size is 10MB.";
+      return t("resume.upload.validation.tooLarge");
     }
 
     return null;
@@ -242,13 +244,13 @@ export function UploadZone({ onUploadComplete }) {
 
             <div className="text-center space-y-1.5 max-w-sm">
               <p className="text-sm font-semibold text-foreground">
-                {isDragging ? "Drop your file here" : "Drag & drop your resume here"}
+                {isDragging ? t("resume.upload.dropHere") : t("resume.upload.dragHere")}
               </p>
               <p className="text-xs text-muted-foreground font-medium">
-                or <span className="text-blue-500 font-semibold group-hover:underline">browse files</span> from your computer
+                {t("resume.upload.or")} <span className="text-blue-500 font-semibold group-hover:underline">{t("resume.upload.browse")}</span> {t("resume.upload.fromComputer")}
               </p>
               <p className="text-[10px] text-muted-foreground/60 font-semibold uppercase tracking-wider pt-3">
-                Supported formats: PDF, DOCX (Max 10MB)
+                {t("resume.upload.supportedFormats")}
               </p>
             </div>
 
@@ -256,7 +258,7 @@ export function UploadZone({ onUploadComplete }) {
               <div className="absolute inset-0 bg-background/60 backdrop-blur-sm flex items-center justify-center">
                 <div className="flex items-center gap-2.5 px-4 py-2 bg-card rounded-xl border border-border shadow-md">
                   <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
-                  <span className="text-xs font-semibold text-foreground">Validating file...</span>
+                  <span className="text-xs font-semibold text-foreground">{t("resume.upload.validating")}</span>
                 </div>
               </div>
             )}
@@ -281,7 +283,7 @@ export function UploadZone({ onUploadComplete }) {
                   {fileDetails.name}
                 </p>
                 <p className="text-xs text-muted-foreground font-semibold">
-                  {fileDetails.type} File • {formatFileSize(fileDetails.size)}
+                  {fileDetails.type} • {formatFileSize(fileDetails.size)}
                 </p>
               </div>
               <div className="flex items-center justify-center shrink-0">
@@ -291,7 +293,7 @@ export function UploadZone({ onUploadComplete }) {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
-                <span>Uploading file...</span>
+                <span>{t("resume.upload.uploading")}</span>
                 <span className="text-blue-500 font-bold">{uploadProgress}%</span>
               </div>
               <Progress value={uploadProgress} className="h-2 bg-accent" />
@@ -317,7 +319,7 @@ export function UploadZone({ onUploadComplete }) {
                   {fileDetails.name}
                 </p>
                 <p className="text-xs text-muted-foreground font-semibold">
-                  {fileDetails.type} File • {formatFileSize(fileDetails.size)}
+                  {fileDetails.type} • {formatFileSize(fileDetails.size)}
                 </p>
               </div>
               <div className="flex items-center justify-center shrink-0">
@@ -327,8 +329,8 @@ export function UploadZone({ onUploadComplete }) {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground">
-                <span>Extracting plain text...</span>
-                <span className="text-indigo-500 font-bold">Processing</span>
+                <span>{t("resume.upload.parsing")}</span>
+                <span className="text-indigo-500 font-bold">{t("resume.upload.processing")}</span>
               </div>
               <Progress value={95} className="h-2 bg-accent [&>div]:bg-indigo-500" />
             </div>
@@ -348,11 +350,11 @@ export function UploadZone({ onUploadComplete }) {
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <h3 className="text-base font-bold text-foreground flex items-center gap-1">
-              Upload Successful!
+              {t("resume.upload.success.title")}
               <Sparkles className="w-4 h-4 text-green-500 inline" />
             </h3>
             <p className="text-xs text-muted-foreground font-medium max-w-xs mt-1.5">
-              &quot;{fileDetails.name}&quot; has been safely saved to your profile. Redirecting you shortly...
+              {t("resume.upload.success.desc", { name: fileDetails.name })}
             </p>
           </motion.div>
         )}
@@ -371,7 +373,7 @@ export function UploadZone({ onUploadComplete }) {
                 <AlertCircle className="w-5 h-5" />
               </div>
               <div className="flex-1 space-y-1">
-                <h4 className="text-sm font-bold text-foreground">Upload Blocked</h4>
+                <h4 className="text-sm font-bold text-foreground">{t("resume.upload.error.title")}</h4>
                 <p className="text-xs text-muted-foreground font-medium leading-relaxed">
                   {errorMessage}
                 </p>
@@ -386,7 +388,7 @@ export function UploadZone({ onUploadComplete }) {
                 className="rounded-xl border-border/40 gap-1.5 text-xs h-8 cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
-                Try again
+                {t("resume.upload.error.tryAgain")}
               </Button>
             </div>
           </motion.div>

@@ -27,18 +27,16 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 const formatDate = (dateStr) => {
   if (!dateStr) return "N/A";
   const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  return date.toLocaleDateString();
 };
 
 export function JobMatchResultView({ match }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [checkedSuggestions, setCheckedSuggestions] = useState(new Set());
 
@@ -54,7 +52,7 @@ export function JobMatchResultView({ match }) {
 
   const handlePrint = () => {
     window.print();
-    toast.success("Preparing Job Match PDF report...");
+    toast.success(t("jobMatch.toasts.preparingPrint"));
   };
 
   const resume = match.resume || {};
@@ -78,7 +76,12 @@ export function JobMatchResultView({ match }) {
   const softSkillsScore = match.matchScore >= 80 ? 90 : match.matchScore >= 60 ? 80 : 70;
 
   // Recommendation Level
-  const recommendation = match.matchScore >= 80 ? "Strong Match" : match.matchScore >= 60 ? "Moderate Match" : "Weak Match";
+  const recommendation = match.matchScore >= 80 
+    ? t("jobMatch.result.strongMatch") 
+    : match.matchScore >= 60 
+      ? t("jobMatch.result.moderateMatch") 
+      : t("jobMatch.result.weakMatch");
+      
   const recommendationColor = match.matchScore >= 80 ? "text-green-500 bg-green-500/10 border-green-500/20" : match.matchScore >= 60 ? "text-amber-500 bg-amber-500/10 border-amber-500/20" : "text-rose-500 bg-rose-500/10 border-rose-500/20";
 
   return (
@@ -103,20 +106,20 @@ export function JobMatchResultView({ match }) {
             className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground font-semibold transition-colors mb-1"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            Compare Another Job
+            {t("jobMatch.result.back")}
           </Link>
           <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground truncate max-w-xl">
-            {jobDesc.title || "Target Job Profile"} Matching Report
+            {jobDesc.title || t("jobMatch.result.targetJob")} {t("jobMatch.result.title")}
           </h1>
           <p className="text-xs text-muted-foreground font-medium flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="font-semibold text-foreground">{jobDesc.company || "Target Company"}</span>
+            <span className="font-semibold text-foreground">{jobDesc.company || t("jobMatch.result.targetCompany")}</span>
             <span>•</span>
             <span className="flex items-center gap-1 text-foreground/80">
               <Briefcase className="w-3.5 h-3.5 text-muted-foreground" />
               {resume.fileName}
             </span>
             <span>•</span>
-            <span>Matched {formatDate(match.createdAt)}</span>
+            <span>{t("jobMatch.result.matched", { date: formatDate(match.createdAt) })}</span>
           </p>
         </div>
 
@@ -129,7 +132,7 @@ export function JobMatchResultView({ match }) {
             className="rounded-xl border-border/40 font-semibold text-xs h-9 cursor-pointer"
           >
             <Download className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
-            Download PDF Report
+            {t("jobMatch.result.downloadBtn")}
           </Button>
 
           <Button
@@ -139,7 +142,7 @@ export function JobMatchResultView({ match }) {
             className="rounded-xl font-bold text-xs h-9 bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer shadow-md shadow-indigo-500/10"
           >
             <Link href="/resume">
-              View Resumes
+              {t("jobMatch.result.viewResumes")}
             </Link>
           </Button>
         </div>
@@ -152,7 +155,7 @@ export function JobMatchResultView({ match }) {
         {/* MATCH SCORE CIRCULAR PROGRESS RING */}
         <Card className="border-border/40 bg-card/60 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center p-6 text-center shadow-sm">
           <CardHeader className="pb-2 text-center">
-            <CardTitle className="text-sm font-bold">Overall Match Score</CardTitle>
+            <CardTitle className="text-sm font-bold">{t("jobMatch.result.overallScore")}</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center p-0 space-y-4">
             <div className="relative flex items-center justify-center w-24 h-24">
@@ -186,18 +189,18 @@ export function JobMatchResultView({ match }) {
           <div className="space-y-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-indigo-400">
               <Sparkles className="w-4 h-4" />
-              Role Fit Executive Summary
+              {t("jobMatch.result.roleFitSummary")}
             </CardTitle>
             <p className="text-xs font-semibold leading-relaxed text-foreground/90">
-              {match.summary || "No comparison summary generated."}
+              {match.summary || t("jobMatch.result.noSummary")}
             </p>
           </div>
           <div className="pt-4 border-t border-border/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-[11px] font-bold text-muted-foreground">
             <span className="flex items-center gap-1.5 text-emerald-400">
               <ShieldCheck className="w-4 h-4" />
-              Keywords alignment matches target profile
+              {t("jobMatch.result.alignSuccess")}
             </span>
-            <span className="italic text-[10px]">Estimated ATS Optimization impact: +12%</span>
+            <span className="italic text-[10px]">{t("jobMatch.result.alignImpact")}</span>
           </div>
         </Card>
       </div>
@@ -205,20 +208,20 @@ export function JobMatchResultView({ match }) {
       {/* Top Recommendations Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-4 rounded-xl space-y-1 border border-border/20">
-          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Priority Improvements</span>
-          <p className="text-sm font-black text-foreground">{match.matchScore >= 80 ? "Minor Edits" : "Resume Tailoring Required"}</p>
+          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">{t("jobMatch.result.priority")}</span>
+          <p className="text-sm font-black text-foreground">{match.matchScore >= 80 ? t("jobMatch.result.minorEdits") : t("jobMatch.result.tailoringRequired")}</p>
         </Card>
         <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-4 rounded-xl space-y-1 border border-border/20">
-          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Keyword Density</span>
-          <p className="text-sm font-black text-amber-500">{missingKeywords.length > 0 ? "Boost Needed" : "Optimal"}</p>
+          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">{t("jobMatch.result.density")}</span>
+          <p className="text-sm font-black text-amber-500">{missingKeywords.length > 0 ? t("jobMatch.result.boostNeeded") : t("jobMatch.result.optimal")}</p>
         </Card>
         <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-4 rounded-xl space-y-1 border border-border/20">
-          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">ATS Improvement</span>
-          <p className="text-sm font-black text-indigo-400">Potential score of {Math.min(98, match.matchScore + 15)}%</p>
+          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">{t("jobMatch.result.atsImprovement")}</span>
+          <p className="text-sm font-black text-indigo-400">{t("jobMatch.result.atsPotential", { val: Math.min(98, match.matchScore + 15) })}</p>
         </Card>
         <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-4 rounded-xl space-y-1 border border-border/20">
-          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Tailoring Actions</span>
-          <p className="text-sm font-black text-foreground">{suggestions.length} Tasks Pending</p>
+          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">{t("jobMatch.result.actions")}</span>
+          <p className="text-sm font-black text-foreground">{t("jobMatch.result.tasksPending", { count: suggestions.length })}</p>
         </Card>
       </div>
 
@@ -226,14 +229,14 @@ export function JobMatchResultView({ match }) {
       <Card className="border-border/40 bg-card/60 backdrop-blur-sm rounded-2xl p-6 shadow-sm space-y-4">
         <CardTitle className="text-sm font-bold flex items-center gap-2 text-indigo-400">
           <Sliders className="w-4.5 h-4.5" />
-          Qualifications Match Breakdown
+          {t("jobMatch.result.breakdownTitle")}
         </CardTitle>
 
         <div className="space-y-3.5">
           {/* Technical Skills */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs font-semibold text-muted-foreground">
-              <span>Technical Skills Fit</span>
+              <span>{t("jobMatch.result.techSkillsFit")}</span>
               <span className="text-foreground">{techSkillsScore}%</span>
             </div>
             <Progress value={techSkillsScore} className="h-1.5 bg-accent" />
@@ -242,7 +245,7 @@ export function JobMatchResultView({ match }) {
           {/* Work Experience */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs font-semibold text-muted-foreground">
-              <span>Professional Experience Match</span>
+              <span>{t("jobMatch.result.experienceFit")}</span>
               <span className="text-foreground">{experienceScore}%</span>
             </div>
             <Progress value={experienceScore} className="h-1.5 bg-accent" />
@@ -251,7 +254,7 @@ export function JobMatchResultView({ match }) {
           {/* Key Projects */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs font-semibold text-muted-foreground">
-              <span>Academic Projects & Code Relevance</span>
+              <span>{t("jobMatch.result.projectsFit")}</span>
               <span className="text-foreground">{projectsScore}%</span>
             </div>
             <Progress value={projectsScore} className="h-1.5 bg-accent" />
@@ -260,7 +263,7 @@ export function JobMatchResultView({ match }) {
           {/* Education credentials */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs font-semibold text-muted-foreground">
-              <span>Education Alignment</span>
+              <span>{t("jobMatch.result.educationFit")}</span>
               <span className="text-foreground">{educationScore}%</span>
             </div>
             <Progress value={educationScore} className="h-1.5 bg-accent" />
@@ -269,7 +272,7 @@ export function JobMatchResultView({ match }) {
           {/* Soft Skills */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs font-semibold text-muted-foreground">
-              <span>Behavioral & Soft Skills Index</span>
+              <span>{t("jobMatch.result.softSkillsFit")}</span>
               <span className="text-foreground">{softSkillsScore}%</span>
             </div>
             <Progress value={softSkillsScore} className="h-1.5 bg-accent" />
@@ -284,12 +287,12 @@ export function JobMatchResultView({ match }) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2">
               <Award className="w-4 h-4 text-emerald-400" />
-              Matched Skills & Competencies
+              {t("jobMatch.result.matchedSkillsTitle")}
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-wrap gap-1.5">
             {matchedSkills.length === 0 ? (
-              <span className="text-xs text-muted-foreground font-semibold italic">No matched skills recorded.</span>
+              <span className="text-xs text-muted-foreground font-semibold italic">{t("jobMatch.result.noMatchedSkills")}</span>
             ) : (
               matchedSkills.map((sk, idx) => (
                 <Badge
@@ -309,12 +312,12 @@ export function JobMatchResultView({ match }) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-400" />
-              Missing Required Skills
+              {t("jobMatch.result.missingSkillsTitle")}
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-wrap gap-1.5">
             {missingSkills.length === 0 ? (
-              <span className="text-xs text-muted-foreground font-semibold italic text-emerald-500">None! You possess all required skills.</span>
+              <span className="text-xs text-muted-foreground font-semibold italic text-emerald-500">{t("jobMatch.result.allSkillsMatched")}</span>
             ) : (
               missingSkills.map((sk, idx) => (
                 <Badge
@@ -337,12 +340,12 @@ export function JobMatchResultView({ match }) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-emerald-400">
               <CheckCircle2 className="w-4 h-4" />
-              Candidate Advantages & Strengths
+              {t("jobMatch.result.strengthsTitle")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2.5">
             {strengths.length === 0 ? (
-              <p className="text-xs text-muted-foreground font-semibold">No strengths recorded.</p>
+              <p className="text-xs text-muted-foreground font-semibold">{t("jobMatch.result.noStrengths")}</p>
             ) : (
               strengths.map((str, idx) => (
                 <div key={idx} className="flex gap-3 items-start border border-emerald-500/10 bg-emerald-500/5 p-3.5 rounded-xl text-xs font-semibold text-foreground/90 leading-relaxed">
@@ -359,12 +362,12 @@ export function JobMatchResultView({ match }) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-amber-400">
               <AlertTriangle className="w-4 h-4" />
-              Alignment Gaps & Weaknesses
+              {t("jobMatch.result.weaknessesTitle")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2.5">
             {weaknesses.length === 0 ? (
-              <p className="text-xs text-muted-foreground font-semibold">No weaknesses recorded.</p>
+              <p className="text-xs text-muted-foreground font-semibold">{t("jobMatch.result.noWeaknesses")}</p>
             ) : (
               weaknesses.map((weak, idx) => (
                 <div key={idx} className="flex gap-3 items-start border border-amber-500/10 bg-amber-500/5 p-3.5 rounded-xl text-xs font-semibold text-foreground/90 leading-relaxed">
@@ -380,14 +383,14 @@ export function JobMatchResultView({ match }) {
       {/* Actionable Tailoring suggestions */}
       <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-sm font-bold">Actionable Tailoring Suggestions</CardTitle>
+          <CardTitle className="text-sm font-bold">{t("jobMatch.result.suggestionsTitle")}</CardTitle>
           <CardDescription className="text-[10px] font-semibold leading-relaxed">
-            Check off actions as you update your resume to better match this target role description
+            {t("jobMatch.result.suggestionsDesc")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-2.5">
           {suggestions.length === 0 ? (
-            <p className="text-xs text-muted-foreground font-semibold">No suggestions generated.</p>
+            <p className="text-xs text-muted-foreground font-semibold">{t("jobMatch.result.noSuggestions")}</p>
           ) : (
             suggestions.map((sug, idx) => {
               const isChecked = checkedSuggestions.has(idx);

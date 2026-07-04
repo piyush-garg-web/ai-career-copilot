@@ -76,6 +76,24 @@ export function DashboardClientView({
   const { t } = useTranslation();
   const router = useRouter();
 
+  const getRelativeTime = (timestamp) => {
+    if (!timestamp) return "";
+    const diffInMs = Date.now() - new Date(timestamp).getTime();
+    const diffInMins = Math.floor(diffInMs / (1000 * 60));
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInMins < 1) return t("common.justNow");
+    if (diffInMins < 60) return t("common.minutesAgo", { count: diffInMins });
+    if (diffInHours < 24) return t("common.hoursAgo", { count: diffInHours });
+    if (diffInDays === 1) return t("common.daysAgo", { count: 1 });
+    if (diffInDays < 30) return t("common.daysAgo", { count: diffInDays });
+    return new Date(timestamp).toLocaleDateString();
+  };
+
+  const uploadedDateFormatted = resumeUploadedDate ? getRelativeTime(resumeUploadedDate) : t("dashboard.stats.noUploadsYet");
+  const lastAnalyzedNameFormatted = lastAnalyzedResumeName || t("common.none");
+
   const [userReviews, setUserReviews] = React.useState(initialReviews || []);
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [editingReview, setEditingReview] = React.useState(null);
@@ -191,22 +209,22 @@ export function DashboardClientView({
 
   const quickActions = [
     {
-      title: "Upload Resume",
-      description: "Upload a PDF or Word document.",
+      title: t("dashboard.quickActions.upload"),
+      description: t("dashboard.quickActions.uploadDesc"),
       icon: Plus,
       color: "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/10 hover:shadow-blue-600/20",
       action: () => router.push("/resume"),
     },
     {
-      title: "Analyze Resume",
-      description: "Run ATS scanning & optimizations.",
+      title: t("dashboard.quickActions.analyze"),
+      description: t("dashboard.quickActions.analyzeDesc"),
       icon: Sparkles,
       color: "bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/10 hover:shadow-indigo-600/20",
       action: () => router.push("/resume/analysis"),
     },
     {
-      title: "Start Interview",
-      description: "Practice behavioral & technical questions.",
+      title: t("dashboard.quickActions.interview"),
+      description: t("dashboard.quickActions.interviewDesc"),
       icon: Mic,
       color: "bg-slate-900 dark:bg-slate-100 dark:text-slate-950 dark:hover:bg-slate-200 hover:bg-slate-800 text-white shadow-slate-950/10",
       action: () => router.push("/interview"),
@@ -350,11 +368,11 @@ export function DashboardClientView({
             <CardContent className="space-y-3.5 text-xs font-semibold text-muted-foreground">
               <div className="flex justify-between border-b border-border/20 pb-2">
                 <span>{t("dashboard.metadata.lastUpload")}</span>
-                <span className="text-foreground">{resumeUploadedDate}</span>
+                <span className="text-foreground">{uploadedDateFormatted}</span>
               </div>
               <div className="flex justify-between">
                 <span>{t("dashboard.metadata.lastAnalyzed")}</span>
-                <span className="text-foreground truncate max-w-[150px]" title={lastAnalyzedResumeName}>{lastAnalyzedResumeName}</span>
+                <span className="text-foreground truncate max-w-[150px]" title={lastAnalyzedNameFormatted}>{lastAnalyzedNameFormatted}</span>
               </div>
             </CardContent>
           </Card>
@@ -435,7 +453,7 @@ export function DashboardClientView({
               {suggestions.map((s, i) => (
                 <div key={i} className="flex gap-2.5 items-start text-xs font-semibold text-muted-foreground leading-relaxed">
                   <span className="p-1 rounded bg-indigo-500/10 text-indigo-400 shrink-0">✦</span>
-                  <span>{s}</span>
+                  <span>{s.startsWith("dashboard.") ? t(s) : s}</span>
                 </div>
               ))}
             </CardContent>
@@ -455,7 +473,7 @@ export function DashboardClientView({
               {insights.map((ins, i) => (
                 <div key={i} className="flex gap-2.5 items-start text-xs font-semibold text-muted-foreground leading-relaxed">
                   <span className="p-1 rounded bg-teal-500/10 text-teal-400 shrink-0">✔</span>
-                  <span>{ins}</span>
+                  <span>{ins.startsWith("dashboard.") ? t(ins) : ins}</span>
                 </div>
               ))}
             </CardContent>
@@ -515,14 +533,14 @@ export function DashboardClientView({
                         <div className="flex-1 space-y-0.5 min-w-0">
                           <div className="flex items-center justify-between gap-2">
                             <p className="text-sm font-semibold text-foreground truncate group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors">
-                              {act.title}
+                              {act.titleKey ? t(act.titleKey) : act.title}
                             </p>
                             <span className="text-[11px] font-medium text-muted-foreground shrink-0">
-                              {act.time}
+                              {act.createdAt ? getRelativeTime(act.createdAt) : act.time}
                             </span>
                           </div>
                           <p className="text-xs text-muted-foreground line-clamp-1">
-                            {act.description}
+                            {act.descKey ? t(act.descKey, act.descParams) : act.description}
                           </p>
                         </div>
                       </div>

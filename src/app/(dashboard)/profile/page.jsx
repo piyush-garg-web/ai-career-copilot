@@ -735,7 +735,7 @@ export default function ProfilePage() {
             >
               <span className="flex items-center gap-2.5">
                 <User className="w-4.5 h-4.5 text-indigo-400" />
-                Personal Information & Social Links
+                {t("profile.sections.personal")}
               </span>
               {openSections.personal ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
             </button>
@@ -934,7 +934,7 @@ export default function ProfilePage() {
             >
               <span className="flex items-center gap-2.5">
                 <Briefcase className="w-4.5 h-4.5 text-teal-400" />
-                Career Preferences & Timelines
+                {t("profile.sections.preferences")}
               </span>
               {openSections.preferences ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
             </button>
@@ -1163,7 +1163,7 @@ export default function ProfilePage() {
             >
               <span className="flex items-center gap-2.5">
                 <Briefcase className="w-4.5 h-4.5 text-pink-400" />
-                Work Experience ({profile.experience.length})
+                {t("profile.sections.experienceWithCount", { count: profile.experience.length })}
               </span>
               {openSections.experience ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
             </button>
@@ -1282,7 +1282,7 @@ export default function ProfilePage() {
             >
               <span className="flex items-center gap-2.5">
                 <BookOpen className="w-4.5 h-4.5 text-amber-400" />
-                Education ({profile.education.length})
+                {t("profile.sections.educationWithCount", { count: profile.education.length })}
               </span>
               {openSections.education ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
             </button>
@@ -1403,7 +1403,7 @@ export default function ProfilePage() {
             >
               <span className="flex items-center gap-2.5">
                 <FileCode className="w-4.5 h-4.5 text-pink-400" />
-                Featured Projects ({profile.projects.length})
+                {t("profile.sections.projectsWithCount", { count: profile.projects.length })}
               </span>
               {openSections.projects ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
             </button>
@@ -1527,7 +1527,7 @@ export default function ProfilePage() {
             >
               <span className="flex items-center gap-2.5">
                 <Sliders className="w-4.5 h-4.5 text-indigo-400" />
-                Categorized Portfolio Skills ({skillsCount})
+                {t("profile.sections.skillsWithCount", { count: skillsCount })}
               </span>
               {openSections.skills ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
             </button>
@@ -1619,7 +1619,7 @@ export default function ProfilePage() {
             >
               <span className="flex items-center gap-2.5">
                 <Award className="w-4.5 h-4.5 text-teal-400" />
-                Certifications & Languages ({profile.certifications.length + profile.languages.length})
+                {t("profile.sections.certificationsWithCount", { count: profile.certifications.length + profile.languages.length })}
               </span>
               {openSections.certifications ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
             </button>
@@ -1745,7 +1745,7 @@ export default function ProfilePage() {
             >
               <span className="flex items-center gap-2.5">
                 <Sparkles className="w-4.5 h-4.5 text-indigo-400" />
-                AI Personalization Preferences
+                {t("profile.sections.aiPersonalization")}
               </span>
               {openSections.ai ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
             </button>
@@ -1841,7 +1841,7 @@ export default function ProfilePage() {
             >
               <span className="flex items-center gap-2.5">
                 <Shield className="w-4.5 h-4.5 text-rose-400" />
-                Privacy & Notification Preferences
+                {t("profile.sections.privacyPreferences")}
               </span>
               {openSections.privacy ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
             </button>

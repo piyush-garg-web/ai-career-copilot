@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 export default function Testimonials({
   initialReviews = [],
@@ -31,6 +32,7 @@ export default function Testimonials({
   currentUserReview = null,
   onUnauthAction,
 }) {
+  const { t } = useTranslation();
   const [reviews, setReviews] = useState(initialReviews);
   const [totalReviews, setTotalReviews] = useState(initialTotal);
   const [averageRating, setAverageRating] = useState(initialAverage);
@@ -75,11 +77,11 @@ export default function Testimonials({
         setPage(1);
       } else {
         const errorData = await res.json().catch(() => ({}));
-        toast.error(errorData.error || "Failed to load sorted reviews.");
+        toast.error(errorData.error || t("dashboard.reviews.errors.save"));
       }
     } catch (err) {
       console.error("Refresh error:", err);
-      toast.error("Failed to load sorted reviews.");
+      toast.error(t("dashboard.reviews.errors.saveUnexpected"));
     }
   };
 
@@ -98,10 +100,10 @@ export default function Testimonials({
         setHasMore(data.hasMore);
         setPage(nextPage);
       } else {
-        toast.error("Failed to load more reviews.");
+        toast.error(t("alerts.error"));
       }
     } catch (err) {
-      toast.error("An error occurred while paging.");
+      toast.error(t("alerts.error"));
     } finally {
       setIsLoading(false);
     }
@@ -118,23 +120,23 @@ export default function Testimonials({
     e.preventDefault();
 
     if (!rating || rating < 1 || rating > 5) {
-      toast.error("Please select a rating.");
+      toast.error(t("dashboard.reviews.validation.rating"));
       return;
     }
     if (!titleInput.trim()) {
-      toast.error("Review title is required.");
+      toast.error(t("dashboard.reviews.validation.titleRequired"));
       return;
     }
     if (titleInput.length > 100) {
-      toast.error("Title must be 100 characters or less.");
+      toast.error(t("dashboard.reviews.validation.titleLength"));
       return;
     }
     if (!reviewInput.trim()) {
-      toast.error("Review description is required.");
+      toast.error(t("dashboard.reviews.validation.descriptionRequired"));
       return;
     }
     if (reviewInput.length > 500) {
-      toast.error("Description must be 500 characters or less.");
+      toast.error(t("dashboard.reviews.validation.descriptionLength"));
       return;
     }
 
@@ -155,15 +157,15 @@ export default function Testimonials({
 
       const data = await res.json();
       if (res.ok) {
-        toast.success(userReview ? "Review updated successfully!" : "Review submitted successfully!");
+        toast.success(userReview ? t("dashboard.reviews.success.updated") : t("dashboard.reviews.success.submitted"));
         setUserReview(data.review);
         setIsWriteModalOpen(false);
         await refreshReviewsAndStats();
       } else {
-        toast.error(data.error || "Failed to save review.");
+        toast.error(data.error || t("dashboard.reviews.errors.save"));
       }
     } catch (err) {
-      toast.error("An error occurred while saving.");
+      toast.error(t("dashboard.reviews.errors.saveUnexpected"));
     } finally {
       setIsSubmitting(false);
     }
@@ -171,7 +173,7 @@ export default function Testimonials({
 
   // Handle Delete Review
   const handleDeleteReview = async () => {
-    if (!userReview || !confirm("Are you sure you want to delete your review? This action cannot be undone.")) return;
+    if (!userReview || !confirm(t("dashboard.reviews.confirmDelete"))) return;
     setIsDeleting(true);
 
     try {
@@ -180,16 +182,16 @@ export default function Testimonials({
       });
 
       if (res.ok) {
-        toast.success("Review deleted successfully.");
+        toast.success(t("dashboard.reviews.success.deleted"));
         setUserReview(null);
         setIsWriteModalOpen(false);
         await refreshReviewsAndStats();
       } else {
         const data = await res.json();
-        toast.error(data.error || "Failed to delete review.");
+        toast.error(data.error || t("dashboard.reviews.errors.delete"));
       }
     } catch (err) {
-      toast.error("An error occurred while deleting.");
+      toast.error(t("dashboard.reviews.errors.deleteUnexpected"));
     } finally {
       setIsDeleting(false);
     }
@@ -204,13 +206,13 @@ export default function Testimonials({
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20 space-y-4">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-            Community Reviews
+            {t("landing.reviews.sectionTitle")}
           </h2>
           <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
-            User Testimonials
+            {t("landing.reviews.title")}
           </p>
           <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-            Real feedback from professionals who have accelerated their career search and interview skills using AI Career Copilot.
+            {t("landing.reviews.subtitle")}
           </p>
         </div>
 
@@ -235,7 +237,10 @@ export default function Testimonials({
               ))}
             </div>
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mt-1">
-              Based on {totalReviews} {totalReviews === 1 ? "Review" : "Reviews"}
+              {t("landing.reviews.basedOn", {
+                count: totalReviews,
+                reviews: totalReviews === 1 ? t("landing.reviews.review") : t("landing.reviews.reviews")
+              })}
             </p>
           </div>
 
@@ -243,12 +248,12 @@ export default function Testimonials({
           <div className="md:col-span-7 flex flex-col sm:flex-row items-center justify-between gap-6 sm:pl-4">
             <div className="space-y-1 text-center sm:text-left">
               <h3 className="text-sm font-bold text-foreground">
-                {userReview ? "You've shared your experience!" : "How has your job hunt been?"}
+                {userReview ? t("landing.reviews.sharedExperience") : t("landing.reviews.howIsJobHunt")}
               </h3>
               <p className="text-xs text-muted-foreground font-semibold">
                 {userReview
-                  ? "Manage or edit your live feedback using the options on the right."
-                  : "Submit your rating and feedback to help other developers find their next role."}
+                  ? t("landing.reviews.manageFeedback")
+                  : t("landing.reviews.submitFeedbackHelp")}
               </p>
             </div>
             <Button
@@ -258,12 +263,12 @@ export default function Testimonials({
               {userReview ? (
                 <>
                   <Edit className="w-4 h-4 mr-2" />
-                  Edit My Review
+                  {t("landing.reviews.editMyReview")}
                 </>
               ) : (
                 <>
                   <Plus className="w-4 h-4 mr-2" />
-                  Write a Review
+                  {t("landing.reviews.writeReview")}
                 </>
               )}
             </Button>
@@ -273,23 +278,23 @@ export default function Testimonials({
         {/* Filters and Search Bar */}
         <div className="flex items-center justify-between mb-8 pb-4 border-b border-border/25">
           <span className="text-xs font-black uppercase tracking-wider text-muted-foreground/80">
-            Showing {reviews.length} of {totalReviews} Reviews
+            {t("landing.reviews.showingCount", { count: reviews.length, total: totalReviews })}
           </span>
           <div className="flex items-center space-x-2">
-            <span className="text-xs font-bold text-muted-foreground hidden sm:inline">Sort:</span>
+            <span className="text-xs font-bold text-muted-foreground hidden sm:inline">{t("landing.reviews.sort")}</span>
             <Select value={sort} onValueChange={handleSortChange}>
               <SelectTrigger className="w-[160px] rounded-xl bg-card/60 border-border/50 text-xs font-semibold">
-                <SelectValue placeholder="Sort by" />
+                <SelectValue placeholder={t("landing.reviews.sortBy")} />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
                 <SelectItem value="newest" className="text-xs font-medium cursor-pointer">
-                  Newest First
+                  {t("landing.reviews.sortNewest")}
                 </SelectItem>
                 <SelectItem value="highest" className="text-xs font-medium cursor-pointer">
-                  Highest Rated
+                  {t("landing.reviews.sortHighest")}
                 </SelectItem>
                 <SelectItem value="lowest" className="text-xs font-medium cursor-pointer">
-                  Lowest Rated
+                  {t("landing.reviews.sortLowest")}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -301,7 +306,7 @@ export default function Testimonials({
           <div className="text-center py-20 bg-card/25 border border-border/40 rounded-3xl backdrop-blur-sm">
             <Award className="w-12 h-12 text-muted-foreground/35 mx-auto mb-4" />
             <p className="text-sm font-semibold text-muted-foreground">
-              No reviews have been submitted yet. Be the first to share your thoughts!
+              {t("landing.reviews.emptyState")}
             </p>
           </div>
         ) : (
@@ -313,8 +318,8 @@ export default function Testimonials({
                 month: "long",
                 day: "numeric",
               });
-              const authorInitials = `${rev.user?.firstName?.[0] || "C"}${rev.user?.lastName?.[0] || ""}`;
-              const authorName = `${rev.user?.firstName || "Candidate"} ${rev.user?.lastName || ""}`.trim();
+              const authorInitials = `${rev.user?.firstName?.[0] || t("landing.reviews.defaultAuthor")[0]}${rev.user?.lastName?.[0] || ""}`;
+              const authorName = `${rev.user?.firstName || t("landing.reviews.defaultAuthor")} ${rev.user?.lastName || ""}`.trim();
 
               return (
                 <motion.div
@@ -329,7 +334,7 @@ export default function Testimonials({
                 >
                   {isOwner && (
                     <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-[9px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">
-                      Your Review
+                      {t("landing.reviews.yourReviewLabel")}
                     </div>
                   )}
 
@@ -379,7 +384,7 @@ export default function Testimonials({
                         {authorName}
                       </h5>
                       <p className="text-[10px] text-muted-foreground truncate max-w-[150px] font-semibold mt-0.5">
-                        {rev.user?.targetRole || "Job Candidate"}
+                        {rev.user?.targetRole || t("landing.reviews.anonymousCandidate")}
                       </p>
                     </div>
                   </div>
@@ -398,7 +403,7 @@ export default function Testimonials({
               disabled={isLoading}
               className="rounded-xl px-8 py-5 border-border/50 text-xs font-bold cursor-pointer hover:bg-secondary/40 transition-colors"
             >
-              {isLoading ? "Loading..." : "Load More Reviews"}
+              {isLoading ? t("landing.reviews.loading") : t("landing.reviews.loadMore")}
             </Button>
           </div>
         )}
@@ -410,19 +415,19 @@ export default function Testimonials({
           <DialogHeader>
             <DialogTitle className="text-lg font-extrabold flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-indigo-500" />
-              {userReview ? "Edit Your Review" : "Write a Review"}
+              {userReview ? t("landing.reviews.editMyReview") : t("landing.reviews.writeReview")}
             </DialogTitle>
             <DialogDescription className="text-xs font-medium text-muted-foreground">
               {userReview
-                ? "Update your rating and comment about using AI Career Copilot."
-                : "Submit your rating. Your review will appear live on our community board."}
+                ? t("landing.reviews.modal.editDescription")
+                : t("landing.reviews.modal.newDescription")}
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleSubmitReview} className="space-y-5 pt-3">
             {/* Star selector */}
             <div className="flex items-center space-x-1">
-              <span className="text-xs font-extrabold text-muted-foreground mr-2">Your Rating:</span>
+              <span className="text-xs font-extrabold text-muted-foreground mr-2">{t("dashboard.reviews.yourRating")}</span>
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
@@ -442,12 +447,12 @@ export default function Testimonials({
             {/* Title field */}
             <div className="space-y-2">
               <label htmlFor="title" className="text-xs font-extrabold text-foreground">
-                Review Title
+                {t("dashboard.reviews.reviewTitle")}
               </label>
               <input
                 id="title"
                 type="text"
-                placeholder="Example: Incredible interview grading!"
+                placeholder={t("landing.reviews.form.titlePlaceholder")}
                 value={titleInput}
                 onChange={(e) => setTitleInput(e.target.value)}
                 maxLength={100}
@@ -459,11 +464,11 @@ export default function Testimonials({
             {/* Review description field */}
             <div className="space-y-2">
               <label htmlFor="review" className="text-xs font-extrabold text-foreground">
-                Review Details
+                {t("dashboard.reviews.reviewDetails")}
               </label>
               <textarea
                 id="review"
-                placeholder="Share your experience using the ATS scorecard parser, job matches, and the conversational interview sessions..."
+                placeholder={t("landing.reviews.form.detailsPlaceholder")}
                 value={reviewInput}
                 onChange={(e) => setReviewInput(e.target.value)}
                 maxLength={500}
@@ -471,8 +476,8 @@ export default function Testimonials({
                 className="w-full min-h-[120px] p-3 rounded-xl border border-border/50 bg-background/50 text-sm focus:outline-none focus:ring-1 focus:ring-ring focus:border-ring transition-all duration-200 resize-none"
               />
               <div className="flex justify-between items-center text-[10px] font-bold text-muted-foreground">
-                <span>Maximum 500 characters</span>
-                <span>{reviewInput.length} / 500</span>
+                <span>{t("dashboard.reviews.maxCharacters")}</span>
+                <span>{t("landing.reviews.form.descLength", { count: reviewInput.length })}</span>
               </div>
             </div>
 
@@ -485,7 +490,7 @@ export default function Testimonials({
                   onClick={() => setIsWriteModalOpen(false)}
                   className="rounded-xl text-xs font-bold cursor-pointer"
                 >
-                  Cancel
+                  {t("dashboard.reviews.cancel")}
                 </Button>
 
                 {userReview && (
@@ -497,7 +502,7 @@ export default function Testimonials({
                     className="rounded-xl text-xs font-bold text-red-500 hover:bg-red-500/10 hover:text-red-500 cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4 mr-1.5" />
-                    {isDeleting ? "Deleting..." : "Delete"}
+                    {isDeleting ? t("landing.reviews.modal.deleting") : t("landing.reviews.modal.delete")}
                   </Button>
                 )}
               </div>
@@ -507,7 +512,7 @@ export default function Testimonials({
                 disabled={isSubmitting}
                 className="rounded-xl px-5 cursor-pointer bg-primary hover:bg-primary/95 text-xs font-bold transition-all"
               >
-                {isSubmitting ? "Submitting..." : userReview ? "Update Review" : "Submit Review"}
+                {isSubmitting ? t("dashboard.reviews.saving") : userReview ? t("landing.reviews.form.updateReview") : t("landing.reviews.form.submitReview")}
               </Button>
             </div>
           </form>

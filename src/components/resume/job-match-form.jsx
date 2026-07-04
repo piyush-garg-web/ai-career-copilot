@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 import {
   Select,
   SelectContent,
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/select";
 
 export function JobMatchForm({ resumes }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [selectedResumeId, setSelectedResumeId] = useState("");
   const [jobDescription, setJobDescription] = useState("");
@@ -36,22 +38,22 @@ export function JobMatchForm({ resumes }) {
     e.preventDefault();
 
     if (!selectedResumeId) {
-      toast.error("Please select a resume to match.");
+      toast.error(t("jobMatch.toasts.selectResume"));
       return;
     }
 
     if (!jobDescription || !jobDescription.trim()) {
-      toast.error("Please paste the job description text.");
+      toast.error(t("jobMatch.toasts.pasteDesc"));
       return;
     }
 
     if (jobDescription.trim().length < 100) {
-      toast.error("Job description text is too short. Please paste a complete description.");
+      toast.error(t("jobMatch.toasts.tooShort"));
       return;
     }
 
     setIsMatching(true);
-    toast.info("Gemini AI is analyzing the alignment and comparing keywords. Please hold...");
+    toast.info(t("jobMatch.toasts.analyzing"));
 
     try {
       const response = await fetch("/api/job-matches", {
@@ -67,17 +69,17 @@ export function JobMatchForm({ resumes }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to calculate job description match.");
+        throw new Error(errorData.error || t("jobMatch.toasts.error"));
       }
 
       const data = await response.json();
-      toast.success("Job match completed!");
+      toast.success(t("jobMatch.toasts.success"));
       
       // Redirect to the newly created match results dashboard
       router.push(`/job-match/${data.matchId}`);
     } catch (err) {
       console.error("Job Match request failure:", err);
-      toast.error(err.message || "Failed to compile AI Job Match report.");
+      toast.error(err.message || t("jobMatch.toasts.unexpected"));
     } finally {
       setIsMatching(false);
     }
@@ -100,10 +102,10 @@ export function JobMatchForm({ resumes }) {
             <div className="space-y-1 text-center">
               <h3 className="text-lg font-bold text-foreground flex items-center gap-2 justify-center">
                 <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
-                Matching Resume...
+                {t("jobMatch.form.matching")}
               </h3>
               <p className="text-xs text-muted-foreground font-semibold max-w-xs px-4">
-                Gemini is cross-referencing your experience bullets against the job description requirements.
+                {t("jobMatch.form.matchingDesc")}
               </p>
             </div>
           </motion.div>
@@ -114,10 +116,10 @@ export function JobMatchForm({ resumes }) {
         <CardHeader className="pb-4">
           <CardTitle className="text-base font-bold flex items-center gap-2">
             <Briefcase className="w-4 h-4 text-indigo-400" />
-            Job Match Comparison Form
+            {t("jobMatch.form.title")}
           </CardTitle>
           <CardDescription className="text-xs font-semibold leading-relaxed">
-            Select one of your uploaded resumes and paste the target job description to run an alignment check.
+            {t("jobMatch.form.desc")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -125,11 +127,11 @@ export function JobMatchForm({ resumes }) {
             {/* Resume Selector */}
             <div className="space-y-2">
               <Label htmlFor="resume-select" className="text-xs font-bold text-foreground">
-                1. Select Resume
+                {t("jobMatch.form.selectResumeLabel")}
               </Label>
               <Select onValueChange={setSelectedResumeId} value={selectedResumeId}>
                 <SelectTrigger id="resume-select" className="rounded-xl border-border/40 bg-background/40 h-10 text-xs font-semibold cursor-pointer">
-                  <SelectValue placeholder="Select one of your resumes..." />
+                  <SelectValue placeholder={t("jobMatch.form.selectResumePlaceholder")} />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-border/40 text-xs font-semibold bg-popover/90 backdrop-blur-md">
                   {resumes.map((res) => (
@@ -148,7 +150,7 @@ export function JobMatchForm({ resumes }) {
                         <span>{res.fileName}</span>
                         {res.status !== "ANALYZED" && res.status !== "PARSED" && (
                           <span className="text-[9px] font-bold text-amber-500 uppercase shrink-0">
-                            (Requires parsing text)
+                            {t("jobMatch.form.requiresParsing")}
                           </span>
                         )}
                       </span>
@@ -161,11 +163,11 @@ export function JobMatchForm({ resumes }) {
             {/* Job Description Textarea */}
             <div className="space-y-2">
               <Label htmlFor="job-description" className="text-xs font-bold text-foreground">
-                2. Paste Job Description
+                {t("jobMatch.form.pasteDescLabel")}
               </Label>
               <Textarea
                 id="job-description"
-                placeholder="Paste the target job description here (responsibilities, skills, qualifications, keyword tags)..."
+                placeholder={t("jobMatch.form.pasteDescPlaceholder")}
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
                 rows={10}
@@ -173,7 +175,7 @@ export function JobMatchForm({ resumes }) {
               />
               <span className="text-[10px] text-muted-foreground/80 flex items-center gap-1 font-semibold leading-relaxed">
                 <AlertCircle className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
-                Minimum length: 100 characters. Paste raw text blocks directly.
+                {t("jobMatch.form.minLength")}
               </span>
             </div>
 
@@ -184,7 +186,7 @@ export function JobMatchForm({ resumes }) {
               className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs h-10 shadow-md shadow-indigo-500/10 cursor-pointer gap-1.5 mt-2"
             >
               <Sparkles className="w-4 h-4" />
-              Analyze Match Alignment
+              {t("jobMatch.form.submitBtn")}
             </Button>
           </form>
         </CardContent>

@@ -1,25 +1,312 @@
 {
+  "common": {
+    "loading": "로드 중...",
+    "save": "저장",
+    "cancel": "취소",
+    "delete": "삭제",
+    "edit": "편집",
+    "submit": "제출",
+    "search": "검색",
+    "results": "결과",
+    "noResults": "일치하는 결과가 없습니다.",
+    "searchLanguage": "검색 언어...",
+    "noLanguagesFound": "언어를 찾을 수 없습니다.",
+    "toggleMenu": "토글 메뉴",
+    "complete": "완료",
+    "justNow": "지금 막",
+    "minutesAgo": "{{count}}분 전",
+    "hoursAgo": "{{count}}시간 전",
+    "daysAgo": "{{count}}일 전",
+    "none": "없음"
+  },
   "nav": {
     "home": "홈",
     "dashboard": "대시보드",
     "profile": "프로필",
     "settings": "설정",
     "signIn": "로그인",
-    "signUp": "회원가입",
+    "signUp": "가입",
     "logout": "로그아웃",
     "backToHome": "홈으로 돌아가기",
-    "privacy": "개인정보 처리방침",
-    "terms": "이용약관"
+    "privacy": "개인 정보 보호 정책",
+    "terms": "서비스 약관",
+    "features": "특징",
+    "howItWorks": "작동 방식",
+    "reviews": "리뷰",
+    "faq": "FAQ"
   },
   "landing": {
     "hero": {
-      "title": "AI 기반 커리어 코파일럿",
-      "subtitle": "Google Gemini 기반 실시간 피드백을 통해 이력서를 분석하고, ATS 점수를 확인하고, 채용 공고를 매칭하고, 모의 면접을 연습해 보세요.",
-      "cta": "무료로 시작하기"
+      "title": "AI 기반 경력 부조종사",
+      "subtitle": "Google Gemini에서 제공하는 실시간 피드백을 통해 이력서를 분석하고, ATS 점수를 확인하고, 직무를 매칭하고, 모의 면접을 연습해 보세요.",
+      "cta": "무료로 시작해보세요"
     },
     "features": {
-      "title": "성공을 위한 핵심 기능",
-      "subtitle": "당신의 취업 여정을 가속화할 수 있도록 설계된 도구들을 확인해 보세요."
+      "title": "귀하의 성공을 위해 구축된 핵심 기능",
+      "subtitle": "경력 검색을 가속화하도록 설계된 도구를 찾아보세요.",
+      "loginPrompt": "이 기능을 사용하려면 로그인하세요.",
+      "explore": "탐색 →",
+      "items": {
+        "resume": {
+          "title": "AI 이력서 분석",
+          "description": "경험, 프로젝트 영향, 구조 및 형식 지정 지표에 대한 철저한 섹션 감사를 생성합니다."
+        },
+        "ats": {
+          "title": "ATS 점수",
+          "description": "이력서가 자동 HR 심사 시스템을 통과하도록 보장하기 위해 업계 규정 준수 등급을 계산합니다."
+        },
+        "health": {
+          "title": "건강 이력서",
+          "description": "문법 완성도, 섹션 구조, 서식 다듬기, 문서 가독성 규칙을 평가합니다."
+        },
+        "suggestions": {
+          "title": "AI 제안",
+          "description": "단어별 대체 아이디어, 활성 동사 제안 및 맞춤법 교정을 실시간으로 제공합니다."
+        },
+        "jobMatch": {
+          "title": "직업 매치",
+          "description": "귀하의 기술을 대상 채용 공고와 직접 비교하여 전반적인 정렬 지수를 계산합니다."
+        },
+        "missingSkills": {
+          "title": "누락된 기술 감지",
+          "description": "나열해야 할 프로그래밍 프레임워크, 인증 또는 툴킷을 정확히 찾아냅니다."
+        },
+        "interview": {
+          "title": "인터뷰 코치",
+          "description": "귀하의 배경과 선호하는 난이도에 직접 맞춰진 대화형 구강 모의 세션을 진행하세요."
+        },
+        "history": {
+          "title": "면접 이력",
+          "description": "이전에 완료한 세션을 다시 방문하고 검토하여 답변 등급을 비교하고 성과를 추적하세요."
+        },
+        "analytics": {
+          "title": "분석 대시보드",
+          "description": "그래프, 현재 작업 목록, 최근 일치 진행 상황 확인 기능을 갖춘 중앙 집중식 허브입니다."
+        },
+        "darkMode": {
+          "title": "다크 모드",
+          "description": "자동 운영 체제 재정의를 지원하는 완전히 통합된 다크 모드 및 라이트 모드 UI입니다."
+        },
+        "responsive": {
+          "title": "반응형 디자인",
+          "description": "휴대폰, 태블릿 및 대형 화면에 대한 표준 지원을 제공하는 최적화된 그리드 정렬입니다."
+        }
+      }
+    },
+    "stats": {
+      "resumeAnalyses": {
+        "label": "이력서 분석",
+        "description": "전 세계 구직자를 위해 최적화됨"
+      },
+      "atsImprovement": {
+        "label": "ATS 개선",
+        "description": "평균 성공 점수 향상 비율"
+      },
+      "interviewQuestions": {
+        "label": "면접 질문",
+        "description": "AI 엔진이 답변하고 등급을 매김"
+      },
+      "uptime": {
+        "label": "가동 시간 SLA",
+        "description": "고성능 데이터베이스 클러스터링"
+      }
+    },
+    "howItWorks": {
+      "sectionTitle": "작업 흐름",
+      "title": "간단하고 인터랙티브한 여행",
+      "subtitle": "AI Career Copilot이 원시 이력서 문서 감사부터 모의 면접 준비까지 단계별로 안내하는 방법을 알아보세요.",
+      "steps": {
+        "one": {
+          "title": "1단계: 이력서 업로드",
+          "description": "초고속 파일 업로드 게이트를 통해 이력서를 PDF 또는 Word 형식(최대 10MB)으로 안전하게 업로드하세요."
+        },
+        "two": {
+          "title": "2단계: AI가 이력서를 구문 분석합니다.",
+          "description": "우리의 로컬 파서는 구조화된 원시 텍스트를 동적으로 추출하여 Gemini AI 엔진의 평가를 위해 제출합니다."
+        },
+        "three": {
+          "title": "3단계: ATS 점수 분석",
+          "description": "섹션 완성도, 가독성 점수, 문법 최적화 목표를 강조하는 즉각적인 지표를 얻으세요."
+        },
+        "four": {
+          "title": "4단계: 직무 설명 일치",
+          "description": "의미론적 일치 지표, 누락된 기술 및 키워드를 비교하려면 대상 채용 공고를 붙여넣으세요."
+        },
+        "five": {
+          "title": "5단계: 인터뷰 연습",
+          "description": "답변별로 구조화된 피드백을 받는 맞춤형 음성-텍스트 행동 및 기술 시뮬레이션을 실행하세요."
+        },
+        "six": {
+          "title": "6단계: 인터뷰를 더 많이 유치하세요",
+          "description": "자동화된 필터와 채용 관리자의 기대를 뛰어넘어 최적화된 키워드와 세련된 자신감을 갖고 지원하세요."
+        }
+      }
+    },
+    "faq": {
+      "sectionTitle": "지원",
+      "title": "자주 묻는 질문",
+      "subtitle": "AI 파이프라인, 보안 모델, 파일 지원 및 데이터 개인 정보 보호 정책에 대한 표준 질문에 대한 빠른 답변입니다.",
+      "items": {
+        "one": {
+          "question": "AI 분석은 어떻게 작동하나요?",
+          "answer": "이력서를 업로드하면 당사의 로컬 파서가 문서(PDF 또는 DOCX)에서 원시 텍스트를 추출합니다. 그런 다음 이 텍스트는 Google Gemini AI 파이프라인에 의해 안전하게 처리되어 이를 업계 표준 ATS 필터링 규칙과 비교하고 문법, 형식 완성도 및 키워드 강도에 대한 섹션을 채점합니다."
+        },
+        "two": {
+          "question": "내 이력서는 안전한가요?",
+          "answer": "예, 이력서 파일은 안전하게 처리됩니다. UploadThing이 호스팅하는 비공개 버킷에 문서를 업로드하면 인증된 사용자 계정만 해당 문서를 검색하거나 구문 분석할 수 있습니다. 귀하의 개인정보는 항상 보호됩니다."
+        },
+        "three": {
+          "question": "어떤 파일 형식이 지원되나요?",
+          "answer": "표준 PDF(.pdf) 및 Microsoft Word(.docx) 문서 업로드를 최대 10MB까지 완벽하게 지원합니다. AI 평가를 위한 깨끗한 텍스트를 추출하기 위해 서식 데이터를 로컬로 구문 분석합니다."
+        },
+        "four": {
+          "question": "여러 개의 이력서를 분석할 수 있나요?",
+          "answer": "전적으로! 여러 개의 이력서나 버전 초안을 대시보드에 업로드할 수 있습니다. 업로드를 '기본' 이력서로 전환할 수 있으며, 이는 직무 설명 일치 및 모의 인터뷰 세션을 위한 기본 문서로 사용됩니다."
+        },
+        "five": {
+          "question": "내 데이터는 비공개인가요?",
+          "answer": "예, 귀하의 데이터는 비공개이며 귀하의 개인 계정에 잠겨 있습니다. 우리는 귀하의 이력서 세부 정보, 성과 보고서 또는 모의 인터뷰 기록을 제3자 데이터베이스에 판매하지 않습니다. 모든 인증 게이트는 사무원 미들웨어 인증 토큰으로 보호됩니다."
+        }
+      }
+    },
+    "comparison": {
+      "sectionTitle": "비교",
+      "title": "AI 경력 부조종사를 선택하는 이유는 무엇입니까?",
+      "subtitle": "당사의 지능형 Generative AI 엔진이 어떻게 기존의 구식 이력서 검토 및 인터뷰 준비 워크플로우보다 뛰어난 성능을 발휘하는지 알아보세요.",
+      "table": {
+        "capability": "능력",
+        "traditional": "전통적인 검토",
+        "copilot": "부조종사"
+      },
+      "rows": {
+        "instantAI": {
+          "feature": "즉각적인 AI 분석",
+          "traditional": "피드백을 기다리는 일/주",
+          "copilot": "10초 이내 실시간 피드백"
+        },
+        "ats": {
+          "feature": "ATS 최적화 점수",
+          "traditional": "일반 템플릿을 기반으로 한 추측",
+          "copilot": "85개 이상의 구문 분석 필터와 일치하는 정밀 계산"
+        },
+        "jobMatch": {
+          "feature": "맞춤형 직무매칭",
+          "traditional": "구인 목록과 수동 비교",
+          "copilot": "누락된 키워드를 강조하는 의미론적 기술 격차 감지"
+        },
+        "interview": {
+          "feature": "AI 모의면접 코칭",
+          "traditional": "비용이 많이 드는 전문 리뷰 코치",
+          "copilot": "채점 로그가 포함된 동적 STAR 기반 세션"
+        },
+        "actionItems": {
+          "feature": "상황 인식 작업 항목",
+          "traditional": "모호한 템플릿(\"동사를 더 강하게 만들기\")",
+          "copilot": "정확한 단어별 활성동사 교체 팁"
+        },
+        "multiResume": {
+          "feature": "다중 재개 버전 확인",
+          "traditional": "개인용 컴퓨터에 흩어져 있는 파일",
+          "copilot": "버전을 비교하기 위한 중앙 집중식 스토리지 데이터베이스"
+        }
+      }
+    },
+    "productPreview": {
+      "sectionTitle": "제품 투어",
+      "title": "실제 플랫폼 보기",
+      "subtitle": "경력 경로를 최적화하기 위해 구축된 고품질 기능과 AI 인터페이스를 가상으로 둘러보세요.",
+      "tabs": {
+        "dashboard": "계기반",
+        "resumeAnalysis": "이력서 분석",
+        "ats": "ATS 점수 및 건강",
+        "jobMatch": "직업 매치",
+        "interview": "인터뷰 코치"
+      }
+    },
+    "footer": {
+      "ctaTitle": "다음 인터뷰에 성공할 준비가 되셨나요?",
+      "ctaDescription": "AI Career Copilot을 사용하여 지원서 문서를 최적화하고 심사 봇을 통과하며 모의 행동을 연습하는 수천 명의 구직자들과 함께 하세요.",
+      "ctaButton": "무료로 시작해보세요",
+      "description": "이력서를 최적화하고, ATS 규정 준수 등급을 평가하고, 기술 격차를 분석하고, 모의 인터뷰 패널을 통해 지도하도록 설계된 AI 기반 경력 도우미입니다.",
+      "product": "제품",
+      "features": "특징",
+      "howItWorks": "작동 방식",
+      "developers": "개발자",
+      "faq": "자주 묻는 질문",
+      "legal": "법률 및 연락처",
+      "contactSupport": "지원팀에 문의",
+      "changeAppearance": "외형 변경:"
+    },
+    "testimonials": {
+      "loginPrompt": "경험을 공유하려면 로그인하세요."
+    },
+    "reviews": {
+      "sectionTitle": "커뮤니티 리뷰",
+      "title": "사용자 평가",
+      "subtitle": "AI Career Copilot을 활용하여 진로 탐색 및 면접 스킬을 가속화한 전문가들의 실제 피드백입니다.",
+      "basedOn": "{{count}} {{reviews}} 기준",
+      "review": "검토",
+      "reviews": "리뷰",
+      "sharedExperience": "귀하의 경험을 공유하셨습니다!",
+      "howIsJobHunt": "취업활동은 어땠나요?",
+      "manageFeedback": "오른쪽 옵션을 사용하여 실시간 피드백을 관리하거나 편집하세요.",
+      "submitFeedbackHelp": "다른 개발자가 다음 역할을 찾는 데 도움이 되도록 평가 및 피드백을 제출하세요.",
+      "editMyReview": "내 리뷰 편집",
+      "writeReview": "리뷰 작성",
+      "showingCount": "{{total}} 리뷰 중 {{count}} 표시 중",
+      "sort": "정렬:",
+      "sortBy": "정렬 기준",
+      "sortNewest": "최신순",
+      "sortHighest": "최고 등급",
+      "sortLowest": "최저 등급",
+      "emptyState": "아직 제출된 리뷰가 없습니다. 당신의 생각을 가장 먼저 공유해보세요!",
+      "yourReviewLabel": "귀하의 리뷰",
+      "loadMore": "더 많은 리뷰 로드",
+      "loading": "로드 중...",
+      "anonymousCandidate": "취업 지원자",
+      "defaultAuthor": "후보자",
+      "form": {
+        "updateReview": "업데이트 검토",
+        "submitReview": "리뷰 제출",
+        "titlePlaceholder": "예: 놀라운 인터뷰 채점!",
+        "detailsPlaceholder": "ATS 스코어카드 파서, 직업 매칭 및 대화형 인터뷰 세션을 사용하여 경험을 공유하세요...",
+        "descLength": "{{count}} / 500"
+      },
+      "modal": {
+        "editDescription": "AI Career Copilot 사용에 대한 평가와 의견을 업데이트하세요.",
+        "newDescription": "평가를 제출하세요. 귀하의 리뷰는 커뮤니티 보드에 실시간으로 표시됩니다.",
+        "deleting": "삭제 중...",
+        "delete": "삭제"
+      }
+    }
+  },
+  "header": {
+    "documentDetails": "문서 세부정보",
+    "viewNotifications": "알림 보기",
+    "notifications": "알림",
+    "markRead": "읽은 것으로 표시",
+    "clearAll": "모두 지우기",
+    "allCaughtUp": "모두 따라잡았어!",
+    "searchNoResults": "검색결과가 없습니다.",
+    "notificationsMarkedRead": "모든 알림은 읽음으로 표시됩니다.",
+    "notificationsCleared": "모든 알림이 삭제되었습니다.",
+    "signOutSuccess": "성공적으로 로그아웃되었습니다",
+    "signOutError": "로그아웃하지 못했습니다.",
+    "searchPages": {
+      "dashboard": "대시보드",
+      "dashboardDesc": "주요 지표 및 코칭 개요",
+      "resumes": "내 이력서",
+      "resumesDesc": "이력서 문서 업로드 및 나열",
+      "ats": "ATS 점수 최적화 도구",
+      "atsDesc": "채점 확인 및 최적화 내역",
+      "interview": "AI면접코치",
+      "interviewDesc": "맞춤형 모의 세션 시작",
+      "history": "면접 이력",
+      "historyDesc": "연습 스코어카드 검토",
+      "profile": "내 프로필",
+      "profileDesc": "경력 대상 역할 및 세부사항",
+      "settings": "설정",
+      "settingsDesc": "모양 설정 및 테마"
     }
   },
   "dashboard": {
@@ -28,94 +315,826 @@
       "resumeUpload": "이력서 업로드",
       "resumeAnalysis": "이력서 분석",
       "atsScore": "ATS 점수",
-      "jobMatch": "채용 공고 매칭",
-      "interviewCoach": "면접 코치",
-      "interviewHistory": "면접 연습 기록",
+      "jobMatch": "직업 매치",
+      "interviewCoach": "인터뷰 코치",
+      "interviewHistory": "면접 이력",
       "profile": "내 프로필",
       "settings": "계정 설정"
     },
     "welcome": {
-      "title": "다시 오신 것을 환영합니다",
-      "subtitle": "현재 커리어 상태 및 준비 상태에 대한 요약입니다.",
-      "readiness": "AI 커리어 준비도"
+      "title": "돌아온 것을 환영합니다",
+      "subtitle": "이력서 개선 및 인터뷰 코치 준비에 대한 개요는 다음과 같습니다.",
+      "readiness": "AI 취업 준비",
+      "defaultUser": "거기"
     },
     "stats": {
       "resumes": "업로드된 이력서",
       "atsScore": "목표 ATS 점수",
-      "interviews": "연습 세션 수",
-      "completeness": "프로필 설정"
+      "interviews": "연습 세션",
+      "completeness": "프로필 완성",
+      "completenessHint": "AI 지표를 정렬하려면 프로필 탭에서 대상 역할, 목표 및 경험 세부 사항을 완료하세요.",
+      "resumeScore": "이력서 점수",
+      "atsScoreCard": "ATS 점수",
+      "jobMatchCard": "직업 일치 %",
+      "interviewScoreCard": "면접 점수",
+      "latestResumeOptimization": "최신 이력서 최적화",
+      "noResumeAnalyzedYet": "아직 분석된 이력서가 없습니다.",
+      "strongAtsCompatibility": "강력한 ATS 호환성",
+      "needsKeywordBooster": "키워드 부스터가 필요합니다",
+      "pendingAnalysis": "분석 대기 중",
+      "matchCompatibilityScan": "일치 호환성 검사",
+      "noMatchScanRun": "일치 검색 실행 없음",
+      "excellentResponseQuality": "우수한 응답 품질",
+      "requiresCoachingPractice": "코칭 연습이 필요합니다",
+      "noCoachSessionCompleted": "코치 세션이 완료되지 않았습니다.",
+      "noUploadsYet": "아직 업로드가 없습니다."
+    },
+    "metadata": {
+      "title": "메타데이터 재개",
+      "lastUpload": "마지막 업로드 날짜",
+      "lastAnalyzed": "마지막으로 분석된 이력서"
+    },
+    "weeklyTrend": {
+      "title": "주간 분석 동향",
+      "desc": "핵심 코칭 매개변수에 걸쳐 표시된 성과 지표."
+    },
+    "suggestions": {
+      "title": "최근 AI 제안",
+      "default": {
+        "one": "자세한 AI 피드백 제안을 받으려면 첫 번째 이력서를 업로드하세요.",
+        "two": "모의 인터뷰를 연습하여 타겟 응답 추천을 받으세요.",
+        "three": "직무를 매칭하여 기술 역량 격차를 찾아보세요."
+      }
+    },
+    "insights": {
+      "title": "코칭 인사이트",
+      "default": {
+        "one": "보고서에 강조 표시된 누락된 키워드를 추가하여 ATS 점수를 높이세요.",
+        "two": "ATS 점수가 최적화되었습니다! 맞춤형 공백을 찾으려면 계속해서 직무 설명을 일치시키세요.",
+        "three": "기술 전달 및 신뢰 수준을 평가하기 위해 모의 인터뷰를 연습해 보세요.",
+        "four": "답변 속 문제해결 키워드를 강화하여 면접지수를 높입니다.",
+        "five": "이력서 프로젝트를 업무 요구 사항에 맞게 맞춤화하세요.",
+        "six": "측정항목 및 기술 세부정보를 사용하여 이력서 글머리 기호 성과를 정량화합니다."
+      }
+    },
+    "activity": {
+      "title": "최근 활동",
+      "desc": "최근 업데이트 및 시스템 분석 로그.",
+      "viewAll": "모두 보기",
+      "empty": "최근 활동 로그를 찾을 수 없습니다.",
+      "resumeAnalyzed": {
+        "title": "이력서 분석",
+        "desc": "\"{{fileName}}\"에 대해 계산된 스코어카드입니다. 점수: {{score}}/100."
+      },
+      "resumeParsed": {
+        "title": "이력서 분석됨",
+        "desc": "\"{{fileName}}\"에서 추출된 콘텐츠입니다. 분석 준비가 완료되었습니다."
+      },
+      "jobMatch": {
+        "title": "직업 일치 스캔됨",
+        "desc": "\"{{company}}\"과(와) 일치합니다. 정렬: {{score}}%."
+      },
+      "interviewCompleted": {
+        "title": "인터뷰 완료",
+        "desc": "\"{{role}}\"에 대한 연습 세션이 평가되었습니다. 점수: {{score}}%."
+      },
+      "interviewStarted": {
+        "title": "인터뷰가 시작되었습니다",
+        "desc": "현재 \"{{role}}\"에 대한 코칭 세션이 활성화되어 있습니다."
+      }
+    },
+    "quickActions": {
+      "title": "빠른 작업",
+      "desc": "주요 워크플로를 즉시 실행하세요.",
+      "upload": "이력서 업로드",
+      "uploadDesc": "PDF 또는 Word 문서를 업로드하세요.",
+      "analyze": "이력서 분석",
+      "analyzeDesc": "ATS 스캐닝 및 최적화를 실행하세요.",
+      "interview": "인터뷰 시작",
+      "interviewDesc": "행동 및 기술 질문을 연습하세요.",
+      "complete": "완료"
+    },
+    "reviews": {
+      "title": "커뮤니티 리뷰 및 평가",
+      "description": "AI Career Copilot이 귀하의 직업 검색에 어떻게 도움이 되는지 알려주세요. 원하는만큼 리뷰를 작성하세요!",
+      "write": "리뷰 작성",
+      "editTitle": "리뷰 편집",
+      "newTitle": "새로운 리뷰 작성",
+      "yourRating": "귀하의 평가:",
+      "reviewTitle": "리뷰 제목",
+      "reviewDetails": "검토 세부정보",
+      "titlePlaceholder": "예를 들어 뛰어난 ATS 스캔 도구!",
+      "detailsPlaceholder": "AI Career Copilot이 어떻게 도움이 되는지에 대한 생각을 공유해 주세요...",
+      "maxCharacters": "최대 500자",
+      "cancel": "취소",
+      "saveChanges": "변경 사항 저장",
+      "submitReview": "리뷰 제출",
+      "saving": "저장 중...",
+      "yourReviews": "귀하가 제출한 리뷰({{count}})",
+      "empty": "아직 리뷰를 제출하지 않았습니다. 귀하의 경험을 공유하려면 위의 \"리뷰 작성\"을 클릭하십시오!",
+      "edit": "편집",
+      "delete": "삭제",
+      "validation": {
+        "rating": "별점을 선택해주세요.",
+        "titleRequired": "리뷰 제목이 필요합니다.",
+        "titleLength": "제목은 100자 이하여야 합니다.",
+        "descriptionRequired": "리뷰 설명이 필요합니다.",
+        "descriptionLength": "설명은 500자 이하여야 합니다."
+      },
+      "success": {
+        "submitted": "리뷰가 성공적으로 제출되었습니다!",
+        "updated": "리뷰가 성공적으로 업데이트되었습니다!",
+        "deleted": "리뷰가 삭제되었습니다."
+      },
+      "errors": {
+        "save": "리뷰를 저장하지 못했습니다.",
+        "saveUnexpected": "저장하는 동안 오류가 발생했습니다.",
+        "delete": "리뷰를 삭제하지 못했습니다.",
+        "deleteUnexpected": "삭제하는 동안 오류가 발생했습니다."
+      },
+      "confirmDelete": "이 리뷰를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다."
     }
   },
   "profile": {
     "title": "내 전문 프로필",
-    "subtitle": "AI 추천 및 ATS 설정을 커스터마이징하기 위해 최신 프로필 정보를 입력해 주세요.",
+    "subtitle": "AI 추천 및 ATS 타겟팅을 맞춤설정하려면 세부 정보를 최신 상태로 유지하세요.",
+    "loading": "AI 프로필 대시보드 동기화 중...",
+    "pageTitle": "안녕하세요 {{name}}! AI 경력 프로필에 오신 것을 환영합니다.",
+    "defaultUser": "거기",
+    "pageDescription": "상세한 이력서 프로필, 타임라인 경력 목표, 모델 설정을 구성하여 AI Copilot을 개인화하세요.",
+    "statusLabel": "상태:",
+    "saveButton": "변경 사항 저장",
+    "savedState": "설정이 동기화되었습니다.",
+    "complete": "완료",
+    "checklistTitle": "뛰어난 설정 체크리스트",
     "buttons": {
-      "save": "프로필 변경 저장",
+      "save": "프로필 변경 사항 저장",
       "cancel": "취소",
       "saved": "저장됨",
       "unsaved": "저장되지 않은 변경사항",
       "saving": "변경사항 저장 중..."
     },
     "sections": {
-      "bio": "자기소개 및 지역",
-      "goals": "희망 직무 및 급여 목표",
-      "projects": "주요 프로젝트",
-      "experience": "경력 사항",
-      "education": "학력 사항",
-      "certifications": "자격증 목록",
+      "bio": "약력 및 위치",
+      "goals": "꿈의 직업과 급여 목표",
+      "projects": "주요 프로젝트 로그",
+      "experience": "전문적인 경험",
+      "education": "교육 배경",
+      "certifications": "인증 목록",
       "languages": "언어 능력",
       "achievements": "주요 성과",
-      "privacy": "개인정보 및 알림"
+      "privacy": "개인정보 보호 및 알림",
+      "personal": "개인정보 및 소셜 링크",
+      "preferences": "직업 선호도 및 타임라인",
+      "experienceWithCount": "업무 경험({{count}})",
+      "educationWithCount": "교육({{count}})",
+      "projectsWithCount": "주요 프로젝트({{count}})",
+      "skillsWithCount": "분류된 포트폴리오 기술({{count}})",
+      "certificationsWithCount": "인증 및 언어({{count}})",
+      "aiPersonalization": "AI 개인화 기본 설정",
+      "privacyPreferences": "개인정보 보호 및 알림 환경설정"
     }
   },
   "settings": {
-    "title": "계정 설정 구성",
-    "subtitle": "AI 모델 설정, 알림 매개변수, 연결된 계정 정보, 테마 설정을 조정합니다.",
+    "title": "계정 구성",
+    "subtitle": "AI 모델, 알림 매개변수, 연결된 통합 및 테마 매개변수를 조정하세요.",
+    "loading": "설정 대시보드 동기화 중...",
+    "pageTitle": "설정",
+    "pageTitleWithName": "안녕하세요 {{name}}! 설정",
+    "pageDescription": "상세한 시각적 테마, 활성 폴백 AI 모델, 알림 매개변수 및 데이터 통합을 관리하세요.",
+    "searchPlaceholder": "모든 설정 검색...",
+    "unsavedBanner": "설정 대시보드에 저장되지 않은 변경사항이 있습니다.",
+    "saveChanges": "변경 사항 저장",
+    "cards": {
+      "configuration": {
+        "label": "설정 구성",
+        "title": "SaaS 사용자 정의",
+        "description": "계정 동작을 미세 조정합니다."
+      },
+      "personalization": {
+        "label": "AI 개인화",
+        "title": "프롬프트 프로필",
+        "description": "사용자 정의 프롬프트를 자동 정렬합니다."
+      },
+      "billing": {
+        "label": "청구 계층",
+        "title": "스타터 무료 플랜",
+        "badge": "무료",
+        "description": "표준 비율 제한이 적용됩니다.",
+        "button": "업그레이드"
+      }
+    },
     "tabs": {
-      "ai": "AI 환경 설정",
-      "notifications": "알림 설정",
-      "security": "보안 및 개인정보",
+      "ai": "AI 환경설정",
+      "notifications": "알림",
+      "security": "보안 및 개인정보 보호",
       "connected": "연결된 계정",
       "engine": "AI 엔진",
-      "resumeJob": "이력서 및 채용 설정",
-      "appearance": "외관 및 접근성",
+      "resumeJob": "이력서 및 직무",
+      "appearance": "외관 및 접근",
       "data": "데이터 및 스토리지",
-      "danger": "위험 구역"
+      "danger": "위험지대"
     },
     "ai": {
       "language": "AI 응답 언어",
-      "personality": "AI 성격/어조",
-      "coachStyle": "코칭 스타일",
-      "responseLength": "피드백 상세도",
-      "saveConversations": "대화 자동 저장",
+      "personality": "AI 성격/톤",
+      "coachStyle": "코칭 스타일 모드",
+      "responseLength": "세부 피드백 수준",
+      "saveConversations": "AI 대화 자동 저장",
       "useMemory": "AI 메모리 컨텍스트 사용",
-      "improveResponses": "응답 자동 개선"
+      "improveResponses": "자동 응답 개선"
+    },
+    "accounts": {
+      "github": {
+        "label": "GitHub 프로필",
+        "desc": "공개 저장소 기여 동기화",
+        "placeholder": "예를 들어 https://github.com/사용자 이름"
+      },
+      "linkedin": {
+        "label": "링크드인 연결",
+        "desc": "전문적인 성과를 동기화하세요",
+        "placeholder": "예를 들어 https://linkedin.com/in/사용자 이름"
+      },
+      "portfolio": {
+        "label": "포트폴리오 URL 링크",
+        "desc": "맞춤형 개인 랜딩 페이지 연결",
+        "placeholder": "예를 들어 https://myportfolio.dev"
+      },
+      "leetcode": {
+        "label": "LeetCode 활동",
+        "desc": "알고리즘 통계 프로필 가져오기",
+        "placeholder": "예를 들어 leetcode_사용자 이름"
+      },
+      "hackerrank": {
+        "label": "해커랭크 보드",
+        "desc": "기술 인증 프로필 가져오기",
+        "placeholder": "예를 들어 hackerrank_사용자 이름"
+      },
+      "codeforces": {
+        "label": "코드포스 핸들",
+        "desc": "등급 수준 통계 가져오기",
+        "placeholder": "예를 들어 codeforces_handle"
+      }
     }
   },
   "ats": {
-    "title": "ATS 점수 검사기",
-    "subtitle": "최신 이력서 분석 시스템 기준에 따라 이력서 형식을 스캔하고 점수를 확인합니다.",
-    "ring": "ATS 준비 점수",
-    "scoreLabel": "내 점수"
+    "toasts": {
+      "preparingPrint": "ATS 스코어카드 보고서 인쇄 보기 준비 중..."
+    },
+    "title": "ATS 점수 최적화 도구",
+    "description": "이력서와 구문 분석 엔진의 호환성을 확인하고, 키워드 밀도를 최적화하고, 구조적 격차를 식별하세요.",
+    "downloadBtn": "ATS 보고서 다운로드",
+    "grade": "ATS등급",
+    "currentScore": "현재 점수",
+    "targetInfo": "초기 구문 분석 필터를 우회하려면 80% 이상의 점수를 목표로 삼으세요.",
+    "benchmarkTitle": "산업 ATS 벤치마크 비교",
+    "averageAts": "평균 ATS 점수",
+    "yourCurrentAts": "현재 ATS 점수",
+    "topScore": "상위 10% 업계 점수",
+    "trendTitle": "시간 경과에 따른 ATS 추세",
+    "trendDesc": "진행 상황과 최적화를 보여주는 스캔 기록입니다.",
+    "trendEmpty": "여러 이력서를 업로드하고 스캔하여 추세 차트를 작성하세요.",
+    "checklist": {
+      "title": "ATS 구조 체크리스트",
+      "desc": "오류 없는 구문 분석을 보장하기 위한 필수 검사입니다.",
+      "layout": "레이아웃 서식",
+      "sections": "섹션 인덱싱",
+      "keywords": "키워드 밀도",
+      "grammar": "활성 문법",
+      "readability": "파서 가독성",
+      "clean": "깨끗하다",
+      "needsReview": "검토 필요",
+      "complete": "완료",
+      "missing": "누락된 정보",
+      "optimized": "최적화됨",
+      "low": "저밀도",
+      "valid": "유효",
+      "grammarReview": "문법 복습",
+      "high": "높음",
+      "lowIndex": "낮은 지수"
+    },
+    "empty": {
+      "title": "아직 업로드된 이력서가 없습니다.",
+      "desc": "포트폴리오 이력서를 업로드하여 즉시 분석 스캔 결과와 최적화 키워드 체크리스트를 받아보세요.",
+      "btn": "이력서 업로드"
+    },
+    "history": {
+      "title": "ATS 최적화 기록 재개",
+      "scoreTitle": "ATS 점수",
+      "booster": "최적화할 키워드가 누락됨(ATS 부스터)",
+      "boosterEmpty": "누락된 키워드가 감지되지 않았습니다! 귀하의 이력서는 ATS 용어에 맞게 최적화되어 있습니다.",
+      "summary": "점수 요약",
+      "readyForAnalysis": "이 이력서는 분석할 준비가 되어 있지만 아직 ATS 분석기를 실행하지 않았습니다.",
+      "processing": "이 이력서는 현재 처리 중입니다. 구문 분석이 완료되면 ATS 분석 스코어카드를 실행할 수 있습니다.",
+      "viewDetails": "최적화 세부정보 보기",
+      "runAnalysis": "ATS 분석 실행",
+      "manage": "이력서 관리"
+    }
   },
   "jobMatch": {
-    "title": "AI 채용 공고 매칭 스캐너",
-    "subtitle": "채용 공고 설명을 붙여넣어 일치도 점수를 즉시 확인해 보세요."
+    "toasts": {
+      "selectResume": "일치하는 이력서를 선택하세요.",
+      "pasteDesc": "직무 설명 텍스트를 붙여넣으세요.",
+      "tooShort": "작업 설명 텍스트가 너무 짧습니다. 전체 설명을 붙여넣으세요.",
+      "analyzing": "Gemini AI가 정렬을 분석하고 키워드를 비교하고 있습니다. 기다려주세요...",
+      "success": "직업 매칭 완료!",
+      "error": "직무 설명 일치를 계산하지 못했습니다.",
+      "unexpected": "AI 직업 일치 보고서를 작성하지 못했습니다.",
+      "preparingPrint": "직무 일치 PDF 보고서 준비 중..."
+    },
+    "form": {
+      "pageTitle": "안녕하세요 {{name}}! 이력서 및 직무 매칭",
+      "pageTitleGeneric": "이력서 및 직무 매칭",
+      "pageDesc": "이력서 세부정보를 직무 설명과 비교하여 핵심 키워드 격차와 적합성을 찾아보세요.",
+      "noResumesTitle": "이력서를 찾을 수 없습니다",
+      "noResumesDesc": "이력서 문서를 직무 역할과 비교하기 전에 먼저 업로드해야 합니다.",
+      "uploadBtn": "이력서 업로드",
+      "title": "직업 매칭 비교 양식",
+      "desc": "업로드된 이력서 중 하나를 선택하고 대상 직무 설명을 붙여넣어 정렬 확인을 실행하세요.",
+      "selectResumeLabel": "1. 이력서를 선택하세요",
+      "selectResumePlaceholder": "이력서 중 하나를 선택하세요...",
+      "requiresParsing": "(텍스트 구문 분석 필요)",
+      "pasteDescLabel": "2. 직무 설명 붙여넣기",
+      "pasteDescPlaceholder": "여기에 대상 직무 설명(책임, 기술, 자격, 키워드 태그)을 붙여넣으세요...",
+      "minLength": "최소 길이: 100자. 원시 텍스트 블록을 직접 붙여넣습니다.",
+      "submitBtn": "일치 정렬 분석",
+      "matching": "이력서 일치...",
+      "matchingDesc": "Gemini는 직무 설명 요구사항과 귀하의 경험 항목을 상호 참조합니다."
+    },
+    "result": {
+      "back": "다른 직업 비교",
+      "title": "매칭 보고서",
+      "targetJob": "대상 직무 프로필",
+      "targetCompany": "대상기업",
+      "matched": "{{date}}과 일치함",
+      "downloadBtn": "PDF 보고서 다운로드",
+      "viewResumes": "이력서 보기",
+      "overallScore": "전체 경기 점수",
+      "roleFitSummary": "역할 적합성 요약",
+      "noSummary": "비교 요약이 생성되지 않았습니다.",
+      "alignSuccess": "키워드 정렬이 대상 프로필과 일치함",
+      "alignImpact": "예상 ATS 최적화 영향: +12%",
+      "priority": "우선순위 개선",
+      "minorEdits": "사소한 편집",
+      "tailoringRequired": "이력서 조정이 필요합니다",
+      "density": "키워드 밀도",
+      "boostNeeded": "부스트 필요",
+      "optimal": "최적",
+      "atsImprovement": "ATS 개선",
+      "atsPotential": "{{val}}%의 잠재적 점수",
+      "actions": "조치 조정",
+      "tasksPending": "{{count}} 작업 보류 중",
+      "breakdownTitle": "예선 경기 내역",
+      "techSkillsFit": "기술적 능력 적합",
+      "experienceFit": "전문적인 경험 일치",
+      "projectsFit": "학술 프로젝트 및 코드 관련성",
+      "educationFit": "교육 연계",
+      "softSkillsFit": "행동 및 소프트 스킬 지수",
+      "matchedSkillsTitle": "일치하는 기술 및 역량",
+      "noMatchedSkills": "일치하는 기술이 기록되지 않았습니다.",
+      "missingSkillsTitle": "필수 기술 누락",
+      "allSkillsMatched": "없음! 당신은 필요한 모든 기술을 보유하고 있습니다.",
+      "strengthsTitle": "후보자의 장점 및 강점",
+      "noStrengths": "기록된 강점이 없습니다.",
+      "weaknessesTitle": "정렬 격차 및 약점",
+      "noWeaknesses": "약점은 기록되지 않았습니다.",
+      "suggestionsTitle": "실행 가능한 조정 제안",
+      "suggestionsDesc": "이 대상 역할 설명과 더 잘 일치하도록 이력서를 업데이트하면서 작업을 확인하세요.",
+      "noSuggestions": "생성된 제안이 없습니다.",
+      "strongMatch": "강력한 매치",
+      "moderateMatch": "보통 경기",
+      "weakMatch": "약한 일치"
+    }
   },
   "interview": {
-    "title": "AI 모의 면접 코치",
-    "subtitle": "실시간 맞춤형 피드백을 통해 기술 및 인성 모의 면접을 연습해 보세요."
+    "title": "AI 모의면접 코치",
+    "subtitle": "실시간 피드백을 통해 실제 기술 및 행동 인터뷰 형식을 연습해 보세요.",
+    "toasts": {
+      "selectResume": "질문의 기반이 될 이력서를 선택하세요.",
+      "studying": "Gemini AI는 귀하의 배경을 연구하고 맞춤형 질문의 형식을 지정합니다...",
+      "sessionEntering": "질문이 생성되었습니다! 세션룸에 입장 중...",
+      "setupFailed": "모의면접 질문을 생성하지 못했습니다."
+    },
+    "setup": {
+      "pageTitle": "안녕하세요 {{name}}! AI면접코치",
+      "pageTitleGeneric": "AI면접코치",
+      "pageDesc": "맞춤형 모의 인터뷰 세션을 구축하고 답변을 기록하여 체계적이고 적극적인 코칭 피드백을 받으세요.",
+      "noResumesTitle": "이력서를 찾을 수 없습니다",
+      "noResumesDesc": "모의면접을 연습하기 전에 먼저 이력서 서류를 업로드해야 합니다.",
+      "uploadBtn": "이력서 업로드",
+      "title": "연습 세션 구성",
+      "desc": "귀하의 경험 수준이나 붙여넣은 요구 사항을 대상으로 모의 인터뷰를 디자인하십시오.",
+      "sessionSummary": "세션 요약",
+      "historyBtn": "역사",
+      "resumeLabel": "1. 이력서 프로필 선택",
+      "resumePlaceholder": "이력서 중 하나를 선택하세요...",
+      "jobLabel": "2. 대상 직무 대상(선택)",
+      "jobPlaceholder": "직무 내용 대상을 선택하세요...",
+      "generalMock": "일반 전문 모의 (대상 JD 없음)",
+      "jobAt": "{{company}}에서",
+      "typeLabel": "면접유형",
+      "typeMixed": "혼합 초점",
+      "typeTech": "기술적인 질문",
+      "typeBeh": "행동 질문(HR)",
+      "diffLabel": "난이도",
+      "diffEasy": "쉬움(스타터)",
+      "diffMedium": "중간(표준)",
+      "diffHard": "하드(시니어)",
+      "countLabel": "질문 수",
+      "countExpress": "질문 3개(익스프레스)",
+      "countFast": "5개 질문(빠름)",
+      "countStandard": "10문항(표준)",
+      "countDeep": "15개 질문(심층)",
+      "beginBtn": "AI 실습 세션 시작",
+      "durationExpress": "5~8분",
+      "durationFast": "10~15분",
+      "durationStandard": "20~25분",
+      "durationDeep": "30~40분",
+      "crafting": "맞춤형 인터뷰 제작...",
+      "craftingDesc": "Gemini는 귀하의 역량을 연구하고 기술 시나리오를 작성하며 평가 대상을 구성하고 있습니다.",
+      "easyDesc": "기본 기술 개념과 기본 이력서 선언을 확인하는 시작 쿼리입니다.",
+      "mediumDesc": "전문적인 중간 수준 엔지니어 행동 시나리오를 시뮬레이션하는 표준 업계 모의 질문입니다.",
+      "hardDesc": "아키텍처 설계, 시스템 제약 및 복잡한 리더십 시나리오를 확인하는 고압적인 고위 패널입니다.",
+      "estDuration": "예상 기간",
+      "questionFocus": "질문 초점",
+      "diffSetting": "난이도 설정",
+      "diffDescLabel": "난이도 설명",
+      "scoredCategoriesTitle": "점수가 매겨진 카테고리",
+      "scoredCategories": {
+        "tech": "기술 역량",
+        "comm": "커뮤니케이션 및 톤 전달",
+        "star": "STAR 행동 시나리오 논리",
+        "solve": "문제 해결의 구조적 단계"
+      }
+    },
+    "session": {
+      "toasts": {
+        "tooShort": "좀 더 자세한 답변을 제공해 주세요(최소 10자).",
+        "assessing": "Gemini AI가 답변 측정항목을 평가하고 있습니다...",
+        "recorded": "응답이 기록되었습니다!",
+        "unexpected": "답변을 제출하지 못했습니다.",
+        "completing": "모의평가 세션을 종료합니다. 최종 측정항목을 컴파일하는 중...",
+        "completed": "인터뷰 완료! 스코어카드 로드 중...",
+        "completeFailed": "전체 스코어카드를 컴파일하지 못했습니다."
+      },
+      "chatRoom": "모의채팅방",
+      "progressLabel": "연습 세션 진행",
+      "progressStatus": "{{count}} / {{total}} 답변 평가됨({{remaining}} 남음)",
+      "interviewer": "면접관",
+      "feedbackTitle": "반응평가",
+      "strengths": "✓ 강점",
+      "improvements": "⚠ 개선 사항",
+      "compiling": "모의 세션 성적표 작성 중...",
+      "completeBtn": "연습 및 성적 완료",
+      "nextBtn": "다음 질문 준비",
+      "inputPlaceholder": "면접관의 질문에 대한 답변을 입력하세요.",
+      "inputTip": "응답 정렬을 평가하려면 10자 이상을 입력하세요.",
+      "submitBtn": "답변 제출",
+      "liveScores": "실시간 세션 점수",
+      "techAccuracy": "기술적 정확성",
+      "commClarity": "의사소통의 명확성",
+      "confidenceIndex": "신뢰지수",
+      "solveQuotient": "문제 해결 지수",
+      "scoresTip": "실시간 지표 점수는 면접관에게 응답 평가를 제출하는 즉시 평균을 내고 즉시 업데이트됩니다."
+    },
+    "result": {
+      "back": "또 다른 인터뷰 연습",
+      "completedAt": "{{date}} 완료됨",
+      "download": "PDF 보고서 다운로드",
+      "retry": "인터뷰 재시도",
+      "sessionScore": "세션 점수",
+      "excellent": "훌륭한 연습!",
+      "solid": "꾸준한 노력.",
+      "needsImprovement": "개선이 필요합니다.",
+      "scoreRank": "테스트된 포트폴리오 세션의 {{val}}%보다 높은 순위입니다.",
+      "categoryTitle": "세부 카테고리 분석",
+      "tech": "기술",
+      "clarity": "선명도",
+      "confidence": "자신감",
+      "solve": "문제 해결",
+      "behavioral": "행동",
+      "adviceLabel": "성능 조언",
+      "noAdvice": "일반 코칭 요약 조언이 기록되지 않았습니다.",
+      "strengthsTitle": "관찰된 강점",
+      "noStrengths": "기록된 강점이 없습니다.",
+      "gapsTitle": "집중 성장 분야",
+      "noGaps": "약점은 기록되지 않았습니다.",
+      "stepsTitle": "권장되는 다음 단계 및 경력 조언",
+      "stepsDesc": "성장을 위해 실행 가능한 준비 작업",
+      "dialogueReviewTitle": "질문별 대화 검토",
+      "questionNumber": "질문 #{{order}} • {{type}}",
+      "scorePercent": "점수: {{val}}%",
+      "yourResponse": "귀하의 응답",
+      "noResponse": "(응답이 기록되지 않았습니다)",
+      "aiFeedback": "AI 등급 피드백",
+      "noFeedback": "기록된 피드백이 없습니다.",
+      "accuracy": "정확도",
+      "answerStrengths": "답변 강점",
+      "improvements": "개선 제안",
+      "idealAnswer": "이상적인 답변 템플릿",
+      "toasts": {
+        "preparing": "PDF 인쇄 스코어카드 준비 중..."
+      }
+    },
+    "history": {
+      "back": "인터뷰 코치로 돌아가기",
+      "title": "인터뷰 기록 로그",
+      "desc": "전반적인 카드 등급, 대화 세부정보, 과거 사례를 통해 얻은 맞춤형 경력 코치 통찰력을 검사하세요.",
+      "totalSessions": "총 연습 세션",
+      "avgScore": "평균 연습 점수",
+      "highestScore": "최고 득점 패널",
+      "totalTime": "총 연습시간",
+      "trendsTitle": "연습 점수 동향",
+      "trendsDesc": "전체 평가 점수를 시간순으로 표현합니다.",
+      "trendsEmpty": "여러 세션을 완료하여 등급 추세를 차트로 작성하세요.",
+      "filters": {
+        "all": "모두",
+        "completed": "완료된 것만",
+        "technical": "기술 전용",
+        "behavioral": "행동 전용"
+      },
+      "empty": {
+        "title": "연습 세션을 찾을 수 없습니다.",
+        "desc": "필터와 일치하는 세션을 아직 시작하거나 완료하지 않았습니다. 첫 번째 면접 코칭 세션을 진행해 보세요!",
+        "btn": "모의 세션 시작"
+      },
+      "card": {
+        "difficulty": "{{role}} 역할 • 난이도: {{difficulty}}",
+        "duration": "기간: {{val}}",
+        "deleteConfirm": "이 세션 로그 기록을 영구적으로 삭제하시겠습니까?",
+        "confirmBtn": "확인",
+        "cancelBtn": "취소",
+        "viewReport": "보고서 보기",
+        "resumeSession": "세션 재개",
+        "retryTitle": "연습 세션 다시 시도",
+        "deleteTitle": "세션 삭제"
+      },
+      "status": {
+        "active": "진행 중",
+        "completed": "완료됨 • 점수: {{score}}%",
+        "abandoned": "버려진"
+      },
+      "toasts": {
+        "deleted": "인터뷰 세션이 삭제되었습니다.",
+        "deleteFailed": "인터뷰 세션을 삭제하지 못했습니다.",
+        "deleteError": "인터뷰 세션을 삭제하는 중에 오류가 발생했습니다."
+      }
+    }
   },
   "status": {
-    "verified": "인증됨",
+    "verified": "확인됨",
     "connected": "연결됨",
-    "notLinked": "연결 안 됨",
-    "notConnected": "미연결"
+    "notLinked": "연결되지 않음",
+    "notConnected": "연결되지 않음"
   },
   "alerts": {
     "success": "작업이 성공적으로 완료되었습니다!",
     "error": "오류가 발생했습니다. 다시 시도해 주세요.",
-    "saved": "모든 변경사항이 저장되었습니다.",
-    "loading": "데이터 불러오는 중..."
+    "saved": "모든 변경 사항이 지속되었습니다.",
+    "loading": "데이터 로드 중..."
+  },
+  "auth": {
+    "signIn": {
+      "title": "돌아온 것을 환영합니다",
+      "subtitle": "경력 여정을 계속하려면 로그인하세요."
+    },
+    "signUp": {
+      "title": "계정 만들기",
+      "subtitle": "AI Career Copilot에 가입하여 프로필 최적화를 시작해 보세요."
+    }
+  },
+  "resume": {
+    "status": {
+      "uploaded": "업로드됨",
+      "parsing": "파싱",
+      "parsed": "파싱됨",
+      "analyzing": "분석 중",
+      "analyzed": "분석됨",
+      "error": "오류"
+    },
+    "success": {
+      "primaryUpdated": "기본 이력서가 성공적으로 업데이트되었습니다.",
+      "renamed": "이력서 이름이 성공적으로 변경되었습니다.",
+      "duplicated": "이력서가 성공적으로 복제되었습니다.",
+      "duplicatedDesc": "생성된 사본: {{name}}",
+      "deleted": "이력서 문서가 성공적으로 삭제되었습니다."
+    },
+    "errors": {
+      "primaryUpdate": "기본 상태를 업데이트하지 못했습니다.",
+      "primaryUpdateUnexpected": "기본 이력서를 설정하는 중에 오류가 발생했습니다.",
+      "rename": "이력서 이름을 바꾸지 못했습니다.",
+      "renameUnexpected": "이력서 이름을 바꾸는 중에 오류가 발생했습니다.",
+      "duplicate": "이력서를 복제하지 못했습니다.",
+      "duplicateUnexpected": "이력서를 복사하는 중에 오류가 발생했습니다.",
+      "delete": "이력서를 삭제하지 못했습니다.",
+      "deleteUnexpected": "이력서를 삭제하는 중에 오류가 발생했습니다."
+    },
+    "list": {
+      "title": "내 이력서",
+      "titleWithUser": "안녕하세요 {{name}}! 내 이력서",
+      "description": "업로드된 이력서를 보고 관리하거나 새 버전을 업로드하세요.",
+      "uploadBtn": "이력서 업로드",
+      "empty": {
+        "title": "아직 업로드된 이력서가 없습니다.",
+        "desc": "포트폴리오가 신선해 보이네요! 이력서를 PDF 또는 Word 형식으로 업로드하여 ATS 점수를 스캔하고 시뮬레이션 인터뷰 코칭을 시작하세요.",
+        "btn": "첫 번째 이력서 업로드"
+      },
+      "card": {
+        "primaryTag": "기본",
+        "renamePlaceholder": "이력서 이름을 입력하세요...",
+        "renameTitle": "문서 이름 바꾸기",
+        "documentType": "{{type}} 문서",
+        "deleteConfirm": "이 이력서 문서를 영구적으로 삭제하시겠습니까?",
+        "deleteBtn": "확인",
+        "viewAnalysisTitle": "AI 분석 보고서 보기",
+        "setPrimaryTitle": "기본 이력서로 설정",
+        "duplicateTitle": "이력서가 중복되었습니다.",
+        "downloadTitle": "문서 다운로드",
+        "viewDetailsTitle": "세부정보 보기",
+        "deleteTitle": "이력서 삭제"
+      }
+    },
+    "upload": {
+      "dropHere": "여기에 파일을 드롭하세요.",
+      "dragHere": "이력서를 여기에 드래그 앤 드롭하세요.",
+      "or": "또는",
+      "browse": "파일 찾아보기",
+      "fromComputer": "컴퓨터에서",
+      "supportedFormats": "지원되는 형식: PDF, DOCX(최대 10MB)",
+      "validating": "파일 유효성을 검사하는 중...",
+      "uploading": "파일 업로드 중...",
+      "parsing": "일반 텍스트 추출 중...",
+      "processing": "처리",
+      "success": {
+        "title": "업로드 성공!",
+        "desc": "\"{{name}}\"이(가) 귀하의 프로필에 안전하게 저장되었습니다. 곧 리디렉션됩니다..."
+      },
+      "error": {
+        "title": "업로드가 차단되었습니다",
+        "tryAgain": "다시 시도하세요"
+      },
+      "toasts": {
+        "retrieveIdError": "업로드에 성공했지만 이력서 데이터베이스 ID를 검색할 수 없습니다.",
+        "trackingError": "업로드 추적 오류",
+        "success": "이력서가 성공적으로 업로드되고 구문 분석되었습니다!",
+        "extractError": "이력서에서 일반 텍스트를 추출하지 못했습니다.",
+        "parsingFailed": "구문 분석 실패",
+        "unexpectedUploadError": "업로드 중에 예상치 못한 오류가 발생했습니다.",
+        "uploadFailed": "업로드 실패"
+      },
+      "validation": {
+        "noFile": "선택한 파일이 없습니다.",
+        "unsupportedType": "지원되지 않는 파일 형식입니다. PDF 및 DOCX 파일만 허용됩니다.",
+        "tooLarge": "파일이 너무 큽니다. 최대 허용 크기는 10MB입니다."
+      }
+    },
+    "analysis": {
+      "toasts": {
+        "analyzeError": "문서를 분석하지 못했습니다.",
+        "success": "AI 이력서 분석이 성공적으로 완료되었습니다!",
+        "unexpectedError": "AI 분석 중 예상치 못한 오류가 발생했습니다.",
+        "failed": "AI 분석 실패",
+        "reanalyzing": "Gemini AI가 귀하의 이력서를 다시 분석하고 있습니다. 기다려주세요...",
+        "reanalyzeSuccess": "이력서 재분석에 성공했습니다!",
+        "reanalyzeError": "AI 분석 중에 문제가 발생했습니다.",
+        "preparingPrint": "보고서 인쇄 보기 준비 중..."
+      },
+      "error": {
+        "title": "분석 엔진 오류",
+        "tryAgain": "다시 시도"
+      },
+      "loading": {
+        "title": "AI 분석 초기화 중...",
+        "titleRunning": "문서 분석 중...",
+        "desc": "Gemini는 귀하의 경험 설명을 평가하고 기술 키워드를 색인화하며 제안 초안을 작성하고 있습니다.",
+        "descRunning": "Gemini AI는 구조, 문법, ATS 키워드 격차를 읽습니다. 몇 초 정도 걸립니다."
+      },
+      "dashboard": {
+        "back": "내 이력서로 돌아가기",
+        "title": "AI 이력서 분석",
+        "uploaded": "{{date}} 업로드됨",
+        "analyzed": "{{date}} 분석됨",
+        "downloadPdf": "PDF 보고서 다운로드",
+        "analyzeAgain": "다시 분석",
+        "summary": "AI 요약",
+        "gradeTitle": "이력서 성적",
+        "overallScore": "종합점수",
+        "gradeDesc": "ATS 구조, 경험 영향 및 프로젝트 세부 정보 스캔을 기반으로 등급을 매깁니다.",
+        "benchmarks": "주요 포트폴리오 벤치마크",
+        "percentile": "추정 백분위수",
+        "percentileBetter": "지원자의 {{count}}%보다 낫습니다.",
+        "percentileTop": "상위 {{count}}%",
+        "priority": "개선 우선순위",
+        "priorityDesc": "제안 조치의 긴급성",
+        "atsIncrease": "ATS 점수 증가",
+        "atsIncreasePoints": "+{{count}} 포인트",
+        "atsIncreaseDesc": "최적화 제안 포함: {{val}}",
+        "health": {
+          "title": "콘텐츠 상태",
+          "formatting": "서식 지정",
+          "grammar": "문법",
+          "keywords": "키워드",
+          "length": "길이",
+          "sections": "섹션",
+          "pass": "패스",
+          "warning": "경고",
+          "review": "검토",
+          "complete": "완료",
+          "low": "낮음",
+          "medium": "중간",
+          "high": "높음",
+          "optimized": "최적화됨",
+          "full": "전체",
+          "check": "확인"
+        },
+        "metrics": {
+          "ats": {
+            "title": "ATS 호환성",
+            "desc": "파서 가독성 및 형식 최적화를 측정합니다."
+          },
+          "skills": {
+            "title": "기술 및 키워드",
+            "desc": "기술 역량의 밀도와 관련성을 측정합니다."
+          },
+          "experience": {
+            "title": "업무 경험",
+            "desc": "동작 동사, 영향 설명 및 숫자를 측정합니다."
+          },
+          "education": {
+            "title": "학문적 배경",
+            "desc": "자격 증명 레이아웃 및 학위 인덱싱을 측정합니다."
+          },
+          "projects": {
+            "title": "주요 프로젝트",
+            "desc": "기술 깊이, 범위 및 코드 가시성을 측정합니다."
+          },
+          "grammar": {
+            "title": "문법 및 표현",
+            "desc": "철자, 활성 톤 및 구문 구조를 측정합니다."
+          }
+        },
+        "strengths": {
+          "title": "주요강점",
+          "empty": "기록된 강점이 없습니다."
+        },
+        "weaknesses": {
+          "title": "콘텐츠 격차 및 약점",
+          "empty": "약점은 기록되지 않았습니다."
+        },
+        "missingKeywords": {
+          "title": "ATS 키워드 누락",
+          "desc": "ATS 점수를 높이려면 다음 핵심 역량을 추가하세요.",
+          "disabled": "누락된 키워드 강조표시가 비활성화되었습니다.",
+          "empty": "누락된 키워드가 감지되지 않았습니다. 잘했어요!"
+        },
+        "suggestions": {
+          "title": "실행 가능한 제안",
+          "desc": "이력서 파일을 업데이트할 때 제안 사항을 확인하세요.",
+          "disabled": "제안 자동 생성이 비활성화되었습니다.",
+          "empty": "제안사항이 없습니다."
+        }
+      }
+    },
+    "details": {
+      "toasts": {
+        "deleteError": "이력서를 삭제하지 못했습니다.",
+        "deleteSuccess": "이력서가 삭제되었습니다.",
+        "deleteErrorUnexpected": "삭제하는 동안 오류가 발생했습니다."
+      },
+      "back": "이력서로 돌아가기",
+      "uploaded": "{{date}} 업로드됨",
+      "downloadBtn": "파일 다운로드",
+      "deleteBtn": "이력서 삭제",
+      "deleteDialog": {
+        "title": "이력서 삭제",
+        "desc": "\"{{name}}\"을(를) 삭제하시겠습니까? 이 작업을 수행하면 데이터베이스에서 해당 항목이 영구적으로 제거되며 취소할 수 없습니다.",
+        "deleting": "삭제 중...",
+        "confirm": "삭제 확인"
+      },
+      "tabs": {
+        "structured": "구조화된 정보",
+        "raw": "원시 텍스트",
+        "json": "JSON 트리"
+      },
+      "unknownCandidate": "알 수 없는 후보자",
+      "noLocation": "나열된 위치가 없습니다.",
+      "linkedin": "링크드인 프로필",
+      "github": "GitHub 프로필",
+      "summary": "전문 요약",
+      "skills": "핵심 역량 및 기술",
+      "experience": "전문적인 경험",
+      "education": "교육",
+      "projects": "주요 프로젝트",
+      "certifications": "인증 및 과정",
+      "languages": "언어",
+      "noRawText": "이 이력서에 대해 추출된 원시 텍스트가 없습니다.",
+      "metadata": {
+        "title": "문서 메타데이터",
+        "status": "구문 분석 상태",
+        "format": "문서 형식",
+        "size": "파일 크기",
+        "provider": "스토리지 제공자"
+      }
+    }
   }
 }

@@ -92,8 +92,8 @@ export default async function DashboardPage() {
   const profileCompletion = Math.round((filledFields.length / profileFields.length) * 100);
 
   // Resume Uploaded & Last Analyzed metadata
-  const resumeUploadedDate = resumes[0] ? formatRelativeTime(resumes[0].createdAt) : "No uploads yet";
-  const lastAnalyzedResumeName = latestAnalyzedResume ? latestAnalyzedResume.fileName : "None";
+  const resumeUploadedDate = resumes[0] ? resumes[0].createdAt.toISOString() : null;
+  const lastAnalyzedResumeName = latestAnalyzedResume ? latestAnalyzedResume.fileName : null;
 
   // Parse Suggestions from Latest Resume Analysis
   let suggestions = [];
@@ -115,29 +115,29 @@ export default async function DashboardPage() {
   // Fallback default suggestions if empty
   if (suggestions.length === 0) {
     suggestions = [
-      "Upload your first resume to get detailed AI feedback suggestions.",
-      "Practice mock interviews to get targeted responses recommendations.",
-      "Match against jobs to find technical capability gaps.",
+      "dashboard.suggestions.default.one",
+      "dashboard.suggestions.default.two",
+      "dashboard.suggestions.default.three",
     ];
   }
 
   // Compile Dynamic Quick Insights
   const insights = [];
   if (atsScore > 0 && atsScore < 80) {
-    insights.push("Improve ATS score by adding missing keywords highlighted in your report.");
+    insights.push("dashboard.insights.default.one");
   } else if (atsScore >= 80) {
-    insights.push("ATS score is optimized! Continue matching to job descriptions to find custom gaps.");
+    insights.push("dashboard.insights.default.two");
   }
   if (interviewScore === 0) {
-    insights.push("Practice mock interviews to evaluate technical delivery and confidence levels.");
+    insights.push("dashboard.insights.default.three");
   } else if (interviewScore < 80) {
-    insights.push("Strengthen problem-solving keywords in answers to raise interview index.");
+    insights.push("dashboard.insights.default.four");
   }
   if (jobMatchScore > 0 && jobMatchScore < 70) {
-    insights.push("Customize your resume projects to better align with job requirements.");
+    insights.push("dashboard.insights.default.five");
   }
   if (insights.length < 3) {
-    insights.push("Quantify resume bullet achievements with metrics and technical details.");
+    insights.push("dashboard.insights.default.six");
   }
 
   // Format stats payload
@@ -186,9 +186,10 @@ export default async function DashboardPage() {
         id: `resume-analyzed-${res.id}`,
         refId: res.id,
         type: "resume",
-        title: "Resume Analyzed",
-        description: `Scorecard computed for "${res.fileName}". Score: ${res.analysis.overallScore}/100.`,
-        time: formatRelativeTime(res.updatedAt),
+        titleKey: "dashboard.activity.resumeAnalyzed.title",
+        descKey: "dashboard.activity.resumeAnalyzed.desc",
+        descParams: { fileName: res.fileName, score: res.analysis.overallScore },
+        createdAt: res.updatedAt.toISOString(),
         rawTime: new Date(res.updatedAt).getTime(),
       });
     } else if (res.status === "PARSED") {
@@ -196,9 +197,10 @@ export default async function DashboardPage() {
         id: `resume-parsed-${res.id}`,
         refId: res.id,
         type: "resume",
-        title: "Resume Parsed",
-        description: `Content extracted from "${res.fileName}". Ready for analysis.`,
-        time: formatRelativeTime(res.updatedAt),
+        titleKey: "dashboard.activity.resumeParsed.title",
+        descKey: "dashboard.activity.resumeParsed.desc",
+        descParams: { fileName: res.fileName },
+        createdAt: res.updatedAt.toISOString(),
         rawTime: new Date(res.updatedAt).getTime(),
       });
     }
@@ -217,9 +219,10 @@ export default async function DashboardPage() {
       id: `match-${match.id}`,
       refId: match.id,
       type: "match",
-      title: "Job Match Scanned",
-      description: `Matched against "${match.jobDescription.company || "Target Job"}". Alignment: ${match.matchScore}%.`,
-      time: formatRelativeTime(match.createdAt),
+      titleKey: "dashboard.activity.jobMatch.title",
+      descKey: "dashboard.activity.jobMatch.desc",
+      descParams: { company: match.jobDescription.company || "Target Job", score: match.matchScore },
+      createdAt: match.createdAt.toISOString(),
       rawTime: new Date(match.createdAt).getTime(),
     });
   });
@@ -237,9 +240,10 @@ export default async function DashboardPage() {
         id: `interview-${session.id}`,
         refId: session.id,
         type: "interview",
-        title: "Interview Completed",
-        description: `Practice session for "${session.role}" graded. Score: ${session.overallScore || 0}%.`,
-        time: formatRelativeTime(session.updatedAt),
+        titleKey: "dashboard.activity.interviewCompleted.title",
+        descKey: "dashboard.activity.interviewCompleted.desc",
+        descParams: { role: session.role, score: session.overallScore || 0 },
+        createdAt: session.updatedAt.toISOString(),
         rawTime: new Date(session.updatedAt).getTime(),
       });
     } else if (session.status === "ACTIVE") {
@@ -247,9 +251,10 @@ export default async function DashboardPage() {
         id: `interview-${session.id}`,
         refId: session.id,
         type: "interview",
-        title: "Interview Started",
-        description: `Coaching session for "${session.role}" is currently active.`,
-        time: formatRelativeTime(session.updatedAt),
+        titleKey: "dashboard.activity.interviewStarted.title",
+        descKey: "dashboard.activity.interviewStarted.desc",
+        descParams: { role: session.role },
+        createdAt: session.updatedAt.toISOString(),
         rawTime: new Date(session.updatedAt).getTime(),
       });
     }

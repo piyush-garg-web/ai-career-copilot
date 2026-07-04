@@ -64,7 +64,10 @@ export async function POST(req, { params }) {
       question.content,
       question.questionType,
       content.trim(),
-      dbUser.aiPreferences || {}
+      {
+        ...(dbUser.aiPreferences || {}),
+        preferredLanguage: dbUser.preferredLanguage || "en"
+      }
     );
 
     // Save answer evaluation in database using upsert

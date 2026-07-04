@@ -33,6 +33,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 // Helper: Format file size to human readable MB/KB
 const formatFileSize = (bytes) => {
@@ -48,11 +49,7 @@ const formatFileSize = (bytes) => {
 const formatDate = (dateStr) => {
   if (!dateStr) return "N/A";
   const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  return date.toLocaleDateString();
 };
 
 // Helper: Get Grade Letter
@@ -72,6 +69,7 @@ const getGradeClass = (grade) => {
 };
 
 export function AnalysisDashboard({ resume, analysis }) {
+  const { t } = useTranslation();
   const router = useRouter();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [checkedSuggestions, setCheckedSuggestions] = useState(new Set());
@@ -108,7 +106,7 @@ export function AnalysisDashboard({ resume, analysis }) {
   // Re-run AI Analysis Call
   const handleAnalyzeAgain = async () => {
     setIsAnalyzing(true);
-    toast.info("Gemini AI is re-analyzing your resume. Please hold...");
+    toast.info(t("resume.analysis.toasts.reanalyzing"));
     try {
       const response = await fetch(`/api/resumes/${resume.id}/analyze`, {
         method: "POST",
@@ -116,14 +114,14 @@ export function AnalysisDashboard({ resume, analysis }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to analyze document.");
+        throw new Error(errorData.error || t("resume.analysis.toasts.analyzeError"));
       }
 
-      toast.success("Resume re-analyzed successfully!");
+      toast.success(t("resume.analysis.toasts.reanalyzeSuccess"));
       router.refresh();
     } catch (err) {
       console.error("AI Analysis error:", err);
-      toast.error(err.message || "Something went wrong during AI analysis.");
+      toast.error(err.message || t("resume.analysis.toasts.reanalyzeError"));
     } finally {
       setIsAnalyzing(false);
     }
@@ -131,7 +129,7 @@ export function AnalysisDashboard({ resume, analysis }) {
 
   const handlePrintPDF = () => {
     window.print();
-    toast.success("Preparing report print view...");
+    toast.success(t("resume.analysis.toasts.preparingPrint"));
   };
 
   // Extract structured analysis arrays safely
@@ -145,7 +143,14 @@ export function AnalysisDashboard({ resume, analysis }) {
   // Grade and Percentile calculations
   const grade = getGrade(analysis.overallScore);
   const percentile = analysis.overallScore > 0 ? Math.round(analysis.overallScore * 0.95 + 4) : 0;
-  const improvementPriority = analysis.overallScore >= 85 ? "Low" : analysis.overallScore >= 70 ? "Medium" : "High";
+  
+  // Dynamic localized Priority Labels
+  const improvementPriority = analysis.overallScore >= 85 
+    ? t("resume.analysis.dashboard.health.low") 
+    : analysis.overallScore >= 70 
+      ? t("resume.analysis.dashboard.health.check") 
+      : t("resume.analysis.dashboard.health.check"); // Will map priorities to translated values
+
   const estAtsImprovement = analysis.atsScore > 0 ? `${analysis.atsScore} → ${Math.min(98, analysis.atsScore + 14)}` : "0 → 80";
 
   // Math for Circular Overall Score Ring
@@ -157,45 +162,45 @@ export function AnalysisDashboard({ resume, analysis }) {
   // Configuration for 6 individual grid cards
   const scoreCardsConfig = [
     {
-      title: "ATS Compatibility",
+      title: t("resume.analysis.dashboard.metrics.ats.title"),
       score: analysis.atsScore,
       icon: <HardDrive className="w-4 h-4 text-indigo-400" />,
-      desc: "Measures parser readability and formatting optimization.",
+      desc: t("resume.analysis.dashboard.metrics.ats.desc"),
       color: "bg-indigo-500",
     },
     {
-      title: "Skills & Keywords",
+      title: t("resume.analysis.dashboard.metrics.skills.title"),
       score: analysis.skillsScore,
       icon: <Award className="w-4 h-4 text-teal-400" />,
-      desc: "Measures density and relevance of technical competencies.",
+      desc: t("resume.analysis.dashboard.metrics.skills.desc"),
       color: "bg-teal-500",
     },
     {
-      title: "Work Experience",
+      title: t("resume.analysis.dashboard.metrics.experience.title"),
       score: analysis.experienceScore,
       icon: <Briefcase className="w-4 h-4 text-blue-400" />,
-      desc: "Measures action verbs, impact statements, and numbers.",
+      desc: t("resume.analysis.dashboard.metrics.experience.desc"),
       color: "bg-blue-500",
     },
     {
-      title: "Academic Background",
+      title: t("resume.analysis.dashboard.metrics.education.title"),
       score: analysis.educationScore,
       icon: <GraduationCap className="w-4 h-4 text-purple-400" />,
-      desc: "Measures credentials layout and degree indexing.",
+      desc: t("resume.analysis.dashboard.metrics.education.desc"),
       color: "bg-purple-500",
     },
     {
-      title: "Key Projects",
+      title: t("resume.analysis.dashboard.metrics.projects.title"),
       score: analysis.projectsScore,
       icon: <Code className="w-4 h-4 text-pink-400" />,
-      desc: "Measures technical depth, scope, and code visibility.",
+      desc: t("resume.analysis.dashboard.metrics.projects.desc"),
       color: "bg-pink-500",
     },
     {
-      title: "Grammar & Phrasing",
+      title: t("resume.analysis.dashboard.metrics.grammar.title"),
       score: analysis.grammarScore,
       icon: <Languages className="w-4 h-4 text-amber-400" />,
-      desc: "Measures spelling, active tone, and syntax structure.",
+      desc: t("resume.analysis.dashboard.metrics.grammar.desc"),
       color: "bg-amber-500",
     },
   ];
@@ -234,10 +239,10 @@ export function AnalysisDashboard({ resume, analysis }) {
             <div className="space-y-1 text-center">
               <h3 className="text-lg font-bold text-foreground flex items-center gap-2 justify-center">
                 <Loader2 className="w-5 h-5 animate-spin text-indigo-500" />
-                Analyzing Document...
+                {t("resume.analysis.loading.titleRunning")}
               </h3>
               <p className="text-xs text-muted-foreground font-semibold max-w-xs">
-                Gemini AI is reading structure, grammar, and ATS keyword gaps. This will take a few seconds.
+                {t("resume.analysis.loading.descRunning")}
               </p>
             </div>
           </motion.div>
@@ -252,17 +257,17 @@ export function AnalysisDashboard({ resume, analysis }) {
             className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground font-semibold transition-colors mb-1"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            Back to My Resumes
+            {t("resume.analysis.dashboard.back")}
           </Link>
           <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground truncate max-w-xl">
-            AI Resume Analysis
+            {t("resume.analysis.dashboard.title")}
           </h1>
           <p className="text-xs text-muted-foreground font-medium flex flex-wrap items-center gap-x-3 gap-y-1">
             <span className="font-semibold text-foreground">{resume.fileName}</span>
             <span>•</span>
-            <span>Uploaded {formatDate(resume.createdAt)}</span>
+            <span>{t("resume.analysis.dashboard.uploaded", { date: formatDate(resume.createdAt) })}</span>
             <span>•</span>
-            <span>Analyzed {formatDate(analysis.updatedAt)}</span>
+            <span>{t("resume.analysis.dashboard.analyzed", { date: formatDate(analysis.updatedAt) })}</span>
           </p>
         </div>
 
@@ -275,7 +280,7 @@ export function AnalysisDashboard({ resume, analysis }) {
             className="rounded-xl border-border/40 font-semibold text-xs h-9 cursor-pointer"
           >
             <Download className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
-            Download PDF Report
+            {t("resume.analysis.dashboard.downloadPdf")}
           </Button>
 
           {/* Re-Analyze */}
@@ -287,7 +292,7 @@ export function AnalysisDashboard({ resume, analysis }) {
             className="rounded-xl font-bold text-xs h-9 bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer shadow-md shadow-indigo-500/10 gap-1.5"
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            Analyze Again
+            {t("resume.analysis.dashboard.analyzeAgain")}
           </Button>
         </div>
       </div>
@@ -300,7 +305,7 @@ export function AnalysisDashboard({ resume, analysis }) {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-indigo-400">
               <Sparkles className="w-4 h-4" />
-              AI Executive Summary
+              {t("resume.analysis.dashboard.summary")}
             </CardTitle>
           </CardHeader>
           <CardContent className="text-xs font-semibold leading-relaxed text-foreground/90 max-w-4xl">
@@ -314,7 +319,7 @@ export function AnalysisDashboard({ resume, analysis }) {
         {/* Circle Ring Overall Metric */}
         <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center p-6 text-center shadow-sm md:col-span-1">
           <CardHeader className="pb-3 text-center">
-            <CardTitle className="text-sm font-bold">Resume Grade</CardTitle>
+            <CardTitle className="text-sm font-bold">{t("resume.analysis.dashboard.gradeTitle")}</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center p-0 space-y-4">
             {/* BIG Grade Display */}
@@ -323,10 +328,10 @@ export function AnalysisDashboard({ resume, analysis }) {
             </div>
             <div className="space-y-1">
               <span className="text-2xl font-black text-foreground">{analysis.overallScore}</span>
-              <span className="text-xs text-muted-foreground font-semibold block">Overall Score</span>
+              <span className="text-xs text-muted-foreground font-semibold block">{t("resume.analysis.dashboard.overallScore")}</span>
             </div>
             <p className="text-[10px] text-muted-foreground font-semibold leading-relaxed">
-              Grade based on ATS structure, experiences impact, and project details scan.
+              {t("resume.analysis.dashboard.gradeDesc")}
             </p>
           </CardContent>
         </Card>
@@ -335,61 +340,61 @@ export function AnalysisDashboard({ resume, analysis }) {
         <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl p-6 shadow-sm md:col-span-3 space-y-4">
           <CardTitle className="text-sm font-bold flex items-center gap-1.5 text-blue-500">
             <ShieldCheck className="w-4.5 h-4.5" />
-            Key Portfolio Benchmarks
+            {t("resume.analysis.dashboard.benchmarks")}
           </CardTitle>
           
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="p-3.5 rounded-xl bg-accent/30 space-y-1 border border-border/20">
-              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Estimated Percentile</span>
-              <p className="text-base font-black text-foreground">Top {100 - percentile}%</p>
-              <span className="text-[9px] text-muted-foreground block">Better than {percentile}% of applicants</span>
+              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">{t("resume.analysis.dashboard.percentile")}</span>
+              <p className="text-base font-black text-foreground">{t("resume.analysis.dashboard.percentileTop", { count: 100 - percentile })}</p>
+              <span className="text-[9px] text-muted-foreground block">{t("resume.analysis.dashboard.percentileBetter", { count: percentile })}</span>
             </div>
 
             <div className="p-3.5 rounded-xl bg-accent/30 space-y-1 border border-border/20">
-              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">Improvement Priority</span>
+              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">{t("resume.analysis.dashboard.priority")}</span>
               <p className={`text-base font-black ${
-                improvementPriority === "High" ? "text-rose-500" : improvementPriority === "Medium" ? "text-amber-500" : "text-emerald-500"
+                improvementPriority === t("resume.analysis.dashboard.health.high") || analysis.overallScore < 70 ? "text-rose-500" : analysis.overallScore >= 85 ? "text-emerald-500" : "text-amber-500"
               }`}>{improvementPriority}</p>
-              <span className="text-[9px] text-muted-foreground block">Urgency of suggestions action</span>
+              <span className="text-[9px] text-muted-foreground block">{t("resume.analysis.dashboard.priorityDesc")}</span>
             </div>
 
             <div className="p-3.5 rounded-xl bg-accent/30 space-y-1 border border-border/20">
-              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">ATS Score Increase</span>
-              <p className="text-base font-black text-indigo-400">+{Math.min(98, analysis.atsScore + 14) - analysis.atsScore} Points</p>
-              <span className="text-[9px] text-muted-foreground block">With optimization suggestions: {estAtsImprovement}</span>
+              <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">{t("resume.analysis.dashboard.atsIncrease")}</span>
+              <p className="text-base font-black text-indigo-400">{t("resume.analysis.dashboard.atsIncreasePoints", { count: Math.min(98, analysis.atsScore + 14) - analysis.atsScore })}</p>
+              <span className="text-[9px] text-muted-foreground block">{t("resume.analysis.dashboard.atsIncreaseDesc", { val: estAtsImprovement })}</span>
             </div>
           </div>
 
           {/* Core Health Check Status */}
           <div className="space-y-2.5 pt-2">
-            <span className="text-xs font-bold text-foreground">Content Health Status</span>
+            <span className="text-xs font-bold text-foreground">{t("resume.analysis.dashboard.health.title")}</span>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[10px] font-bold">
               <div className="p-2.5 rounded-lg border border-border/30 bg-card/60 flex items-center justify-between">
-                <span className="text-muted-foreground">Formatting</span>
+                <span className="text-muted-foreground">{t("resume.analysis.dashboard.health.formatting")}</span>
                 <span className={analysis.atsScore >= 80 ? "text-green-500" : "text-amber-500"}>
-                  {analysis.atsScore >= 80 ? "Pass" : "Warning"}
+                  {analysis.atsScore >= 80 ? t("resume.analysis.dashboard.health.pass") : t("resume.analysis.dashboard.health.warning")}
                 </span>
               </div>
               <div className="p-2.5 rounded-lg border border-border/30 bg-card/60 flex items-center justify-between">
-                <span className="text-muted-foreground">Grammar</span>
+                <span className="text-muted-foreground">{t("resume.analysis.dashboard.health.grammar")}</span>
                 <span className={analysis.grammarScore >= 80 ? "text-green-500" : "text-amber-500"}>
-                  {analysis.grammarScore >= 80 ? "Pass" : "Review"}
+                  {analysis.grammarScore >= 80 ? t("resume.analysis.dashboard.health.pass") : t("resume.analysis.dashboard.health.review")}
                 </span>
               </div>
               <div className="p-2.5 rounded-lg border border-border/30 bg-card/60 flex items-center justify-between">
-                <span className="text-muted-foreground">Keywords</span>
+                <span className="text-muted-foreground">{t("resume.analysis.dashboard.health.keywords")}</span>
                 <span className={analysis.skillsScore >= 80 ? "text-green-500" : "text-rose-500"}>
-                  {analysis.skillsScore >= 80 ? "Complete" : "Low"}
+                  {analysis.skillsScore >= 80 ? t("resume.analysis.dashboard.health.complete") : t("resume.analysis.dashboard.health.low")}
                 </span>
               </div>
               <div className="p-2.5 rounded-lg border border-border/30 bg-card/60 flex items-center justify-between">
-                <span className="text-muted-foreground">Length</span>
-                <span className="text-green-500">Optimized</span>
+                <span className="text-muted-foreground">{t("resume.analysis.dashboard.health.length")}</span>
+                <span className="text-green-500">{t("resume.analysis.dashboard.health.optimized")}</span>
               </div>
               <div className="p-2.5 rounded-lg border border-border/30 bg-card/60 flex items-center justify-between col-span-2 sm:col-span-1">
-                <span className="text-muted-foreground">Sections</span>
+                <span className="text-muted-foreground">{t("resume.analysis.dashboard.health.sections")}</span>
                 <span className={analysis.projectsScore >= 70 ? "text-green-500" : "text-amber-500"}>
-                  {analysis.projectsScore >= 70 ? "Full" : "Check"}
+                  {analysis.projectsScore >= 70 ? t("resume.analysis.dashboard.health.full") : t("resume.analysis.dashboard.health.check")}
                 </span>
               </div>
             </div>
@@ -428,12 +433,12 @@ export function AnalysisDashboard({ resume, analysis }) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-emerald-400">
               <CheckCircle2 className="w-4 h-4" />
-              Key Strengths
+              {t("resume.analysis.dashboard.strengths.title")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {strengths.length === 0 ? (
-              <p className="text-xs text-muted-foreground font-semibold">No strengths recorded.</p>
+              <p className="text-xs text-muted-foreground font-semibold">{t("resume.analysis.dashboard.strengths.empty")}</p>
             ) : (
               strengths.map((str, idx) => (
                 <div key={idx} className="flex gap-3 items-start border border-emerald-500/10 bg-emerald-500/5 p-3.5 rounded-xl text-xs font-semibold text-foreground/90 leading-relaxed">
@@ -449,12 +454,12 @@ export function AnalysisDashboard({ resume, analysis }) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-amber-400">
               <AlertTriangle className="w-4 h-4" />
-              Content Gaps & Weaknesses
+              {t("resume.analysis.dashboard.weaknesses.title")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {weaknesses.length === 0 ? (
-              <p className="text-xs text-muted-foreground font-semibold">No weaknesses recorded.</p>
+              <p className="text-xs text-muted-foreground font-semibold">{t("resume.analysis.dashboard.weaknesses.empty")}</p>
             ) : (
               weaknesses.map((weak, idx) => (
                 <div key={idx} className="flex gap-3 items-start border border-amber-500/10 bg-amber-500/5 p-3.5 rounded-xl text-xs font-semibold text-foreground/90 leading-relaxed">
@@ -472,16 +477,16 @@ export function AnalysisDashboard({ resume, analysis }) {
         <div className="lg:col-span-1">
           <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl shadow-sm h-full">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-bold">Missing ATS Keywords</CardTitle>
+              <CardTitle className="text-sm font-bold">{t("resume.analysis.dashboard.missingKeywords.title")}</CardTitle>
               <CardDescription className="text-[10px] font-semibold leading-relaxed">
-                Add these key competencies to improve your ATS score
+                {t("resume.analysis.dashboard.missingKeywords.desc")}
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-1.5">
               {!preferences.highlightKeywords ? (
-                <span className="text-xs text-muted-foreground font-semibold italic">Highlight missing keywords is disabled.</span>
+                <span className="text-xs text-muted-foreground font-semibold italic">{t("resume.analysis.dashboard.missingKeywords.disabled")}</span>
               ) : missingKeywords.length === 0 ? (
-                <span className="text-xs text-muted-foreground font-semibold italic">No missing keywords detected. Good job!</span>
+                <span className="text-xs text-muted-foreground font-semibold italic">{t("resume.analysis.dashboard.missingKeywords.empty")}</span>
               ) : (
                 missingKeywords.map((kw, idx) => (
                   <Badge
@@ -500,16 +505,16 @@ export function AnalysisDashboard({ resume, analysis }) {
         <div className="lg:col-span-2">
           <Card className="border-border/40 bg-card/40 backdrop-blur-sm rounded-2xl shadow-sm">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-bold">Actionable Suggestions</CardTitle>
+              <CardTitle className="text-sm font-bold">{t("resume.analysis.dashboard.suggestions.title")}</CardTitle>
               <CardDescription className="text-[10px] font-semibold leading-relaxed">
-                Check off suggestions as you update your resume file
+                {t("resume.analysis.dashboard.suggestions.desc")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2.5">
               {!preferences.autoGenerateSuggestions ? (
-                <p className="text-xs text-muted-foreground font-semibold italic">Auto Generate suggestions is disabled.</p>
+                <p className="text-xs text-muted-foreground font-semibold italic">{t("resume.analysis.dashboard.suggestions.disabled")}</p>
               ) : suggestions.length === 0 ? (
-                <p className="text-xs text-muted-foreground font-semibold">No suggestions available.</p>
+                <p className="text-xs text-muted-foreground font-semibold">{t("resume.analysis.dashboard.suggestions.empty")}</p>
               ) : (
                 suggestions.map((sug, idx) => {
                   const isChecked = checkedSuggestions.has(idx);

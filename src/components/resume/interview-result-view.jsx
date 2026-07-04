@@ -27,6 +27,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
+import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 // Helper: Format Dates
 const formatDate = (dateStr) => {
@@ -48,6 +49,7 @@ const formatDuration = (totalSecs) => {
 };
 
 export function InterviewResultView({ session, questions }) {
+  const { t } = useTranslation();
   const [expandedQuestionId, setExpandedQuestionId] = useState(null);
 
   const toggleExpand = (qId) => {
@@ -72,7 +74,7 @@ export function InterviewResultView({ session, questions }) {
 
   const handlePrint = () => {
     window.print();
-    toast.success("Preparing PDF print scorecard...");
+    toast.success(t("interview.result.toasts.preparing"));
   };
 
   // Circle Gauge Math for Overall Score
@@ -103,20 +105,20 @@ export function InterviewResultView({ session, questions }) {
             className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground font-semibold transition-colors mb-1"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            Practice Another Interview
+            {t("interview.result.back")}
           </Link>
           <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground truncate max-w-xl">
             {session.title}
           </h1>
           <p className="text-xs text-muted-foreground font-medium flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="font-semibold text-foreground">{session.role} Role</span>
+            <span className="font-semibold text-foreground">{session.role}</span>
             <span>•</span>
             <span className="flex items-center gap-1">
               <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-              Duration: {formatDuration(session.duration)}
+              {t("interview.history.card.duration", { val: formatDuration(session.duration) })}
             </span>
             <span>•</span>
-            <span>Completed {formatDate(session.completedAt || session.updatedAt)}</span>
+            <span>{t("interview.result.completedAt", { date: formatDate(session.completedAt || session.updatedAt) })}</span>
           </p>
         </div>
 
@@ -129,7 +131,7 @@ export function InterviewResultView({ session, questions }) {
             className="rounded-xl border-border/40 font-semibold text-xs h-9 cursor-pointer"
           >
             <Download className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
-            Download PDF Report
+            {t("interview.result.download")}
           </Button>
 
           {/* Retry Interview */}
@@ -141,7 +143,7 @@ export function InterviewResultView({ session, questions }) {
           >
             <Link href="/interview">
               <RotateCcw className="w-3.5 h-3.5" />
-              Retry Interview
+              {t("interview.result.retry")}
             </Link>
           </Button>
         </div>
@@ -154,7 +156,7 @@ export function InterviewResultView({ session, questions }) {
         {/* OVERALL SCORE CIRCULAR RING */}
         <Card className="border-border/40 bg-card/45 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center p-6 text-center shadow-sm">
           <CardHeader className="pb-3 text-center">
-            <CardTitle className="text-sm font-bold">Session Score</CardTitle>
+            <CardTitle className="text-sm font-bold">{t("interview.result.sessionScore")}</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center p-0 space-y-4">
             <div className="relative flex items-center justify-center">
@@ -174,18 +176,18 @@ export function InterviewResultView({ session, questions }) {
               </svg>
               <div className="absolute flex flex-col items-center justify-center">
                 <span className="text-2xl font-black text-foreground">{session.overallScore}%</span>
-                <span className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">Score</span>
+                <span className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">{t("interview.result.sessionScore")}</span>
               </div>
             </div>
             <p className="text-xs text-muted-foreground font-semibold leading-relaxed max-w-xs">
               {session.overallScore >= 80 ? (
-                <span className="text-emerald-400 font-bold">Excellent Practice!</span>
+                <span className="text-emerald-400 font-bold">{t("interview.result.excellent")}</span>
               ) : session.overallScore >= 60 ? (
-                <span className="text-amber-400 font-bold">Solid Effort.</span>
+                <span className="text-amber-400 font-bold">{t("interview.result.solid")}</span>
               ) : (
-                <span className="text-destructive font-bold">Needs Improvement.</span>
+                <span className="text-destructive font-bold">{t("interview.result.needsImprovement")}</span>
               )}{" "}
-              Ranks higher than <span className="text-indigo-400 font-bold">{session.overallScore}%</span> of tested portfolio sessions.
+              {t("interview.result.scoreRank", { val: session.overallScore })}
             </p>
           </CardContent>
         </Card>
@@ -195,28 +197,28 @@ export function InterviewResultView({ session, questions }) {
           <div className="space-y-4 w-full">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-indigo-400">
               <Sparkles className="w-4 h-4" />
-              Detailed Category Breakdown
+              {t("interview.result.categoryTitle")}
             </CardTitle>
             
             <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 pt-2">
               <div className="p-3 bg-muted/45 border border-border/20 rounded-xl space-y-1">
-                <span className="text-[9px] uppercase font-bold text-muted-foreground">Technical</span>
+                <span className="text-[9px] uppercase font-bold text-muted-foreground">{t("interview.result.tech")}</span>
                 <p className="text-lg font-black text-indigo-400">{techScore}%</p>
               </div>
               <div className="p-3 bg-muted/45 border border-border/20 rounded-xl space-y-1">
-                <span className="text-[9px] uppercase font-bold text-muted-foreground">Clarity</span>
+                <span className="text-[9px] uppercase font-bold text-muted-foreground">{t("interview.result.clarity")}</span>
                 <p className="text-lg font-black text-teal-400">{commScore}%</p>
               </div>
               <div className="p-3 bg-muted/45 border border-border/20 rounded-xl space-y-1">
-                <span className="text-[9px] uppercase font-bold text-muted-foreground">Confidence</span>
+                <span className="text-[9px] uppercase font-bold text-muted-foreground">{t("interview.result.confidence")}</span>
                 <p className="text-lg font-black text-amber-400">{confScore}%</p>
               </div>
               <div className="p-3 bg-muted/45 border border-border/20 rounded-xl space-y-1">
-                <span className="text-[9px] uppercase font-bold text-muted-foreground">Problem Solving</span>
+                <span className="text-[9px] uppercase font-bold text-muted-foreground">{t("interview.result.solve")}</span>
                 <p className="text-lg font-black text-blue-400">{problemSolvingScore}%</p>
               </div>
               <div className="p-3 bg-muted/45 border border-border/20 rounded-xl space-y-1">
-                <span className="text-[9px] uppercase font-bold text-muted-foreground">Behavioral</span>
+                <span className="text-[9px] uppercase font-bold text-muted-foreground">{t("interview.result.behavioral")}</span>
                 <p className="text-lg font-black text-purple-400">{behavioralScore}%</p>
               </div>
             </div>
@@ -224,9 +226,9 @@ export function InterviewResultView({ session, questions }) {
             <Separator className="bg-border/20" />
 
             <div className="space-y-1">
-              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider block">Performance Advice</span>
+              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider block">{t("interview.result.adviceLabel")}</span>
               <p className="text-xs font-semibold text-muted-foreground leading-relaxed">
-                {session.feedback || "No general coaching summary advice recorded."}
+                {session.feedback || t("interview.result.noAdvice")}
               </p>
             </div>
           </div>
@@ -239,12 +241,12 @@ export function InterviewResultView({ session, questions }) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-emerald-400">
               <CheckCircle2 className="w-4 h-4" />
-              Observed Strengths
+              {t("interview.result.strengthsTitle")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2.5">
             {strengths.length === 0 ? (
-              <p className="text-xs text-muted-foreground font-semibold">No strengths recorded.</p>
+              <p className="text-xs text-muted-foreground font-semibold">{t("interview.result.noStrengths")}</p>
             ) : (
               strengths.map((str, idx) => (
                 <div key={idx} className="flex gap-3 items-start border border-emerald-500/10 bg-emerald-500/5 p-3.5 rounded-xl text-xs font-semibold text-foreground/90 leading-relaxed">
@@ -260,12 +262,12 @@ export function InterviewResultView({ session, questions }) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-amber-400">
               <AlertTriangle className="w-4 h-4" />
-              Focus Growth Areas
+              {t("interview.result.gapsTitle")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2.5">
             {areasToImprove.length === 0 ? (
-              <p className="text-xs text-muted-foreground font-semibold">No weaknesses recorded.</p>
+              <p className="text-xs text-muted-foreground font-semibold">{t("interview.result.noGaps")}</p>
             ) : (
               areasToImprove.map((weak, idx) => (
                 <div key={idx} className="flex gap-3 items-start border border-amber-500/10 bg-amber-500/5 p-3.5 rounded-xl text-xs font-semibold text-foreground/90 leading-relaxed">
@@ -283,9 +285,9 @@ export function InterviewResultView({ session, questions }) {
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-bold flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-indigo-400" />
-            Recommended Next Steps & Career Advice
+            {t("interview.result.stepsTitle")}
           </CardTitle>
-          <CardDescription className="text-[10px] font-semibold">Actionable prep tasks for growth</CardDescription>
+          <CardDescription className="text-[10px] font-semibold">{t("interview.result.stepsDesc")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
           {nextSteps.map((step, idx) => (
@@ -303,7 +305,7 @@ export function InterviewResultView({ session, questions }) {
       <div className="space-y-4">
         <h2 className="text-base font-bold text-foreground flex items-center gap-2">
           <MessageSquare className="w-5 h-5 text-indigo-400" />
-          Question-by-Question Dialogue Review
+          {t("interview.result.dialogueReviewTitle")}
         </h2>
 
         <div className="space-y-3">
@@ -323,7 +325,7 @@ export function InterviewResultView({ session, questions }) {
                 >
                   <div className="space-y-1 min-w-0">
                     <span className="text-[10px] font-extrabold uppercase text-indigo-400 tracking-wider">
-                      Question #{q.order} • {q.questionType}
+                      {t("interview.result.questionNumber", { order: q.order, type: q.questionType })}
                     </span>
                     <h3 className="text-xs font-bold text-foreground leading-snug">
                       {q.content}
@@ -331,7 +333,7 @@ export function InterviewResultView({ session, questions }) {
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
                     <Badge className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 font-black">
-                      Score: {ans.score || 0}%
+                      {t("interview.result.scorePercent", { val: ans.score || 0 })}
                     </Badge>
                     {isExpanded ? (
                       <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -346,10 +348,10 @@ export function InterviewResultView({ session, questions }) {
                     {/* User response block */}
                     <div className="space-y-1 pt-2">
                       <span className="text-[9px] font-extrabold text-muted-foreground uppercase tracking-wide">
-                        Your Response
+                        {t("interview.result.yourResponse")}
                       </span>
                       <p className="text-xs font-semibold leading-relaxed text-foreground/80 p-3 rounded-xl bg-background/50 border border-border/20">
-                        {ans.content || "(No response recorded)"}
+                        {ans.content || t("interview.result.noResponse")}
                       </p>
                     </div>
 
@@ -357,29 +359,29 @@ export function InterviewResultView({ session, questions }) {
                     <div className="space-y-1">
                       <span className="text-[9px] font-extrabold text-muted-foreground uppercase tracking-wide flex items-center gap-1">
                         <ThumbsUp className="w-3.5 h-3.5 text-indigo-400" />
-                        AI Grading Feedback
+                        {t("interview.result.aiFeedback")}
                       </span>
                       <p className="text-xs font-semibold leading-relaxed text-foreground">
-                        {ans.feedback || "No feedback recorded."}
+                        {ans.feedback || t("interview.result.noFeedback")}
                       </p>
                     </div>
 
                     {/* Breakdown radar cards */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-background/30 p-3 rounded-xl border border-border/10">
                       <div className="text-center space-y-0.5">
-                        <span className="text-[9px] font-bold text-muted-foreground uppercase block">Score</span>
+                        <span className="text-[9px] font-bold text-muted-foreground uppercase block">{t("interview.result.sessionScore")}</span>
                         <span className="text-sm font-black text-indigo-400">{ans.score || 0}%</span>
                       </div>
                       <div className="text-center space-y-0.5 border-l border-border/20">
-                        <span className="text-[9px] font-bold text-muted-foreground uppercase block">Clarity</span>
+                        <span className="text-[9px] font-bold text-muted-foreground uppercase block">{t("interview.result.clarity")}</span>
                         <span className="text-sm font-black text-teal-400">{analysis.communication || 0}%</span>
                       </div>
                       <div className="text-center space-y-0.5 border-l border-border/20">
-                        <span className="text-[9px] font-bold text-muted-foreground uppercase block">Accuracy</span>
+                        <span className="text-[9px] font-bold text-muted-foreground uppercase block">{t("interview.result.accuracy")}</span>
                         <span className="text-sm font-black text-blue-400">{analysis.technicalAccuracy || 0}%</span>
                       </div>
                       <div className="text-center space-y-0.5 border-l border-border/20">
-                        <span className="text-[9px] font-bold text-muted-foreground uppercase block">Confidence</span>
+                        <span className="text-[9px] font-bold text-muted-foreground uppercase block">{t("interview.result.confidence")}</span>
                         <span className="text-sm font-black text-amber-400">{analysis.confidence || 0}%</span>
                       </div>
                     </div>
@@ -390,7 +392,7 @@ export function InterviewResultView({ session, questions }) {
                       <div className="space-y-1 border border-emerald-500/10 bg-emerald-500/5 p-3 rounded-xl">
                         <span className="text-[9px] font-bold text-emerald-500 uppercase flex items-center gap-1">
                           <Check className="w-3.5 h-3.5 shrink-0" />
-                          Answer Strengths
+                          {t("interview.result.answerStrengths")}
                         </span>
                         <ul className="space-y-1 text-xs leading-relaxed font-semibold list-disc list-inside text-foreground/80">
                           {(analysis.strengths || []).map((s, idx) => (
@@ -402,7 +404,7 @@ export function InterviewResultView({ session, questions }) {
                       <div className="space-y-1 border border-amber-500/10 bg-amber-500/5 p-3 rounded-xl">
                         <span className="text-[9px] font-bold text-amber-500 uppercase flex items-center gap-1">
                           <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-                          Improvement Suggestions
+                          {t("interview.result.improvements")}
                         </span>
                         <ul className="space-y-1 text-xs leading-relaxed font-semibold list-disc list-inside text-foreground/80">
                           {(analysis.improvements || []).map((i, idx) => (
@@ -420,7 +422,7 @@ export function InterviewResultView({ session, questions }) {
                         </div>
                         <span className="text-[9px] font-bold text-indigo-400 uppercase tracking-wide flex items-center gap-1.5">
                           <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                          Ideal Answer Template
+                          {t("interview.result.idealAnswer")}
                         </span>
                         <p className="text-xs leading-relaxed font-semibold text-foreground/90">
                           {ans.improvedAnswer}
