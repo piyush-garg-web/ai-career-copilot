@@ -6,6 +6,7 @@ import crypto from "crypto";
 import { AI_CONFIG } from "./config";
 import { GeminiAIProvider } from "./providers/gemini";
 import { OpenAIProvider } from "./providers/openai";
+import { GrokProvider } from "./providers/grok";
 import { AIServiceError } from "./providers/base";
 
 class RequestQueue {
@@ -53,16 +54,34 @@ class RequestQueue {
 class AIGateway {
   constructor() {
     this.config = AI_CONFIG;
-    this.activeProviderName = AI_CONFIG.activeProvider;
-    this.providerConfig = AI_CONFIG.providers[this.activeProviderName];
     
-    // Instantiate target provider
-    if (this.activeProviderName === "gemini") {
-      this.provider = new GeminiAIProvider(this.providerConfig);
-    } else if (this.activeProviderName === "openai") {
-      this.provider = new OpenAIProvider(this.providerConfig);
-    } else {
-      throw new Error(`Unsupported AI provider configured: ${this.activeProviderName}`);
+    // Instantiate all available providers
+    this.providers = {};
+    this.providerNames = [];
+    
+    // Always include configured primary provider first
+    const primaryProvider = AI_CONFIG.activeProvider;
+    this.providerNames.push(primaryProvider);
+    
+    // Add fallback providers (excluding primary to avoid duplicates)
+    if (AI_CONFIG.providerFallbacks) {
+      for (const provider of AI_CONFIG.providerFallbacks) {
+        if (!this.providerNames.includes(provider)) {
+          this.providerNames.push(provider);
+        }
+      }
+    }
+    
+    // Initialize providers
+    for (const providerName of this.providerNames) {
+      const providerConfig = AI_CONFIG.providers[providerName];
+      if (providerName === "gemini") {
+        this.providers[providerName] = new GeminiAIProvider(providerConfig);
+      } else if (providerName === "openai") {
+        this.providers[providerName] = new OpenAIProvider(providerConfig);
+      } else if (providerName === "grok") {
+        this.providers[providerName] = new GrokProvider(providerConfig);
+      }
     }
 
     // Setup file paths for persistence
@@ -296,11 +315,13 @@ class AIGateway {
     }
 
     // 2. Deduplication Layer
+    const firstProviderName = this.providerNames[0];
+    const firstProviderConfig = AI_CONFIG.providers[firstProviderName];
     const reqHash = this._getRequestHash({
       prompt,
       systemInstruction,
       temperature,
-      model: this.providerConfig.models[0],
+      model: firstProviderConfig.models[0],
     });
 
     if (this.activeRequests.has(reqHash)) {
@@ -310,106 +331,129 @@ class AIGateway {
 
     // Wrap execution logic to place in activeRequests & run in Queue
     const executionPromise = (async () => {
-      let modelIndex = 0;
       let lastError = null;
       let fallbackUsed = null;
 
-      // Model Fallback Loop
-      while (modelIndex < this.providerConfig.models.length) {
-        const model = this.providerConfig.models[modelIndex];
-        let attempt = 0;
-        const maxRetries = this.providerConfig.retries;
+      // Provider Fallback Loop
+      for (let providerIndex = 0; providerIndex < this.providerNames.length; providerIndex++) {
+        const providerName = this.providerNames[providerIndex];
+        const provider = this.providers[providerName];
+        const providerConfig = AI_CONFIG.providers[providerName];
+        
+        // Skip if provider doesn't have API key configured
+        if (!providerConfig.apiKey) {
+          console.warn(`[AI GATEWAY]: Skipping provider ${providerName} (no API key configured)`);
+          continue;
+        }
+        
+        console.log(`[AI GATEWAY]: Trying provider: ${providerName}`);
+        
+        // Model Fallback Loop within this provider
+        let modelIndex = 0;
+        while (modelIndex < providerConfig.models.length) {
+          const model = providerConfig.models[modelIndex];
+          let attempt = 0;
+          const maxRetries = providerConfig.retries;
 
-        // Retry Loop for current model
-        while (attempt <= maxRetries) {
-          try {
-            // Run standard provider model call inside the rate limiting Queue
-            const result = await this.queue.enqueue(async () => {
-              if (type === "json") {
-                return await this.provider.generateJSON({
-                  prompt,
-                  systemInstruction,
-                  temperature,
-                  maxTokens,
-                  model,
-                });
-              } else {
-                return await this.provider.generateText({
-                  prompt,
-                  systemInstruction,
-                  temperature,
-                  maxTokens,
-                  model,
-                });
-              }
-            });
-
-            // Success: update metrics & cache
-            const duration = Date.now() - startTime;
-            this.stats.successes++;
-            this.stats.totalDurationMs += duration;
-
-            if (cacheKey && AI_CONFIG.cache.enabled) {
-              this.cache.set(cacheKey, {
-                timestamp: Date.now(),
-                model,
-                data: result,
+          // Retry Loop for current model
+          while (attempt <= maxRetries) {
+            try {
+              // Run standard provider model call inside the rate limiting Queue
+              const result = await this.queue.enqueue(async () => {
+                if (type === "json") {
+                  return await provider.generateJSON({
+                    prompt,
+                    systemInstruction,
+                    temperature,
+                    maxTokens,
+                    model,
+                  });
+                } else {
+                  return await provider.generateText({
+                    prompt,
+                    systemInstruction,
+                    temperature,
+                    maxTokens,
+                    model,
+                  });
+                }
               });
-              await this._saveCache();
-            }
 
-            await this._logUsage({
-              feature: cacheContext?.feature || "generic",
-              model,
-              durationMs: duration,
-              success: true,
-              cacheHit: false,
-              fallbackUsed,
-              errorType: null,
-            });
+              // Success: update metrics & cache
+              const duration = Date.now() - startTime;
+              this.stats.successes++;
+              this.stats.totalDurationMs += duration;
 
-            return result;
+              if (cacheKey && AI_CONFIG.cache.enabled) {
+                this.cache.set(cacheKey, {
+                  timestamp: Date.now(),
+                  model,
+                  data: result,
+                });
+                await this._saveCache();
+              }
 
-          } catch (error) {
-            lastError = error;
-            console.warn(
-              `[AI GATEWAY WARN]: Attempt ${attempt + 1}/${maxRetries + 1} failed on model ${model}. ` +
-              `Code: ${error.code || "unknown"}, Message: ${error.message}`
-            );
+              await this._logUsage({
+                feature: cacheContext?.feature || "generic",
+                model,
+                durationMs: duration,
+                success: true,
+                cacheHit: false,
+                fallbackUsed,
+                errorType: null,
+              });
 
-            // Handle Quota limit metrics
-            if (error.code === "QUOTA_EXHAUSTED") {
-              this.stats.quotaErrors++;
-            }
+              return result;
 
-            // Decide whether to retry this model or immediately fail/fallback
-            if (error.retryable && attempt < maxRetries) {
-              attempt++;
-              const delay = this.providerConfig.retryDelayMs * attempt;
-              await new Promise((r) => setTimeout(r, delay));
-            } else {
-              // Non-retryable error, or retries exhausted: break retry loop and try next model
-              break;
+            } catch (error) {
+              lastError = error;
+              console.warn(
+                `[AI GATEWAY WARN]: Attempt ${attempt + 1}/${maxRetries + 1} failed on provider ${providerName}, model ${model}. ` +
+                `Code: ${error.code || "unknown"}, Message: ${error.message}`
+              );
+
+              // Handle Quota limit metrics
+              if (error.code === "QUOTA_EXHAUSTED") {
+                this.stats.quotaErrors++;
+              }
+
+              // Decide whether to retry this model or immediately fail/fallback
+              if (error.retryable && attempt < maxRetries) {
+                attempt++;
+                const delay = providerConfig.retryDelayMs * attempt;
+                await new Promise((r) => setTimeout(r, delay));
+              } else {
+                // Non-retryable error, or retries exhausted: break retry loop and try next model
+                break;
+              }
             }
           }
-        }
 
-        // Current model failed. Walk to the next fallback model.
-        modelIndex++;
-        if (modelIndex < this.providerConfig.models.length) {
+          // Current model failed. Walk to the next fallback model.
+          modelIndex++;
+          if (modelIndex < providerConfig.models.length) {
+            this.stats.fallbacks++;
+            fallbackUsed = providerConfig.models[modelIndex];
+            console.warn(`[AI GATEWAY FALLBACK]: Switch to fallback model: ${fallbackUsed}`);
+          }
+        }
+        
+        // All models failed for this provider, try next provider
+        if (providerIndex < this.providerNames.length - 1) {
+          const nextProviderName = this.providerNames[providerIndex + 1];
           this.stats.fallbacks++;
-          fallbackUsed = this.providerConfig.models[modelIndex];
-          console.warn(`[AI GATEWAY FALLBACK]: Switch to fallback model: ${fallbackUsed}`);
+          fallbackUsed = `provider:${nextProviderName}`;
+          console.warn(`[AI GATEWAY PROVIDER FALLBACK]: Switching to provider: ${nextProviderName}`);
         }
       }
 
-      // All models exhausted
+      // All providers and models exhausted
       this.stats.failures++;
       const duration = Date.now() - startTime;
 
       await this._logUsage({
         feature: cacheContext?.feature || "generic",
-        model: this.providerConfig.models[0],
+        model: firstProviderConfig.models[0],
         durationMs: duration,
         success: false,
         cacheHit: false,
@@ -446,7 +490,7 @@ class AIGateway {
       avgResponseTimeMs: parseFloat(avgResponseTimeMs.toFixed(0)),
       cacheHitRate: parseFloat(cacheHitRate.toFixed(3)),
       quotaErrors: this.stats.quotaErrors,
-      activeProvider: this.activeProviderName,
+      activeProviders: this.providerNames,
       providerHealth: this.stats.failures > 3 && this.stats.successes === 0 ? "DEGRADED" : "OK",
     };
   }

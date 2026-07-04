@@ -41,6 +41,8 @@ import {
   Target,
   Mic,
 } from "lucide-react";
+import { usePremium } from "@/hooks/use-premium";
+import { PremiumBadge } from "@/components/shared/PremiumBadge";
 
 // Inline Custom SVG for GitHub to resolve lucide-react package version mapping errors
 const Github = ({ className }) => (
@@ -83,6 +85,7 @@ const SKILL_CATEGORIES = [
 export default function ProfilePage() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { isPremium } = usePremium();
 
   // Loading and Save Tracking states
   const [loading, setLoading] = useState(true);
@@ -620,7 +623,12 @@ export default function ProfilePage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       <PageHeader
-        title={t("profile.pageTitle", { name: profile.firstName || t("profile.defaultUser") })}
+        title={
+          <div className="flex items-center gap-2">
+            {t("profile.pageTitle", { name: profile.firstName || t("profile.defaultUser") })}
+            {isPremium && <PremiumBadge />}
+          </div>
+        }
         description={t("profile.pageDescription")}
       />
 

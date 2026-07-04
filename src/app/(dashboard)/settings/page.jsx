@@ -47,7 +47,12 @@ import {
   Key,
   Globe,
   Code,
+  Zap,
+  XCircle,
 } from "lucide-react";
+import { usePremium } from "@/hooks/use-premium";
+import { PremiumBadge } from "@/components/shared/PremiumBadge";
+import { useRouter } from "next/navigation";
 
 // Inline Custom SVGs to resolve Lucide-React barrel import bugs on compilation
 const GitHubIcon = ({ className }) => (
@@ -68,6 +73,8 @@ export default function SettingsPage() {
   const { setAccentColor } = useAccent();
   const { openUserProfile } = useClerk();
   const { t, changeLanguage, locale } = useTranslation();
+  const { isPremium, planInfo, refresh } = usePremium();
+  const router = useRouter();
   
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -605,6 +612,7 @@ export default function SettingsPage() {
 
   // Tab definitions with keyword mapping for dynamic searches
   const tabsList = [
+    { id: "premium", label: "Upgrade Plan", icon: Zap, keywords: "premium upgrade subscription billing plan" },
     { id: "ai", label: t("settings.tabs.ai"), icon: Sparkles, keywords: "personality length focus language mentor memory conversational custom" },
     { id: "notifications", label: t("settings.tabs.notifications"), icon: Bell, keywords: "email push weekly monthly alerts alerts completeness platform" },
     { id: "security", label: t("settings.tabs.security"), icon: Shield, keywords: "password mfa session verification status device history log" },
@@ -801,6 +809,111 @@ export default function SettingsPage() {
               transition={{ duration: 0.15 }}
             >
               
+              {/* TAB: PREMIUM SUBSCRIPTION */}
+              {activeTab === "premium" && (
+                <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-6 space-y-6">
+                  <div className="space-y-1">
+                    <h3 className="text-sm font-black text-foreground flex items-center gap-2">
+                      <Zap className="w-4 h-4 text-yellow-500" />
+                      Premium Subscription
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Unlock AI Voice & Video mock interviews, multilingual support, and priority access.
+                    </p>
+                  </div>
+
+                  {isPremium ? (
+                    <div className="space-y-4 border border-yellow-500/20 bg-yellow-500/5 rounded-xl p-4">
+                      <div className="flex items-center gap-2">
+                        <PremiumBadge />
+                        <h4 className="text-sm font-black text-yellow-600 dark:text-yellow-400">
+                          You&apos;re on {planInfo?.planType || "Premium"}!
+                        </h4>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 text-xs">
+                        <div className="space-y-1">
+                          <span className="text-muted-foreground">Purchase Date</span>
+                          <span className="font-bold text-foreground">
+                            {planInfo?.purchaseDate ? new Date(planInfo.purchaseDate).toLocaleDateString() : "—"}
+                          </span>
+                        </div>
+                        <div className="space-y-1">
+                          <span className="text-muted-foreground">Expiry Date</span>
+                          <span className="font-bold text-foreground">
+                            {planInfo?.expiryDate ? new Date(planInfo.expiryDate).toLocaleDateString() : "—"}
+                          </span>
+                        </div>
+                        <div className="space-y-1">
+                          <span className="text-muted-foreground">Subscription Status</span>
+                          <span className="font-bold text-emerald-500">
+                            {planInfo?.subscriptionStatus || "Active"}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex gap-3">
+                        <Button onClick={() => router.push("/upgrade")} className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold">
+                          Manage Subscription
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="border border-border/40 bg-background/60 rounded-xl p-4">
+                          <h4 className="text-sm font-black text-foreground mb-2">Free Plan</h4>
+                          <p className="text-2xl font-extrabold mb-4">₹0</p>
+                          <ul className="space-y-2 text-xs">
+                            {[
+                              "Resume Analysis",
+                              "Text-based mock interviews",
+                              "ATS Optimization",
+                              "Job Matching",
+                              "English language only",
+                            ].map((feat, i) => (
+                              <li key={i} className="flex items-center gap-1.5">
+                                <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                                {feat}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="border-2 border-yellow-500 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-xl p-4 relative overflow-hidden">
+                          <div className="absolute top-0 right-0 bg-gradient-to-r from-yellow-500 to-orange-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-bl-xl">
+                            RECOMMENDED
+                          </div>
+                          <h4 className="text-sm font-black text-foreground mb-2 flex items-center gap-1">
+                            Premium <PremiumBadge />
+                          </h4>
+                          <p className="text-2xl font-extrabold mb-1">₹299</p>
+                          <p className="text-[10px] text-muted-foreground mb-4">per month</p>
+                          <ul className="space-y-2 text-xs">
+                            {[
+                              "Everything in Free",
+                              "AI Voice Mock Interviews",
+                              "AI Video Mock Interviews",
+                              "Multilingual support (all 12 languages)",
+                              "Priority AI processing",
+                              "Early access to new features",
+                            ].map((feat, i) => (
+                              <li key={i} className="flex items-center gap-1.5">
+                                <CheckCircle className="w-3.5 h-3.5 text-yellow-500 shrink-0" />
+                                {feat}
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="mt-4">
+                            <Button onClick={() => router.push("/upgrade")} className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold">
+                              Upgrade Now
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </Card>
+              )}
+
               {/* TAB 1: AI PREFERENCES */}
               {activeTab === "ai" && (
                 <Card className="border-border/40 bg-card/60 backdrop-blur-sm p-6 space-y-6">

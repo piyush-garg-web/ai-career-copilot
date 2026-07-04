@@ -18,10 +18,14 @@ import {
   VolumeX,
 } from "lucide-react";
 import { toast } from "sonner";
+import { usePremium } from "@/hooks/use-premium";
+import { PremiumRequiredModal } from "@/components/shared/PremiumRequiredModal";
 
 export function VoiceInterviewSetup({ onStartSession, initialResumes = [], initialJds = [] }) {
   const { t } = useTranslation();
   const router = useRouter();
+  const { isPremium, loading: premiumLoading } = usePremium();
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   // Settings states
   const [resumes, setResumes] = useState(initialResumes);
@@ -42,7 +46,7 @@ export function VoiceInterviewSetup({ onStartSession, initialResumes = [], initi
   const [noiseSuppression, setNoiseSuppression] = useState(true);
   
   // Loading states
-  const [loading, setLoading] = useState(false);
+  const [sessionLoading, setSessionLoading] = useState(false);
   const [savingSettings, setSavingSettings] = useState(false);
   const [showConfig, setShowConfig] = useState(false);
 
@@ -132,7 +136,12 @@ export function VoiceInterviewSetup({ onStartSession, initialResumes = [], initi
       return;
     }
 
-    setLoading(true);
+    if (!isPremium && !premiumLoading) {
+      setShowPremiumModal(true);
+      return;
+    }
+
+    setSessionLoading(true);
     try {
       // First save configuration preferences to database
       await fetch("/api/voice-interview/settings", {
@@ -192,7 +201,7 @@ export function VoiceInterviewSetup({ onStartSession, initialResumes = [], initi
       console.error(err);
       toast.error(err.message || "Failed to create mock interview session.");
     } finally {
-      setLoading(false);
+      setSessionLoading(false);
     }
   };
 
@@ -216,7 +225,8 @@ export function VoiceInterviewSetup({ onStartSession, initialResumes = [], initi
   ];
 
   return (
-    <div className="grid gap-8 lg:grid-cols-12 max-w-5xl mx-auto p-2">
+    <>
+      <div className="grid gap-8 lg:grid-cols-12 max-w-5xl mx-auto p-2">
       {/* Overview Block */}
       <div className="lg:col-span-5 space-y-6">
         <div className="space-y-4">
@@ -524,16 +534,22 @@ export function VoiceInterviewSetup({ onStartSession, initialResumes = [], initi
             {/* Action buttons */}
             <Button
               type="submit"
-              disabled={loading || resumes.length === 0}
+              disabled={sessionLoading || resumes.length === 0}
               className="w-full h-12 rounded-xl"
             >
-              {loading ? "Generating initial voice prompt..." : "Start Voice Mock Interview"}
+              {sessionLoading ? "Generating initial voice prompt..." : "Start Voice Mock Interview"}
               <ArrowRight className="w-4 h-4" />
             </Button>
           </CardContent>
         </Card>
       </form>
     </div>
+    <PremiumRequiredModal
+      isOpen={showPremiumModal}
+      onClose={() => setShowPremiumModal(false)}
+      featureName="Voice & Video Mock Interviews"
+    />
+    </>
   );
 }
 export default VoiceInterviewSetup;

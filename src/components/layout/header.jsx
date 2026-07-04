@@ -19,6 +19,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { usePremium } from "@/hooks/use-premium";
+import { PremiumBadge } from "@/components/shared/PremiumBadge";
 
 const getRouteTitle = (path, t) => {
   if (path === "/dashboard") return t("dashboard.sidebar.dashboard");
@@ -51,6 +53,7 @@ export function Header({ onMenuClick }) {
   const router = useRouter();
   const { user, isLoaded } = useUser();
   const { signOut } = useClerk();
+  const { isPremium } = usePremium();
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
@@ -418,8 +421,9 @@ export function Header({ onMenuClick }) {
             <DropdownMenuContent className="w-56 rounded-2xl border-border/40 mt-1" align="end" forceMount>
               <DropdownMenuLabel className="font-normal p-3">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-semibold leading-none text-foreground flex items-center gap-1">
+                  <p className="text-sm font-semibold leading-none text-foreground flex items-center gap-1.5 flex-wrap">
                     {user.fullName}
+                    {isPremium && <PremiumBadge size="sm" />}
                     {user.publicMetadata?.role === "admin" && (
                       <Sparkles className="w-3.5 h-3.5 text-blue-500" />
                     )}

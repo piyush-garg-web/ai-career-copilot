@@ -1,8 +1,11 @@
 // src/lib/ai/config.js
 
 export const AI_CONFIG = {
-  // Active provider: "gemini" | "openai" (easily switchable)
+  // Active provider: "gemini" | "openai" | "grok" (easily switchable)
   activeProvider: process.env.AI_PROVIDER || "gemini",
+  
+  // Provider-level fallbacks: if primary fails, try these in order
+  providerFallbacks: ["openai", "grok"],
 
   // Providers configurations
   providers: {
@@ -24,6 +27,16 @@ export const AI_CONFIG = {
         "gpt-4o",
       ],
       apiKey: process.env.OPENAI_API_KEY || "",
+      retries: 2,
+      retryDelayMs: 1500,
+      timeoutMs: 25000,
+    },
+    grok: {
+      models: [
+        "grok-3-fast",
+        "grok-3-mini",
+      ],
+      apiKey: process.env.GROK_API_KEY || "",
       retries: 2,
       retryDelayMs: 1500,
       timeoutMs: 25000,

@@ -1,13 +1,14 @@
-// src/lib/ai/providers/openai.js
+// src/lib/ai/providers/grok.js
 
 import OpenAI from "openai";
 import { BaseAIProvider, AIServiceError } from "./base";
 
-export class OpenAIProvider extends BaseAIProvider {
+export class GrokProvider extends BaseAIProvider {
   constructor(config) {
     super(config);
     this.client = new OpenAI({
       apiKey: config.apiKey || "",
+      baseURL: "https://api.x.ai/v1",
     });
   }
 
@@ -90,7 +91,7 @@ export class OpenAIProvider extends BaseAIProvider {
   async generateJSON({ prompt, systemInstruction, temperature = 0.1, maxTokens = 4096, model }) {
     try {
       if (!this.config.apiKey) {
-        throw new AIServiceError("AI configuration error. OPENAI_API_KEY is missing.", "INVALID_API_KEY", { retryable: false });
+        throw new AIServiceError("AI configuration error. GROK_API_KEY is missing.", "INVALID_API_KEY", { retryable: false });
       }
 
       const messages = [];
@@ -109,7 +110,7 @@ export class OpenAIProvider extends BaseAIProvider {
 
       const content = response.choices[0]?.message?.content;
       if (!content) {
-        throw new Error("Invalid response format received from OpenAI.");
+        throw new Error("Invalid response format received from Grok.");
       }
 
       return JSON.parse(content.trim());
@@ -121,7 +122,7 @@ export class OpenAIProvider extends BaseAIProvider {
   async generateText({ prompt, systemInstruction, temperature = 0.1, maxTokens = 4096, model }) {
     try {
       if (!this.config.apiKey) {
-        throw new AIServiceError("AI configuration error. OPENAI_API_KEY is missing.", "INVALID_API_KEY", { retryable: false });
+        throw new AIServiceError("AI configuration error. GROK_API_KEY is missing.", "INVALID_API_KEY", { retryable: false });
       }
 
       const messages = [];
@@ -139,7 +140,7 @@ export class OpenAIProvider extends BaseAIProvider {
 
       const content = response.choices[0]?.message?.content;
       if (!content) {
-        throw new Error("Invalid response format received from OpenAI.");
+        throw new Error("Invalid response format received from Grok.");
       }
 
       return content;

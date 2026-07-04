@@ -66,6 +66,18 @@ model User {
   accessibilitySettings Json?
   appearanceSettings   Json?
 
+  // Premium Subscription Fields
+  isPremium          Boolean          @default(false)
+  planType           PlanType?        @default(FREE)
+  subscriptionStatus SubscriptionStatus? @default(INACTIVE)
+  paymentId          String?
+  paymentProvider    String?
+  purchaseDate       DateTime?
+  expiryDate         DateTime?
+  amountPaid         Float?
+  currency           String?          @default("INR")
+  transactionStatus  TransactionStatus?
+
   resumes            Resume[]
   jobDescriptions    JobDescription[]
   jobMatches         JobMatch[]
@@ -79,10 +91,32 @@ model User {
   achievements       Achievement[]
   voiceInterviewSessions VoiceInterviewSession[]
   voiceInterviewSettings VoiceInterviewSettings?
+  transactions       Transaction[]
 
   @@index([clerkId])
   @@index([email])
+  @@index([isPremium])
   @@map("users")
+}
+
+enum PlanType {
+  FREE
+  MONTHLY
+  YEARLY
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
 }
 
 enum ExperienceLevel {
@@ -606,4 +640,30 @@ model VoiceInterviewSettings {
   user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("voice_interview_settings")
+}
+
+// ─────────────────────────────────────────────
+// TRANSACTIONS (for Premium Payments)
+// ─────────────────────────────────────────────
+
+model Transaction {
+  id                String           @id @default(cuid())
+  userId            String
+  orderId           String           @unique
+  paymentId         String?          @unique
+  razorpayPaymentId String?
+  razorpayOrderId   String
+  razorpaySignature String?
+  amount            Float
+  currency          String           @default("INR")
+  planType          PlanType
+  status            TransactionStatus @default(PENDING)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([razorpayOrderId])
+  @@map("transactions")
 }

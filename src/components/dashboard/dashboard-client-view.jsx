@@ -29,6 +29,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import { usePremium } from "@/hooks/use-premium";
+import { PremiumBadge } from "@/components/shared/PremiumBadge";
 
 // Framer motion animation variants
 const containerVariants = {
@@ -83,6 +85,7 @@ export function DashboardClientView({
 }) {
   const { t } = useTranslation();
   const router = useRouter();
+  const { isPremium } = usePremium();
 
   const getRelativeTime = (timestamp) => {
     if (!timestamp) return "";
@@ -265,8 +268,9 @@ export function DashboardClientView({
       {/* Welcome Section */}
       <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight md:text-3xl bg-gradient-to-r from-foreground via-foreground/90 to-foreground/75 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold tracking-tight md:text-3xl bg-gradient-to-r from-foreground via-foreground/90 to-foreground/75 bg-clip-text text-transparent flex items-center gap-3">
             {t("dashboard.welcome.title")}, {userFirstName || t("dashboard.welcome.defaultUser")}! 👋
+            {isPremium && <PremiumBadge />}
           </h2>
           <p className="text-sm text-muted-foreground font-medium mt-1">
             {t("dashboard.welcome.subtitle")}
