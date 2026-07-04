@@ -625,23 +625,23 @@ export function DashboardClientView({
             <div className="space-y-1">
               <CardTitle className="text-xl font-black flex items-center gap-2">
                 <Mic className="w-5 h-5 text-blue-500" />
-                🎤 AI Voice Mock Interview
+                🎤 AI Mock Interview (Voice + Video)
               </CardTitle>
               <CardDescription className="text-xs max-w-2xl leading-relaxed">
-                Practice realistic AI-powered voice interviews with real-time speech recognition, natural AI voice responses, detailed communication analytics, and personalized feedback.
+                Practice realistic AI-powered voice & video interviews with real-time speech recognition, natural AI voice responses, detailed communication analytics, and personalized feedback.
               </CardDescription>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <Button
                 onClick={() => router.push("/voice-mock-interview")}
-                className="rounded-xl px-4 py-2 bg-primary hover:bg-primary/95 text-white text-xs font-bold shadow-md cursor-pointer"
+                className="rounded-xl"
               >
                 Start Voice Interview
               </Button>
               <Button
                 variant="outline"
                 onClick={() => router.push("/voice-mock-interview?tab=history")}
-                className="rounded-xl px-4 py-2 text-xs font-bold cursor-pointer hover:bg-secondary/60"
+                className="rounded-xl"
               >
                 View History
               </Button>

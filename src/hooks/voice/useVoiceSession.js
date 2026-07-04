@@ -39,6 +39,7 @@ export function useVoiceSession({
   const audioChunksRef = useRef([]);
   const streamRef = useRef(null);
   const recognitionRef = useRef(null);
+  const isProcessingRef = useRef(false); // Prevent double submissions
   
   // Web Audio refs for silence detection & waveform
   const audioContextRef = useRef(null);
@@ -100,7 +101,21 @@ export function useVoiceSession({
    * AI Speaks the question aloud using TTS.
    */
   const speakQuestion = useCallback((questionText) => {
+    console.log("[VOICE-SESSION]: speakQuestion called with text:", questionText.substring(0, 50));
+    setCurrentQuestion(""); // Start with empty
     setStatus("speaking");
+    
+    // Simulate dynamic text display with typing effect
+    let index = 0;
+    const typeInterval = setInterval(() => {
+      if (index < questionText.length) {
+        setCurrentQuestion(questionText.substring(0, index + 1));
+        index++;
+      } else {
+        clearInterval(typeInterval);
+      }
+    }, 30); // Adjust speed here (30ms per character)
+
     ttsService.speak(
       questionText,
       resolvedSettings,
@@ -110,12 +125,16 @@ export function useVoiceSession({
       },
       // onEnd
       () => {
+        clearInterval(typeInterval);
+        setCurrentQuestion(questionText); // Ensure full text is shown
         console.log("[TTS]: Completed speaking question. Opening microphone...");
         questionFinishTimeRef.current = Date.now();
         startListening();
       },
       // onError
       (err) => {
+        clearInterval(typeInterval);
+        setCurrentQuestion(questionText); // Ensure full text is shown
         console.warn("[TTS]: Speech ended with warning. Proceed to listen anyway.");
         questionFinishTimeRef.current = Date.now();
         startListening();
@@ -197,14 +216,14 @@ export function useVoiceSession({
         const avgVolume = sum / dataArray.length;
         setVolumeLevel(Math.min(100, Math.round((avgVolume / 128) * 100)));
 
-        // Silence detection logic: threshold amplitude < 6
-        if (avgVolume < 6) {
+        // Silence detection logic: threshold amplitude < 12
+        if (avgVolume < 12) {
           if (silenceStart === 0) {
             silenceStart = Date.now();
           } else {
             const silentDuration = Date.now() - silenceStart;
-            // Trigger auto stop after 2.8 seconds of silence
-            if (silentDuration > 2800) {
+            // Trigger auto stop after 5 seconds of silence
+            if (silentDuration > 5000) {
               console.log("[SILENCE DETECTED]: Auto-submitting response...");
               stopAndEvaluate();
               return;
@@ -275,7 +294,13 @@ export function useVoiceSession({
    * Finalizes the current user answer recording and uploads to evaluate.
    */
   const stopAndEvaluate = useCallback(async () => {
-    if (status !== "listening") return;
+    console.log("[VOICE-SESSION]: stopAndEvaluate called! Current status:", status);
+    if (status !== "listening" || isProcessingRef.current) {
+      console.log("[VOICE-SESSION]: stopAndEvaluate skipped (not listening or already processing)");
+      return;
+    }
+
+    isProcessingRef.current = true;
 
     setStatus("processing");
     setMicActive(false);
@@ -285,10 +310,18 @@ export function useVoiceSession({
     
     // Stop recording and gather media recorder file
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
-      mediaRecorderRef.current.stop();
+      try {
+        mediaRecorderRef.current.stop();
+      } catch (e) {
+        console.warn("[VOICE-SESSION]: Error stopping media recorder", e);
+      }
     }
     if (recognitionRef.current) {
-      recognitionRef.current.stop();
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {
+        console.warn("[VOICE-SESSION]: Error stopping recognition", e);
+      }
     }
 
     // Wait a brief 300ms for buffer storage
@@ -338,6 +371,8 @@ export function useVoiceSession({
         textResult = "Could not record clear audio answer.";
       }
 
+      console.log("[VOICE-SESSION]: Final text result:", textResult);
+
       // Append user dialog locally
       setTranscripts((prev) => [...prev, { speaker: "USER", text: textResult }]);
 
@@ -363,6 +398,7 @@ export function useVoiceSession({
       fillerWordsDetectedRef.current = [];
 
       // 4. Submit to database evaluation API
+      console.log("[VOICE-SESSION]: Calling evaluate API", sessionId);
       const res = await fetch(`/api/voice-interview/${sessionId}/evaluate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -379,6 +415,8 @@ export function useVoiceSession({
         throw new Error(evalData.error || "Evaluation request failed.");
       }
 
+      console.log("[VOICE-SESSION]: Evaluate response received:", evalData);
+
       if (evalData.completed) {
         // Complete the session
         setStatus("completed");
@@ -393,12 +431,15 @@ export function useVoiceSession({
         setCurrentQuestionNumber((n) => n + 1);
         
         // Speak follow-up question
+        console.log("[VOICE-SESSION]: Speaking next question...");
         speakQuestion(nextQ);
       }
     } catch (err) {
       console.error("[EVALUATION SERVICE ERROR]:", err);
       // Fallback: allow skipping or manual retry on error
       setStatus("paused");
+    } finally {
+      isProcessingRef.current = false;
     }
   }, [status, liveTranscript, sessionId, currentQuestionNumber, totalQuestions, resolvedSettings, speechStats.thinkingTime, speakQuestion, cleanup, onCompleted]);
 
@@ -451,9 +492,12 @@ export function useVoiceSession({
     setCoachingFeedback,
     setCoachingTips,
     startSession: (firstQ) => {
-      setCurrentQuestion(firstQ);
+      console.log("[VOICE-SESSION]: startSession called with firstQ:", firstQ.substring(0, 50));
       setTranscripts([{ speaker: "AI", text: firstQ }]);
-      speakQuestion(firstQ);
+      // Small delay to ensure DOM is ready, then speak
+      setTimeout(() => {
+        speakQuestion(firstQ);
+      }, 100);
     },
     pauseSession: () => {
       cleanup();

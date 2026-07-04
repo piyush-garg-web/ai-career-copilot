@@ -58,7 +58,7 @@ export const navigationItems = [
     icon: History,
   },
   {
-    name: "Voice Mock Interview",
+    name: "AI Mock Interview (Voice + Video)",
     href: "/voice-mock-interview",
     icon: Volume2,
   },

@@ -4,6 +4,19 @@ class TTSService {
   constructor() {
     this.synth = typeof window !== "undefined" ? window.speechSynthesis : null;
     this.activeUtterance = null;
+    this.voicesLoaded = false;
+
+    // Ensure voices are loaded
+    if (this.synth) {
+      const loadVoices = () => {
+        const voices = this.synth.getVoices();
+        if (voices.length > 0) {
+          this.voicesLoaded = true;
+        }
+      };
+      loadVoices();
+      this.synth.onvoiceschanged = loadVoices;
+    }
   }
 
   /**
@@ -18,6 +31,7 @@ class TTSService {
     if (!this.synth) {
       console.warn("[TTS SERVICE]: SpeechSynthesis is not supported on this device/browser.");
       if (onError) onError("Browser SpeechSynthesis unsupported");
+      if (onEnd) onEnd(); // Proceed even if TTS fails
       return;
     }
 
@@ -42,20 +56,25 @@ class TTSService {
     // Resolve voice selection if custom voice is desired
     if (preferredVoice && preferredVoice !== "native") {
       const voices = this.synth.getVoices();
-      const resolvedVoice = voices.find((v) => v.name === preferredVoice || v.lang === preferredVoice);
+      const resolvedVoice = voices.find((v) => v.name === preferredVoice || v.lang.startsWith(preferredVoice));
       if (resolvedVoice) {
         utterance.voice = resolvedVoice;
       }
     }
 
     if (onStart) utterance.onstart = onStart;
-    if (onEnd) utterance.onend = onEnd;
+    utterance.onend = (event) => {
+      console.log("[TTS]: Speech ended successfully");
+      if (onEnd) onEnd();
+    };
     utterance.onerror = (err) => {
       console.warn("[TTS SERVICE UTTERANCE EXCEPTION]:", err);
       if (onError) onError(err);
+      if (onEnd) onEnd(); // Always proceed to listening mode
     };
 
     this.activeUtterance = utterance;
+    console.log("[TTS]: Starting to speak:", text.substring(0, 50));
     this.synth.speak(utterance);
   }
 

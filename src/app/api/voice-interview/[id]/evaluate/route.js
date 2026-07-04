@@ -61,34 +61,72 @@ export async function POST(req, { params }) {
 
     // Save answer and transcripts in transaction
     const result = await db.$transaction(async (tx) => {
-      // 1. Create VoiceInterviewAnswer
-      const answer = await tx.voiceInterviewAnswer.create({
-        data: {
-          questionId: currentQuestion.id,
-          userResponse: userResponse,
-          score: evaluation.score,
-          technicalAccuracy: evaluation.technicalAccuracy,
-          communication: evaluation.communication,
-          grammar: evaluation.grammar,
-          vocabulary: evaluation.vocabulary,
-          confidence: evaluation.confidence,
-          completeness: evaluation.completeness,
-          fluency: evaluation.fluency,
-          professionalism: evaluation.professionalism,
-          strengths: evaluation.strengths,
-          weaknesses: evaluation.weaknesses,
-          improvedAnswer: evaluation.improvedAnswer,
-        },
+      // Check if answer already exists for this question
+      const existingAnswer = await tx.voiceInterviewAnswer.findUnique({
+        where: { questionId: currentQuestion.id },
       });
 
-      // 2. Add transcript entry for User response
-      await tx.voiceTranscript.create({
-        data: {
+      // 1. Create or update VoiceInterviewAnswer
+      let answer;
+      if (existingAnswer) {
+        answer = await tx.voiceInterviewAnswer.update({
+          where: { questionId: currentQuestion.id },
+          data: {
+            userResponse: userResponse,
+            score: evaluation.score,
+            technicalAccuracy: evaluation.technicalAccuracy,
+            communication: evaluation.communication,
+            grammar: evaluation.grammar,
+            vocabulary: evaluation.vocabulary,
+            confidence: evaluation.confidence,
+            completeness: evaluation.completeness,
+            fluency: evaluation.fluency,
+            professionalism: evaluation.professionalism,
+            strengths: evaluation.strengths,
+            weaknesses: evaluation.weaknesses,
+            improvedAnswer: evaluation.improvedAnswer,
+          },
+        });
+      } else {
+        answer = await tx.voiceInterviewAnswer.create({
+          data: {
+            questionId: currentQuestion.id,
+            userResponse: userResponse,
+            score: evaluation.score,
+            technicalAccuracy: evaluation.technicalAccuracy,
+            communication: evaluation.communication,
+            grammar: evaluation.grammar,
+            vocabulary: evaluation.vocabulary,
+            confidence: evaluation.confidence,
+            completeness: evaluation.completeness,
+            fluency: evaluation.fluency,
+            professionalism: evaluation.professionalism,
+            strengths: evaluation.strengths,
+            weaknesses: evaluation.weaknesses,
+            improvedAnswer: evaluation.improvedAnswer,
+          },
+        });
+      }
+
+      // 2. Add transcript entry for User response only if it doesn't exist
+      const existingUserTranscript = await tx.voiceTranscript.findFirst({
+        where: {
           sessionId: session.id,
           speaker: "USER",
           text: userResponse,
         },
+        orderBy: { createdAt: "desc" },
       });
+
+      if (!existingUserTranscript) {
+        await tx.voiceTranscript.create({
+          data: {
+            sessionId: session.id,
+            speaker: "USER",
+            text: userResponse,
+          },
+        });
+      }
 
       if (isLastTurn) {
         return { completed: true };

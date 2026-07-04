@@ -93,7 +93,7 @@ class VideoAnalyzer {
    * Initializes the face and pose tracking models.
    */
   async initModels() {
-    // Try MediaPipe first
+    // Try MediaPipe only (skip TF.js fallback to avoid errors)
     const mpSuccess = await this.loadMediaPipe();
     if (mpSuccess && typeof window !== "undefined" && window.tasksVision) {
       try {
@@ -105,7 +105,7 @@ class VideoAnalyzer {
         this.faceLandmarker = await vision.FaceLandmarker.createFromOptions(filesetResolver, {
           baseOptions: {
             modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
-            delegate: "GPU",
+            delegate: "CPU", // Use CPU for better compatibility
           },
           outputFaceBlendshapes: true,
           runningMode: "VIDEO",
@@ -115,7 +115,7 @@ class VideoAnalyzer {
         this.poseLandmarker = await vision.PoseLandmarker.createFromOptions(filesetResolver, {
           baseOptions: {
             modelAssetPath: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker.task",
-            delegate: "GPU",
+            delegate: "CPU", // Use CPU for better compatibility
           },
           runningMode: "VIDEO",
         });
@@ -124,31 +124,7 @@ class VideoAnalyzer {
         this.activeTracker = "mediapipe";
         return true;
       } catch (err) {
-        console.warn("[VIDEO ANALYZER]: MediaPipe init failed. Falling back to TF.js...", err);
-      }
-    }
-
-    // Fallback to TensorFlow.js
-    const tfSuccess = await this.loadTensorFlow();
-    if (tfSuccess && typeof window !== "undefined" && window.faceLandmarksDetection) {
-      try {
-        const faceDetector = window.faceLandmarksDetection;
-        const poseDetector = window.poseDetection;
-
-        this.tfFaceModel = await faceDetector.createDetector(faceDetector.SupportedModels.MediaPipeFaceMesh, {
-          runtime: "mediapipe",
-          solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh",
-        });
-
-        this.tfPoseModel = await poseDetector.createDetector(poseDetector.SupportedModels.MoveNet, {
-          modelType: poseDetector.movenet.modelType.SINGLEPOSE_LIGHTNING,
-        });
-
-        console.log("[VIDEO ANALYZER SUCCESS]: TensorFlow.js Fallback Models Initialized.");
-        this.activeTracker = "tfjs";
-        return true;
-      } catch (err) {
-        console.error("[VIDEO ANALYZER ERROR]: All model initializations failed.", err);
+        console.warn("[VIDEO ANALYZER]: MediaPipe init failed. Disabling video analysis.", err);
       }
     }
 

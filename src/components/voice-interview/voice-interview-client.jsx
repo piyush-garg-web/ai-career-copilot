@@ -140,16 +140,16 @@ export function VoiceInterviewClient({
                 Conversational Live Coach
               </div>
               <h1 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight">
-                🎤 AI Voice Mock Interview
+                🎤 AI Mock Interview (Voice + Video)
               </h1>
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed font-medium">
-                Practice realistic AI-powered voice interviews with real-time speech recognition, natural AI voice responses, detailed communication analytics, and personalized feedback.
+                Practice realistic AI-powered voice & video interviews with real-time speech recognition, natural AI voice responses, detailed communication analytics, and personalized feedback.
               </p>
               
               <div className="flex flex-wrap gap-3 pt-2">
                 <Button
                   onClick={() => setView("setup")}
-                  className="rounded-xl px-5 py-4 bg-primary hover:bg-primary/95 text-white text-xs font-black shadow-md hover:shadow-lg transition-all cursor-pointer"
+                  className="rounded-xl"
                 >
                   <Play className="w-3.5 h-3.5 mr-1.5" />
                   Start Voice Interview
@@ -157,7 +157,7 @@ export function VoiceInterviewClient({
                 <Button
                   variant="outline"
                   onClick={() => setView("history")}
-                  className="rounded-xl px-5 py-4 text-xs font-black border-border/60 hover:bg-accent/40 cursor-pointer"
+                  className="rounded-xl"
                 >
                   <History className="w-3.5 h-3.5 mr-1.5" />
                   View History
@@ -165,7 +165,7 @@ export function VoiceInterviewClient({
                 <Button
                   variant="outline"
                   onClick={handleLoadSettings}
-                  className="rounded-xl px-5 py-4 text-xs font-black border-border/60 hover:bg-accent/40 cursor-pointer"
+                  className="rounded-xl"
                 >
                   <Settings className="w-3.5 h-3.5 mr-1.5" />
                   Settings
@@ -196,7 +196,7 @@ export function VoiceInterviewClient({
                       });
                       setView("flow");
                     }}
-                    className="w-full h-9 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold cursor-pointer"
+                    className="w-full rounded-lg"
                   >
                     Continue Last Interview
                   </Button>

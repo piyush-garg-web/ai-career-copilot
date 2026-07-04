@@ -110,15 +110,15 @@ export function VoiceInterviewReport({ session, onBackToHistory, onRetake }) {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={onBackToHistory} className="rounded-xl text-xs font-bold cursor-pointer">
+          <Button variant="outline" onClick={onBackToHistory} className="rounded-xl">
             <History className="w-4 h-4 mr-1.5" />
             History
           </Button>
-          <Button variant="outline" onClick={handlePrint} className="rounded-xl text-xs font-bold cursor-pointer">
+          <Button variant="outline" onClick={handlePrint} className="rounded-xl">
             <Download className="w-4 h-4 mr-1.5" />
             Download PDF
           </Button>
-          <Button onClick={onRetake} className="rounded-xl bg-primary hover:bg-primary/95 text-white text-xs font-bold cursor-pointer shadow-md">
+          <Button onClick={onRetake} className="rounded-xl">
             <RotateCcw className="w-4 h-4 mr-1.5" />
             Retake Interview
           </Button>

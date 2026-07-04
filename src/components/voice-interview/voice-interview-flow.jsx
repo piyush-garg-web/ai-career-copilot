@@ -132,19 +132,26 @@ export function VoiceInterviewFlow({
         videoRef.current.srcObject = stream;
       }
 
-      // 2. Load vision tracking libraries lazily
-      const initialized = await videoAnalyzer.initModels();
-      if (!initialized) {
-        throw new Error("Failed to initialize local vision models.");
+      // 2. Load vision tracking libraries lazily (optional - continue even if fails)
+      let initialized = false;
+      try {
+        initialized = await videoAnalyzer.initModels();
+      } catch (e) {
+        console.warn("[VISION MODELS WARNING]: Failed to initialize, continuing without tracking.", e);
       }
 
-      videoAnalyzer.resetMetrics();
-      
-      // 3. Start processing frames
-      startVideoAnalysisLoop();
+      if (initialized) {
+        videoAnalyzer.resetMetrics();
+        // 3. Start processing frames
+        startVideoAnalysisLoop();
+      } else {
+        console.log("[VIDEO MODE]: Running without vision tracking analytics.");
+        setRealtimeCoachingFeedback("Video feed active (tracking disabled)");
+        setRealtimeTips([]);
+      }
     } catch (e) {
       console.error("[WEBCAM INITIALIZATION ERROR]:", e);
-      setVideoError("Camera access denied or vision models failed to load. Continuing with Voice-only mode.");
+      setVideoError("Camera access denied. Continuing with Voice-only mode.");
       toast.warning("Camera disabled. Running in voice-only mode.");
     } finally {
       setLoadingVideoModels(false);
@@ -335,7 +342,7 @@ export function VoiceInterviewFlow({
               <Button
                 variant="outline"
                 onClick={handleExit}
-                className="rounded-xl font-bold cursor-pointer text-xs flex items-center gap-1.5 border-red-500/20 text-red-500 hover:bg-red-500/10 hover:text-red-500"
+                className="rounded-xl"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 Exit Mock
@@ -344,7 +351,7 @@ export function VoiceInterviewFlow({
               {status === "paused" ? (
                 <Button
                   onClick={resumeSession}
-                  className="rounded-xl font-bold cursor-pointer text-xs flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
+                  className="rounded-xl"
                 >
                   <Play className="w-3.5 h-3.5" />
                   Resume
@@ -354,7 +361,7 @@ export function VoiceInterviewFlow({
                   variant="outline"
                   onClick={pauseSession}
                   disabled={status === "completed" || status === "processing"}
-                  className="rounded-xl font-bold cursor-pointer text-xs flex items-center gap-1.5"
+                  className="rounded-xl"
                 >
                   <Pause className="w-3.5 h-3.5" />
                   Pause
@@ -367,7 +374,7 @@ export function VoiceInterviewFlow({
                 variant="secondary"
                 onClick={replayQuestion}
                 disabled={status === "completed" || status === "processing"}
-                className="rounded-xl font-bold cursor-pointer text-xs flex items-center gap-1.5"
+                className="rounded-xl"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 Repeat Question
@@ -377,7 +384,7 @@ export function VoiceInterviewFlow({
                 variant="secondary"
                 onClick={skipQuestion}
                 disabled={status === "completed" || status === "processing"}
-                className="rounded-xl font-bold cursor-pointer text-xs flex items-center gap-1.5"
+                className="rounded-xl"
               >
                 <SkipForward className="w-3.5 h-3.5" />
                 Skip Turn
@@ -386,7 +393,7 @@ export function VoiceInterviewFlow({
               <Button
                 onClick={stopAndEvaluate}
                 disabled={status !== "listening"}
-                className="rounded-xl font-bold cursor-pointer text-xs flex items-center gap-1.5 bg-primary hover:bg-primary/95 text-white"
+                className="rounded-xl"
               >
                 Next Answer
                 <SkipForward className="w-3.5 h-3.5" />

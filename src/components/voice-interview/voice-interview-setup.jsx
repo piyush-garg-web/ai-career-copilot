@@ -255,7 +255,7 @@ export function VoiceInterviewSetup({ onStartSession, initialResumes = [], initi
             <Button
               variant="outline"
               onClick={() => router.push("/interview")}
-              className="w-full text-xs font-bold rounded-xl cursor-pointer py-5"
+              className="w-full rounded-xl"
             >
               Need text-based practice instead?
               <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
@@ -513,7 +513,7 @@ export function VoiceInterviewSetup({ onStartSession, initialResumes = [], initi
                     variant="secondary"
                     disabled={savingSettings}
                     onClick={handleSaveSettings}
-                    className="text-[11px] font-bold rounded-lg cursor-pointer bg-accent hover:bg-accent/80 w-full"
+                    className="w-full rounded-lg"
                   >
                     {savingSettings ? "Saving Settings..." : "Save Preferences as Default"}
                   </Button>
@@ -525,7 +525,7 @@ export function VoiceInterviewSetup({ onStartSession, initialResumes = [], initi
             <Button
               type="submit"
               disabled={loading || resumes.length === 0}
-              className="w-full h-12 rounded-xl bg-primary hover:bg-primary/95 text-white font-extrabold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg transition-all"
+              className="w-full h-12 rounded-xl"
             >
               {loading ? "Generating initial voice prompt..." : "Start Voice Mock Interview"}
               <ArrowRight className="w-4 h-4" />
