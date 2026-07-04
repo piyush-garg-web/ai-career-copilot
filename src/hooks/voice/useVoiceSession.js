@@ -46,6 +46,7 @@ export function useVoiceSession({
   const analyserRef = useRef(null);
   const animationFrameRef = useRef(null);
   const silenceTimerRef = useRef(null);
+  const stopAndEvaluateRef = useRef(null);
 
   // Speaking timers refs
   const speakStartTimeRef = useRef(0);
@@ -97,50 +98,7 @@ export function useVoiceSession({
     return () => cleanup();
   }, [cleanup]);
 
-  /**
-   * AI Speaks the question aloud using TTS.
-   */
-  const speakQuestion = useCallback((questionText) => {
-    console.log("[VOICE-SESSION]: speakQuestion called with text:", questionText.substring(0, 50));
-    setCurrentQuestion(""); // Start with empty
-    setStatus("speaking");
-    
-    // Simulate dynamic text display with typing effect
-    let index = 0;
-    const typeInterval = setInterval(() => {
-      if (index < questionText.length) {
-        setCurrentQuestion(questionText.substring(0, index + 1));
-        index++;
-      } else {
-        clearInterval(typeInterval);
-      }
-    }, 30); // Adjust speed here (30ms per character)
 
-    ttsService.speak(
-      questionText,
-      resolvedSettings,
-      // onStart
-      () => {
-        console.log("[TTS]: Started speaking question.");
-      },
-      // onEnd
-      () => {
-        clearInterval(typeInterval);
-        setCurrentQuestion(questionText); // Ensure full text is shown
-        console.log("[TTS]: Completed speaking question. Opening microphone...");
-        questionFinishTimeRef.current = Date.now();
-        startListening();
-      },
-      // onError
-      (err) => {
-        clearInterval(typeInterval);
-        setCurrentQuestion(questionText); // Ensure full text is shown
-        console.warn("[TTS]: Speech ended with warning. Proceed to listen anyway.");
-        questionFinishTimeRef.current = Date.now();
-        startListening();
-      }
-    );
-  }, [resolvedSettings]);
 
   /**
    * Starts microphone recording and live Web Speech API recognition.
@@ -225,7 +183,9 @@ export function useVoiceSession({
             // Trigger auto stop after 5 seconds of silence
             if (silentDuration > 5000) {
               console.log("[SILENCE DETECTED]: Auto-submitting response...");
-              stopAndEvaluate();
+              if (stopAndEvaluateRef.current) {
+                stopAndEvaluateRef.current();
+              }
               return;
             }
           }
@@ -289,6 +249,82 @@ export function useVoiceSession({
       setMicActive(false);
     }
   }, [resolvedSettings, cleanup]);
+
+  /**
+   * AI Speaks the question aloud using TTS.
+   */
+  const speakQuestion = useCallback((questionText) => {
+    console.log("[VOICE-SESSION]: speakQuestion called with text:", questionText.substring(0, 50));
+    setCurrentQuestion(""); // Start with empty
+    setStatus("speaking");
+    
+    // Simulate dynamic text display with typing effect
+    let index = 0;
+    const typeInterval = setInterval(() => {
+      if (index < questionText.length) {
+        const nextSubstr = questionText.substring(0, index + 1);
+        setCurrentQuestion(nextSubstr);
+        
+        // Update the last AI transcript entry in real-time
+        setTranscripts((prev) => {
+          if (prev.length === 0) return prev;
+          const nextTranscripts = [...prev];
+          const lastIdx = nextTranscripts.length - 1;
+          if (nextTranscripts[lastIdx].speaker === "AI") {
+            nextTranscripts[lastIdx] = { ...nextTranscripts[lastIdx], text: nextSubstr };
+          }
+          return nextTranscripts;
+        });
+        
+        index++;
+      } else {
+        clearInterval(typeInterval);
+      }
+    }, 30); // Adjust speed here (30ms per character)
+
+    ttsService.speak(
+      questionText,
+      resolvedSettings,
+      // onStart
+      () => {
+        console.log("[TTS]: Started speaking question.");
+      },
+      // onEnd
+      () => {
+        clearInterval(typeInterval);
+        setCurrentQuestion(questionText); // Ensure full text is shown
+        setTranscripts((prev) => {
+          if (prev.length === 0) return prev;
+          const nextTranscripts = [...prev];
+          const lastIdx = nextTranscripts.length - 1;
+          if (nextTranscripts[lastIdx].speaker === "AI") {
+            nextTranscripts[lastIdx] = { ...nextTranscripts[lastIdx], text: questionText };
+          }
+          return nextTranscripts;
+        });
+        console.log("[TTS]: Completed speaking question. Opening microphone...");
+        questionFinishTimeRef.current = Date.now();
+        startListening();
+      },
+      // onError
+      (err) => {
+        clearInterval(typeInterval);
+        setCurrentQuestion(questionText); // Ensure full text is shown
+        setTranscripts((prev) => {
+          if (prev.length === 0) return prev;
+          const nextTranscripts = [...prev];
+          const lastIdx = nextTranscripts.length - 1;
+          if (nextTranscripts[lastIdx].speaker === "AI") {
+            nextTranscripts[lastIdx] = { ...nextTranscripts[lastIdx], text: questionText };
+          }
+          return nextTranscripts;
+        });
+        console.warn("[TTS]: Speech ended with warning. Proceed to listen anyway.");
+        questionFinishTimeRef.current = Date.now();
+        startListening();
+      }
+    );
+  }, [resolvedSettings, startListening]);
 
   /**
    * Finalizes the current user answer recording and uploads to evaluate.
@@ -427,7 +463,7 @@ export function useVoiceSession({
         // Create next turn
         const nextQ = evalData.nextQuestion;
         setCurrentQuestion(nextQ);
-        setTranscripts((prev) => [...prev, { speaker: "AI", text: nextQ }]);
+        setTranscripts((prev) => [...prev, { speaker: "AI", text: "" }]);
         setCurrentQuestionNumber((n) => n + 1);
         
         // Speak follow-up question
@@ -442,6 +478,10 @@ export function useVoiceSession({
       isProcessingRef.current = false;
     }
   }, [status, liveTranscript, sessionId, currentQuestionNumber, totalQuestions, resolvedSettings, speechStats.thinkingTime, speakQuestion, cleanup, onCompleted]);
+
+  useEffect(() => {
+    stopAndEvaluateRef.current = stopAndEvaluate;
+  }, [stopAndEvaluate]);
 
   /**
    * Manually skip the current question.
@@ -463,7 +503,7 @@ export function useVoiceSession({
     } else {
       const fallbackNextQ = "Let's move on. Next question: Can you describe your experience collaborating with multidisciplinary teams?";
       setCurrentQuestion(fallbackNextQ);
-      setTranscripts((prev) => [...prev, { speaker: "AI", text: fallbackNextQ }]);
+      setTranscripts((prev) => [...prev, { speaker: "AI", text: "" }]);
       setCurrentQuestionNumber((n) => n + 1);
       speakQuestion(fallbackNextQ);
     }
@@ -493,7 +533,7 @@ export function useVoiceSession({
     setCoachingTips,
     startSession: (firstQ) => {
       console.log("[VOICE-SESSION]: startSession called with firstQ:", firstQ.substring(0, 50));
-      setTranscripts([{ speaker: "AI", text: firstQ }]);
+      setTranscripts([{ speaker: "AI", text: "" }]);
       // Small delay to ensure DOM is ready, then speak
       setTimeout(() => {
         speakQuestion(firstQ);
@@ -506,6 +546,15 @@ export function useVoiceSession({
     resumeSession: () => {
       if (status === "paused") {
         if (currentQuestion) {
+          setTranscripts((prev) => {
+            if (prev.length === 0) return prev;
+            const nextTranscripts = [...prev];
+            const lastIdx = nextTranscripts.length - 1;
+            if (nextTranscripts[lastIdx].speaker === "AI") {
+              nextTranscripts[lastIdx] = { ...nextTranscripts[lastIdx], text: "" };
+            }
+            return nextTranscripts;
+          });
           speakQuestion(currentQuestion);
         }
       }

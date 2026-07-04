@@ -37,11 +37,15 @@ export function VoiceInterviewReport({ session, onBackToHistory, onRetake }) {
     interviewType,
     overallScore = 0,
     feedback = "",
-    roadmap = {},
-    analytics = {},
-    questions = [],
+    roadmap: sessionRoadmap = {},
+    analytics: sessionAnalytics = {},
+    questions: sessionQuestions = [],
     videoEnabled = false,
   } = session;
+
+  const roadmap = sessionRoadmap || {};
+  const analytics = sessionAnalytics || {};
+  const questions = sessionQuestions || [];
 
   const handlePrint = () => {
     window.print();

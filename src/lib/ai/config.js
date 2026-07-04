@@ -12,7 +12,6 @@ export const AI_CONFIG = {
         "gemini-2.5-flash",
         "gemini-2.5-flash-lite",
         "gemini-2.0-flash",
-        "gemini-1.5-flash",
       ],
       apiKey: process.env.GEMINI_API_KEY || "",
       retries: 2,

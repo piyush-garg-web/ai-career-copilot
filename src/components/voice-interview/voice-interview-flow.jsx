@@ -282,7 +282,7 @@ export function VoiceInterviewFlow({
               </h3>
               <p className="text-xs text-muted-foreground font-semibold">
                 {status === "speaking" && "Listen to the mock question."}
-                {status === "listening" && `Automatic submission in ${Math.max(0, 30 - questionTimer)}s of silence.`}
+                {status === "listening" && "Microphone active. Will auto-submit after 5 seconds of silence."}
                 {status === "processing" && "Grading response and creating next turn."}
               </p>
             </div>

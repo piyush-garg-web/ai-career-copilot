@@ -115,7 +115,7 @@ export async function POST(req, { params }) {
           speaker: "USER",
           text: userResponse,
         },
-        orderBy: { createdAt: "desc" },
+        orderBy: { timestamp: "desc" },
       });
 
       if (!existingUserTranscript) {
