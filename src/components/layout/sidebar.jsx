@@ -12,6 +12,7 @@ import {
   Gauge,
   Target,
   Mic,
+  Volume2,
   History,
   User,
   Settings,
@@ -57,6 +58,11 @@ export const navigationItems = [
     icon: History,
   },
   {
+    name: "Voice Mock Interview",
+    href: "/voice-mock-interview",
+    icon: Volume2,
+  },
+  {
     name: "Profile",
     href: "/profile",
     icon: User,
@@ -80,6 +86,9 @@ export function Sidebar({ className }) {
       return false;
     }
     if (item.href === "/interview" && pathname.startsWith("/interview/history")) {
+      return false;
+    }
+    if (item.href === "/voice-mock-interview" && pathname.startsWith("/voice-mock-interview/history")) {
       return false;
     }
     return pathname.startsWith(item.href);
@@ -157,6 +166,7 @@ export function Sidebar({ className }) {
                       "Job Match": "dashboard.sidebar.jobMatch",
                       "Interview Coach": "dashboard.sidebar.interviewCoach",
                       "Interview History": "dashboard.sidebar.interviewHistory",
+                      "Voice Mock Interview": "dashboard.sidebar.voiceMockInterview",
                       "Profile": "dashboard.sidebar.profile",
                       "Settings": "dashboard.sidebar.settings"
                     };

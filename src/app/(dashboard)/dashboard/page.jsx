@@ -271,6 +271,33 @@ export default async function DashboardPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  // Fetch Voice Mock Interview stats
+  const voiceSessions = await db.voiceInterviewSession.findMany({
+    where: { userId: dbUser.id, status: "COMPLETED" },
+    include: { analytics: true },
+    orderBy: { completedAt: "desc" },
+  });
+
+  const voiceStats = {
+    totalInterviews: voiceSessions.length,
+    averageScore: voiceSessions.length > 0 ? Math.round(voiceSessions.reduce((sum, s) => sum + (s.overallScore || 0), 0) / voiceSessions.length) : 0,
+    bestScore: voiceSessions.length > 0 ? Math.max(...voiceSessions.map(s => s.overallScore || 0)) : 0,
+    totalPracticeTime: voiceSessions.reduce((sum, s) => sum + (s.duration || 15), 0),
+    lastInterviewDate: voiceSessions.length > 0 ? new Date(voiceSessions[0].completedAt || voiceSessions[0].updatedAt).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }) : "N/A",
+    voiceReadinessScore: 0,
+  };
+
+  if (voiceSessions.length > 0) {
+    const confidenceSum = voiceSessions.reduce((sum, s) => sum + (s.analytics?.confidenceScore || 80), 0);
+    const commsSum = voiceSessions.reduce((sum, s) => sum + (s.analytics?.communicationScore || 80), 0);
+    const grammarSum = voiceSessions.reduce((sum, s) => sum + (s.analytics?.grammarScore || 80), 0);
+    voiceStats.voiceReadinessScore = Math.round((confidenceSum + commsSum + grammarSum) / (3 * voiceSessions.length));
+  }
+
   return (
     <DashboardClientView
       stats={stats}
@@ -282,6 +309,7 @@ export default async function DashboardPage() {
       suggestions={suggestions}
       insights={insights}
       initialReviews={userReviews}
+      voiceStats={voiceStats}
     />
   );
 }

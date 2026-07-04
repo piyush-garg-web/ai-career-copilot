@@ -77,6 +77,8 @@ model User {
   certifications     Certification[]
   languages          LanguageProficiency[]
   achievements       Achievement[]
+  voiceInterviewSessions VoiceInterviewSession[]
+  voiceInterviewSettings VoiceInterviewSettings?
 
   @@index([clerkId])
   @@index([email])
@@ -450,4 +452,158 @@ model Achievement {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@index([userId])
   @@map("achievements")
+}
+
+// ─────────────────────────────────────────────
+// VOICE MOCK INTERVIEW MODULE
+// ─────────────────────────────────────────────
+
+model VoiceInterviewSession {
+  id             String                   @id @default(cuid())
+  userId         String
+  title          String
+  role           String
+  difficulty     Difficulty
+  interviewType  String
+  duration       Int                      @default(15)
+  language       String                   @default("en")
+  voice          String                   @default("native")
+  status         InterviewStatus          @default(ACTIVE)
+  overallScore   Int?
+  feedback       String?                  @db.Text
+  roadmap        Json?
+  videoEnabled   Boolean                  @default(false)
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+  completedAt    DateTime?
+
+  user           User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questions      VoiceInterviewQuestion[]
+  analytics      VoiceInterviewAnalytics?
+  transcripts    VoiceTranscript[]
+
+  @@index([userId])
+  @@index([status])
+  @@map("voice_interview_sessions")
+}
+
+model VoiceInterviewQuestion {
+  id           String                 @id @default(cuid())
+  sessionId    String
+  content      String                 @db.Text
+  order        Int
+  createdAt    DateTime               @default(now())
+
+  session      VoiceInterviewSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  answer       VoiceInterviewAnswer?
+
+  @@index([sessionId])
+  @@index([sessionId, order])
+  @@map("voice_interview_questions")
+}
+
+model VoiceInterviewAnswer {
+  id                  String                 @id @default(cuid())
+  questionId          String                 @unique
+  userResponse        String                 @db.Text
+  score               Int?
+  technicalAccuracy   Int?
+  communication       Int?
+  grammar             Int?
+  vocabulary          Int?
+  confidence          Int?
+  completeness        Int?
+  fluency             Int?
+  professionalism     Int?
+  strengths           Json?
+  weaknesses          Json?
+  improvedAnswer      String?                @db.Text
+  createdAt           DateTime               @default(now())
+
+  question            VoiceInterviewQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId])
+  @@map("voice_interview_answers")
+}
+
+model VoiceTranscript {
+  id           String                 @id @default(cuid())
+  sessionId    String
+  speaker      String
+  text         String                 @db.Text
+  timestamp    DateTime               @default(now())
+
+  session      VoiceInterviewSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("voice_transcripts")
+}
+
+model VoiceInterviewAnalytics {
+  id                        String                 @id @default(cuid())
+  sessionId                 String                 @unique
+  
+  speakingSpeed             Float?
+  wordsPerMinute            Float?
+  avgPause                  Float?
+  longestPause              Float?
+  responseTime              Float?
+  thinkingTime              Float?
+  fillerWords               Json?
+  grammarScore              Int?
+  vocabularyScore           Int?
+  communicationScore        Int?
+  technicalScore            Int?
+  confidenceScore           Int?
+  speechAccuracy            Float?
+  fluency                   Float?
+
+  eyeContactScore           Int?
+  postureScore              Int?
+  attentionScore            Int?
+  lightingScore             Int?
+  faceCenteringScore        Int?
+  cameraPresenceScore       Int?
+  engagementScore           Int?
+  faceDetectionPercentage   Float?
+  lookingAwayFrequency      Float?
+  smileCount                Int?
+  shoulderAlignmentScore    Int?
+  bodyStabilityScore        Int?
+  screenEngagementScore     Int?
+  cameraDistanceScore       Int?
+  blinkFrequency            Float?
+
+  session                   VoiceInterviewSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("voice_interview_analytics")
+}
+
+model VoiceInterviewSettings {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  preferredVoice       String   @default("native")
+  speakingSpeed        Float    @default(1.0)
+  pitch                Float    @default(1.0)
+  volume               Float    @default(1.0)
+  difficulty           String   @default("MEDIUM")
+  duration             Int      @default(15)
+  language             String   @default("en")
+  autoSave             Boolean  @default(true)
+  autoDownloadReport   Boolean  @default(false)
+  microphoneDevice     String?
+  noiseSuppression     Boolean  @default(true)
+
+  enableCamera         Boolean  @default(false)
+  defaultCameraDevice  String?
+  mirrorCamera         Boolean  @default(true)
+  videoResolution      String   @default("720p")
+  frameRate            Int      @default(30)
+  showLivePreview      Boolean  @default(true)
+  enableLiveCoaching   Boolean  @default(true)
+  enableVideoAnalytics Boolean  @default(true)
+
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("voice_interview_settings")
 }

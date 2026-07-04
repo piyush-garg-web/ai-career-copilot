@@ -23,6 +23,9 @@ export function MobileNav({ isOpen, onClose }) {
     if (item.href === "/interview" && pathname.startsWith("/interview/history")) {
       return false;
     }
+    if (item.href === "/voice-mock-interview" && pathname.startsWith("/voice-mock-interview/history")) {
+      return false;
+    }
     return pathname.startsWith(item.href);
   };
 
@@ -84,6 +87,7 @@ export function MobileNav({ isOpen, onClose }) {
                         "Job Match": "dashboard.sidebar.jobMatch",
                         "Interview Coach": "dashboard.sidebar.interviewCoach",
                         "Interview History": "dashboard.sidebar.interviewHistory",
+                        "Voice Mock Interview": "dashboard.sidebar.voiceMockInterview",
                         "Profile": "dashboard.sidebar.profile",
                         "Settings": "dashboard.sidebar.settings"
                       };
