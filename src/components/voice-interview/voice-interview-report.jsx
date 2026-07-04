@@ -22,6 +22,7 @@ import {
   AlertCircle,
   ThumbsUp,
   Target,
+  RotateCcw,
 } from "lucide-react";
 
 export function VoiceInterviewReport({ session, onBackToHistory, onRetake }) {

@@ -10,6 +10,7 @@ import { VoiceInterviewSetup } from "./voice-interview-setup";
 import { VoiceInterviewFlow } from "./voice-interview-flow";
 import { VoiceInterviewReport } from "./voice-interview-report";
 import { VoiceInterviewHistory } from "./voice-interview-history";
+import { VoiceInterviewSettings } from "./voice-interview-settings";
 import { useTranslation } from "@/lib/i18n/LanguageProvider";
 import {
   Mic,
@@ -24,6 +25,7 @@ import {
   FileText,
   Calendar,
   Zap,
+  Settings,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -37,10 +39,11 @@ export function VoiceInterviewClient({
   const { t } = useTranslation();
   
   // Coordinate states
-  const [view, setView] = useState("overview"); // 'overview' | 'setup' | 'flow' | 'report' | 'history'
+  const [view, setView] = useState("overview"); // 'overview' | 'setup' | 'flow' | 'report' | 'history' | 'settings'
   const [sessions, setSessions] = useState(initialSessions);
   const [activeSession, setActiveSession] = useState(initialActiveSession);
   const [selectedReportSession, setSelectedReportSession] = useState(null);
+  const [settings, setSettings] = useState(null);
   
   // Runtime flow setup
   const [flowParams, setFlowParams] = useState(null);
@@ -81,6 +84,24 @@ export function VoiceInterviewClient({
 
   const handleDeleteSession = (sessionId) => {
     setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+  };
+
+  const handleLoadSettings = async () => {
+    try {
+      const res = await fetch("/api/voice-interview/settings");
+      const data = await res.json();
+      if (res.ok) {
+        setSettings(data.settings);
+        setView("settings");
+      }
+    } catch (error) {
+      console.error("[SETTINGS] Failed to load:", error);
+      toast.error("Failed to load settings");
+    }
+  };
+
+  const handleSettingsSaved = (savedSettings) => {
+    setSettings(savedSettings);
   };
 
   // Setup FAQs & Interview tips
@@ -140,6 +161,14 @@ export function VoiceInterviewClient({
                 >
                   <History className="w-3.5 h-3.5 mr-1.5" />
                   View History
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleLoadSettings}
+                  className="rounded-xl px-5 py-4 text-xs font-black border-border/60 hover:bg-accent/40 cursor-pointer"
+                >
+                  <Settings className="w-3.5 h-3.5 mr-1.5" />
+                  Settings
                 </Button>
               </div>
             </div>
@@ -327,6 +356,19 @@ export function VoiceInterviewClient({
             onViewSession={handleViewReport}
             onRetakeSession={handleRetake}
             onDeleteSession={handleDeleteSession}
+          />
+        </div>
+      )}
+
+      {/* 6. SETTINGS VIEW */}
+      {view === "settings" && (
+        <div className="space-y-4">
+          <Button variant="ghost" onClick={() => setView("overview")} className="rounded-xl font-bold cursor-pointer text-xs mb-2">
+            &larr; Back to Dashboard
+          </Button>
+          <VoiceInterviewSettings
+            initialSettings={settings || {}}
+            onSave={handleSettingsSaved}
           />
         </div>
       )}
