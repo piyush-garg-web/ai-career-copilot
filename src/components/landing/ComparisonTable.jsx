@@ -1,12 +1,23 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { Check, X, Sparkles } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/LanguageProvider";
 import { PremiumBadge } from "@/components/shared/PremiumBadge";
 
 export default function ComparisonTable() {
   const { t } = useTranslation();
+
+  const floatAnimation = (yOffset = 3, duration = 5, delay = 0) => ({
+    y: [0, -yOffset, 0],
+    transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
+  });
+
+  const pulseAnimation = (scale = 1.02, duration = 4, delay = 0) => ({
+    scale: [1, scale, 1],
+    transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
+  });
 
   const comparisonData = [
     {
@@ -51,20 +62,34 @@ export default function ComparisonTable() {
     <section className="py-16 md:py-24 bg-secondary/15 border-y border-border/40 relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14 space-y-4">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400">
+        <motion.div
+          className="text-center max-w-3xl mx-auto mb-10 md:mb-14 space-y-4"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.8 }}
+        >
+          <motion.h2
+            className="text-xs font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400"
+            animate={{ opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          >
             {t("landing.comparison.sectionTitle")}
-          </h2>
+          </motion.h2>
           <p className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">
             {t("landing.comparison.title")}
           </p>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
             {t("landing.comparison.subtitle")}
           </p>
-        </div>
+        </motion.div>
 
         {/* Comparison Table */}
-        <div className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-xl">
+        <motion.div
+          className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-xl"
+          animate={floatAnimation(3, 6, 0)}
+          style={{ willChange: "transform" }}
+        >
           {/* Header Row */}
           <div className="grid grid-cols-3 bg-secondary/40 border-b border-border/60 items-center min-h-[60px] px-4 sm:px-6">
             <div className="font-bold text-xs sm:text-sm text-foreground uppercase tracking-wider text-left">
@@ -82,9 +107,11 @@ export default function ComparisonTable() {
           {/* Body Rows */}
           <div className="divide-y divide-border/50">
             {comparisonData.map((row, idx) => (
-              <div
+              <motion.div
                 key={idx}
+                animate={floatAnimation(2, 4 + idx * 0.2, idx * 0.3)}
                 className="grid grid-cols-3 min-h-[84px] items-center hover:bg-secondary/10 transition-colors duration-150 px-4 sm:px-6 gap-4"
+                style={{ willChange: "transform" }}
               >
                 {/* Feature Name */}
                 <div className="font-semibold text-xs sm:text-sm text-foreground flex items-center gap-2 min-w-0 text-left py-3">

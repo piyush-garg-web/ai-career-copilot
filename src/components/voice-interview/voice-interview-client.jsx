@@ -214,17 +214,6 @@ export function VoiceInterviewClient({
             )}
           </div>
 
-          {/* Mockup Preview Image */}
-          <div className="flex justify-center items-center py-6">
-            <div className="relative w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl border border-border/40 bg-card/40 backdrop-blur-sm">
-              <img
-                src="/ss/voiceVideo.png"
-                alt="AI Voice + Video Mock Interview Preview"
-                className="w-full h-auto object-cover rounded-2xl"
-              />
-            </div>
-          </div>
-
           {/* Stats Counter Matrix */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
             <Card className="border-border/40 bg-card/60 backdrop-blur-md p-4 text-center">

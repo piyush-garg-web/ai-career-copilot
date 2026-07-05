@@ -27,7 +27,17 @@ export default function Hero() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.12, delayChildren: 0.1 },
+      transition: { staggerChildren: 0.2, delayChildren: 0.3 },
+    },
+  };
+
+  const leftSectionVariants = {
+    hidden: { opacity: 0, x: -50, y: 30 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      transition: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] },
     },
   };
 
@@ -36,36 +46,79 @@ export default function Hero() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15 },
+      transition: { type: "spring", stiffness: 100, damping: 15, duration: 0.8 },
     },
   };
 
-  const floatAnimation = (yOffset = 8, duration = 6, delay = 0) => ({
+  const floatAnimation = (yOffset = 8, duration = 4, delay = 0) => ({
     y: [0, -yOffset, 0],
     transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
   });
 
+  const pulseAnimation = (scale = 1.05, duration = 3, delay = 0) => ({
+    scale: [1, scale, 1],
+    opacity: [0.5, 0.8, 0.5],
+    transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
+  });
+
+  const shimmerAnimation = (duration = 2, delay = 0) => ({
+    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+    transition: { duration, repeat: Infinity, ease: "linear", delay },
+  });
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { type: "spring", stiffness: 80, damping: 15, duration: 0.9 },
+    },
+  };
+
   return (
     <div className="relative min-h-[90vh] flex items-center justify-center pt-24 overflow-hidden bg-background">
       {/* Background Gradients */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-indigo-500/10 dark:bg-indigo-500/5 rounded-full filter blur-[80px] sm:blur-[120px] translate-x-[-20%] translate-y-[-20%]" />
-        <div className="absolute top-1/3 right-1/4 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-violet-500/10 dark:bg-violet-500/5 rounded-full filter blur-[80px] sm:blur-[100px] translate-x-[20%]" />
-        <div className="absolute bottom-10 left-1/2 w-[300px] sm:w-[450px] h-[300px] sm:h-[450px] bg-blue-500/10 dark:bg-blue-500/5 rounded-full filter blur-[80px] sm:blur-[100px] translate-x-[-50%]" />
-      </div>
+      <motion.div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <motion.div
+          className="absolute top-0 left-1/4 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-indigo-500/10 dark:bg-indigo-500/5 rounded-full filter blur-[80px] sm:blur-[120px] translate-x-[-20%] translate-y-[-20%]"
+          animate={pulseAnimation(1.2, 8, 0)}
+          style={{ willChange: "transform" }}
+        />
+        <motion.div
+          className="absolute top-1/3 right-1/4 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-violet-500/10 dark:bg-violet-500/5 rounded-full filter blur-[80px] sm:blur-[100px] translate-x-[20%]"
+          animate={pulseAnimation(1.15, 7, 1)}
+          style={{ willChange: "transform" }}
+        />
+        <motion.div
+          className="absolute bottom-10 left-1/2 w-[300px] sm:w-[450px] h-[300px] sm:h-[450px] bg-blue-500/10 dark:bg-blue-500/5 rounded-full filter blur-[80px] sm:blur-[100px] translate-x-[-50%]"
+          animate={pulseAnimation(1.25, 9, 2)}
+          style={{ willChange: "transform" }}
+        />
+      </motion.div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-12 md:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
           {/* Hero Content */}
           <motion.div
             className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 md:space-y-8"
-            variants={containerVariants}
+            variants={leftSectionVariants}
             initial="hidden"
             animate="visible"
           >
             <motion.h1
               variants={itemVariants}
               className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] md:leading-[1.05]"
+              animate={{
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+              }}
+              transition={{
+                backgroundPosition: { duration: 5, repeat: Infinity, ease: "linear" },
+              }}
+              style={{
+                backgroundSize: "200% auto",
+                backgroundImage: "linear-gradient(to right, currentColor 0%, currentColor 100%)",
+              }}
             >
               {t("landing.hero.title")}
             </motion.h1>
@@ -73,34 +126,77 @@ export default function Hero() {
             <motion.p
               variants={itemVariants}
               className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed font-normal"
+              animate={{
+                opacity: [0.8, 1, 0.8],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
             >
               {t("landing.hero.subtitle")}
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <Link href="/sign-up" className="w-full sm:w-auto">
-                <Button
-                  size="lg"
-                  className="w-full sm:w-auto text-base font-semibold px-8 py-6 rounded-xl bg-primary hover:bg-primary/95 shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20 transition-all duration-200 group"
+                <motion.div
+                  animate={{
+                    scale: [1, 1.02, 1],
+                    boxShadow: [
+                      "0 0 20px rgba(99, 102, 241, 0.1)",
+                      "0 0 30px rgba(99, 102, 241, 0.2)",
+                      "0 0 20px rgba(99, 102, 241, 0.1)",
+                    ],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                 >
-                  {t("landing.hero.cta")}
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                  <Button
+                    size="lg"
+                    className="w-full sm:w-auto text-base font-semibold px-8 py-6 rounded-xl bg-primary hover:bg-primary/95 shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20 hover:scale-105 transition-all duration-300 group"
+                  >
+                    {t("landing.hero.cta")}
+                    <motion.span
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </motion.span>
+                  </Button>
+                </motion.div>
               </Link>
             </motion.div>
           </motion.div>
 
           {/* Floating Feature Cards */}
-          <div className="lg:col-span-5 relative w-full flex justify-center">
+          <motion.div
+            className="lg:col-span-5 relative w-full flex justify-center"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
             <div className="relative w-full max-w-md space-y-5">
               {/* Ambient glow */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <motion.div
+                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                animate={pulseAnimation(1.3, 6, 0)}
+                style={{ willChange: "transform" }}
+              >
                 <div className="w-72 h-72 rounded-full bg-indigo-500/10 dark:bg-indigo-500/5 blur-[80px]" />
-              </div>
+              </motion.div>
 
               {/* Decorative rings */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
-                <div className="w-[100%] aspect-square rounded-full border border-dashed border-indigo-500/20 animate-[spin_80s_linear_infinite]" />
+                <motion.div
+                  className="w-[100%] aspect-square rounded-full border border-dashed border-indigo-500/20"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+                  style={{ willChange: "transform" }}
+                />
               </div>
 
               {/* Cards vertical stack — balanced, non-overlapping */}
@@ -108,8 +204,10 @@ export default function Hero() {
                 {/* Card 1: Resume Analysis */}
                 <motion.div
                   className={CARD_BASE}
-                  animate={floatAnimation(5, 5.5, 0)}
-                  whileHover={{ scale: 1.025 }}
+                  variants={cardVariants}
+                  animate={floatAnimation(6, 5.5, 0)}
+                  whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
+                  style={{ willChange: "transform" }}
                 >
                   <div className="flex items-start gap-3">
                     <div className="p-2.5 rounded-xl bg-green-500/10 text-green-500 dark:text-green-400 shrink-0 border border-green-500/20">
@@ -138,8 +236,10 @@ export default function Hero() {
                 {/* Card 2: Interview Coach */}
                 <motion.div
                   className={CARD_BASE}
-                  animate={floatAnimation(5, 6, 0.4)}
-                  whileHover={{ scale: 1.025 }}
+                  variants={cardVariants}
+                  animate={floatAnimation(6, 6, 0.4)}
+                  whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
+                  style={{ willChange: "transform" }}
                 >
                   <div className="flex items-start gap-3">
                     <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-500 dark:text-purple-400 shrink-0 border border-purple-500/20">
@@ -163,8 +263,10 @@ export default function Hero() {
                 {/* Card 3: AI Mock Interview */}
                 <motion.div
                   className={`${CARD_BASE} border-yellow-500/30 bg-gradient-to-br from-yellow-500/5 to-orange-500/5 shadow-yellow-500/5`}
-                  animate={floatAnimation(5, 5, 0.8)}
-                  whileHover={{ scale: 1.025 }}
+                  variants={cardVariants}
+                  animate={floatAnimation(6, 5, 0.8)}
+                  whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
+                  style={{ willChange: "transform" }}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
@@ -199,7 +301,7 @@ export default function Hero() {
                 </motion.div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 

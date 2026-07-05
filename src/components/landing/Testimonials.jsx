@@ -33,6 +33,17 @@ export default function Testimonials({
   onUnauthAction,
 }) {
   const { t } = useTranslation();
+
+  const floatAnimation = (yOffset = 5, duration = 5, delay = 0) => ({
+    y: [0, -yOffset, 0],
+    transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
+  });
+
+  const pulseAnimation = (scale = 1.02, duration = 4, delay = 0) => ({
+    scale: [1, scale, 1],
+    transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
+  });
+
   const [reviews, setReviews] = useState(initialReviews);
   const [totalReviews, setTotalReviews] = useState(initialTotal);
   const [averageRating, setAverageRating] = useState(initialAverage);
@@ -200,24 +211,42 @@ export default function Testimonials({
   return (
     <section id="reviews" className="py-20 md:py-28 bg-background relative overflow-hidden">
       {/* Background dynamic radial glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-indigo-500/5 dark:bg-indigo-500/3 rounded-full filter blur-[130px] pointer-events-none" />
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-indigo-500/5 dark:bg-indigo-500/3 rounded-full filter blur-[130px] pointer-events-none"
+        animate={pulseAnimation(1.15, 10, 0)}
+        style={{ willChange: "transform" }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20 space-y-4">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+        <motion.div
+          className="text-center max-w-3xl mx-auto mb-16 md:mb-20 space-y-4"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.8 }}
+        >
+          <motion.h2
+            className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400"
+            animate={{ opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          >
             {t("landing.reviews.sectionTitle")}
-          </h2>
+          </motion.h2>
           <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
             {t("landing.reviews.title")}
           </p>
           <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
             {t("landing.reviews.subtitle")}
           </p>
-        </div>
+        </motion.div>
 
         {/* Rating Scorecard Banner */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-card/40 border border-border/50 rounded-3xl p-8 backdrop-blur-md mb-12">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-card/40 border border-border/50 rounded-3xl p-8 backdrop-blur-md mb-12"
+          animate={floatAnimation(3, 6, 0)}
+          style={{ willChange: "transform" }}
+        >
           {/* Average Rating Big View */}
           <div className="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left space-y-2 md:border-r md:border-border/30 md:pr-8">
             <span className="text-5xl font-black tracking-tight text-foreground flex items-baseline">
@@ -273,7 +302,7 @@ export default function Testimonials({
               )}
             </Button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Filters and Search Bar */}
         <div className="flex items-center justify-between mb-8 pb-4 border-b border-border/25">
@@ -311,7 +340,7 @@ export default function Testimonials({
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
-            {reviews.map((rev) => {
+            {reviews.map((rev, index) => {
               const isOwner = userReview && rev.id === userReview.id;
               const formattedDate = new Date(rev.createdAt).toLocaleDateString("en-US", {
                 year: "numeric",
@@ -324,6 +353,7 @@ export default function Testimonials({
               return (
                 <motion.div
                   key={rev.id}
+                  animate={floatAnimation(4, 5 + index * 0.2, index * 0.3)}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-40px" }}
@@ -331,6 +361,7 @@ export default function Testimonials({
                   className={`p-6 rounded-3xl border bg-card/45 hover:bg-card/75 backdrop-blur-sm shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between space-y-4 hover:border-indigo-500/15 relative overflow-hidden group ${
                     isOwner ? "border-indigo-500/35 ring-1 ring-indigo-500/20" : "border-border/50"
                   }`}
+                  style={{ willChange: "transform" }}
                 >
                   {isOwner && (
                     <div className="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-[9px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">

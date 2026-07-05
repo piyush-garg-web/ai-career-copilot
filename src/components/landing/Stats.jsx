@@ -54,6 +54,17 @@ function AnimatedCounter({ value, duration = 2, suffix = "", decimals = 0 }) {
 
 export default function Stats() {
   const { t } = useTranslation();
+
+  const floatAnimation = (yOffset = 5, duration = 5, delay = 0) => ({
+    y: [0, -yOffset, 0],
+    transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
+  });
+
+  const pulseAnimation = (scale = 1.03, duration = 4, delay = 0) => ({
+    scale: [1, scale, 1],
+    transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
+  });
+
   const stats = [
     {
       value: 10000,
@@ -92,19 +103,25 @@ export default function Stats() {
           {stats.map((stat, index) => (
             <motion.div
               key={index}
+              animate={floatAnimation(4, 5 + index * 0.2, index * 0.3)}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="flex flex-col items-center text-center space-y-2 p-4 rounded-xl hover:bg-card/40 transition-all duration-300 border border-transparent hover:border-border/25"
+              style={{ willChange: "transform" }}
             >
-              <span className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/80">
+              <motion.span
+                className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/80"
+                animate={pulseAnimation(1.02, 3, index * 0.4)}
+                style={{ willChange: "transform" }}
+              >
                 <AnimatedCounter
                   value={stat.value}
                   suffix={stat.suffix}
                   decimals={stat.decimals}
                 />
-              </span>
+              </motion.span>
               <span className="text-sm font-semibold text-foreground tracking-wide">
                 {stat.label}
               </span>

@@ -246,15 +246,7 @@ export function DashboardClientView({
     },
   ];
 
-  const handleVoiceInterviewClick = () => {
-    if (!isPremium) {
-      setShowPremiumModal(true);
-    } else {
-      router.push("/voice-mock-interview");
-    }
-  };
-
-  const handleVideoInterviewClick = () => {
+  const handleVoiceVideoInterviewClick = () => {
     if (!isPremium) {
       setShowPremiumModal(true);
     } else {
@@ -291,7 +283,7 @@ export function DashboardClientView({
         <div>
           <h2 className="text-2xl font-bold tracking-tight md:text-3xl bg-gradient-to-r from-foreground via-foreground/90 to-foreground/75 bg-clip-text text-transparent flex items-center gap-3">
             {t("dashboard.welcome.title")}, {userFirstName || t("dashboard.welcome.defaultUser")}! 👋
-            {isPremium && <PremiumBadge />}
+            {isPremium && <PremiumBadge className="mt-1" />}
           </h2>
           <p className="text-sm text-muted-foreground font-medium mt-1">
             {t("dashboard.welcome.subtitle")}
@@ -653,7 +645,7 @@ export function DashboardClientView({
                   <Crown className="w-5 h-5 text-yellow-500" />
                   🎤 AI Mock Interview
                 </CardTitle>
-                {!isPremium && <PremiumBadge size="sm" />}
+                {!isPremium && <PremiumBadge size="sm" className="mt-0.5" />}
               </div>
               <CardDescription className="text-xs max-w-2xl leading-relaxed">
                 Practice realistic AI-powered voice & video interviews with real-time speech recognition, natural AI voice responses, detailed communication analytics, and personalized feedback.
@@ -661,19 +653,11 @@ export function DashboardClientView({
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <Button
-                onClick={handleVoiceInterviewClick}
+                onClick={handleVoiceVideoInterviewClick}
                 className="rounded-xl bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700"
               >
-                <Mic className="w-4 h-4 mr-2" />
-                Voice Interview
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleVideoInterviewClick}
-                className="rounded-xl border-yellow-500/30 hover:bg-yellow-500/10"
-              >
                 <Video className="w-4 h-4 mr-2" />
-                Video Interview
+                AI Voice + Video Interview
               </Button>
             </div>
           </CardHeader>
