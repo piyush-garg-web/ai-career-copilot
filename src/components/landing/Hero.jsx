@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, FileText, Bot, Briefcase, TrendingUp, Mic, Video } from "lucide-react";
+import { ArrowRight, FileText, Bot, TrendingUp, Mic, Video } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/LanguageProvider";
 import { PremiumRequiredModal } from "@/components/shared/PremiumRequiredModal";
+import { PremiumBadge } from "@/components/shared/PremiumBadge";
 import { usePremium } from "@/hooks/use-premium";
 
-const heroHighlights = ["hero.badge", "hero.cards.resume", "hero.cards.interview", "hero.cards.jobMatch"];
+const CARD_BASE =
+  "relative w-full rounded-2xl border border-border/50 bg-card/85 backdrop-blur-md shadow-xl p-5 flex flex-col gap-3 overflow-hidden transition-shadow duration-300 hover:shadow-2xl";
 
 export default function Hero() {
   const { t } = useTranslation();
@@ -18,34 +20,15 @@ export default function Hero() {
 
   const handleInterviewClick = (e) => {
     e.preventDefault();
-    // On landing page, always redirect - premium check happens on the interview page
     window.location.href = "/voice-mock-interview";
-  };
-  const scrollToFeatures = () => {
-    const element = document.getElementById("features");
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-      });
-    }
   };
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1
-      }
-    }
+      transition: { staggerChildren: 0.12, delayChildren: 0.1 },
+    },
   };
 
   const itemVariants = {
@@ -53,9 +36,14 @@ export default function Hero() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15 }
-    }
+      transition: { type: "spring", stiffness: 100, damping: 15 },
+    },
   };
+
+  const floatAnimation = (yOffset = 8, duration = 6, delay = 0) => ({
+    y: [0, -yOffset, 0],
+    transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
+  });
 
   return (
     <div className="relative min-h-[90vh] flex items-center justify-center pt-24 overflow-hidden bg-background">
@@ -67,7 +55,7 @@ export default function Hero() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-12 md:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
           {/* Hero Content */}
           <motion.div
             className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 md:space-y-8"
@@ -89,12 +77,12 @@ export default function Hero() {
               {t("landing.hero.subtitle")}
             </motion.p>
 
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
-            >
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <Link href="/sign-up" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto text-base font-semibold px-8 py-6 rounded-xl bg-primary hover:bg-primary/95 shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20 transition-all duration-200 group">
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto text-base font-semibold px-8 py-6 rounded-xl bg-primary hover:bg-primary/95 shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20 transition-all duration-200 group"
+                >
                   {t("landing.hero.cta")}
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -102,137 +90,119 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Floating Illustration */}
-          <div className="lg:col-span-5 relative w-full h-[450px] sm:h-[550px] flex items-center justify-center">
-            {/* Ambient Backlight */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] rounded-full bg-indigo-500/20 dark:bg-indigo-500/10 blur-[60px]" />
+          {/* Floating Feature Cards */}
+          <div className="lg:col-span-5 relative w-full">
+            <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+              {/* Ambient glow */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="w-56 h-56 sm:w-72 sm:h-72 rounded-full bg-indigo-500/15 dark:bg-indigo-500/10 blur-[60px]" />
+              </div>
 
-            {/* Floating Container */}
-            <div className="relative w-full max-w-[1000px] h-[400px] sm:h-[440px] flex items-center justify-center">
-              {/* Card 1: Resume Analysis */}
-              <motion.div
-                className="absolute top-24 left-1/2 -translate-x-1/2 sm:-translate-x-0 sm:left-8 sm:right-auto sm:w-[80px] p-1.5 rounded-xl border border-border/50 bg-card/85 backdrop-blur-md shadow-xl z-20"
-                animate={{
-                  y: [0, -8, 0],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 rounded-lg bg-green-500/15 text-green-600 dark:text-green-400">
-                    <FileText className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-xs text-foreground">{t("landing.hero.cards.resumeTitle")}</h3>
-                    <p className="text-[10px] text-muted-foreground">{t("landing.hero.cards.resumeDesc")}</p>
-                  </div>
-                </div>
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-xs font-medium">
-                    <span>{t("landing.hero.cards.optimization")}</span>
-                    <span className="text-green-600 dark:text-green-400 font-bold">87%</span>
-                  </div>
-                  <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                    <div className="bg-green-500 h-full rounded-full" style={{ width: "87%" }} />
-                  </div>
-                </div>
-              </motion.div>
+              {/* Decorative rings */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
+                <div className="w-[90%] max-w-[420px] aspect-square rounded-full border border-dashed border-indigo-500/20 animate-[spin_60s_linear_infinite]" />
+              </div>
 
-              {/* Card 2: Interview Coach */}
-              <motion.div
-                className="absolute bottom-24 left-1/2 -translate-x-1/2 sm:-translate-x-0 sm:right-8 sm:left-auto sm:w-[70px] p-1.5 rounded-xl border border-border/50 bg-card/85 backdrop-blur-md shadow-xl z-10"
-                animate={{
-                  y: [0, 8, 0],
-                }}
-                transition={{
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.5
-                }}
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 rounded-lg bg-purple-500/15 text-purple-600 dark:text-purple-400">
-                    <Bot className="w-5 h-5" />
+              {/* Cards grid — balanced, non-overlapping */}
+              <div className="relative grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                {/* Card 1: Resume Analysis */}
+                <motion.div
+                  className={`${CARD_BASE} sm:col-span-2 min-h-[148px]`}
+                  animate={floatAnimation(6, 5.5, 0)}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="p-2.5 rounded-xl bg-green-500/15 text-green-600 dark:text-green-400 shrink-0">
+                      <FileText className="w-5 h-5" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-sm text-foreground leading-snug">
+                        {t("landing.hero.cards.resumeTitle")}
+                      </h3>
+                      <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                        {t("landing.hero.cards.resumeDesc")}
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="font-semibold text-xs text-foreground">{t("landing.hero.cards.interviewTitle")}</h3>
-                </div>
-                <div className="space-y-2 text-[11px] leading-relaxed">
-                  <div className="p-2 rounded bg-secondary/50 text-muted-foreground">
+                  <div className="space-y-2 mt-auto">
+                    <div className="flex justify-between text-xs font-medium">
+                      <span className="text-muted-foreground">{t("landing.hero.cards.optimization")}</span>
+                      <span className="text-green-600 dark:text-green-400 font-bold">87%</span>
+                    </div>
+                    <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                      <div className="bg-green-500 h-full rounded-full transition-all duration-500" style={{ width: "87%" }} />
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Card 2: Interview Coach */}
+                <motion.div
+                  className={`${CARD_BASE} min-h-[200px]`}
+                  animate={floatAnimation(7, 6.5, 0.4)}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-400 shrink-0">
+                      <Bot className="w-5 h-5" />
+                    </div>
+                    <h3 className="font-semibold text-sm text-foreground leading-snug">
+                      {t("landing.hero.cards.interviewTitle")}
+                    </h3>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                     {t("landing.hero.cards.interviewPrompt")}
+                  </p>
+                  <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 text-xs leading-relaxed">
+                    <strong>{t("landing.hero.cards.tipLabel")}</strong> {t("landing.hero.cards.tipText")}
                   </div>
-                  <div className="p-2 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 font-medium">
-                    💡 <strong>{t("landing.hero.cards.tipLabel")}</strong> {t("landing.hero.cards.tipText")}
+                </motion.div>
+
+                {/* Card 3: AI Mock Interview */}
+                <motion.div
+                  className={`${CARD_BASE} min-h-[200px] border-yellow-500/30 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 shadow-yellow-500/10`}
+                  animate={floatAnimation(5, 5, 0.8)}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="p-2 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 text-yellow-600 dark:text-yellow-400 shrink-0">
+                        <Mic className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[11px] text-muted-foreground">AI Mock Interview</p>
+                        <p className="text-sm font-bold text-foreground leading-tight">Voice + Video</p>
+                      </div>
+                    </div>
+                    <PremiumBadge />
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground">
+                    <span className="inline-flex items-center gap-1">
+                      <Video className="w-3 h-3 shrink-0" />
+                      Real-time AI
+                    </span>
+                    <span className="text-border">•</span>
+                    <span className="inline-flex items-center gap-1">
+                      <TrendingUp className="w-3 h-3 shrink-0" />
+                      Smart Feedback
+                    </span>
                   </div>
                   <Button
                     onClick={handleInterviewClick}
-                    className="w-full mt-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold text-xs py-2 rounded-lg shadow-md"
+                    className="w-full mt-auto bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold text-xs h-9 rounded-xl shadow-md"
                   >
-                    <Video className="w-3 h-3 mr-1.5" />
-                    Video Interview
+                    <Video className="w-3.5 h-3.5 mr-1.5 shrink-0" />
+                    Start Interview
                   </Button>
-                </div>
-              </motion.div>
-
-              {/* Card 3: AI Mock Interview */}
-              <motion.div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 sm:left-1/2 sm:-translate-x-1/2 w-[60px] p-1.5 rounded-lg border border-yellow-500/30 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 backdrop-blur-md shadow-lg shadow-yellow-500/10 z-30"
-                animate={{
-                  scale: [1, 1.02, 1],
-                  y: [0, 4, 0]
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 1
-                }}
-              >
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="p-1.5 rounded-full bg-gradient-to-br from-yellow-500/20 to-orange-500/20 text-yellow-600 dark:text-yellow-400">
-                    <Mic className="w-4 h-4" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-[10px] text-muted-foreground">AI Mock Interview</p>
-                    <p className="text-xs font-bold text-foreground">Voice + Video</p>
-                  </div>
-                  <div className="text-[9px] font-extrabold text-yellow-600 dark:text-yellow-400 bg-yellow-500/10 py-0.5 px-1.5 rounded-full border border-yellow-500/20">
-                    👑 Premium
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 text-[9px] text-muted-foreground mb-3">
-                  <div className="flex items-center gap-1">
-                    <Video className="w-3 h-3" />
-                    <span>Real-time AI</span>
-                  </div>
-                  <span>•</span>
-                  <div className="flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3" />
-                    <span>Smart Feedback</span>
-                  </div>
-                </div>
-                <Button
-                  onClick={handleInterviewClick}
-                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold text-xs py-2 rounded-lg shadow-md"
-                >
-                  <Video className="w-3 h-3 mr-1.5" />
-                  Start Interview
-                </Button>
-              </motion.div>
-
-              {/* Background Glow Ring */}
-              <div className="absolute inset-4 rounded-full border border-dashed border-indigo-500/20 dark:border-indigo-500/10 animate-[spin_60s_linear_infinite] pointer-events-none" />
-              <div className="absolute inset-16 rounded-full border border-dashed border-violet-500/20 dark:border-violet-500/10 animate-[spin_40s_linear_infinite_reverse] pointer-events-none" />
+                </motion.div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <PremiumRequiredModal 
-        isOpen={showPremiumModal} 
-        onClose={() => setShowPremiumModal(false)} 
+
+      <PremiumRequiredModal
+        isOpen={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
         featureName="AI Mock Interview"
       />
     </div>

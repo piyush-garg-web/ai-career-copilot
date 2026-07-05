@@ -1,23 +1,15 @@
-import { Zap } from "lucide-react";
+import { Crown } from "lucide-react";
 
-export function PremiumBadge({ className, size = "sm" }) {
-  const sizeClasses = {
-    sm: "px-1.5 py-0.5 text-[8px]",
-    md: "px-2 py-0.5 text-[9px]",
-    lg: "px-2.5 py-1 text-[10px]",
-  };
-
-  const iconSizes = {
-    sm: "w-2 h-2",
-    md: "w-2.5 h-2.5",
-    lg: "w-3 h-3",
-  };
-
+/**
+ * Unified Premium badge — single design used across the entire application.
+ */
+export function PremiumBadge({ className = "" }) {
   return (
     <span
-      className={`inline-flex items-center gap-0.5 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-black shadow-md shadow-yellow-500/20 select-none ${sizeClasses[size]} ${className || ""}`}
+      className={`inline-flex items-center justify-center gap-1.5 min-h-[22px] px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 text-white text-[11px] font-bold leading-none tracking-wide shadow-sm shadow-amber-500/30 select-none whitespace-nowrap ${className}`}
+      aria-label="Premium"
     >
-      <Zap className={`${iconSizes[size]} fill-current shrink-0`} />
+      <Crown className="w-3 h-3 shrink-0 fill-white/90 stroke-white" strokeWidth={2} />
       Premium
     </span>
   );

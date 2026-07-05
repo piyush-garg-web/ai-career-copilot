@@ -61,7 +61,7 @@ export const navigationItems = [
     icon: History,
   },
   {
-    name: "AI Mock Interview (Voice + Video)",
+    name: "AI Voice + Video Interview",
     href: "/voice-mock-interview",
     icon: Volume2,
   },
@@ -215,7 +215,7 @@ export function Sidebar({ className }) {
                         })()}
                       </span>
                       {isVoiceInterviewItem && !isPremium && !loading && (
-                        <PremiumBadge size="sm" />
+                        <PremiumBadge />
                       )}
                     </span>
                   </LinkWrapper>
