@@ -24,6 +24,8 @@ import {
   Star,
   Trash2,
   Edit,
+  Video,
+  Crown,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -241,6 +243,24 @@ export function DashboardClientView({
       action: () => router.push("/interview"),
     },
   ];
+
+  const handleVoiceInterviewClick = () => {
+    if (!isPremium) {
+      toast.error("AI Voice Mock Interview is a Premium feature. Upgrade to access!");
+      router.push("/upgrade");
+    } else {
+      router.push("/voice-mock-interview");
+    }
+  };
+
+  const handleVideoInterviewClick = () => {
+    if (!isPremium) {
+      toast.error("AI Video Mock Interview is a Premium feature. Upgrade to access!");
+      router.push("/upgrade");
+    } else {
+      router.push("/voice-mock-interview");
+    }
+  };
 
   // Map stat configuration keys to runtime icons
   const statConfig = {
@@ -621,37 +641,41 @@ export function DashboardClientView({
         </motion.div>
       </div>
 
-      {/* Premium Voice Mock Interview Card */}
-      {isPremium && (
-        <motion.div variants={itemVariants} className="mt-8">
-          <Card className="border-border/40 bg-card/60 backdrop-blur-md overflow-hidden relative group hover:border-border transition-all duration-300">
-            <div className="absolute top-0 inset-x-0 h-[2.5px] bg-gradient-to-r from-blue-500/10 via-blue-500/60 to-indigo-500/10 opacity-70" />
-            <CardHeader className="pb-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="space-y-1">
+      {/* AI Mock Interview Card - Visible to all users */}
+      <motion.div variants={itemVariants} className="mt-8">
+        <Card className="border-2 border-yellow-500/30 bg-gradient-to-br from-yellow-500/5 to-orange-500/5 backdrop-blur-md overflow-hidden relative group hover:border-yellow-500/50 transition-all duration-300">
+          <div className="absolute top-0 inset-x-0 h-[2.5px] bg-gradient-to-r from-yellow-500/10 via-yellow-500/60 to-orange-500/10 opacity-70" />
+          <CardHeader className="pb-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
                 <CardTitle className="text-xl font-black flex items-center gap-2">
-                  <Mic className="w-5 h-5 text-blue-500" />
-                  🎤 AI Mock Interview (Voice + Video)
+                  <Crown className="w-5 h-5 text-yellow-500" />
+                  🎤 AI Mock Interview
                 </CardTitle>
-                <CardDescription className="text-xs max-w-2xl leading-relaxed">
-                  Practice realistic AI-powered voice & video interviews with real-time speech recognition, natural AI voice responses, detailed communication analytics, and personalized feedback.
-                </CardDescription>
+                {!isPremium && <PremiumBadge size="sm" />}
               </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <Button
-                  onClick={() => router.push("/voice-mock-interview")}
-                  className="rounded-xl"
-                >
-                  Start Voice Interview
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => router.push("/voice-mock-interview?tab=history")}
-                  className="rounded-xl"
-                >
-                  View History
-                </Button>
-              </div>
-            </CardHeader>
+              <CardDescription className="text-xs max-w-2xl leading-relaxed">
+                Practice realistic AI-powered voice & video interviews with real-time speech recognition, natural AI voice responses, detailed communication analytics, and personalized feedback.
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button
+                onClick={handleVoiceInterviewClick}
+                className="rounded-xl bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700"
+              >
+                <Mic className="w-4 h-4 mr-2" />
+                Voice Interview
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleVideoInterviewClick}
+                className="rounded-xl border-yellow-500/30 hover:bg-yellow-500/10"
+              >
+                <Video className="w-4 h-4 mr-2" />
+                Video Interview
+              </Button>
+            </div>
+          </CardHeader>
 
             <CardContent className="pt-2">
               <div className="grid gap-4 grid-cols-2 md:grid-cols-6 border-t border-border/20 pt-4 text-center">
@@ -683,7 +707,6 @@ export function DashboardClientView({
             </CardContent>
           </Card>
         </motion.div>
-      )}
 
       {/* Community Reviews Feedback Card */}
       <motion.div variants={itemVariants} className="mt-8">

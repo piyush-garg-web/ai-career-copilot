@@ -2,41 +2,119 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PremiumBadge } from "@/components/shared/PremiumBadge";
-import { CheckCircle2, Zap, ShieldCheck, Globe, Mic, Video, Download, Mail, ArrowLeft, X, Calendar, CreditCard, History } from "lucide-react";
+import { CheckCircle2, Zap, ShieldCheck, Globe, Mic, Video, Download, Mail, ArrowLeft, Calendar, CreditCard, History, Crown, Clock, Award, Check, FileText, Home, X, Sparkles, Lock, Database } from "lucide-react";
 import { toast } from "sonner";
+import jsPDF from "jspdf";
 
 const premiumFeatures = [
-  { icon: Mic, title: "Voice AI Interviews", description: "Practice with realistic voice AI interviews with speech recognition and detailed feedback" },
-  { icon: Video, title: "Video AI Interviews", description: "Practice with video AI interviews with visual analytics on your body language and presentation" },
+  { icon: Mic, title: "AI Voice Mock Interview", description: "Practice with realistic voice AI interviews with speech recognition and detailed feedback" },
+  { icon: Video, title: "AI Video Mock Interview", description: "Practice with video AI interviews with visual analytics on your body language and presentation" },
   { icon: Globe, title: "Multilingual Support", description: "Access the platform and practice interviews in multiple languages" },
-  { icon: ShieldCheck, title: "Priority Support", description: "Get fast responses from our support team for any questions or issues" },
+  { icon: Sparkles, title: "Future Premium Features", description: "Get automatic access to all new premium features as they're released" },
+  { icon: Award, title: "Priority Feature Access", description: "Be the first to access new features and improvements" },
+  { icon: Crown, title: "Premium Experience", description: "Enjoy an enhanced, ad-free experience with premium support" },
 ];
 
 export function PremiumMembershipClient({ user, transactions }) {
   const router = useRouter();
+  const { user: clerkUser } = useUser();
   const [downloadingReceipt, setDownloadingReceipt] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
-  const handleDownloadReceipt = async (transaction) => {
-    setDownloadingReceipt(transaction.id);
+  const handleDownloadReceipt = async () => {
+    setDownloadingReceipt(true);
     try {
-      // In a real app, you would generate and download a PDF receipt
-      // For now, we'll just show a toast
-      toast.success("Receipt download initiated!");
-      await new Promise((r) => setTimeout(r, 1000));
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      
+      // Header
+      doc.setFillColor(249, 115, 22);
+      doc.rect(0, 0, pageWidth, 40, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(24);
+      doc.setFont('helvetica', 'bold');
+      doc.text('CareerCopilot', pageWidth / 2, 20, { align: 'center' });
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Payment Receipt', pageWidth / 2, 30, { align: 'center' });
+      
+      // Invoice Number
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Invoice Number: INV-${Date.now()}`, 15, 55);
+      
+      // Customer Details
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Customer Details', 15, 70);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Name: ${clerkUser?.fullName || 'N/A'}`, 15, 80);
+      doc.text(`Email: ${clerkUser?.primaryEmailAddress?.emailAddress || 'N/A'}`, 15, 88);
+      
+      // Payment Details
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Payment Details', 15, 105);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Payment ID: ${user.paymentId || 'N/A'}`, 15, 115);
+      doc.text(`Order ID: ${transactions[0]?.orderId || 'N/A'}`, 15, 123);
+      doc.text(`Plan Name: Premium Lifetime`, 15, 131);
+      doc.text(`Amount Paid: ${user.currency || 'INR'} ${user.amountPaid || '0'}`, 15, 139);
+      doc.text(`Payment Provider: ${user.paymentProvider || 'Razorpay'}`, 15, 147);
+      doc.text(`Purchase Date: ${formatDate(user.purchaseDate)}`, 15, 155);
+      doc.text(`Transaction Status: ${user.transactionStatus || 'Verified'}`, 15, 163);
+      
+      // Lifetime Badge
+      doc.setFillColor(234, 179, 8);
+      doc.roundedRect(15, 175, 80, 20, 3, 3, 'F');
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Lifetime Premium', 55, 188, { align: 'center' });
+      
+      // Thank You
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Thank You!', pageWidth / 2, 220, { align: 'center' });
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Thank you for supporting CareerCopilot.', pageWidth / 2, 230, { align: 'center' });
+      doc.text('Enjoy all premium features!', pageWidth / 2, 238, { align: 'center' });
+      
+      // Footer
+      doc.setFontSize(8);
+      doc.setTextColor(128, 128, 128);
+      doc.text('This is a computer-generated receipt. No signature required.', pageWidth / 2, pageHeight - 20, { align: 'center' });
+      
+      doc.save(`CareerCopilot-Receipt-${Date.now()}.pdf`);
+      toast.success("Receipt downloaded successfully!");
     } catch (error) {
       console.error("Failed to download receipt:", error);
       toast.error("Failed to download receipt");
     } finally {
-      setDownloadingReceipt(null);
+      setDownloadingReceipt(false);
     }
   };
 
   const handleContactSupport = () => {
-    // In a real app, you might open a mailto link or support chat
-    window.location.href = "mailto:support@careercopilot.com";
+    const subject = encodeURIComponent("Premium Membership Support");
+    const body = encodeURIComponent(`Hello CareerCopilot Team,
+
+I need assistance regarding my Premium Membership.
+
+Payment ID: ${user.paymentId || 'N/A'}
+Order ID: ${transactions[0]?.orderId || 'N/A'}
+
+Thank you.`);
+    window.location.href = `mailto:support@careercopilot.com?subject=${subject}&body=${body}`;
   };
 
   const formatDate = (dateString) => {
@@ -53,8 +131,10 @@ export function PremiumMembershipClient({ user, transactions }) {
         return "Monthly Premium";
       case "YEARLY":
         return "Yearly Premium";
+      case "LIFETIME":
+        return "Premium Lifetime";
       default:
-        return "Free";
+        return "Premium Lifetime";
     }
   };
 
@@ -83,10 +163,26 @@ export function PremiumMembershipClient({ user, transactions }) {
   };
 
   const daysRemaining = calculateDaysRemaining(user.expiryDate);
+  const premiumSince = user.purchaseDate ? formatDate(user.purchaseDate) : 'N/A';
+  
+  const getSubscriptionDuration = (planType) => {
+    switch (planType) {
+      case "MONTHLY":
+        return "Monthly";
+      case "YEARLY":
+        return "Annual";
+      case "LIFETIME":
+        return "Lifetime";
+      default:
+        return "Lifetime";
+    }
+  };
+  
+  const subscriptionDuration = getSubscriptionDuration(user.planType);
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <div className="max-w-5xl mx-auto space-y-8">
+      <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -109,73 +205,119 @@ export function PremiumMembershipClient({ user, transactions }) {
             <div className="flex items-start justify-between">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <Zap className="w-8 h-8 fill-yellow-200" />
-                  <h1 className="text-3xl font-extrabold">Premium Membership</h1>
+                  <Crown className="w-8 h-8 fill-yellow-200" />
+                  <h1 className="text-3xl font-extrabold">👑 Premium Membership</h1>
                 </div>
                 <p className="text-yellow-100 text-lg">
-                  Unlock all premium features and accelerate your career growth
+                  Thank you for supporting CareerCopilot.
+                </p>
+                <p className="text-yellow-100 text-base">
+                  Enjoy all Premium AI features.
                 </p>
               </div>
             </div>
           </div>
-          <CardContent className="pt-8">
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Current Plan</p>
-                <p className="text-2xl font-bold">{getPlanName(user.planType)}</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Status</p>
-                <div className="flex items-center gap-2">
-                  <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold ${
-                    user.subscriptionStatus === "ACTIVE"
-                      ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
-                      : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
-                  }`}>
-                    <CheckCircle2 className="w-4 h-4" />
-                    {user.subscriptionStatus === "ACTIVE" ? "Active" : user.subscriptionStatus}
-                  </div>
-                </div>
-              </div>
-              {daysRemaining !== null && (
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">Expires On</p>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-muted-foreground" />
-                    <p className="text-lg font-semibold">
-                      {formatDate(user.expiryDate)}
-                      <span className="ml-2 text-sm text-muted-foreground">
-                        ({daysRemaining} {daysRemaining === 1 ? "day" : "days"} remaining)
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </CardContent>
         </Card>
 
+        {/* Premium Statistics Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card className="border border-border/40 bg-gradient-to-br from-yellow-500/10 to-orange-500/10">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Clock className="w-4 h-4 text-yellow-500" />
+                <span className="text-xs font-semibold text-muted-foreground uppercase">Premium Since</span>
+              </div>
+              <p className="text-lg font-bold">{premiumSince}</p>
+            </CardContent>
+          </Card>
+          <Card className="border border-border/40 bg-gradient-to-br from-green-500/10 to-emerald-500/10">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Award className="w-4 h-4 text-green-500" />
+                <span className="text-xs font-semibold text-muted-foreground uppercase">Subscription Type</span>
+              </div>
+              <p className="text-lg font-bold">{subscriptionDuration}</p>
+            </CardContent>
+          </Card>
+          <Card className="border border-border/40 bg-gradient-to-br from-blue-500/10 to-indigo-500/10">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Zap className="w-4 h-4 text-blue-500" />
+                <span className="text-xs font-semibold text-muted-foreground uppercase">Features Unlocked</span>
+              </div>
+              <p className="text-lg font-bold">6+</p>
+            </CardContent>
+          </Card>
+          <Card className="border border-border/40 bg-gradient-to-br from-purple-500/10 to-pink-500/10">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <CheckCircle2 className="w-4 h-4 text-purple-500" />
+                <span className="text-xs font-semibold text-muted-foreground uppercase">Membership Status</span>
+              </div>
+              <p className="text-lg font-bold text-green-500">Active</p>
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="grid md:grid-cols-2 gap-8">
+          {/* Current Membership Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Crown className="w-5 h-5 text-yellow-500" />
+                Current Membership
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-yellow-50/50 dark:bg-yellow-900/10">
+                <span className="text-sm text-muted-foreground">👑 Current Plan</span>
+                <span className="font-bold">{getPlanName(user.planType)}</span>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-green-50/50 dark:bg-green-900/10">
+                <span className="text-sm text-muted-foreground">🟢 Status</span>
+                <span className="font-bold text-green-600 dark:text-green-400">Active</span>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-blue-50/50 dark:bg-blue-900/10">
+                <span className="text-sm text-muted-foreground">📅 Purchase Date</span>
+                <span className="font-semibold">{formatDate(user.purchaseDate)}</span>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-purple-50/50 dark:bg-purple-900/10">
+                <span className="text-sm text-muted-foreground">🛡 Payment Status</span>
+                <span className="font-semibold">Verified & Successful</span>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-orange-50/50 dark:bg-orange-900/10">
+                <span className="text-sm text-muted-foreground">💳 Payment Provider</span>
+                <span className="font-semibold capitalize">{user.paymentProvider || 'Razorpay'}</span>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-pink-50/50 dark:bg-pink-900/10">
+                <span className="text-sm text-muted-foreground">🆔 Payment ID</span>
+                <span className="font-mono text-xs">{user.paymentId || 'N/A'}</span>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-teal-50/50 dark:bg-teal-900/10">
+                <span className="text-sm text-muted-foreground">📄 Transaction Status</span>
+                <span className="font-semibold">Verified</span>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Features Section */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-yellow-500" />
-                Premium Features
+                <Sparkles className="w-5 h-5 text-yellow-500" />
+                Unlocked Features
               </CardTitle>
               <CardDescription>All features included in your premium membership</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3">
               {premiumFeatures.map((feature, index) => {
                 const Icon = feature.icon;
                 return (
-                  <div key={index} className="flex items-start gap-4 p-4 rounded-lg bg-yellow-50/50 dark:bg-yellow-900/10">
-                    <div className="mt-1 p-2 rounded-full bg-yellow-100 dark:bg-yellow-900/30">
-                      <Icon className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
-                    </div>
+                  <div key={index} className="flex items-start gap-3 p-3 rounded-lg bg-yellow-50/50 dark:bg-yellow-900/10">
+                    <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                     <div className="space-y-1">
-                      <h4 className="font-semibold">{feature.title}</h4>
-                      <p className="text-sm text-muted-foreground">{feature.description}</p>
+                      <h4 className="font-semibold text-sm">{feature.title}</h4>
+                      <p className="text-xs text-muted-foreground">{feature.description}</p>
                     </div>
                   </div>
                 );
@@ -193,63 +335,106 @@ export function PremiumMembershipClient({ user, transactions }) {
               <CardDescription>Your payment and membership information</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {user.purchaseDate && (
-                <div className="flex justify-between items-center py-2 border-b border-border">
-                  <span className="text-muted-foreground">Purchase Date</span>
-                  <span className="font-medium">{formatDate(user.purchaseDate)}</span>
-                </div>
-              )}
               <div className="flex justify-between items-center py-2 border-b border-border">
                 <span className="text-muted-foreground">Amount Paid</span>
                 <span className="font-bold text-lg">
                   {user.currency || "INR"} {user.amountPaid || "0"}
                 </span>
               </div>
-              {user.paymentProvider && (
-                <div className="flex justify-between items-center py-2 border-b border-border">
-                  <span className="text-muted-foreground">Payment Provider</span>
-                  <span className="font-medium capitalize">{user.paymentProvider}</span>
-                </div>
-              )}
-              {user.paymentId && (
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-muted-foreground">Payment ID</span>
-                  <span className="font-mono text-sm">{user.paymentId}</span>
-                </div>
-              )}
+              <div className="flex justify-between items-center py-2 border-b border-border">
+                <span className="text-muted-foreground">Currency</span>
+                <span className="font-medium">{user.currency || "INR"}</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-border">
+                <span className="text-muted-foreground">Purchase Time</span>
+                <span className="font-medium">{user.purchaseDate ? new Date(user.purchaseDate).toLocaleTimeString() : 'N/A'}</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-border">
+                <span className="text-muted-foreground">Transaction ID</span>
+                <span className="font-mono text-sm">{user.paymentId || 'N/A'}</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-border">
+                <span className="text-muted-foreground">Order ID</span>
+                <span className="font-mono text-sm">{transactions[0]?.orderId || 'N/A'}</span>
+              </div>
+              <div className="flex justify-between items-center py-2">
+                <span className="text-muted-foreground">Payment Method</span>
+                <span className="font-medium capitalize">{user.paymentProvider || 'Razorpay'}</span>
+              </div>
             </CardContent>
-            <CardFooter className="flex gap-3">
-              <Button
-                variant="secondary"
-                className="flex-1"
-                onClick={handleContactSupport}
-              >
-                <Mail className="w-4 h-4 mr-2" />
-                Contact Support
-              </Button>
-              <Button
-                className="flex-1 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700"
-                onClick={() => router.push("/upgrade")}
-              >
-                Manage Plan
-              </Button>
-            </CardFooter>
+          </Card>
+
+          {/* Future Benefits Card */}
+          <Card className="border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/5 to-pink-500/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-purple-500" />
+                Future Benefits
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                As a Premium member, every new Premium feature released in CareerCopilot will automatically become available to you at no additional cost.
+              </p>
+            </CardContent>
           </Card>
         </div>
+
+        {/* Account Status Card */}
+        <Card className="border border-border/40 bg-gradient-to-r from-green-500/5 to-emerald-500/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-green-500" />
+              Account Status
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-green-50/50 dark:bg-green-900/10">
+                <Clock className="w-4 h-4 text-green-500" />
+                <div>
+                  <p className="text-xs text-muted-foreground">Premium Since</p>
+                  <p className="text-sm font-semibold">{premiumSince}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-blue-50/50 dark:bg-blue-900/10">
+                <Award className="w-4 h-4 text-blue-500" />
+                <div>
+                  <p className="text-xs text-muted-foreground">Lifetime Membership</p>
+                  <p className="text-sm font-semibold">Active</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-purple-50/50 dark:bg-purple-900/10">
+                <Lock className="w-4 h-4 text-purple-500" />
+                <div>
+                  <p className="text-xs text-muted-foreground">Secure Payment</p>
+                  <p className="text-sm font-semibold">Verified</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-yellow-50/50 dark:bg-yellow-900/10">
+                <Database className="w-4 h-4 text-yellow-500" />
+                <div>
+                  <p className="text-xs text-muted-foreground">Database Synced</p>
+                  <p className="text-sm font-semibold">Yes</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Transaction History */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <History className="w-5 h-5" />
-              Transaction History
+              Payment History
             </CardTitle>
             <CardDescription>Your complete payment transaction history</CardDescription>
           </CardHeader>
           <CardContent>
             {transactions.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
-                <p>No transactions found</p>
+                <p>You currently have one successful Premium purchase.</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -276,22 +461,43 @@ export function PremiumMembershipClient({ user, transactions }) {
                       <span className="text-xl font-bold">
                         {transaction.currency} {transaction.amount}
                       </span>
-                      {transaction.status === "COMPLETED" && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDownloadReceipt(transaction)}
-                          disabled={downloadingReceipt === transaction.id}
-                        >
-                          <Download className="w-4 h-4 mr-2" />
-                          {downloadingReceipt === transaction.id ? "Downloading..." : "Receipt"}
-                        </Button>
-                      )}
                     </div>
                   </div>
                 ))}
               </div>
             )}
+          </CardContent>
+        </Card>
+        {/* Action Buttons */}
+        <Card className="border-2 border-yellow-500/30 bg-gradient-to-r from-yellow-500/5 to-orange-500/5">
+          <CardContent className="p-6">
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Button
+                size="lg"
+                onClick={handleDownloadReceipt}
+                disabled={downloadingReceipt}
+                className="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                {downloadingReceipt ? "Generating..." : "📄 Download Receipt"}
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={handleContactSupport}
+              >
+                <Mail className="w-4 h-4 mr-2" />
+                💬 Contact Support
+              </Button>
+              <Button
+                size="lg"
+                variant="secondary"
+                onClick={() => router.push("/dashboard")}
+              >
+                <Home className="w-4 h-4 mr-2" />
+                🏠 Go To Dashboard
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

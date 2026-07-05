@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, XCircle, Zap, Star, ShieldCheck, Globe, Mic, Video } from "lucide-react";
+import { CheckCircle2, XCircle, Zap, Star, ShieldCheck, Globe, Mic, Video, Loader2 } from "lucide-react";
 import { usePremium } from "@/hooks/use-premium";
 import { PremiumBadge } from "@/components/shared/PremiumBadge";
 import { PremiumSuccessModal } from "@/components/shared/PremiumSuccessModal";
@@ -193,9 +193,26 @@ const PricingCard = ({ plan, recommended = false, onUpgrade, user }) => {
 
 export default function UpgradePage() {
   const router = useRouter();
-  const { isPremium, refresh } = usePremium();
+  const { isPremium, loading, refresh } = usePremium();
   const { user } = useUser();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // Redirect premium users to membership management page
+  useEffect(() => {
+    if (!loading && isPremium) {
+      router.push("/premium-membership");
+    }
+  }, [isPremium, loading, router]);
+
+  // Show loading state while checking premium status
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 gap-3">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+        <span className="text-sm font-semibold text-muted-foreground animate-pulse">Loading...</span>
+      </div>
+    );
+  }
 
   const plans = [
     {
@@ -315,11 +332,11 @@ export default function UpgradePage() {
               </div>
               <div className="border border-border rounded-xl p-6">
                 <h3 className="font-bold text-lg mb-2">Is my payment secure?</h3>
-                <p className="text-muted-foreground">Yes! All payments are processed through Razorpay's secure payment gateway with end-to-end encryption.</p>
+                <p className="text-muted-foreground">Yes! All payments are processed through Razorpay&apos;s secure payment gateway with end-to-end encryption.</p>
               </div>
               <div className="border border-border rounded-xl p-6">
                 <h3 className="font-bold text-lg mb-2">Can I cancel my subscription?</h3>
-                <p className="text-muted-foreground">Yes! You can cancel your subscription at any time. You'll have access to premium features until your current subscription period ends.</p>
+                <p className="text-muted-foreground">Yes! You can cancel your subscription at any time. You&apos;ll have access to premium features until your current subscription period ends.</p>
               </div>
             </div>
           </div>

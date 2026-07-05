@@ -52,7 +52,33 @@
 
 ---
 
-## 5. Dashboard & Analytics
+## 5. Premium Membership Management
+*   **Premium Membership Page**: A dedicated page for premium users to manage their subscription with:
+    *   **Premium Header**: Beautiful gradient card with crown icon and thank you message
+    *   **Premium Statistics Cards**: Displaying Premium Since, Lifetime Access, Features Unlocked, and Membership Status
+    *   **Current Membership Details**: Current plan, status, purchase date, payment status, payment provider, payment ID, and transaction status
+    *   **Unlocked Features Checklist**: AI Voice Mock Interview, AI Video Mock Interview, Multilingual Support, Future Premium Features, Priority Feature Access, and Premium Experience
+    *   **Payment Details**: Amount paid, currency, purchase time, transaction ID, order ID, and payment method
+    *   **Future Benefits Card**: Information about automatic access to all new premium features
+    *   **Account Status**: Premium Since, Lifetime Membership, Secure Payment Verified, and Database Synced
+    *   **Payment History**: Complete transaction history with status badges
+*   **PDF Receipt Generation**: Professional PDF receipt generation including:
+    *   CareerCopilot logo and branding
+    *   Invoice number
+    *   Customer details (name, email)
+    *   Payment details (Payment ID, Order ID, Plan Name, Amount, Currency, Payment Provider, Purchase Date, Transaction Status)
+    *   Lifetime Premium badge
+    *   Thank you message
+*   **Contact Support Integration**: Pre-filled email with:
+    *   Support email address
+    *   Subject: Premium Membership Support
+    *   Pre-filled message with Payment ID and Order ID
+*   **Smart Redirects**: Premium users are automatically redirected to the membership management page when clicking "Manage Subscription" or accessing /upgrade
+*   **Authentication & Database Integration**: All premium information is fetched from authenticated user and database (no localStorage/sessionStorage usage)
+
+---
+
+## 6. Dashboard & Analytics
 *   **Performance Metrics Dashboard**: Get a birds-eye view of your application health:
     *   Latest ATS score statistics.
     *   Recent job match results.

@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/lib/i18n/LanguageProvider";
+import { PremiumBadge } from "@/components/shared/PremiumBadge";
 import {
   FileText,
   Target,
@@ -14,7 +15,9 @@ import {
   History,
   LayoutDashboard,
   Moon,
-  Smartphone
+  Smartphone,
+  Mic,
+  Video
 } from "lucide-react";
 
 export default function Features({ onFeatureClick }) {
@@ -85,6 +88,20 @@ export default function Features({ onFeatureClick }) {
       title: t("landing.features.items.responsive.title"),
       description: t("landing.features.items.responsive.description"),
       color: "from-orange-500/10 to-red-500/10 text-orange-600 dark:text-orange-400"
+    },
+    {
+      icon: Mic,
+      title: "AI Voice Mock Interview",
+      description: "Practice realistic voice interviews with AI-powered speech recognition and intelligent feedback on your communication skills.",
+      color: "from-yellow-500/10 to-orange-500/10 text-yellow-600 dark:text-yellow-400",
+      isPremium: true
+    },
+    {
+      icon: Video,
+      title: "AI Video Mock Interview",
+      description: "Experience video interviews with AI analysis of your body language, presentation skills, and confidence levels.",
+      color: "from-amber-500/10 to-yellow-500/10 text-amber-600 dark:text-amber-400",
+      isPremium: true
     }
   ];
 
@@ -121,8 +138,11 @@ export default function Features({ onFeatureClick }) {
               className="group p-6 rounded-2xl border border-border/50 bg-card/40 hover:bg-card/75 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 hover:border-indigo-500/20 dark:hover:border-indigo-500/35 transition-all duration-300 flex flex-col justify-between cursor-pointer"
             >
               <div className="space-y-4">
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feat.color} flex items-center justify-center`}>
-                  <feat.icon className="w-6 h-6" />
+                <div className="flex items-start justify-between">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feat.color} flex items-center justify-center`}>
+                    <feat.icon className="w-6 h-6" />
+                  </div>
+                  {feat.isPremium && <PremiumBadge size="sm" />}
                 </div>
                 <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
                   {feat.title}

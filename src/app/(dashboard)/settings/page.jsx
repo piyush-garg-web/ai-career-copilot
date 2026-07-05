@@ -736,7 +736,7 @@ export default function SettingsPage() {
             size="sm" 
             onClick={() => {
               if (isPremium) {
-                router.push("/upgrade");
+                router.push("/premium-membership");
               } else {
                 setShowPremiumModal(true);
               }

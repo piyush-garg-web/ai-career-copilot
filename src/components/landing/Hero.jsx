@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, FileText, Bot, Briefcase, TrendingUp } from "lucide-react";
+import { ArrowRight, Sparkles, FileText, Bot, Briefcase, TrendingUp, Mic, Video } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 const heroHighlights = ["hero.badge", "hero.cards.resume", "hero.cards.interview", "hero.cards.jobMatch"];
@@ -176,9 +176,9 @@ export default function Hero() {
                 </div>
               </motion.div>
 
-              {/* Card 3: Job Match */}
+              {/* Card 3: AI Mock Interview */}
               <motion.div
-                className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[220px] p-3 rounded-lg border border-border/50 bg-card/90 backdrop-blur-md shadow-lg z-30 flex items-center gap-3"
+                className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[240px] p-3 rounded-lg border border-yellow-500/30 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 backdrop-blur-md shadow-lg shadow-yellow-500/10 z-30"
                 animate={{
                   scale: [1, 1.03, 1],
                   y: [0, 5, 0]
@@ -190,15 +190,28 @@ export default function Hero() {
                   delay: 1
                 }}
               >
-                <div className="p-1.5 rounded-full bg-blue-500/20 text-blue-600 dark:text-blue-400">
-                  <Briefcase className="w-4 h-4" />
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="p-1.5 rounded-full bg-gradient-to-br from-yellow-500/20 to-orange-500/20 text-yellow-600 dark:text-yellow-400">
+                    <Mic className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-[10px] text-muted-foreground">AI Mock Interview</p>
+                    <p className="text-xs font-bold text-foreground">Voice + Video</p>
+                  </div>
+                  <div className="text-[9px] font-extrabold text-yellow-600 dark:text-yellow-400 bg-yellow-500/10 py-0.5 px-1.5 rounded-full border border-yellow-500/20">
+                    👑 Premium
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[10px] text-muted-foreground truncate">{t("landing.hero.cards.jobMatchLabel")}</p>
-                  <p className="text-xs font-bold text-foreground truncate">{t("landing.hero.cards.jobMatchRole")}</p>
-                </div>
-                <div className="text-xs font-extrabold text-blue-600 dark:text-blue-400 bg-blue-500/10 py-0.5 px-1.5 rounded">
-                  92%
+                <div className="flex items-center gap-2 text-[9px] text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <Video className="w-3 h-3" />
+                    <span>Real-time AI</span>
+                  </div>
+                  <span>•</span>
+                  <div className="flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3" />
+                    <span>Smart Feedback</span>
+                  </div>
                 </div>
               </motion.div>
 

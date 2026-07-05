@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Check, X, Sparkles } from "lucide-react";
+import { Check, X, Sparkles, Crown } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/LanguageProvider";
 
 export default function ComparisonTable() {
@@ -42,6 +42,20 @@ export default function ComparisonTable() {
       traditional: t("landing.comparison.rows.multiResume.traditional"),
       copilot: t("landing.comparison.rows.multiResume.copilot"),
       supported: true
+    },
+    {
+      feature: "AI Voice Mock Interview",
+      traditional: "Not Available",
+      copilot: "Real-time AI Feedback",
+      supported: true,
+      isPremium: true
+    },
+    {
+      feature: "AI Video Mock Interview",
+      traditional: "Not Available",
+      copilot: "Body Language Analysis",
+      supported: true,
+      isPremium: true
     }
   ];
 
@@ -80,8 +94,9 @@ export default function ComparisonTable() {
                 className="grid grid-cols-12 gap-2 p-4 sm:p-5 items-center hover:bg-secondary/20 transition-all duration-150"
               >
                 {/* Feature Name */}
-                <div className="col-span-4 sm:col-span-5 font-semibold text-xs sm:text-sm text-foreground">
+                <div className="col-span-4 sm:col-span-5 font-semibold text-xs sm:text-sm text-foreground flex items-center gap-2">
                   {row.feature}
+                  {row.isPremium && <Crown className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500/20" />}
                 </div>
 
                 {/* Traditional review metrics */}

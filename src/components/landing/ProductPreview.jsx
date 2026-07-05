@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LayoutDashboard, FileText, CheckCircle2, Briefcase, Bot } from "lucide-react";
+import { LayoutDashboard, FileText, CheckCircle2, Briefcase, Bot, Mic, Video } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/LanguageProvider";
+import { PremiumBadge } from "@/components/shared/PremiumBadge";
 
 export default function ProductPreview() {
   const { t } = useTranslation();
@@ -44,6 +45,22 @@ export default function ProductPreview() {
       icon: Bot,
       imagePath: "/screenshots/interview-coach.png",
       url: "ai-career-copilot.vercel.app/interview"
+    },
+    {
+      id: "voice-interview",
+      label: "AI Voice Interview",
+      icon: Mic,
+      imagePath: "/screenshots/voice-interview.png",
+      url: "ai-career-copilot.vercel.app/voice-mock-interview",
+      isPremium: true
+    },
+    {
+      id: "video-interview",
+      label: "AI Video Interview",
+      icon: Video,
+      imagePath: "/screenshots/video-interview.png",
+      url: "ai-career-copilot.vercel.app/voice-mock-interview",
+      isPremium: true
     }
   ];
 
@@ -86,6 +103,7 @@ export default function ProductPreview() {
               >
                 <Icon className={`w-4 h-4 ${isActive ? "text-indigo-500" : "text-muted-foreground"}`} />
                 {tab.label}
+                {tab.isPremium && <PremiumBadge size="sm" />}
               </button>
             );
           })}
