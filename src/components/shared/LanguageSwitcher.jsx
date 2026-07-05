@@ -39,8 +39,8 @@ export default function LanguageSwitcher() {
   );
 
   const handleLanguageChange = (langCode) => {
-    // Allow English for free users, block others
-    if (!isPremium && !loading && langCode !== "en") {
+    // Allow all languages for premium users, only English for free users
+    if (!loading && !isPremium && langCode !== "en") {
       setIsOpen(false);
       setShowPremiumModal(true);
       return;

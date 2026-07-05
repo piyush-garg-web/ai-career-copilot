@@ -39,7 +39,24 @@
     "hero": {
       "title": "Your AI-Powered Career Copilot",
       "subtitle": "Analyze resumes, check ATS scores, match jobs, and practice mock interviews with real-time feedback powered by Google Gemini.",
-      "cta": "Get Started Free"
+      "cta": "Get Started Free",
+      "secondaryCta": "Learn More",
+      "badge": "AI-Powered",
+      "cards": {
+        "resume": "Resume Analysis",
+        "resumeTitle": "Resume Analysis",
+        "resumeDesc": "AI-powered resume optimization",
+        "interview": "Interview Coach",
+        "interviewTitle": "AI Mock Interview",
+        "interviewDesc": "Practice with AI mock interviews",
+        "interviewPrompt": "Tell me about a time you led a project...",
+        "jobMatch": "Job Match",
+        "jobMatchTitle": "Job Matching",
+        "jobMatchDesc": "Find your perfect job fit",
+        "optimization": "Optimization Score",
+        "tipLabel": "AI Tip",
+        "tipText": "Structure your answer using the STAR method for maximum impact"
+      }
     },
     "features": {
       "title": "Core Features Built for Your Success",

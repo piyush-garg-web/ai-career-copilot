@@ -102,7 +102,7 @@ export default function ComparisonTable() {
                 {/* Traditional review metrics */}
                 <div className="col-span-4 sm:col-span-3.5 text-center flex flex-col items-center justify-center space-y-1">
                   <X className="w-5 h-5 text-red-500 stroke-[3px] bg-red-500/10 p-0.5 rounded-full" />
-                  <span className="text-[10px] sm:text-xs text-muted-foreground hidden sm:block">
+                  <span className="text-[10px] sm:text-xs text-muted-foreground hidden sm:block text-center">
                     {row.traditional}
                   </span>
                 </div>

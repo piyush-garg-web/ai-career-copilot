@@ -92,6 +92,14 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState("Saved"); // "Saved" | "Unsaved" | "Saving..."
   const [resumes, setResumes] = useState([]);
+  const [voiceStats, setVoiceStats] = useState({
+    totalInterviews: 0,
+    averageScore: 0,
+    bestScore: 0,
+    voiceInterviews: 0,
+    videoInterviews: 0,
+    lastInterviewDate: "N/A",
+  });
 
   // Active Collapsible Accordion sections state
   const [openSections, setOpenSections] = useState({
@@ -208,9 +216,10 @@ export default function ProfilePage() {
   useEffect(() => {
     async function loadProfile() {
       try {
-        const [userRes, resumesRes] = await Promise.all([
+        const [userRes, resumesRes, voiceStatsRes] = await Promise.all([
           fetch("/api/user"),
           fetch("/api/resumes"),
+          fetch("/api/voice-interview/stats"),
         ]);
 
         if (userRes.ok) {
@@ -262,6 +271,17 @@ export default function ProfilePage() {
         if (resumesRes.ok) {
           const resumesData = await resumesRes.json();
           setResumes(resumesData);
+        }
+        if (voiceStatsRes.ok) {
+          const voiceData = await voiceStatsRes.json();
+          setVoiceStats(voiceData.stats || {
+            totalInterviews: 0,
+            averageScore: 0,
+            bestScore: 0,
+            voiceInterviews: 0,
+            videoInterviews: 0,
+            lastInterviewDate: "N/A",
+          });
         }
       } catch (err) {
         console.error("Profile load fail:", err);
@@ -731,6 +751,76 @@ export default function ProfilePage() {
               </Card>
             ))}
           </div>
+
+          {/* AI MOCK INTERVIEW STATS CARD */}
+          <Card className="border-2 border-yellow-500/30 bg-gradient-to-br from-yellow-500/5 to-orange-500/5 backdrop-blur-md rounded-2xl p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Mic className="w-5 h-5 text-yellow-500" />
+                <h4 className="text-sm font-bold text-foreground">AI Mock Interview Statistics</h4>
+                {!isPremium && <PremiumBadge size="sm" />}
+              </div>
+              {isPremium && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => router.push("/voice-mock-interview")}
+                  className="text-xs font-semibold border-yellow-500/30 hover:bg-yellow-500/10"
+                >
+                  Start Interview
+                </Button>
+              )}
+            </div>
+            
+            {voiceStats.totalInterviews > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                <div className="bg-card/50 rounded-xl p-3 text-center">
+                  <span className="text-xs text-muted-foreground uppercase font-black tracking-wider block mb-1">Total</span>
+                  <span className="text-lg font-black text-foreground">{voiceStats.totalInterviews}</span>
+                </div>
+                <div className="bg-card/50 rounded-xl p-3 text-center">
+                  <span className="text-xs text-muted-foreground uppercase font-black tracking-wider block mb-1">Voice</span>
+                  <span className="text-lg font-black text-foreground">{voiceStats.voiceInterviews}</span>
+                </div>
+                <div className="bg-card/50 rounded-xl p-3 text-center">
+                  <span className="text-xs text-muted-foreground uppercase font-black tracking-wider block mb-1">Video</span>
+                  <span className="text-lg font-black text-foreground">{voiceStats.videoInterviews}</span>
+                </div>
+                <div className="bg-card/50 rounded-xl p-3 text-center">
+                  <span className="text-xs text-muted-foreground uppercase font-black tracking-wider block mb-1">Avg Score</span>
+                  <span className="text-lg font-black text-green-500">{voiceStats.averageScore}%</span>
+                </div>
+                <div className="bg-card/50 rounded-xl p-3 text-center">
+                  <span className="text-xs text-muted-foreground uppercase font-black tracking-wider block mb-1">Best Score</span>
+                  <span className="text-lg font-black text-yellow-500">{voiceStats.bestScore}%</span>
+                </div>
+                <div className="bg-card/50 rounded-xl p-3 text-center">
+                  <span className="text-xs text-muted-foreground uppercase font-black tracking-wider block mb-1">Last</span>
+                  <span className="text-xs font-black text-foreground">{voiceStats.lastInterviewDate}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-6">
+                <Mic className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground font-semibold">No interview history yet</p>
+                {isPremium ? (
+                  <Button
+                    onClick={() => router.push("/voice-mock-interview")}
+                    className="mt-3 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold px-6 py-2 rounded-xl text-xs"
+                  >
+                    Start Your First Interview
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => router.push("/upgrade")}
+                    className="mt-3 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold px-6 py-2 rounded-xl text-xs"
+                  >
+                    Upgrade to Access
+                  </Button>
+                )}
+              </div>
+            )}
+          </Card>
 
           {/* DYNAMIC COLLAPSIBLE ACCORDION SECTIONS */}
 

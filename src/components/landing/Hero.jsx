@@ -65,14 +65,6 @@ export default function Hero() {
             initial="hidden"
             animate="visible"
           >
-            <motion.div
-              variants={itemVariants}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-400 border border-indigo-500/20"
-            >
-              <Sparkles className="w-3.5 h-3.5 fill-current" />
-              {t("landing.hero.badge")}
-            </motion.div>
-
             <motion.h1
               variants={itemVariants}
               className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] md:leading-[1.05]"
@@ -97,14 +89,6 @@ export default function Hero() {
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={scrollToFeatures}
-                className="w-full sm:w-auto text-base font-semibold px-8 py-6 rounded-xl border-border/80 hover:bg-secondary/60 hover:text-foreground transition-all duration-200"
-              >
-                {t("landing.hero.secondaryCta")}
-              </Button>
             </motion.div>
           </motion.div>
 

@@ -6,6 +6,8 @@ import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Sparkles } from "lucide-react";
+import { usePremium } from "@/hooks/use-premium";
+import { PremiumBadge } from "@/components/shared/PremiumBadge";
 
 import { useRouter, usePathname } from "next/navigation";
 import { useUser, useClerk } from "@clerk/nextjs";
@@ -37,6 +39,7 @@ export default function Navbar() {
 
   const { isLoaded, isSignedIn, user } = useUser();
   const { signOut } = useClerk();
+  const { isPremium } = usePremium();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -86,9 +89,12 @@ export default function Navbar() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/10 group-hover:shadow-indigo-500/25 transition-all duration-300">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <span className="text-lg font-black tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/75 bg-clip-text text-transparent group-hover:opacity-90 transition-opacity">
-              AI Career Copilot
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-black tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/75 bg-clip-text text-transparent group-hover:opacity-90 transition-opacity">
+                AI Career Copilot
+              </span>
+              {isPremium && <PremiumBadge size="sm" />}
+            </div>
           </Link>
 
           {/* Desktop Navigation Links */}

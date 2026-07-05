@@ -6,7 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PremiumBadge } from "@/components/shared/PremiumBadge";
-import { CheckCircle2, Zap, ShieldCheck, Globe, Mic, Video, Download, Mail, ArrowLeft, Calendar, CreditCard, History, Crown, Clock, Award, Check, FileText, Home, X, Sparkles, Lock, Database } from "lucide-react";
+import { CheckCircle2, Zap, ShieldCheck, Globe, Mic, Video, Download, Mail, ArrowLeft, ArrowRight, Calendar, CreditCard, History, Crown, Clock, Award, Check, FileText, Home, X, Sparkles, Lock, Database, TrendingUp, MessageSquare, Brain } from "lucide-react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
 
@@ -216,6 +216,98 @@ Thank you.`);
                 </p>
               </div>
             </div>
+          </div>
+        </Card>
+
+        {/* AI Mock Interview Hero Section - Flagship Feature */}
+        <Card className="overflow-hidden border-2 border-yellow-500/30 bg-gradient-to-br from-yellow-500/5 via-orange-500/5 to-amber-500/5 shadow-xl shadow-yellow-500/5">
+          <div className="relative">
+            {/* Animated gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 via-orange-500/10 to-amber-500/10 animate-pulse" />
+            
+            <CardContent className="relative p-8 md:p-10">
+              <div className="flex flex-col lg:flex-row items-center gap-8">
+                {/* Left: Illustration/Icon */}
+                <div className="flex-shrink-0">
+                  <div className="relative w-32 h-32 md:w-40 md:h-40">
+                    {/* Animated circles */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-yellow-500/20 to-orange-500/20 animate-pulse" />
+                    <div className="absolute inset-2 rounded-full bg-gradient-to-br from-yellow-500/30 to-orange-500/30 animate-ping" style={{ animationDuration: '2s' }} />
+                    
+                    {/* Central icon */}
+                    <div className="absolute inset-4 rounded-full bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center shadow-2xl">
+                      <div className="flex items-center gap-2 text-white">
+                        <Mic className="w-8 h-8 md:w-10 md:h-10" />
+                        <Video className="w-8 h-8 md:w-10 md:h-10" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right: Content */}
+                <div className="flex-1 space-y-4 text-center lg:text-left">
+                  <div className="flex items-center gap-3 justify-center lg:justify-start">
+                    <Crown className="w-6 h-6 text-yellow-500 fill-yellow-500/20" />
+                    <h2 className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">
+                      🎤 AI Mock Interview
+                    </h2>
+                    <PremiumBadge size="md" />
+                  </div>
+                  
+                  <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+                    Practice realistic AI-powered mock interviews using voice and optional webcam. Receive intelligent AI feedback, communication analysis, confidence insights, and personalized improvement suggestions.
+                  </p>
+
+                  {/* Feature highlights */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4">
+                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      <Mic className="w-4 h-4 text-yellow-500" />
+                      <span>Voice AI Interview</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      <Video className="w-4 h-4 text-orange-500" />
+                      <span>Video AI Interview</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      <Brain className="w-4 h-4 text-purple-500" />
+                      <span>Real-time AI Feedback</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      <MessageSquare className="w-4 h-4 text-blue-500" />
+                      <span>Communication Analysis</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      <TrendingUp className="w-4 h-4 text-green-500" />
+                      <span>Confidence Score</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      <Award className="w-4 h-4 text-amber-500" />
+                      <span>Answer Evaluation</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      <Sparkles className="w-4 h-4 text-pink-500" />
+                      <span>Performance Analytics</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      <Zap className="w-4 h-4 text-cyan-500" />
+                      <span>Smart Suggestions</span>
+                    </div>
+                  </div>
+
+                  {/* CTA Button */}
+                  <div className="pt-4">
+                    <Button
+                      onClick={() => router.push("/voice-mock-interview")}
+                      className="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/30 transition-all duration-300"
+                    >
+                      <Mic className="w-5 h-5 mr-2" />
+                      Start AI Mock Interview
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
           </div>
         </Card>
 

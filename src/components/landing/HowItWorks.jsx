@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/lib/i18n/LanguageProvider";
-import { Upload, Cpu, Eye, FileSearch, MessageSquare, Award } from "lucide-react";
+import { Upload, Cpu, Eye, FileSearch, MessageSquare, Award, Mic, Video } from "lucide-react";
 
 export default function HowItWorks() {
   const { t } = useTranslation();
@@ -43,13 +43,25 @@ export default function HowItWorks() {
       title: t("landing.howItWorks.steps.six.title"),
       description: t("landing.howItWorks.steps.six.description"),
       color: "bg-green-500/10 text-green-600 dark:text-green-400"
+    },
+    {
+      icon: Mic,
+      title: "AI Mock Interview Practice",
+      description: "Practice realistic voice and video interviews with AI-powered speech recognition, real-time feedback, and detailed communication analysis.",
+      color: "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
+    },
+    {
+      icon: Video,
+      title: "Video Interview Analytics",
+      description: "Get AI analysis of your body language, presentation skills, and confidence levels with personalized improvement suggestions.",
+      color: "bg-orange-500/10 text-orange-600 dark:text-orange-400"
     }
   ];
 
   return (
-    <section id="how-it-works" className="py-20 md:py-28 bg-secondary/20 relative">
+    <section id="how-it-works" className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 bg-secondary/20 relative">
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.01]" />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20 space-y-4">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">

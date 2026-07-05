@@ -33,6 +33,7 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { usePremium } from "@/hooks/use-premium";
 import { PremiumBadge } from "@/components/shared/PremiumBadge";
+import { PremiumRequiredModal } from "@/components/shared/PremiumRequiredModal";
 
 // Framer motion animation variants
 const containerVariants = {
@@ -110,6 +111,7 @@ export function DashboardClientView({
   const [userReviews, setUserReviews] = React.useState(initialReviews || []);
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [editingReview, setEditingReview] = React.useState(null);
+  const [showPremiumModal, setShowPremiumModal] = React.useState(false);
 
   const [reviewRating, setReviewRating] = React.useState(0);
   const [reviewTitle, setReviewTitle] = React.useState("");
@@ -246,8 +248,7 @@ export function DashboardClientView({
 
   const handleVoiceInterviewClick = () => {
     if (!isPremium) {
-      toast.error("AI Voice Mock Interview is a Premium feature. Upgrade to access!");
-      router.push("/upgrade");
+      setShowPremiumModal(true);
     } else {
       router.push("/voice-mock-interview");
     }
@@ -255,8 +256,7 @@ export function DashboardClientView({
 
   const handleVideoInterviewClick = () => {
     if (!isPremium) {
-      toast.error("AI Video Mock Interview is a Premium feature. Upgrade to access!");
-      router.push("/upgrade");
+      setShowPremiumModal(true);
     } else {
       router.push("/voice-mock-interview");
     }
@@ -279,6 +279,7 @@ export function DashboardClientView({
   ];
 
   return (
+    <>
     <motion.div
       variants={containerVariants}
       initial="hidden"
@@ -896,5 +897,12 @@ export function DashboardClientView({
         </Card>
       </motion.div>
     </motion.div>
+
+    <PremiumRequiredModal
+      isOpen={showPremiumModal}
+      onClose={() => setShowPremiumModal(false)}
+      featureName="AI Mock Interview"
+    />
+    </>
   );
 }
