@@ -12,6 +12,7 @@ import { VoiceInterviewReport } from "./voice-interview-report";
 import { VoiceInterviewHistory } from "./voice-interview-history";
 import { VoiceInterviewSettings } from "./voice-interview-settings";
 import { useTranslation } from "@/lib/i18n/LanguageProvider";
+import { GoBackButton } from "@/components/shared/GoBackButton";
 import {
   Mic,
   Video,
@@ -133,15 +134,7 @@ export function VoiceInterviewClient({
       {/* Back Button - shown on all views except overview */}
       {view !== "overview" && (
         <div className="max-w-5xl mx-auto p-2 mb-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setView("overview")}
-            className="flex items-center gap-2 border-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Overview
-          </Button>
+          <GoBackButton onClick={() => setView("overview")} />
         </div>
       )}
 
@@ -168,7 +161,7 @@ export function VoiceInterviewClient({
                   className="rounded-xl"
                 >
                   <Play className="w-3.5 h-3.5 mr-1.5" />
-                  Start Voice Interview
+                  Start Voice + Video Interview
                 </Button>
                 <Button
                   variant="outline"
@@ -219,6 +212,17 @@ export function VoiceInterviewClient({
                 </CardContent>
               </Card>
             )}
+          </div>
+
+          {/* Mockup Preview Image */}
+          <div className="flex justify-center items-center py-6">
+            <div className="relative w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl border border-border/40 bg-card/40 backdrop-blur-sm">
+              <img
+                src="/ss/voiceVideo.png"
+                alt="AI Voice + Video Mock Interview Preview"
+                className="w-full h-auto object-cover rounded-2xl"
+              />
+            </div>
           </div>
 
           {/* Stats Counter Matrix */}
@@ -323,9 +327,6 @@ export function VoiceInterviewClient({
       {/* 2. SETUP MODE VIEW */}
       {view === "setup" && (
         <div className="space-y-4">
-          <Button variant="ghost" onClick={() => setView("overview")} className="rounded-xl font-bold cursor-pointer text-xs mb-2">
-            &larr; Back to Dashboard
-          </Button>
           <VoiceInterviewSetup
             onStartSession={handleStartSession}
             initialResumes={resumes}
@@ -350,9 +351,6 @@ export function VoiceInterviewClient({
       {/* 4. RESULTS REPORT VIEW */}
       {view === "report" && selectedReportSession && (
         <div className="space-y-4">
-          <Button variant="ghost" onClick={() => setView("overview")} className="rounded-xl font-bold cursor-pointer text-xs mb-2">
-            &larr; Back to Dashboard
-          </Button>
           <VoiceInterviewReport
             session={selectedReportSession}
             onBackToHistory={() => setView("history")}
@@ -364,9 +362,6 @@ export function VoiceInterviewClient({
       {/* 5. HISTORY VIEW */}
       {view === "history" && (
         <div className="space-y-4">
-          <Button variant="ghost" onClick={() => setView("overview")} className="rounded-xl font-bold cursor-pointer text-xs mb-2">
-            &larr; Back to Dashboard
-          </Button>
           <VoiceInterviewHistory
             sessions={sessions}
             onViewSession={handleViewReport}
@@ -379,9 +374,6 @@ export function VoiceInterviewClient({
       {/* 6. SETTINGS VIEW */}
       {view === "settings" && (
         <div className="space-y-4">
-          <Button variant="ghost" onClick={() => setView("overview")} className="rounded-xl font-bold cursor-pointer text-xs mb-2">
-            &larr; Back to Dashboard
-          </Button>
           <VoiceInterviewSettings
             initialSettings={settings || {}}
             onSave={handleSettingsSaved}

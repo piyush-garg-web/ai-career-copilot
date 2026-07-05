@@ -227,17 +227,6 @@ export function VoiceInterviewSetup({ onStartSession, initialResumes = [], initi
 
   return (
     <>
-      <div className="max-w-5xl mx-auto p-2 mb-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => router.push("/dashboard")}
-          className="flex items-center gap-2 border-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Dashboard
-        </Button>
-      </div>
       <div className="grid gap-8 lg:grid-cols-12 max-w-5xl mx-auto p-2">
       {/* Overview Block */}
       <div className="lg:col-span-5 space-y-6">

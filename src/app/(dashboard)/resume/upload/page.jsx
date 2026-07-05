@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { UploadZone } from "@/components/resume/upload-zone";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { GoBackButton } from "@/components/shared/GoBackButton";
 
 export default function ResumeUploadPage() {
   const router = useRouter();
@@ -19,12 +20,12 @@ export default function ResumeUploadPage() {
           const userData = await userRes.json();
           const autoAnalyze = userData.resumePreferences?.autoAnalyze;
           if (autoAnalyze) {
-            // Trigger background auto-analysis API call
+            // Trigger auto analysis in background
             fetch(`/api/resumes/${resumeId}/analyze`, { method: "POST" });
           }
         }
       } catch (err) {
-        console.error("Auto analyze background error:", err);
+        console.warn("Failed to check auto-analyze preference:", err);
       }
     }
     // Redirect back to the resume lists on success
@@ -38,15 +39,7 @@ export default function ResumeUploadPage() {
         title="Upload Resume"
         description="Select or drop your PDF or DOCX file to save your resume to your profile."
         actions={
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => router.push("/resume")}
-            className="rounded-xl border-border/40 gap-1.5 text-xs h-9 cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Resumes
-          </Button>
+          <GoBackButton href="/resume" />
         }
       />
 

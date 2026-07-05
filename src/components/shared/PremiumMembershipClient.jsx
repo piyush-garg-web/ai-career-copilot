@@ -187,15 +187,7 @@ Thank you.`);
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => router.push("/dashboard")}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Dashboard
-            </Button>
+            <GoBackButton href="/dashboard" />
           </div>
           <PremiumBadge size="md" />
         </div>

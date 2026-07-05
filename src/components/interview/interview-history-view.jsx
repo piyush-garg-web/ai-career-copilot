@@ -24,6 +24,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "@/lib/i18n/LanguageProvider";
+import { GoBackButton } from "@/components/shared/GoBackButton";
 
 const formatDuration = (totalSecs) => {
   if (!totalSecs) return "0s";
@@ -103,13 +104,9 @@ export function InterviewHistoryView({ initialSessions }) {
     <div className="space-y-6">
       {/* Header */}
       <div className="space-y-1">
-        <Link
-          href="/interview"
-          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground font-semibold transition-colors mb-1"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          {t("interview.history.back")}
-        </Link>
+        <div className="mb-2">
+          <GoBackButton href="/interview" />
+        </div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">{t("interview.history.title")}</h1>

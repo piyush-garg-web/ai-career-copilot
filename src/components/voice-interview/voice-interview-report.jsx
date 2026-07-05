@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { GoBackButton } from "@/components/shared/GoBackButton";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -102,15 +103,7 @@ export function VoiceInterviewReport({ session, onBackToHistory, onRetake }) {
     <div className="space-y-8 max-w-5xl mx-auto p-1 print:p-0 print:bg-white print:text-black">
       {/* Back Button */}
       <div className="p-2 mb-2 print:hidden">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onBackToHistory}
-          className="flex items-center gap-2 border-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to History
-        </Button>
+        <GoBackButton onClick={onBackToHistory} />
       </div>
 
       {/* Print-only title */}

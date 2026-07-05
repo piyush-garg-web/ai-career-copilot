@@ -34,6 +34,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useTranslation } from "@/lib/i18n/LanguageProvider";
+import { GoBackButton } from "@/components/shared/GoBackButton";
 
 // Helper: Format file size to human readable MB/KB
 const formatFileSize = (bytes) => {
@@ -252,13 +253,9 @@ export function AnalysisDashboard({ resume, analysis }) {
       {/* Hero Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 print:hidden">
         <div className="space-y-1">
-          <Link
-            href="/resume"
-            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground font-semibold transition-colors mb-1"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            {t("resume.analysis.dashboard.back")}
-          </Link>
+          <div className="mb-2">
+            <GoBackButton href="/resume" />
+          </div>
           <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground truncate max-w-xl">
             {t("resume.analysis.dashboard.title")}
           </h1>
