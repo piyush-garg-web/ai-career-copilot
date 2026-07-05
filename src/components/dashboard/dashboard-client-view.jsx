@@ -622,66 +622,68 @@ export function DashboardClientView({
       </div>
 
       {/* Premium Voice Mock Interview Card */}
-      <motion.div variants={itemVariants} className="mt-8">
-        <Card className="border-border/40 bg-card/60 backdrop-blur-md overflow-hidden relative group hover:border-border transition-all duration-300">
-          <div className="absolute top-0 inset-x-0 h-[2.5px] bg-gradient-to-r from-blue-500/10 via-blue-500/60 to-indigo-500/10 opacity-70" />
-          <CardHeader className="pb-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <CardTitle className="text-xl font-black flex items-center gap-2">
-                <Mic className="w-5 h-5 text-blue-500" />
-                🎤 AI Mock Interview (Voice + Video)
-              </CardTitle>
-              <CardDescription className="text-xs max-w-2xl leading-relaxed">
-                Practice realistic AI-powered voice & video interviews with real-time speech recognition, natural AI voice responses, detailed communication analytics, and personalized feedback.
-              </CardDescription>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <Button
-                onClick={() => router.push("/voice-mock-interview")}
-                className="rounded-xl"
-              >
-                Start Voice Interview
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => router.push("/voice-mock-interview?tab=history")}
-                className="rounded-xl"
-              >
-                View History
-              </Button>
-            </div>
-          </CardHeader>
+      {isPremium && (
+        <motion.div variants={itemVariants} className="mt-8">
+          <Card className="border-border/40 bg-card/60 backdrop-blur-md overflow-hidden relative group hover:border-border transition-all duration-300">
+            <div className="absolute top-0 inset-x-0 h-[2.5px] bg-gradient-to-r from-blue-500/10 via-blue-500/60 to-indigo-500/10 opacity-70" />
+            <CardHeader className="pb-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <CardTitle className="text-xl font-black flex items-center gap-2">
+                  <Mic className="w-5 h-5 text-blue-500" />
+                  🎤 AI Mock Interview (Voice + Video)
+                </CardTitle>
+                <CardDescription className="text-xs max-w-2xl leading-relaxed">
+                  Practice realistic AI-powered voice & video interviews with real-time speech recognition, natural AI voice responses, detailed communication analytics, and personalized feedback.
+                </CardDescription>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <Button
+                  onClick={() => router.push("/voice-mock-interview")}
+                  className="rounded-xl"
+                >
+                  Start Voice Interview
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => router.push("/voice-mock-interview?tab=history")}
+                  className="rounded-xl"
+                >
+                  View History
+                </Button>
+              </div>
+            </CardHeader>
 
-          <CardContent className="pt-2">
-            <div className="grid gap-4 grid-cols-2 md:grid-cols-6 border-t border-border/20 pt-4 text-center">
-              <div className="space-y-1 p-2 rounded-xl bg-accent/20">
-                <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider block">Total Interviews</span>
-                <span className="text-sm font-black text-foreground block pt-0.5">{voiceStats.totalInterviews}</span>
+            <CardContent className="pt-2">
+              <div className="grid gap-4 grid-cols-2 md:grid-cols-6 border-t border-border/20 pt-4 text-center">
+                <div className="space-y-1 p-2 rounded-xl bg-accent/20">
+                  <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider block">Total Interviews</span>
+                  <span className="text-sm font-black text-foreground block pt-0.5">{voiceStats.totalInterviews}</span>
+                </div>
+                <div className="space-y-1 p-2 rounded-xl bg-accent/20">
+                  <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider block">Average Score</span>
+                  <span className="text-sm font-black text-foreground block pt-0.5">{voiceStats.averageScore}%</span>
+                </div>
+                <div className="space-y-1 p-2 rounded-xl bg-accent/20">
+                  <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider block">Best Score</span>
+                  <span className="text-sm font-black text-foreground block pt-0.5">{voiceStats.bestScore}%</span>
+                </div>
+                <div className="space-y-1 p-2 rounded-xl bg-accent/20">
+                  <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider block">Practice Time</span>
+                  <span className="text-sm font-black text-foreground block pt-0.5">{voiceStats.totalPracticeTime} mins</span>
+                </div>
+                <div className="space-y-1 p-2 rounded-xl bg-accent/20">
+                  <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider block">Last Interview</span>
+                  <span className="text-[11px] font-black text-foreground block pt-0.5">{voiceStats.lastInterviewDate}</span>
+                </div>
+                <div className="space-y-1 p-2 rounded-xl bg-accent/20 flex flex-col justify-between">
+                  <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider block">Readiness Score</span>
+                  <span className="text-sm font-black text-foreground block">{voiceStats.voiceReadinessScore}%</span>
+                </div>
               </div>
-              <div className="space-y-1 p-2 rounded-xl bg-accent/20">
-                <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider block">Average Score</span>
-                <span className="text-sm font-black text-foreground block pt-0.5">{voiceStats.averageScore}%</span>
-              </div>
-              <div className="space-y-1 p-2 rounded-xl bg-accent/20">
-                <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider block">Best Score</span>
-                <span className="text-sm font-black text-foreground block pt-0.5">{voiceStats.bestScore}%</span>
-              </div>
-              <div className="space-y-1 p-2 rounded-xl bg-accent/20">
-                <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider block">Practice Time</span>
-                <span className="text-sm font-black text-foreground block pt-0.5">{voiceStats.totalPracticeTime} mins</span>
-              </div>
-              <div className="space-y-1 p-2 rounded-xl bg-accent/20">
-                <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider block">Last Interview</span>
-                <span className="text-[11px] font-black text-foreground block pt-0.5">{voiceStats.lastInterviewDate}</span>
-              </div>
-              <div className="space-y-1 p-2 rounded-xl bg-accent/20 flex flex-col justify-between">
-                <span className="text-[10px] text-muted-foreground uppercase font-black tracking-wider block">Readiness Score</span>
-                <span className="text-sm font-black text-foreground block">{voiceStats.voiceReadinessScore}%</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Community Reviews Feedback Card */}
       <motion.div variants={itemVariants} className="mt-8">

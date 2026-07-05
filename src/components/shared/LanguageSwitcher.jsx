@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Globe, ChevronDown, Check, Search } from "lucide-react";
+import { Globe, ChevronDown, Check, Search, Lock } from "lucide-react";
 import { useTranslation, SUPPORTED_LANGUAGES } from "@/lib/i18n/LanguageProvider";
 import { PremiumRequiredModal } from "@/components/shared/PremiumRequiredModal";
+import { PremiumBadge } from "@/components/shared/PremiumBadge";
 import { usePremium } from "@/hooks/use-premium";
 
 export default function LanguageSwitcher() {
@@ -50,6 +51,11 @@ export default function LanguageSwitcher() {
     setSearchQuery("");
   };
 
+  const handlePremiumBadgeClick = (e) => {
+    e.stopPropagation();
+    setShowPremiumModal(true);
+  };
+
   return (
     <>
       <div className="relative inline-block text-left" ref={dropdownRef}>
@@ -62,6 +68,11 @@ export default function LanguageSwitcher() {
         >
           <Globe className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
           <span>{activeLang.nativeName}</span>
+          {!isPremium && !loading && (
+            <span onClick={handlePremiumBadgeClick} className="cursor-pointer">
+              <PremiumBadge size="sm" />
+            </span>
+          )}
           <ChevronDown className={`w-3 h-3 text-muted-foreground shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
         </button>
 
@@ -83,7 +94,7 @@ export default function LanguageSwitcher() {
               />
             </div>
 
-            <div className="max-h-56 overflow-y-auto custom-scrollbar space-y-0.5">
+            <div className="max-h-56 overflow-y-auto scrollbar-hide space-y-0.5">
               {filteredLanguages.length > 0 ? (
                 filteredLanguages.map((lang) => {
                   const isSelected = lang.code === locale;
@@ -111,7 +122,10 @@ export default function LanguageSwitcher() {
                           </span>
                         )}
                       </div>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-white shrink-0" />}
+                      <div className="flex items-center gap-1">
+                        {isLocked && <Lock className="w-3 h-3 text-muted-foreground shrink-0" />}
+                        {isSelected && <Check className="w-3.5 h-3.5 text-white shrink-0" />}
+                      </div>
                     </button>
                   );
                 })

@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, XCircle, Zap, Star } from "lucide-react";
+import { CheckCircle2, XCircle, Zap, Star, ShieldCheck, Globe, Mic, Video } from "lucide-react";
 import { usePremium } from "@/hooks/use-premium";
 import { PremiumBadge } from "@/components/shared/PremiumBadge";
+import { PremiumSuccessModal } from "@/components/shared/PremiumSuccessModal";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 
@@ -14,12 +15,11 @@ const features = [
   { name: "Resume Analysis", free: true },
   { name: "Interview Coach", free: true },
   { name: "ATS Optimization", free: true },
-  { name: "Job Matching", free: true },
+  { name: "Job Match", free: true },
   { name: "AI Voice Mock Interview", free: false },
   { name: "AI Video Mock Interview", free: false },
   { name: "Multilingual Support", free: false },
-  { name: "Priority AI Processing", free: false },
-  { name: "Early Access Features", free: false },
+  { name: "Future Premium Features", free: false },
 ];
 
 // Function to load Razorpay script
@@ -195,6 +195,7 @@ export default function UpgradePage() {
   const router = useRouter();
   const { isPremium, refresh } = usePremium();
   const { user } = useUser();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const plans = [
     {
@@ -218,7 +219,7 @@ export default function UpgradePage() {
       type: "YEARLY",
       name: "Yearly",
       description: "Best value for serious candidates",
-      price: 2999,
+      price: 2499,
       period: "year",
       isFree: false,
       isPremium: true,
@@ -226,43 +227,135 @@ export default function UpgradePage() {
   ];
 
   return (
-    <div className="container mx-auto py-12 px-4">
-      <div className="max-w-5xl mx-auto">
-        {/* Hero */}
-        <div className="text-center mb-12 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 text-yellow-700 dark:text-yellow-300 font-bold mb-4">
-            <Zap className="w-4 h-4" />
-            Unlock Your Full Potential
+    <>
+      <div className="container mx-auto py-12 px-4">
+        <div className="max-w-5xl mx-auto">
+          {/* Hero */}
+          <div className="text-center mb-12 space-y-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 text-yellow-700 dark:text-yellow-300 font-bold mb-4">
+              <Zap className="w-4 h-4" />
+              Unlock Your Full Potential
+            </div>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+              Upgrade to <span className="bg-gradient-to-r from-yellow-500 to-orange-600 bg-clip-text text-transparent">Premium</span>
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Take your career preparation to the next level with AI-powered voice and video mock interviews, multilingual support, and more.
+            </p>
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-            Upgrade to <span className="bg-gradient-to-r from-yellow-500 to-orange-600 bg-clip-text text-transparent">Premium</span>
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Take your career preparation to the next level with AI-powered voice and video mock interviews, multilingual support, and more.
-          </p>
-        </div>
 
-        {/* Pricing Grid */}
-        <div className="grid gap-8 md:grid-cols-3 items-start">
-          {plans.map((plan, i) => (
-            <PricingCard
-              key={plan.type}
-              plan={plan}
-              recommended={i === 1}
-              onUpgrade={() => refresh()}
-              user={user}
-            />
-          ))}
-        </div>
+          {/* Pricing Grid */}
+          <div className="grid gap-8 md:grid-cols-3 items-start">
+            {plans.map((plan, i) => (
+              <PricingCard
+                key={plan.type}
+                plan={plan}
+                recommended={i === 1}
+                onUpgrade={() => {
+                  refresh();
+                  setShowSuccessModal(true);
+                }}
+                user={user}
+              />
+            ))}
+          </div>
 
-        {/* FAQ / Info */}
-        <div className="mt-16 text-center">
-          <h3 className="text-2xl font-bold mb-4">Ready to Ace Your Next Interview?</h3>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Join thousands of users who have transformed their interview preparation with CareerCopilot Premium.
-          </p>
+          {/* Feature Comparison Section */}
+          <div className="mt-20">
+            <h2 className="text-3xl font-bold text-center mb-12">Compare Plans</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-4 px-6 font-semibold">Features</th>
+                    <th className="text-center py-4 px-6 font-semibold">Free</th>
+                    <th className="text-center py-4 px-6 font-semibold bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30">Premium</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {features.map((feature, i) => (
+                    <tr key={i} className="border-b border-border">
+                      <td className="py-4 px-6">{feature.name}</td>
+                      <td className="text-center py-4 px-6">
+                        {feature.free ? <CheckCircle2 className="w-5 h-5 text-green-500 mx-auto" /> : <XCircle className="w-5 h-5 text-gray-400 mx-auto" />}
+                      </td>
+                      <td className="text-center py-4 px-6 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30">
+                        <CheckCircle2 className="w-5 h-5 text-green-500 mx-auto" />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Payment Security Section */}
+          <div className="mt-20">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-2xl p-8 border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center gap-4 mb-4">
+                <ShieldCheck className="w-10 h-10 text-blue-600 dark:text-blue-400" />
+                <h2 className="text-2xl font-bold">Secure Payment</h2>
+              </div>
+              <p className="text-muted-foreground">
+                Your payment is processed securely through Razorpay. We use industry-standard encryption to protect your data.
+              </p>
+              <p className="text-sm text-muted-foreground mt-2">
+                ⓘ Test Mode: Use Razorpay test card details (e.g., 4111 1111 1111 1111) to complete payment
+              </p>
+            </div>
+          </div>
+
+          {/* FAQ Section */}
+          <div className="mt-20">
+            <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+            <div className="grid gap-6">
+              <div className="border border-border rounded-xl p-6">
+                <h3 className="font-bold text-lg mb-2">What payment methods are supported?</h3>
+                <p className="text-muted-foreground">We support all major payment methods including credit/debit cards, UPI, and net banking through Razorpay.</p>
+              </div>
+              <div className="border border-border rounded-xl p-6">
+                <h3 className="font-bold text-lg mb-2">Is my payment secure?</h3>
+                <p className="text-muted-foreground">Yes! All payments are processed through Razorpay's secure payment gateway with end-to-end encryption.</p>
+              </div>
+              <div className="border border-border rounded-xl p-6">
+                <h3 className="font-bold text-lg mb-2">Can I cancel my subscription?</h3>
+                <p className="text-muted-foreground">Yes! You can cancel your subscription at any time. You'll have access to premium features until your current subscription period ends.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Premium Benefits Section */}
+          <div className="mt-20">
+            <h2 className="text-3xl font-bold text-center mb-12">Premium Benefits</h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="border border-border rounded-xl p-6 text-center">
+                <Mic className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+                <h3 className="font-bold text-lg mb-2">Voice AI Interviews</h3>
+                <p className="text-muted-foreground">Practice with realistic voice AI interviews with speech recognition and feedback.</p>
+              </div>
+              <div className="border border-border rounded-xl p-6 text-center">
+                <Video className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+                <h3 className="font-bold text-lg mb-2">Video AI Interviews</h3>
+                <p className="text-muted-foreground">Practice with video AI interviews with visual analytics on your body language.</p>
+              </div>
+              <div className="border border-border rounded-xl p-6 text-center">
+                <Globe className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+                <h3 className="font-bold text-lg mb-2">Multilingual Support</h3>
+                <p className="text-muted-foreground">Access the platform and practice interviews in multiple languages.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Final CTA */}
+          <div className="mt-16 text-center">
+            <h3 className="text-2xl font-bold mb-4">Ready to Ace Your Next Interview?</h3>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Join thousands of users who have transformed their interview preparation with CareerCopilot Premium.
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+      <PremiumSuccessModal isOpen={showSuccessModal} onClose={() => setShowSuccessModal(false)} />
+    </>
   );
 }

@@ -28,6 +28,11 @@ export default async function VoiceMockInterviewPage() {
     redirect("/resume");
   }
 
+  // Check Premium Status
+  if (!dbUser.isPremium) {
+    redirect("/upgrade");
+  }
+
   // 1. Fetch user's resumes
   const resumes = await db.resume.findMany({
     where: { userId: dbUser.id },

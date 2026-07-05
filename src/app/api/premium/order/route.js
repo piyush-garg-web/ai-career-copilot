@@ -10,18 +10,8 @@ const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
 // Pricing (in INR paise)
 const PRICING = {
   MONTHLY: 29900, // ₹299/month
-  YEARLY: 299900, // ₹2999/year (17% discount)
+  YEARLY: 249900, // ₹2499/year (30% discount)
 };
-
-// Import Razorpay dynamically if keys are available
-let Razorpay;
-if (RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET) {
-  try {
-    Razorpay = (await import("razorpay")).default;
-  } catch (e) {
-    console.warn("Razorpay package not installed or keys missing", e);
-  }
-}
 
 export async function POST(req) {
   try {
@@ -68,22 +58,41 @@ export async function POST(req) {
     });
 
     let razorpayOrder;
+    let Razorpay;
+
+    // Try to import Razorpay dynamically
+    try {
+      Razorpay = (await import("razorpay")).default;
+    } catch (e) {
+      console.warn("Razorpay package not installed", e);
+    }
 
     // Use real Razorpay if available, else mock
     if (Razorpay && RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET) {
-      const razorpayInstance = new Razorpay({
-        key_id: RAZORPAY_KEY_ID,
-        key_secret: RAZORPAY_KEY_SECRET,
-      });
-      razorpayOrder = await razorpayInstance.orders.create({
-        amount,
-        currency: "INR",
-        receipt: orderId,
-        notes: {
-          planType,
-          userId: dbUser.id,
-        },
-      });
+      try {
+        const razorpayInstance = new Razorpay({
+          key_id: RAZORPAY_KEY_ID,
+          key_secret: RAZORPAY_KEY_SECRET,
+        });
+        razorpayOrder = await razorpayInstance.orders.create({
+          amount,
+          currency: "INR",
+          receipt: orderId,
+          notes: {
+            planType,
+            userId: dbUser.id,
+          },
+        });
+      } catch (razorpayError) {
+        console.warn("Razorpay order creation failed, using mock mode", razorpayError);
+        // Fallback to mock order
+        razorpayOrder = {
+          id: orderId,
+          amount,
+          currency: "INR",
+          receipt: orderId,
+        };
+      }
     } else {
       // Mock Razorpay not available, use mock order
       razorpayOrder = {

@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Zap, CheckCircle2, X } from "lucide-react";
+import { Zap, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function PremiumRequiredModal({ isOpen, onClose, featureName = "this feature" }) {
@@ -10,24 +10,18 @@ export function PremiumRequiredModal({ isOpen, onClose, featureName = "this feat
     "AI Voice Mock Interviews",
     "AI Video Mock Interviews",
     "Multilingual Support",
-    "Priority AI Processing",
-    "Early Access to New Features",
+    "Future Premium Features",
   ];
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 p-2">
-                <Zap className="w-6 h-6 text-white" />
-              </div>
-              <DialogTitle className="text-2xl font-bold">Premium Required</DialogTitle>
+          <div className="flex items-center gap-2">
+            <div className="rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 p-2">
+              <Zap className="w-6 h-6 text-white" />
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
-              <X className="h-4 w-4" />
-            </Button>
+            <DialogTitle className="text-2xl font-bold">Premium Required</DialogTitle>
           </div>
           <DialogDescription className="pt-2">
             {featureName} is available exclusively for Premium users. Unlock all premium features to take your career prep to the next level!

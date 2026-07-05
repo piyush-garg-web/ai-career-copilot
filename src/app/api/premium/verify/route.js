@@ -74,7 +74,7 @@ export async function POST(req) {
         paymentProvider: "RAZORPAY",
         purchaseDate,
         expiryDate,
-        amountPaid: planType === "MONTHLY" ? 299 : 2999,
+        amountPaid: planType === "MONTHLY" ? 299 : 2499,
         currency: "INR",
         transactionStatus: "COMPLETED",
       },

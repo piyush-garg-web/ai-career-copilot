@@ -52,6 +52,7 @@ import {
 } from "lucide-react";
 import { usePremium } from "@/hooks/use-premium";
 import { PremiumBadge } from "@/components/shared/PremiumBadge";
+import { PremiumRequiredModal } from "@/components/shared/PremiumRequiredModal";
 import { useRouter } from "next/navigation";
 
 // Inline Custom SVGs to resolve Lucide-React barrel import bugs on compilation
@@ -83,6 +84,7 @@ export default function SettingsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   // Available resumes list for preferences mapping
   const [resumes, setResumes] = useState([]);
@@ -726,12 +728,22 @@ export default function SettingsPage() {
             <span className="text-[10px] font-black uppercase text-indigo-400 tracking-wider">{t("settings.cards.billing.label")}</span>
             <div className="flex items-center gap-1.5">
               <h4 className="text-sm font-black text-foreground">{t("settings.cards.billing.title")}</h4>
-              <span className="text-[8px] bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded-full font-black uppercase tracking-wider">{t("settings.cards.billing.badge")}</span>
+              {isPremium && <PremiumBadge size="sm" />}
             </div>
             <p className="text-[10px] text-muted-foreground font-medium">{t("settings.cards.billing.description")}</p>
           </div>
-          <Button size="sm" className="h-8 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] uppercase tracking-wider cursor-pointer">
-            {t("settings.cards.billing.button")}
+          <Button 
+            size="sm" 
+            onClick={() => {
+              if (isPremium) {
+                router.push("/upgrade");
+              } else {
+                setShowPremiumModal(true);
+              }
+            }}
+            className="h-8 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] uppercase tracking-wider cursor-pointer"
+          >
+            {isPremium ? "Manage Subscription" : t("settings.cards.billing.button")}
           </Button>
         </Card>
       </div>
@@ -903,7 +915,7 @@ export default function SettingsPage() {
                             ))}
                           </ul>
                           <div className="mt-4">
-                            <Button onClick={() => router.push("/upgrade")} className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold">
+                            <Button onClick={() => setShowPremiumModal(true)} className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold">
                               Upgrade Now
                             </Button>
                           </div>
@@ -1716,6 +1728,12 @@ export default function SettingsPage() {
         </div>
 
       </div>
+      
+      <PremiumRequiredModal 
+        isOpen={showPremiumModal} 
+        onClose={() => setShowPremiumModal(false)} 
+        featureName="Premium Features"
+      />
 
     </div>
   );
