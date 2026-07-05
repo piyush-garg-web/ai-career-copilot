@@ -98,10 +98,10 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 - **File Modified**: `src/components/voice-interview/voice-interview-client.jsx`
 
 ### Landing Page Hero Animation Enhancements
-- **Left Section**: Enhanced with smooth fade-in, slide from left (-40px), soft upward movement (20px), staggered animations for heading/description/button, breathing animations
-- **Right Section**: Improved floating animation (6-7px offset, 5-7s duration), staggered appearance with container variants, fade-in with scale animation, hardware-accelerated transforms, rotation effects
+- **Left Section**: Enhanced with smooth fade-in, slide from left (-40px), soft upward movement (20px), staggered animations, and continuous swirling/floating animation (increased x/y offsets, rotation, and scale for more visibility)
+- **Right Section**: Enhanced floating cards with unique animation durations for organic feel, each card has continuous swirling/floating movement (increased x/y offsets, rotation, and scale for more visibility)
 - **Button Hover**: Added slight scale (1.05), soft shadow enhancement, smooth transition (300ms), animated glow
-- **Card Hover**: Added soft scale (1.03-1.04) with smooth transition (200ms), hardware-accelerated transforms, enhanced shadow
+- **Card Hover**: Added soft scale (1.06) with smooth transition, enhanced shadow, y offset lift
 - **Animated Background**: Added slow-moving gradient blobs for premium feel
 - **File Modified**: `src/components/landing/Hero.jsx`
 
@@ -139,8 +139,16 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 - Enhanced background blobs
 - File Modified: `src/components/landing/ComparisonTable.jsx`
 
-### VoiceVideo Image
-- The image at `public/ss/voiceVideo.png` is used on the landing page in Product Preview component
+### VoiceVideo Image Update
+- Copied voiceVideoAI.png from root screenshots folder to public/screenshots
+- Updated Product Preview component to use `public/screenshots/voiceVideoAI.png`
+
+### Dashboard Welcome Section Adjustment
+- Adjusted Premium Badge margin top to mt-2 for perfect vertical alignment with welcome text
+
+### Dashboard Button Adjustments
+- Adjusted button container to use items-start (removed margin top) for perfect vertical alignment with text
+- Increased button size to lg with larger icon for better visual balance
 
 ### Dashboard Voice/Video Button Merge
 - **Change**: Merged separate "Voice Interview" and "Video Interview" buttons into single "AI Voice + Video Interview" button

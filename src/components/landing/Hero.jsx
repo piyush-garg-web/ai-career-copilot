@@ -50,21 +50,46 @@ export default function Hero() {
     },
   };
 
-  const floatAnimation = (yOffset = 8, floatDuration = 6, delay = 0, rotateSpeed = 0) => ({
-    y: [0, -yOffset, 0],
-    transition: { 
-      y: { 
-        duration: floatDuration, 
-        repeat: Infinity, 
-        ease: "easeInOut", 
-        delay 
+  const floatSwirlAnimation = (
+    xOffset = 8,
+    yOffset = 12,
+    rotateOffset = 2.5,
+    scaleOffset = 1.015,
+    xDuration = 8,
+    yDuration = 10,
+    rotateDuration = 14,
+    scaleDuration = 7,
+    delay = 0
+  ) => ({
+    x: [0, -xOffset, 0, xOffset, 0],
+    y: [0, -yOffset, 0, yOffset, 0],
+    rotate: [0, rotateOffset, 0, -rotateOffset, 0],
+    scale: [1, scaleOffset, 1, scaleOffset * 0.985, 1],
+    transition: {
+      x: {
+        duration: xDuration,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay,
+      },
+      y: {
+        duration: yDuration,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay,
       },
       rotate: {
-        duration: rotateSpeed,
+        duration: rotateDuration,
         repeat: Infinity,
-        ease: "linear",
-        delay
-      }
+        ease: "easeInOut",
+        delay,
+      },
+      scale: {
+        duration: scaleDuration,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay,
+      },
     },
   });
 
@@ -72,16 +97,6 @@ export default function Hero() {
     scale: [1, scale, 1],
     opacity: [0.5, 0.8, 0.5],
     transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
-  });
-
-  const breathingAnimation = (scale = 1.02, duration = 4, delay = 0) => ({
-    scale: [1, scale, 1],
-    transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
-  });
-
-  const shimmerAnimation = (duration = 2, delay = 0) => ({
-    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-    transition: { duration, repeat: Infinity, ease: "linear", delay },
   });
 
   const cardVariants = {
@@ -180,54 +195,54 @@ export default function Hero() {
             initial="hidden"
             animate="visible"
           >
-            <motion.h1
+            <motion.div
               variants={itemVariants}
-              className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] md:leading-[1.05]"
-              animate={breathingAnimation(1.01, 5, 0)}
+              animate={floatSwirlAnimation(6, 8, 1.8, 1.012, 8, 10, 14, 7, 0)}
               style={{ willChange: "transform" }}
             >
-              {t("landing.hero.title")}
-            </motion.h1>
+              <motion.h1
+                className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] md:leading-[1.05]"
+              >
+                {t("landing.hero.title")}
+              </motion.h1>
 
-            <motion.p
-              variants={itemVariants}
-              className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed font-normal"
-              animate={breathingAnimation(1.005, 6, 0.2)}
-              style={{ willChange: "transform" }}
-            >
-              {t("landing.hero.subtitle")}
-            </motion.p>
+              <motion.p
+                className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed font-normal mt-4"
+              >
+                {t("landing.hero.subtitle")}
+              </motion.p>
 
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <Link href="/sign-up" className="w-full sm:w-auto">
-                <motion.div
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  animate={{
-                    boxShadow: [
-                      "0 0 20px rgba(99, 102, 241, 0.15)",
-                      "0 0 35px rgba(99, 102, 241, 0.25)",
-                      "0 0 20px rgba(99, 102, 241, 0.15)",
-                    ],
-                  }}
-                  transition={{
-                    boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-                  }}
-                >
-                  <Button
-                    size="lg"
-                    className="w-full sm:w-auto text-base font-semibold px-8 py-6 rounded-xl bg-primary hover:bg-primary/95 shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/25 transition-all duration-300 group"
+              <motion.div className="mt-6 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <Link href="/sign-up" className="w-full sm:w-auto">
+                  <motion.div
+                    whileHover={{ scale: 1.05, y: -2, boxShadow: "0 0 25px rgba(99,102,241,0.4)" }}
+                    whileTap={{ scale: 0.98 }}
+                    animate={{
+                      boxShadow: [
+                        "0 0 20px rgba(99, 102, 241, 0.15)",
+                        "0 0 35px rgba(99, 102, 241, 0.25)",
+                        "0 0 20px rgba(99, 102, 241, 0.15)",
+                      ],
+                    }}
+                    transition={{
+                      boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+                    }}
                   >
-                    {t("landing.hero.cta")}
-                    <motion.span
-                      animate={{ x: [0, 6, 0] }}
-                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                    <Button
+                      size="lg"
+                      className="w-full sm:w-auto text-base font-semibold px-8 py-6 rounded-xl bg-primary hover:bg-primary/95 shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/25 transition-all duration-300 group"
                     >
-                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" />
-                    </motion.span>
-                  </Button>
-                </motion.div>
-              </Link>
+                      {t("landing.hero.cta")}
+                      <motion.span
+                        animate={{ x: [0, 6, 0] }}
+                        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" />
+                      </motion.span>
+                    </Button>
+                  </motion.div>
+                </Link>
+              </motion.div>
             </motion.div>
           </motion.div>
 
@@ -242,7 +257,7 @@ export default function Hero() {
               {/* Ambient glow */}
               <motion.div
                 className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                animate={pulseAnimation(1.35, 8, 0)}
+                animate={pulseAnimation(1.35, 9, 0)}
                 style={{ willChange: "transform" }}
               >
                 <div className="w-80 h-80 rounded-full bg-indigo-500/12 dark:bg-indigo-500/6 blur-[90px]" />
@@ -270,22 +285,9 @@ export default function Hero() {
                 <motion.div
                   className={CARD_BASE}
                   variants={cardVariants}
-                  animate={{
-                    ...floatAnimation(7, 7, 0, 0),
-                    rotate: [0, 360],
-                  }}
-                  whileHover={{ scale: 1.04, y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
-                  transition={{
-                    rotate: {
-                      duration: 120,
-                      repeat: Infinity,
-                      ease: "linear",
-                      delay: 0
-                    },
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 20
-                  }}
+                  animate={floatSwirlAnimation(10, 14, 2.8, 1.02, 9, 11, 15, 8, 0)}
+                  whileHover={{ scale: 1.06, y: -8, boxShadow: "0 30px 40px -5px rgba(0, 0, 0, 0.18), 0 18px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   style={{ willChange: "transform" }}
                 >
                   <div className="flex items-start gap-3">
@@ -325,22 +327,9 @@ export default function Hero() {
                 <motion.div
                   className={CARD_BASE}
                   variants={cardVariants}
-                  animate={{
-                    ...floatAnimation(6, 6.5, 0.3, 0),
-                    rotate: [0, -360],
-                  }}
-                  whileHover={{ scale: 1.04, y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
-                  transition={{
-                    rotate: {
-                      duration: 150,
-                      repeat: Infinity,
-                      ease: "linear",
-                      delay: 0.3
-                    },
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 20
-                  }}
+                  animate={floatSwirlAnimation(8, 12, 2.2, 1.018, 10, 13, 16, 9, 0.3)}
+                  whileHover={{ scale: 1.06, y: -8, boxShadow: "0 30px 40px -5px rgba(0, 0, 0, 0.18), 0 18px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   style={{ willChange: "transform" }}
                 >
                   <div className="flex items-start gap-3">
@@ -370,22 +359,9 @@ export default function Hero() {
                 <motion.div
                   className={`${CARD_BASE} border-yellow-500/30 bg-gradient-to-br from-yellow-500/5 to-orange-500/5 shadow-yellow-500/5`}
                   variants={cardVariants}
-                  animate={{
-                    ...floatAnimation(6.5, 6, 0.6, 0),
-                    rotate: [0, 360],
-                  }}
-                  whileHover={{ scale: 1.04, y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
-                  transition={{
-                    rotate: {
-                      duration: 130,
-                      repeat: Infinity,
-                      ease: "linear",
-                      delay: 0.6
-                    },
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 20
-                  }}
+                  animate={floatSwirlAnimation(12, 16, 3.2, 1.022, 11, 14, 17, 10, 0.6)}
+                  whileHover={{ scale: 1.06, y: -8, boxShadow: "0 30px 40px -5px rgba(0, 0, 0, 0.18), 0 18px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   style={{ willChange: "transform" }}
                 >
                   <div className="flex items-start justify-between gap-3">

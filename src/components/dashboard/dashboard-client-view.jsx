@@ -283,7 +283,7 @@ export function DashboardClientView({
         <div>
           <h2 className="text-2xl font-bold tracking-tight md:text-3xl bg-gradient-to-r from-foreground via-foreground/90 to-foreground/75 bg-clip-text text-transparent flex items-center gap-3">
             {t("dashboard.welcome.title")}, {userFirstName || t("dashboard.welcome.defaultUser")}! 👋
-            {isPremium && <PremiumBadge className="mt-1" />}
+            {isPremium && <PremiumBadge className="mt-2" />}
           </h2>
           <p className="text-sm text-muted-foreground font-medium mt-1">
             {t("dashboard.welcome.subtitle")}
@@ -651,12 +651,13 @@ export function DashboardClientView({
                 Practice realistic AI-powered voice & video interviews with real-time speech recognition, natural AI voice responses, detailed communication analytics, and personalized feedback.
               </CardDescription>
             </div>
-            <div className="flex items-center gap-2 shrink-0 mt-1 md:mt-0">
+            <div className="flex items-start gap-2 shrink-0">
               <Button
                 onClick={handleVoiceVideoInterviewClick}
+                size="lg"
                 className="rounded-xl bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700"
               >
-                <Video className="w-4 h-4 mr-2" />
+                <Video className="w-5 h-5 mr-2" />
                 AI Voice + Video Interview
               </Button>
             </div>

@@ -23,14 +23,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Dashboard**: Merged Voice/Video buttons into single unified button
 - **Landing Page Animations Overhaul**: Complete premium animation system
   - Animated background gradient blobs with slow floating movement
-  - Enhanced Hero section with breathing animations
-  - Animated floating cards with rotation effects
+  - Enhanced Hero section with swirling/floating animations for left content and cards
+  - Animated floating cards with unique durations for organic feel
   - Enhanced Navbar with hover underline, logo spin, and button animations
   - Enhanced Stats section with improved floating cards and animated stats
   - Enhanced Features section with animated icons and cards
   - Enhanced How It Works section with animated timeline
   - Enhanced Comparison Table section with animated rows
   - All animations use GPU-accelerated transforms (willChange: "transform")
+- **Product Preview Component**: Updated image path to voiceVideoAI.png (copied from root screenshots folder to public/screenshots)
+- **Landing Page Hero**: Enhanced swirling/floating animation for more visibility (increased x/y offsets, rotation, and scale)
+- **Dashboard Welcome Section**: Adjusted Premium Badge margin top to 2 for better alignment with welcome text
+- **Dashboard AI Mock Interview Card**: Adjusted button container alignment to items-start (removed margin top) and increased button size to lg
 
 ### Performance
 - All landing page animations use hardware-accelerated transforms only
