@@ -21,6 +21,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Landing Page Hero**: Improved floating animation for feature cards with hardware-accelerated transforms
 - **Landing Page Hero**: Enhanced button hover effects with scale and shadow transitions
 - **Dashboard**: Merged Voice/Video buttons into single unified button
+- **Landing Page Animations Overhaul**: Complete premium animation system
+  - Animated background gradient blobs with slow floating movement
+  - Enhanced Hero section with breathing animations
+  - Animated floating cards with rotation effects
+  - Enhanced Navbar with hover underline, logo spin, and button animations
+  - Enhanced Stats section with improved floating cards and animated stats
+  - Enhanced Features section with animated icons and cards
+  - Enhanced How It Works section with animated timeline
+  - Enhanced Comparison Table section with animated rows
+  - All animations use GPU-accelerated transforms (willChange: "transform")
+
+### Performance
+- All landing page animations use hardware-accelerated transforms only
+- Performance optimized for mobile devices
+- FPS-friendly animations
+
+### Files Modified
+- `src/components/landing/Hero.jsx - Enhanced hero animations, breathing effects, animated background, floating cards with rotation
+- `src/components/landing/Navbar.jsx - Navbar animations (hover underline, logo spin, button animations, mobile menu animations
+- `src/components/landing/Stats.jsx - Enhanced stats cards with animations
+- `src/components/landing/Features.jsx - Enhanced feature cards animations
+- `src/components/landing/HowItWorks.jsx - Enhanced timeline animations
+- `src/components/landing/ComparisonTable.jsx - Enhanced table animations
 
 ### Fixed
 - Premium badge alignment issues across dashboard components

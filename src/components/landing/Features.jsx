@@ -117,21 +117,36 @@ export default function Features({ onFeatureClick }) {
   ];
 
   return (
-    <section id="features" className="py-20 md:py-28 bg-background relative">
-      {/* Background radial accent */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-violet-500/5 dark:bg-violet-500/3 rounded-full filter blur-[120px] pointer-events-none"
-        animate={pulseAnimation(1.1, 8, 0)}
-        style={{ willChange: "transform" }}
-      />
+    <section id="features" className="py-20 md:py-28 bg-background relative overflow-hidden">
+      {/* Enhanced Background Effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-violet-500/5 dark:bg-violet-500/3 rounded-full blur-[150px]"
+          animate={{
+            x: [0, 50, 0],
+            y: [0, -40, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-1/3 w-[500px] h-[500px] bg-indigo-500/5 dark:bg-indigo-500/3 rounded-full blur-[130px]"
+          animate={{
+            x: [0, -50, 0],
+            y: [0, 40, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
           className="text-center max-w-3xl mx-auto mb-16 md:mb-20 space-y-4"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8 }}
         >
           <motion.h2
@@ -154,24 +169,42 @@ export default function Features({ onFeatureClick }) {
           {featureList.map((feat, index) => (
             <motion.div
               key={index}
-              animate={floatAnimation(5, 5 + index * 0.3, index * 0.2)}
-              whileHover={{ y: -8, scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              initial={{ opacity: 0, y: 30 }}
+              animate={floatAnimation(6, 7 + index * 0.25, index * 0.2)}
+              whileHover={{ y: -12, scale: 1.03, transition: { duration: 0.25 } }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ 
+                duration: 0.7, 
+                delay: index * 0.08,
+                type: "spring",
+                stiffness: 120,
+                damping: 15
+              }}
               onClick={() => onFeatureClick?.(t("landing.features.loginPrompt"))}
-              className="group p-6 rounded-2xl border border-border/50 bg-card/40 hover:bg-card/75 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 hover:border-indigo-500/20 dark:hover:border-indigo-500/35 transition-all duration-300 flex flex-col justify-between cursor-pointer"
+              className="group p-6 rounded-2xl border border-border/50 bg-card/45 hover:bg-card/80 backdrop-blur-md shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10 hover:border-indigo-500/30 dark:hover:border-indigo-500/40 transition-all duration-350 flex flex-col justify-between cursor-pointer relative overflow-hidden"
               style={{ willChange: "transform" }}
             >
-              <div className="space-y-4">
+              {/* Subtle glow effect on hover */}
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              />
+              <div className="space-y-4 relative z-10">
                 <div className="flex items-start justify-between">
                   <motion.div
-                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feat.color} flex items-center justify-center`}
-                    animate={pulseAnimation(1.05, 4, index * 0.3)}
+                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feat.color} flex items-center justify-center shadow-sm`}
+                    animate={pulseAnimation(1.06, 4, index * 0.3)}
+                    whileHover={{ rotate: 5, scale: 1.1 }}
+                    transition={{ duration: 0.2 }}
                     style={{ willChange: "transform" }}
                   >
-                    <feat.icon className="w-6 h-6" />
+                    <motion.div
+                      animate={{ rotate: [0, 5, -5, 0] }}
+                      transition={{ duration: 4 + index * 0.5, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <feat.icon className="w-6 h-6" />
+                    </motion.div>
                   </motion.div>
                   {feat.isPremium && <PremiumBadge size="sm" />}
                 </div>
@@ -183,9 +216,9 @@ export default function Features({ onFeatureClick }) {
                 </p>
               </div>
               <motion.div
-                className="mt-4 pt-4 border-t border-border/10 flex items-center justify-end text-xs font-semibold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-1 transition-transform"
-                animate={{ x: [0, 3, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }}
+                className="mt-4 pt-4 border-t border-border/10 flex items-center justify-end text-xs font-semibold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-2 transition-transform duration-300"
+                animate={{ x: [0, 4, 0] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }}
               >
                 {t("landing.features.explore")}
               </motion.div>

@@ -70,16 +70,39 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 bg-secondary/20 relative">
+    <section id="how-it-works" className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 bg-secondary/20 relative overflow-hidden">
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.01]" />
+      
+      {/* Background Effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div 
+          className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl"
+          animate={{
+            x: [0, 60, 0],
+            y: [0, -40, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{ duration: 35, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-3xl"
+          animate={{
+            x: [0, -60, 0],
+            y: [0, 40, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{ duration: 40, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+      
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <motion.div
           className="text-center max-w-3xl mx-auto mb-16 md:mb-20 space-y-4"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.8 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.9 }}
         >
           <motion.h2
             className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400"
@@ -113,36 +136,56 @@ export default function HowItWorks() {
                   } relative`}
                 >
                   {/* Timeline Badge (Circle) */}
-                  <div className="absolute left-8 lg:left-1/2 top-4 -translate-x-1/2 flex items-center justify-center w-8 h-8 rounded-full border border-border bg-background shadow-md z-20">
+                  <motion.div 
+                    className="absolute left-8 lg:left-1/2 top-4 -translate-x-1/2 flex items-center justify-center w-8 h-8 rounded-full border border-border bg-background shadow-md z-20"
+                    animate={{ scale: [1, 1.05, 1] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 }}
+                    style={{ willChange: "transform" }}
+                  >
                     <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
                       {index + 1}
                     </span>
-                  </div>
+                  </motion.div>
 
                   {/* Left Spacer / Right Panel wrapper */}
                   <div className="w-full lg:w-1/2 pl-16 lg:pl-0 lg:px-8">
                     <motion.div
-                      animate={floatAnimation(4, 5 + index * 0.2, index * 0.3)}
-                      initial={{ opacity: 0, x: isEven ? 30 : -30 }}
+                      animate={floatAnimation(5, 6 + index * 0.2, index * 0.3)}
+                      initial={{ opacity: 0, x: isEven ? 50 : -50 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true, margin: "-80px" }}
-                      transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
-                      className="bg-card/45 hover:bg-card/85 backdrop-blur-sm border border-border/40 hover:border-indigo-500/25 p-6 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 group"
+                      transition={{ duration: 0.7, type: "spring", stiffness: 110, damping: 16, delay: index * 0.1 }}
+                      whileHover={{ 
+                        scale: 1.03, 
+                        y: -4,
+                        transition: { duration: 0.25 }
+                      }}
+                      className="bg-card/45 hover:bg-card/85 backdrop-blur-sm border border-border/40 hover:border-indigo-500/30 p-6 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-350 group relative overflow-hidden"
                       style={{ willChange: "transform" }}
                     >
-                      <div className="flex items-center gap-4 mb-3">
+                      {/* Hover glow */}
+                      <motion.div 
+                        className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      />
+                      <div className="flex items-center gap-4 mb-3 relative z-10">
                         <motion.div
-                          className={`w-10 h-10 rounded-lg ${step.color} flex items-center justify-center group-hover:scale-105 transition-transform duration-200`}
-                          animate={pulseAnimation(1.05, 4, index * 0.4)}
+                          className={`w-10 h-10 rounded-lg ${step.color} flex items-center justify-center group-hover:scale-115 transition-transform duration-250 shadow-sm`}
+                          animate={pulseAnimation(1.06, 4.5, index * 0.4)}
+                          whileHover={{ rotate: 10 }}
                           style={{ willChange: "transform" }}
                         >
-                          <step.icon className="w-5 h-5" />
+                          <motion.div
+                            animate={{ rotate: [0, 8, -8, 0] }}
+                            transition={{ duration: 5 + index * 0.6, repeat: Infinity, ease: "easeInOut" }}
+                          >
+                            <step.icon className="w-5 h-5" />
+                          </motion.div>
                         </motion.div>
                         <h3 className="font-bold text-lg text-foreground group-hover:text-primary transition-colors">
                           {step.title}
                         </h3>
                       </div>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
+                      <p className="text-sm text-muted-foreground leading-relaxed relative z-10">
                         {step.description}
                       </p>
                     </motion.div>

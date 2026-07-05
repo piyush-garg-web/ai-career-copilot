@@ -98,11 +98,49 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 - **File Modified**: `src/components/voice-interview/voice-interview-client.jsx`
 
 ### Landing Page Hero Animation Enhancements
-- **Left Section**: Enhanced with smooth fade-in, slide from left (-40px), soft upward movement (20px), staggered animations for heading/description/button
-- **Right Section**: Improved floating animation (6px offset, 5-6s duration), staggered appearance with container variants, fade-in with scale animation, hardware-accelerated transforms
-- **Button Hover**: Added slight scale (1.05), soft shadow enhancement, smooth transition (300ms)
-- **Card Hover**: Added soft scale (1.03) with smooth transition (200ms), hardware-accelerated transforms
+- **Left Section**: Enhanced with smooth fade-in, slide from left (-40px), soft upward movement (20px), staggered animations for heading/description/button, breathing animations
+- **Right Section**: Improved floating animation (6-7px offset, 5-7s duration), staggered appearance with container variants, fade-in with scale animation, hardware-accelerated transforms, rotation effects
+- **Button Hover**: Added slight scale (1.05), soft shadow enhancement, smooth transition (300ms), animated glow
+- **Card Hover**: Added soft scale (1.03-1.04) with smooth transition (200ms), hardware-accelerated transforms, enhanced shadow
+- **Animated Background**: Added slow-moving gradient blobs for premium feel
 - **File Modified**: `src/components/landing/Hero.jsx`
+
+### Landing Page Navbar Animation Enhancements
+- **Logo**: Added spin animation for sparkles icon, hover scale and rotation effects
+- **Links**: Added smooth hover underline effects from indigo to purple gradient
+- **Buttons**: Added hover scale and translate effects
+- **Mobile Menu**: Animate height transitions
+- **File Modified**: `src/components/landing/Navbar.jsx`
+
+### Landing Page Stats Section Enhancements
+- Added enhanced floating animations for stats cards
+- Improved whileHover effects (scale, y offset)
+- Added enhanced background blobs
+- File Modified: `src/components/landing/Stats.jsx`
+
+### Landing Page Features Section Enhancements
+- Added enhanced floating animations for feature cards
+- Animated icons with rotation and pulse
+- Improved whileHover effects
+- Enhanced background
+- File Modified: `src/components/landing/Features.jsx`
+
+### Landing Page How It Works Section Enhancements
+- Animated timeline badge pulse
+- Enhanced floating cards
+- Animated icons
+- Enhanced background blobs
+- File Modified: `src/components/landing/HowItWorks.jsx`
+
+### Landing Page Comparison Table Enhancements
+- Enhanced floating rows
+- Animated icons (Check, X, Sparkles)
+- Improved hover effects
+- Enhanced background blobs
+- File Modified: `src/components/landing/ComparisonTable.jsx`
+
+### VoiceVideo Image
+- The image at `public/ss/voiceVideo.png` is used on the landing page in Product Preview component
 
 ### Dashboard Voice/Video Button Merge
 - **Change**: Merged separate "Voice Interview" and "Video Interview" buttons into single "AI Voice + Video Interview" button

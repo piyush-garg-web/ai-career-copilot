@@ -638,7 +638,7 @@ export function DashboardClientView({
       <motion.div variants={itemVariants} className="mt-8">
         <Card className="border-2 border-yellow-500/30 bg-gradient-to-br from-yellow-500/5 to-orange-500/5 backdrop-blur-md overflow-hidden relative group hover:border-yellow-500/50 transition-all duration-300">
           <div className="absolute top-0 inset-x-0 h-[2.5px] bg-gradient-to-r from-yellow-500/10 via-yellow-500/60 to-orange-500/10 opacity-70" />
-          <CardHeader className="pb-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <CardHeader className="pb-3 flex flex-col md:flex-row md:items-start justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <CardTitle className="text-xl font-black flex items-center gap-2">
@@ -651,7 +651,7 @@ export function DashboardClientView({
                 Practice realistic AI-powered voice & video interviews with real-time speech recognition, natural AI voice responses, detailed communication analytics, and personalized feedback.
               </CardDescription>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 shrink-0 mt-1 md:mt-0">
               <Button
                 onClick={handleVoiceVideoInterviewClick}
                 className="rounded-xl bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700"

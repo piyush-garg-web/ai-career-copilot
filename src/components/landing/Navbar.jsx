@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
@@ -75,10 +76,13 @@ export default function Navbar() {
   };
 
   return (
-    <nav
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+    <motion.nav
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-400 ${
         isScrolled
-          ? "bg-background/80 backdrop-blur-md border-b border-border/40 py-3 shadow-sm shadow-accent/5"
+          ? "bg-background/85 backdrop-blur-xl border-b border-border/40 py-3 shadow-sm shadow-indigo-500/10"
           : "bg-transparent py-5"
       }`}
     >
@@ -86,67 +90,119 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
           {/* Logo Brand */}
           <Link href="/" className="flex items-center space-x-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/10 group-hover:shadow-indigo-500/25 transition-all duration-300">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
+            <motion.div
+              whileHover={{ rotate: 5, scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/10 group-hover:shadow-indigo-500/30 transition-all duration-300"
+            >
+              <motion.div
+                animate={{ 
+                  rotate: [0, 5, -5, 0], 
+                  scale: [1, 1.05, 1] 
+                }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <Sparkles className="w-5 h-5 text-white" />
+              </motion.div>
+            </motion.div>
             <div className="flex items-center gap-2">
-              <span className="text-lg font-black tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/75 bg-clip-text text-transparent group-hover:opacity-90 transition-opacity">
+              <motion.span 
+                className="text-lg font-black tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/75 bg-clip-text text-transparent"
+                whileHover={{ 
+                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+                style={{ backgroundSize: "200% 200%" }}
+              >
                 AI Career Copilot
-              </span>
+              </motion.span>
               {isPremium && <PremiumBadge size="sm" />}
             </div>
           </Link>
 
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
-            <button
-              onClick={() => scrollToSection("features")}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
+            {[ 
+              { key: "features", label: t("nav.features"), id: "features" },
+              { key: "howItWorks", label: t("nav.howItWorks"), id: "how-it-works" },
+              { key: "reviews", label: t("nav.reviews"), id: "reviews" },
+              { key: "faq", label: t("nav.faq"), id: "faq" }
+            ].map((item, index) => (
+              <motion.button
+                key={item.key}
+                onClick={() => scrollToSection(item.id)}
+                whileHover={{ y: -2 }}
+                whileTap={{ y: 0 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 + index * 0.05, duration: 0.5 }}
+                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 group"
+              >
+                {item.label}
+                <motion.span 
+                  className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 group-hover:w-full transition-all duration-300"
+                />
+              </motion.button>
+            ))}
+            
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
             >
-              {t("nav.features")}
-            </button>
-            <button
-              onClick={() => scrollToSection("how-it-works")}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
-            >
-              {t("nav.howItWorks")}
-            </button>
-            <button
-              onClick={() => scrollToSection("reviews")}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
-            >
-              {t("nav.reviews")}
-            </button>
-            <button
-              onClick={() => scrollToSection("faq")}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
-            >
-              {t("nav.faq")}
-            </button>
-            <Link
-              href="https://github.com/piyushgarg6702-cyber/ai-career-copilot"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors duration-200"
-            >
-              <GithubIcon className="w-4 h-4" />
-              GitHub
-            </Link>
+              <Link
+                href="https://github.com/piyushgarg6702-cyber/ai-career-copilot"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors duration-200 group"
+              >
+                <motion.div whileHover={{ rotate: 360 }} transition={{ duration: 0.6 }}>
+                  <GithubIcon className="w-4 h-4" />
+                </motion.div>
+                GitHub
+              </Link>
+            </motion.div>
           </div>
 
           {/* Desktop Action Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <LanguageSwitcher isLandingPage={true} />
-            <ThemeToggle />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.35, duration: 0.5 }}
+            >
+              <LanguageSwitcher isLandingPage={true} />
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              <ThemeToggle />
+            </motion.div>
 
             {isLoaded && isSignedIn && user ? (
               <>
-                <Link href="/dashboard">
-                  <Button className="font-medium text-sm bg-primary hover:bg-primary/95 shadow-md hover:shadow-lg transition-all duration-200">
-                    {t("nav.dashboard")}
-                  </Button>
-                </Link>
-                <div className="pl-2 flex items-center border-l border-border/50 h-8">
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.45, duration: 0.5 }}
+                >
+                  <Link href="/dashboard">
+                    <motion.div whileHover={{ scale: 1.05, y: -1 }} whileTap={{ scale: 0.98 }}>
+                      <Button className="font-medium text-sm bg-primary hover:bg-primary/95 shadow-md hover:shadow-lg transition-all duration-200">
+                        {t("nav.dashboard")}
+                      </Button>
+                    </motion.div>
+                  </Link>
+                </motion.div>
+                <motion.div 
+                  className="pl-2 flex items-center border-l border-border/50 h-8"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5, duration: 0.5 }}
+                >
                   <Button
                     variant="ghost"
                     onClick={() => signOut()}
@@ -154,14 +210,22 @@ export default function Navbar() {
                   >
                     {t("nav.logout")}
                   </Button>
-                </div>
+                </motion.div>
               </>
             ) : (
-              <Link href="/sign-in">
-                <Button className="font-medium text-sm bg-primary hover:bg-primary/95 shadow-md hover:shadow-lg transition-all duration-200">
-                  {t("nav.signIn")}
-                </Button>
-              </Link>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.45, duration: 0.5 }}
+              >
+                <Link href="/sign-in">
+                  <motion.div whileHover={{ scale: 1.05, y: -1 }} whileTap={{ scale: 0.98 }}>
+                    <Button className="font-medium text-sm bg-primary hover:bg-primary/95 shadow-md hover:shadow-lg transition-all duration-200">
+                      {t("nav.signIn")}
+                    </Button>
+                  </motion.div>
+                </Link>
+              </motion.div>
             )}
           </div>
 
@@ -169,86 +233,98 @@ export default function Navbar() {
           <div className="flex md:hidden items-center space-x-2">
             <LanguageSwitcher isLandingPage={true} />
             <ThemeToggle />
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 rounded-md text-foreground hover:bg-secondary transition-colors"
               aria-label={t("common.toggleMenu")}
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
 
       {/* Mobile Drawer Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-background/95 border-b border-border/40 py-4 px-4 space-y-4 shadow-xl backdrop-blur-lg">
-          <div className="flex flex-col space-y-3">
-            <button
-              onClick={() => scrollToSection("features")}
-              className="text-left py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
-            >
-              {t("nav.features")}
-            </button>
-            <button
-              onClick={() => scrollToSection("how-it-works")}
-              className="text-left py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
-            >
-              {t("nav.howItWorks")}
-            </button>
-            <button
-              onClick={() => scrollToSection("reviews")}
-              className="text-left py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
-            >
-              {t("nav.reviews")}
-            </button>
-            <button
-              onClick={() => scrollToSection("faq")}
-              className="text-left py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
-            >
-              FAQ
-            </button>
-            <Link
-              href="https://github.com/piyushgarg6702-cyber/ai-career-copilot"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
-            >
-              <GithubIcon className="w-4 h-4" />
-              GitHub
-            </Link>
-          </div>
-          <div className="border-t border-border pt-4 flex flex-col sm:flex-row gap-3">
-            {isLoaded && isSignedIn && user ? (
-              <div className="flex flex-col gap-2 w-full">
-                <div className="flex items-center justify-between p-2.5 bg-secondary/40 rounded-xl mb-1">
-                  <span className="text-xs font-bold text-muted-foreground truncate max-w-[180px]">
-                    {user.fullName || user.primaryEmailAddress?.emailAddress}
-                  </span>
-                  <Button
-                    variant="ghost"
-                    onClick={() => signOut()}
-                    className="text-[11px] font-bold text-red-500 hover:text-red-600 h-6 px-2 cursor-pointer"
-                  >
-                    {t("nav.logout")}
-                  </Button>
-                </div>
-                <Link href="/dashboard" className="w-full">
-                  <Button className="w-full font-medium bg-primary hover:bg-primary/95">
-                    {t("nav.dashboard")}
-                  </Button>
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden bg-background/95 border-b border-border/40 overflow-hidden shadow-xl backdrop-blur-lg"
+          >
+            <div className="py-4 px-4 space-y-4">
+              <div className="flex flex-col space-y-3">
+                <button
+                  onClick={() => scrollToSection("features")}
+                  className="text-left py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
+                >
+                  {t("nav.features")}
+                </button>
+                <button
+                  onClick={() => scrollToSection("how-it-works")}
+                  className="text-left py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
+                >
+                  {t("nav.howItWorks")}
+                </button>
+                <button
+                  onClick={() => scrollToSection("reviews")}
+                  className="text-left py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
+                >
+                  {t("nav.reviews")}
+                </button>
+                <button
+                  onClick={() => scrollToSection("faq")}
+                  className="text-left py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
+                >
+                  FAQ
+                </button>
+                <Link
+                  href="https://github.com/piyushgarg6702-cyber/ai-career-copilot"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 py-2 px-3 rounded-md hover:bg-secondary text-sm font-medium text-muted-foreground hover:text-foreground transition-all"
+                >
+                  <GithubIcon className="w-4 h-4" />
+                  GitHub
                 </Link>
               </div>
-            ) : (
-              <Link href="/sign-in" className="w-full">
-                <Button className="w-full font-medium bg-primary hover:bg-primary/95">
-                  {t("nav.signIn")}
-                </Button>
-              </Link>
-            )}
-          </div>
-        </div>
-      )}
-    </nav>
+              <div className="border-t border-border pt-4 flex flex-col sm:flex-row gap-3">
+                {isLoaded && isSignedIn && user ? (
+                  <div className="flex flex-col gap-2 w-full">
+                    <div className="flex items-center justify-between p-2.5 bg-secondary/40 rounded-xl mb-1">
+                      <span className="text-xs font-bold text-muted-foreground truncate max-w-[180px]">
+                        {user.fullName || user.primaryEmailAddress?.emailAddress}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        onClick={() => signOut()}
+                        className="text-[11px] font-bold text-red-500 hover:text-red-600 h-6 px-2 cursor-pointer"
+                      >
+                        {t("nav.logout")}
+                      </Button>
+                    </div>
+                    <Link href="/dashboard" className="w-full">
+                      <Button className="w-full font-medium bg-primary hover:bg-primary/95">
+                        {t("nav.dashboard")}
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <Link href="/sign-in" className="w-full">
+                    <Button className="w-full font-medium bg-primary hover:bg-primary/95">
+                      {t("nav.signIn")}
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.nav>
   );
 }

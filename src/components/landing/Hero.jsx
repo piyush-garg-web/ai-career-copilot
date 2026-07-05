@@ -27,7 +27,7 @@ export default function Hero() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.2, delayChildren: 0.3 },
+      transition: { staggerChildren: 0.25, delayChildren: 0.2 },
     },
   };
 
@@ -37,7 +37,7 @@ export default function Hero() {
       opacity: 1,
       x: 0,
       y: 0,
-      transition: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] },
+      transition: { duration: 0.9, ease: [0.25, 0.1, 0.25, 1] },
     },
   };
 
@@ -46,18 +46,36 @@ export default function Hero() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15, duration: 0.8 },
+      transition: { type: "spring", stiffness: 120, damping: 18, duration: 0.8 },
     },
   };
 
-  const floatAnimation = (yOffset = 8, duration = 4, delay = 0) => ({
+  const floatAnimation = (yOffset = 8, floatDuration = 6, delay = 0, rotateSpeed = 0) => ({
     y: [0, -yOffset, 0],
-    transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
+    transition: { 
+      y: { 
+        duration: floatDuration, 
+        repeat: Infinity, 
+        ease: "easeInOut", 
+        delay 
+      },
+      rotate: {
+        duration: rotateSpeed,
+        repeat: Infinity,
+        ease: "linear",
+        delay
+      }
+    },
   });
 
   const pulseAnimation = (scale = 1.05, duration = 3, delay = 0) => ({
     scale: [1, scale, 1],
     opacity: [0.5, 0.8, 0.5],
+    transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
+  });
+
+  const breathingAnimation = (scale = 1.02, duration = 4, delay = 0) => ({
+    scale: [1, scale, 1],
     transition: { duration, repeat: Infinity, ease: "easeInOut", delay },
   });
 
@@ -72,27 +90,83 @@ export default function Hero() {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { type: "spring", stiffness: 80, damping: 15, duration: 0.9 },
+      transition: { type: "spring", stiffness: 90, damping: 16, duration: 0.95 },
     },
   };
 
   return (
     <div className="relative min-h-[90vh] flex items-center justify-center pt-24 overflow-hidden bg-background">
-      {/* Background Gradients */}
+      {/* Enhanced Background Gradients & Blobs */}
       <motion.div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <motion.div
           className="absolute top-0 left-1/4 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-indigo-500/10 dark:bg-indigo-500/5 rounded-full filter blur-[80px] sm:blur-[120px] translate-x-[-20%] translate-y-[-20%]"
-          animate={pulseAnimation(1.2, 8, 0)}
+          animate={{
+            x: [0, 30, 0],
+            y: [0, 20, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
           style={{ willChange: "transform" }}
         />
         <motion.div
           className="absolute top-1/3 right-1/4 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-violet-500/10 dark:bg-violet-500/5 rounded-full filter blur-[80px] sm:blur-[100px] translate-x-[20%]"
-          animate={pulseAnimation(1.15, 7, 1)}
+          animate={{
+            x: [0, -20, 0],
+            y: [0, -30, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
           style={{ willChange: "transform" }}
         />
         <motion.div
           className="absolute bottom-10 left-1/2 w-[300px] sm:w-[450px] h-[300px] sm:h-[450px] bg-blue-500/10 dark:bg-blue-500/5 rounded-full filter blur-[80px] sm:blur-[100px] translate-x-[-50%]"
-          animate={pulseAnimation(1.25, 9, 2)}
+          animate={{
+            x: [-20, 20, -20],
+            y: [0, 20, 0],
+            scale: [1, 1.08, 1],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          style={{ willChange: "transform" }}
+        />
+        {/* Additional subtle blobs */}
+        <motion.div
+          className="absolute top-2/3 left-10 w-[200px] h-[200px] bg-purple-500/8 dark:bg-purple-500/3 rounded-full filter blur-[60px]"
+          animate={{
+            x: [0, 40, 0],
+            y: [0, -30, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 28,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          style={{ willChange: "transform" }}
+        />
+        <motion.div
+          className="absolute top-1/4 right-20 w-[250px] h-[250px] bg-pink-500/8 dark:bg-pink-500/3 rounded-full filter blur-[70px]"
+          animate={{
+            x: [0, -30, 0],
+            y: [0, 40, 0],
+            scale: [1, 1.12, 1],
+          }}
+          transition={{
+            duration: 24,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
           style={{ willChange: "transform" }}
         />
       </motion.div>
@@ -109,16 +183,8 @@ export default function Hero() {
             <motion.h1
               variants={itemVariants}
               className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] md:leading-[1.05]"
-              animate={{
-                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-              }}
-              transition={{
-                backgroundPosition: { duration: 5, repeat: Infinity, ease: "linear" },
-              }}
-              style={{
-                backgroundSize: "200% auto",
-                backgroundImage: "linear-gradient(to right, currentColor 0%, currentColor 100%)",
-              }}
+              animate={breathingAnimation(1.01, 5, 0)}
+              style={{ willChange: "transform" }}
             >
               {t("landing.hero.title")}
             </motion.h1>
@@ -126,14 +192,8 @@ export default function Hero() {
             <motion.p
               variants={itemVariants}
               className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed font-normal"
-              animate={{
-                opacity: [0.8, 1, 0.8],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+              animate={breathingAnimation(1.005, 6, 0.2)}
+              style={{ willChange: "transform" }}
             >
               {t("landing.hero.subtitle")}
             </motion.p>
@@ -141,30 +201,29 @@ export default function Hero() {
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <Link href="/sign-up" className="w-full sm:w-auto">
                 <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                   animate={{
-                    scale: [1, 1.02, 1],
                     boxShadow: [
-                      "0 0 20px rgba(99, 102, 241, 0.1)",
-                      "0 0 30px rgba(99, 102, 241, 0.2)",
-                      "0 0 20px rgba(99, 102, 241, 0.1)",
+                      "0 0 20px rgba(99, 102, 241, 0.15)",
+                      "0 0 35px rgba(99, 102, 241, 0.25)",
+                      "0 0 20px rgba(99, 102, 241, 0.15)",
                     ],
                   }}
                   transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
+                    boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" },
                   }}
                 >
                   <Button
                     size="lg"
-                    className="w-full sm:w-auto text-base font-semibold px-8 py-6 rounded-xl bg-primary hover:bg-primary/95 shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20 hover:scale-105 transition-all duration-300 group"
+                    className="w-full sm:w-auto text-base font-semibold px-8 py-6 rounded-xl bg-primary hover:bg-primary/95 shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/25 transition-all duration-300 group"
                   >
                     {t("landing.hero.cta")}
                     <motion.span
-                      animate={{ x: [0, 5, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                      animate={{ x: [0, 6, 0] }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                     >
-                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" />
                     </motion.span>
                   </Button>
                 </motion.div>
@@ -183,18 +242,24 @@ export default function Hero() {
               {/* Ambient glow */}
               <motion.div
                 className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                animate={pulseAnimation(1.3, 6, 0)}
+                animate={pulseAnimation(1.35, 8, 0)}
                 style={{ willChange: "transform" }}
               >
-                <div className="w-72 h-72 rounded-full bg-indigo-500/10 dark:bg-indigo-500/5 blur-[80px]" />
+                <div className="w-80 h-80 rounded-full bg-indigo-500/12 dark:bg-indigo-500/6 blur-[90px]" />
               </motion.div>
 
               {/* Decorative rings */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-25">
                 <motion.div
                   className="w-[100%] aspect-square rounded-full border border-dashed border-indigo-500/20"
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+                  transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+                  style={{ willChange: "transform" }}
+                />
+                <motion.div
+                  className="w-[85%] aspect-square rounded-full border border-dotted border-violet-500/15 absolute"
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 150, repeat: Infinity, ease: "linear" }}
                   style={{ willChange: "transform" }}
                 />
               </div>
@@ -205,14 +270,32 @@ export default function Hero() {
                 <motion.div
                   className={CARD_BASE}
                   variants={cardVariants}
-                  animate={floatAnimation(6, 5.5, 0)}
-                  whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
+                  animate={{
+                    ...floatAnimation(7, 7, 0, 0),
+                    rotate: [0, 360],
+                  }}
+                  whileHover={{ scale: 1.04, y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+                  transition={{
+                    rotate: {
+                      duration: 120,
+                      repeat: Infinity,
+                      ease: "linear",
+                      delay: 0
+                    },
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 20
+                  }}
                   style={{ willChange: "transform" }}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="p-2.5 rounded-xl bg-green-500/10 text-green-500 dark:text-green-400 shrink-0 border border-green-500/20">
+                    <motion.div 
+                      className="p-2.5 rounded-xl bg-green-500/10 text-green-500 dark:text-green-400 shrink-0 border border-green-500/20"
+                      animate={pulseAnimation(1.05, 3, 0)}
+                      style={{ willChange: "transform" }}
+                    >
                       <FileText className="w-5 h-5" />
-                    </div>
+                    </motion.div>
                     <div className="min-w-0 flex-1">
                       <h3 className="font-bold text-sm text-foreground leading-snug">
                         {t("landing.hero.cards.resumeTitle")}
@@ -228,7 +311,12 @@ export default function Hero() {
                       <span className="text-green-500 dark:text-green-400 font-bold">87%</span>
                     </div>
                     <div className="w-full bg-secondary/50 h-2 rounded-full overflow-hidden border border-border/30">
-                      <div className="bg-gradient-to-r from-green-500 to-emerald-400 h-full rounded-full transition-all duration-500" style={{ width: "87%" }} />
+                      <motion.div 
+                        className="bg-gradient-to-r from-green-500 to-emerald-400 h-full rounded-full"
+                        initial={{ width: "0%" }}
+                        animate={{ width: "87%" }}
+                        transition={{ duration: 1.5, ease: "easeOut", delay: 1 }}
+                      />
                     </div>
                   </div>
                 </motion.div>
@@ -237,14 +325,32 @@ export default function Hero() {
                 <motion.div
                   className={CARD_BASE}
                   variants={cardVariants}
-                  animate={floatAnimation(6, 6, 0.4)}
-                  whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
+                  animate={{
+                    ...floatAnimation(6, 6.5, 0.3, 0),
+                    rotate: [0, -360],
+                  }}
+                  whileHover={{ scale: 1.04, y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+                  transition={{
+                    rotate: {
+                      duration: 150,
+                      repeat: Infinity,
+                      ease: "linear",
+                      delay: 0.3
+                    },
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 20
+                  }}
                   style={{ willChange: "transform" }}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-500 dark:text-purple-400 shrink-0 border border-purple-500/20">
+                    <motion.div 
+                      className="p-2.5 rounded-xl bg-purple-500/10 text-purple-500 dark:text-purple-400 shrink-0 border border-purple-500/20"
+                      animate={pulseAnimation(1.05, 3, 0.2)}
+                      style={{ willChange: "transform" }}
+                    >
                       <Bot className="w-5 h-5" />
-                    </div>
+                    </motion.div>
                     <div className="min-w-0 flex-1">
                       <h3 className="font-bold text-sm text-foreground leading-snug">
                         {t("landing.hero.cards.interviewTitle")}
@@ -264,15 +370,33 @@ export default function Hero() {
                 <motion.div
                   className={`${CARD_BASE} border-yellow-500/30 bg-gradient-to-br from-yellow-500/5 to-orange-500/5 shadow-yellow-500/5`}
                   variants={cardVariants}
-                  animate={floatAnimation(6, 5, 0.8)}
-                  whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
+                  animate={{
+                    ...floatAnimation(6.5, 6, 0.6, 0),
+                    rotate: [0, 360],
+                  }}
+                  whileHover={{ scale: 1.04, y: -4, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+                  transition={{
+                    rotate: {
+                      duration: 130,
+                      repeat: Infinity,
+                      ease: "linear",
+                      delay: 0.6
+                    },
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 20
+                  }}
                   style={{ willChange: "transform" }}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="p-2.5 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 text-yellow-500 dark:text-yellow-400 shrink-0 border border-yellow-500/20">
+                      <motion.div 
+                        className="p-2.5 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 text-yellow-500 dark:text-yellow-400 shrink-0 border border-yellow-500/20"
+                        animate={pulseAnimation(1.08, 2.5, 0.1)}
+                        style={{ willChange: "transform" }}
+                      >
                         <Mic className="w-5 h-5" />
-                      </div>
+                      </motion.div>
                       <div className="min-w-0">
                         <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">AI Mock Interview</p>
                         <p className="text-sm font-black text-foreground leading-tight mt-0.5">Voice + Video</p>

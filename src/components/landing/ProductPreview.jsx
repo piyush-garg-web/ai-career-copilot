@@ -60,7 +60,7 @@ export default function ProductPreview() {
       id: "voice-video-interview",
       label: "AI Voice + Video Interview",
       icon: Mic,
-      imagePath: "/ss/voiceVideo.png",
+      imagePath: "/screenshots/voiceVideo.png",
       url: "ai-career-copilot.vercel.app/voice-mock-interview",
       isPremium: true
     }

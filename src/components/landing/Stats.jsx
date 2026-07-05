@@ -97,23 +97,55 @@ export default function Stats() {
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-secondary/35 border-y border-border/40 relative">
+    <section className="py-16 md:py-24 bg-secondary/35 border-y border-border/40 relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div 
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl"
+          animate={{
+            x: [0, 40, 0],
+            y: [0, -30, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"
+          animate={{
+            x: [0, -40, 0],
+            y: [0, 30, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
           {stats.map((stat, index) => (
             <motion.div
               key={index}
-              animate={floatAnimation(4, 5 + index * 0.2, index * 0.3)}
-              initial={{ opacity: 0, y: 20 }}
+              animate={floatAnimation(5, 6 + index * 0.2, index * 0.3)}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="flex flex-col items-center text-center space-y-2 p-4 rounded-xl hover:bg-card/40 transition-all duration-300 border border-transparent hover:border-border/25"
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ 
+                duration: 0.6, 
+                delay: index * 0.12,
+                type: "spring",
+                stiffness: 100
+              }}
+              whileHover={{ 
+                y: -8, 
+                scale: 1.03,
+                transition: { duration: 0.2 }
+              }}
+              className="flex flex-col items-center text-center space-y-2 p-6 rounded-2xl hover:bg-card/60 transition-all duration-300 border border-transparent hover:border-border/30 hover:shadow-lg"
               style={{ willChange: "transform" }}
             >
               <motion.span
-                className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/80"
-                animate={pulseAnimation(1.02, 3, index * 0.4)}
+                className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-indigo-500"
+                animate={pulseAnimation(1.03, 3.5, index * 0.4)}
                 style={{ willChange: "transform" }}
               >
                 <AnimatedCounter
@@ -122,7 +154,7 @@ export default function Stats() {
                   decimals={stat.decimals}
                 />
               </motion.span>
-              <span className="text-sm font-semibold text-foreground tracking-wide">
+              <span className="text-sm font-bold text-foreground tracking-wide">
                 {stat.label}
               </span>
               <span className="text-xs text-muted-foreground max-w-[200px]">

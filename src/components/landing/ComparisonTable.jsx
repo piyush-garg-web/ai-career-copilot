@@ -59,15 +59,37 @@ export default function ComparisonTable() {
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-secondary/15 border-y border-border/40 relative">
+    <section className="py-16 md:py-24 bg-secondary/15 border-y border-border/40 relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div 
+          className="absolute top-1/3 left-1/3 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-3xl"
+          animate={{
+            x: [0, 50, 0],
+            y: [0, -40, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div 
+          className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl"
+          animate={{
+            x: [0, -40, 0],
+            y: [0, 30, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{ duration: 32, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+      
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
           className="text-center max-w-3xl mx-auto mb-10 md:mb-14 space-y-4"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.8 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.85 }}
         >
           <motion.h2
             className="text-xs font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400"
@@ -87,7 +109,8 @@ export default function ComparisonTable() {
         {/* Comparison Table */}
         <motion.div
           className="overflow-hidden rounded-2xl border border-border/60 bg-card shadow-xl"
-          animate={floatAnimation(3, 6, 0)}
+          animate={floatAnimation(4, 7, 0)}
+          whileHover={{ y: -2, transition: { duration: 0.2 } }}
           style={{ willChange: "transform" }}
         >
           {/* Header Row */}
@@ -99,7 +122,12 @@ export default function ComparisonTable() {
               {t("landing.comparison.table.traditional")}
             </div>
             <div className="font-bold text-xs sm:text-sm text-indigo-500 dark:text-indigo-400 uppercase tracking-wider text-center flex items-center justify-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 fill-current shrink-0" />
+              <motion.div
+                animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.1, 1] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <Sparkles className="w-3.5 h-3.5 fill-current shrink-0" />
+              </motion.div>
               {t("landing.comparison.table.copilot")}
             </div>
           </div>
@@ -109,8 +137,13 @@ export default function ComparisonTable() {
             {comparisonData.map((row, idx) => (
               <motion.div
                 key={idx}
-                animate={floatAnimation(2, 4 + idx * 0.2, idx * 0.3)}
-                className="grid grid-cols-3 min-h-[84px] items-center hover:bg-secondary/10 transition-colors duration-150 px-4 sm:px-6 gap-4"
+                animate={floatAnimation(2.5, 4.5 + idx * 0.2, idx * 0.3)}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.5, delay: idx * 0.08 }}
+                whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
+                className="grid grid-cols-3 min-h-[84px] items-center hover:bg-secondary/20 transition-colors duration-200 px-4 sm:px-6 gap-4 group"
                 style={{ willChange: "transform" }}
               >
                 {/* Feature Name */}
@@ -121,23 +154,34 @@ export default function ComparisonTable() {
 
                 {/* Traditional */}
                 <div className="flex flex-col items-center justify-center gap-1 text-center py-3">
-                  <X className="w-5 h-5 text-red-500 stroke-[3px] bg-red-500/10 p-0.5 rounded-full shrink-0" />
+                  <motion.div
+                    whileHover={{ rotate: 10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <X className="w-5 h-5 text-red-500 stroke-[3px] bg-red-500/10 p-0.5 rounded-full shrink-0" />
+                  </motion.div>
                   <span className="text-[10px] sm:text-xs text-muted-foreground leading-normal max-w-[150px] inline-block font-medium">
                     {row.traditional}
                   </span>
                 </div>
 
                 {/* Copilot */}
-                <div className="flex flex-col items-center justify-center gap-1 text-center py-3 bg-indigo-500/[0.02] dark:bg-indigo-500/[0.03] border-x border-border/10 h-full">
-                  <Check className="w-5 h-5 text-green-500 stroke-[3px] bg-green-500/10 p-0.5 rounded-full shrink-0" />
+                <div className="flex flex-col items-center justify-center gap-1 text-center py-3 bg-indigo-500/[0.02] dark:bg-indigo-500/[0.03] border-x border-border/10 h-full group-hover:bg-indigo-500/10 dark:group-hover:bg-indigo-500/5 transition-colors duration-200">
+                  <motion.div
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: idx * 0.2 }}
+                    whileHover={{ rotate: 10 }}
+                  >
+                    <Check className="w-5 h-5 text-green-500 stroke-[3px] bg-green-500/10 p-0.5 rounded-full shrink-0" />
+                  </motion.div>
                   <span className="text-[10px] sm:text-xs text-indigo-500 dark:text-indigo-300 font-bold leading-normal max-w-[160px] inline-block">
                     {row.copilot}
                   </span>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
