@@ -13,7 +13,7 @@ import jsPDF from "jspdf";
 const premiumFeatures = [
   { icon: Mic, title: "AI Voice Mock Interview", description: "Practice with realistic voice AI interviews with speech recognition and detailed feedback" },
   { icon: Video, title: "AI Video Mock Interview", description: "Practice with video AI interviews with visual analytics on your body language and presentation" },
-  { icon: Globe, title: "Multilingual Support", description: "Access the platform and practice interviews in multiple languages" },
+  { icon: Globe, title: "🌍 Multilingual AI Experience", description: "Experience CareerCopilot in your preferred language. Premium members can use Resume Analysis, ATS Analysis, Interview Coach, AI Mock Interview, Dashboard, Profile, Settings, and future AI features in multiple supported languages." },
   { icon: Sparkles, title: "Future Premium Features", description: "Get automatic access to all new premium features as they're released" },
   { icon: Award, title: "Priority Feature Access", description: "Be the first to access new features and improvements" },
   { icon: Crown, title: "Premium Experience", description: "Enjoy an enhanced, ad-free experience with premium support" },

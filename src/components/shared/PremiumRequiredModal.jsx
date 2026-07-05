@@ -9,7 +9,7 @@ export function PremiumRequiredModal({ isOpen, onClose, featureName = "this feat
   const features = [
     "AI Voice Mock Interviews",
     "AI Video Mock Interviews",
-    "Multilingual Support",
+    "🌍 Multilingual AI Experience",
     "Future Premium Features",
   ];
 

@@ -7,7 +7,7 @@ import { PremiumRequiredModal } from "@/components/shared/PremiumRequiredModal";
 import { PremiumBadge } from "@/components/shared/PremiumBadge";
 import { usePremium } from "@/hooks/use-premium";
 
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({ isLandingPage = false }) {
   const { locale, changeLanguage, t } = useTranslation();
   const { isPremium, loading } = usePremium();
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +16,9 @@ export default function LanguageSwitcher() {
   const dropdownRef = useRef(null);
 
   const activeLang = SUPPORTED_LANGUAGES.find((l) => l.code === locale) || SUPPORTED_LANGUAGES[0];
+
+  // On landing page, language switching is free for everyone
+  const isFreeMode = isLandingPage;
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -39,7 +42,15 @@ export default function LanguageSwitcher() {
   );
 
   const handleLanguageChange = (langCode) => {
-    // Allow all languages for premium users, only English for free users
+    // On landing page, allow all languages for everyone
+    if (isFreeMode) {
+      changeLanguage(langCode);
+      setIsOpen(false);
+      setSearchQuery("");
+      return;
+    }
+
+    // In authenticated app, allow all languages for premium users, only English for free users
     if (!loading && !isPremium && langCode !== "en") {
       setIsOpen(false);
       setShowPremiumModal(true);
@@ -68,7 +79,7 @@ export default function LanguageSwitcher() {
         >
           <Globe className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
           <span>{activeLang.nativeName}</span>
-          {!isPremium && !loading && (
+          {!isFreeMode && !isPremium && !loading && (
             <span onClick={handlePremiumBadgeClick} className="cursor-pointer">
               <PremiumBadge size="sm" />
             </span>
@@ -98,7 +109,7 @@ export default function LanguageSwitcher() {
               {filteredLanguages.length > 0 ? (
                 filteredLanguages.map((lang) => {
                   const isSelected = lang.code === locale;
-                  const isLocked = !isPremium && !loading && lang.code !== "en";
+                  const isLocked = !isFreeMode && !isPremium && !loading && lang.code !== "en";
                   return (
                     <button
                       key={lang.code}
@@ -142,7 +153,7 @@ export default function LanguageSwitcher() {
       <PremiumRequiredModal
         isOpen={showPremiumModal}
         onClose={() => setShowPremiumModal(false)}
-        featureName="Multilingual support"
+        featureName="🌍 Multilingual AI Experience"
       />
     </>
   );

@@ -16,6 +16,7 @@ import {
   RotateCcw,
   Sparkles,
   BookOpen,
+  ArrowLeft,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -101,6 +102,19 @@ export function VoiceInterviewHistory({ sessions = [], onViewSession, onRetakeSe
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto p-1 text-xs font-semibold">
+      {/* Back Button */}
+      <div className="p-2 mb-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => window.history.back()}
+          className="flex items-center gap-2 border-2"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </Button>
+      </div>
+
       {/* Search & Filters Controls */}
       <Card className="border border-border/40 bg-card/60 backdrop-blur-md">
         <CardContent className="p-4 flex flex-col md:flex-row gap-4 items-center justify-between">

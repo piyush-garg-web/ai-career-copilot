@@ -26,6 +26,7 @@ import {
   Calendar,
   Zap,
   Settings,
+  ArrowLeft,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -129,6 +130,21 @@ export function VoiceInterviewClient({
 
   return (
     <div className="space-y-6">
+      {/* Back Button - shown on all views except overview */}
+      {view !== "overview" && (
+        <div className="max-w-5xl mx-auto p-2 mb-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setView("overview")}
+            className="flex items-center gap-2 border-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Overview
+          </Button>
+        </div>
+      )}
+
       {/* 1. OVERVIEW DASHBOARD VIEW */}
       {view === "overview" && (
         <div className="space-y-8">

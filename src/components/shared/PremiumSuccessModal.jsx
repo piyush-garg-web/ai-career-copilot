@@ -46,7 +46,7 @@ export function PremiumSuccessModal({ isOpen, onClose }) {
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                <span className="text-gray-700 dark:text-gray-300">Multilingual Support</span>
+                <span className="text-gray-700 dark:text-gray-300">🌍 Multilingual AI Experience</span>
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />

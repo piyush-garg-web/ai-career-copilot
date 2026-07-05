@@ -26,9 +26,8 @@ export function LanguageProvider({ children }) {
   const [translations, setTranslations] = useState({});
   const [loading, setLoading] = useState(true);
 
-  // Initialize language from local storage, cookie, or DB
+  // Initialize language from local storage or cookie (for landing page and guests)
   useEffect(() => {
-    // Check local storage or cookie
     let initialLang = "en";
     if (typeof window !== "undefined") {
       const savedLang = localStorage.getItem("pref_lang");
@@ -45,7 +44,7 @@ export function LanguageProvider({ children }) {
     setLocale(initialLang);
   }, []);
 
-  // Fetch from DB if user logs in
+  // Fetch from DB if user logs in (for authenticated application)
   useEffect(() => {
     if (isLoaded && user) {
       const syncUserLang = async () => {
@@ -56,8 +55,9 @@ export function LanguageProvider({ children }) {
             const dbLang = userData.preferredLanguage || "en";
             const guestLang = localStorage.getItem("pref_lang") || "en";
             
-            if (dbLang === "en" && guestLang !== "en") {
-              // Sync guest preference to DB
+            // If user has a saved language in DB, use it
+            // Otherwise, sync guest preference to DB for premium users
+            if (userData.isPremium && dbLang !== guestLang) {
               await fetch("/api/user", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

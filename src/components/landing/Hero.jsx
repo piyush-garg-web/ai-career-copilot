@@ -1,16 +1,26 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, FileText, Bot, Briefcase, TrendingUp, Mic, Video } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/LanguageProvider";
+import { PremiumRequiredModal } from "@/components/shared/PremiumRequiredModal";
+import { usePremium } from "@/hooks/use-premium";
 
 const heroHighlights = ["hero.badge", "hero.cards.resume", "hero.cards.interview", "hero.cards.jobMatch"];
 
 export default function Hero() {
   const { t } = useTranslation();
+  const { isPremium, loading } = usePremium();
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
+
+  const handleInterviewClick = (e) => {
+    e.preventDefault();
+    // On landing page, always redirect - premium check happens on the interview page
+    window.location.href = "/voice-mock-interview";
+  };
   const scrollToFeatures = () => {
     const element = document.getElementById("features");
     if (element) {
@@ -93,17 +103,17 @@ export default function Hero() {
           </motion.div>
 
           {/* Floating Illustration */}
-          <div className="lg:col-span-5 relative w-full h-[350px] sm:h-[450px] flex items-center justify-center">
+          <div className="lg:col-span-5 relative w-full h-[450px] sm:h-[550px] flex items-center justify-center">
             {/* Ambient Backlight */}
-            <div className="absolute w-[280px] h-[280px] rounded-full bg-indigo-500/20 dark:bg-indigo-500/10 blur-[60px]" />
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] rounded-full bg-indigo-500/20 dark:bg-indigo-500/10 blur-[60px]" />
 
             {/* Floating Container */}
-            <div className="relative w-full max-w-[400px] h-[340px] sm:h-[380px]">
+            <div className="relative w-full max-w-[1000px] h-[400px] sm:h-[440px] flex items-center justify-center">
               {/* Card 1: Resume Analysis */}
               <motion.div
-                className="absolute top-0 left-4 sm:left-0 right-4 sm:right-auto sm:w-[260px] p-4 rounded-xl border border-border/50 bg-card/85 backdrop-blur-md shadow-xl z-20"
+                className="absolute top-24 left-1/2 -translate-x-1/2 sm:-translate-x-0 sm:left-8 sm:right-auto sm:w-[80px] p-1.5 rounded-xl border border-border/50 bg-card/85 backdrop-blur-md shadow-xl z-20"
                 animate={{
-                  y: [0, -10, 0],
+                  y: [0, -8, 0],
                 }}
                 transition={{
                   duration: 6,
@@ -133,9 +143,9 @@ export default function Hero() {
 
               {/* Card 2: Interview Coach */}
               <motion.div
-                className="absolute bottom-4 right-4 sm:right-0 left-4 sm:left-auto sm:w-[280px] p-4 rounded-xl border border-border/50 bg-card/85 backdrop-blur-md shadow-xl z-10"
+                className="absolute bottom-24 left-1/2 -translate-x-1/2 sm:-translate-x-0 sm:right-8 sm:left-auto sm:w-[70px] p-1.5 rounded-xl border border-border/50 bg-card/85 backdrop-blur-md shadow-xl z-10"
                 animate={{
-                  y: [0, 10, 0],
+                  y: [0, 8, 0],
                 }}
                 transition={{
                   duration: 7,
@@ -144,7 +154,7 @@ export default function Hero() {
                   delay: 0.5
                 }}
               >
-                <div className="flex items-center gap-3 mb-2">
+                <div className="flex items-center gap-3 mb-3">
                   <div className="p-2 rounded-lg bg-purple-500/15 text-purple-600 dark:text-purple-400">
                     <Bot className="w-5 h-5" />
                   </div>
@@ -157,15 +167,22 @@ export default function Hero() {
                   <div className="p-2 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 font-medium">
                     💡 <strong>{t("landing.hero.cards.tipLabel")}</strong> {t("landing.hero.cards.tipText")}
                   </div>
+                  <Button
+                    onClick={handleInterviewClick}
+                    className="w-full mt-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold text-xs py-2 rounded-lg shadow-md"
+                  >
+                    <Video className="w-3 h-3 mr-1.5" />
+                    Video Interview
+                  </Button>
                 </div>
               </motion.div>
 
               {/* Card 3: AI Mock Interview */}
               <motion.div
-                className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[240px] p-3 rounded-lg border border-yellow-500/30 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 backdrop-blur-md shadow-lg shadow-yellow-500/10 z-30"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 sm:left-1/2 sm:-translate-x-1/2 w-[60px] p-1.5 rounded-lg border border-yellow-500/30 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 backdrop-blur-md shadow-lg shadow-yellow-500/10 z-30"
                 animate={{
-                  scale: [1, 1.03, 1],
-                  y: [0, 5, 0]
+                  scale: [1, 1.02, 1],
+                  y: [0, 4, 0]
                 }}
                 transition={{
                   duration: 5,
@@ -174,7 +191,7 @@ export default function Hero() {
                   delay: 1
                 }}
               >
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2 mb-3">
                   <div className="p-1.5 rounded-full bg-gradient-to-br from-yellow-500/20 to-orange-500/20 text-yellow-600 dark:text-yellow-400">
                     <Mic className="w-4 h-4" />
                   </div>
@@ -186,7 +203,7 @@ export default function Hero() {
                     👑 Premium
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-[9px] text-muted-foreground">
+                <div className="flex items-center gap-2 text-[9px] text-muted-foreground mb-3">
                   <div className="flex items-center gap-1">
                     <Video className="w-3 h-3" />
                     <span>Real-time AI</span>
@@ -197,6 +214,13 @@ export default function Hero() {
                     <span>Smart Feedback</span>
                   </div>
                 </div>
+                <Button
+                  onClick={handleInterviewClick}
+                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold text-xs py-2 rounded-lg shadow-md"
+                >
+                  <Video className="w-3 h-3 mr-1.5" />
+                  Start Interview
+                </Button>
               </motion.div>
 
               {/* Background Glow Ring */}
@@ -206,6 +230,11 @@ export default function Hero() {
           </div>
         </div>
       </div>
+      <PremiumRequiredModal 
+        isOpen={showPremiumModal} 
+        onClose={() => setShowPremiumModal(false)} 
+        featureName="AI Mock Interview"
+      />
     </div>
   );
 }

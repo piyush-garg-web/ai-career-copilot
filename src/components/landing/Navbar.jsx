@@ -136,7 +136,7 @@ export default function Navbar() {
 
           {/* Desktop Action Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <LanguageSwitcher />
+            <LanguageSwitcher isLandingPage={true} />
             <ThemeToggle />
 
             {isLoaded && isSignedIn && user ? (
@@ -167,7 +167,7 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <div className="flex md:hidden items-center space-x-2">
-            <LanguageSwitcher />
+            <LanguageSwitcher isLandingPage={true} />
             <ThemeToggle />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

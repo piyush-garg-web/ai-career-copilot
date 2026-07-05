@@ -830,7 +830,7 @@ export default function SettingsPage() {
                       Premium Subscription
                     </h3>
                     <p className="text-xs text-muted-foreground">
-                      Unlock AI Voice & Video mock interviews, multilingual support, and priority access.
+                      Unlock AI Voice & Video mock interviews, multilingual AI experience, and priority access.
                     </p>
                   </div>
 
@@ -904,7 +904,7 @@ export default function SettingsPage() {
                               "Everything in Free",
                               "AI Voice Mock Interviews",
                               "AI Video Mock Interviews",
-                              "Multilingual support (all 12 languages)",
+                              "🌍 Multilingual AI Experience (all 12 languages)",
                               "Priority AI processing",
                               "Early access to new features",
                             ].map((feat, i) => (

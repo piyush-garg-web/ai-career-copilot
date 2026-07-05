@@ -18,7 +18,7 @@ const features = [
   { name: "Job Match", free: true },
   { name: "AI Voice Mock Interview", free: false },
   { name: "AI Video Mock Interview", free: false },
-  { name: "Multilingual Support", free: false },
+  { name: "🌍 Multilingual AI Experience", free: false },
   { name: "Future Premium Features", free: false },
 ];
 
@@ -257,7 +257,7 @@ export default function UpgradePage() {
               Upgrade to <span className="bg-gradient-to-r from-yellow-500 to-orange-600 bg-clip-text text-transparent">Premium</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Take your career preparation to the next level with AI-powered voice and video mock interviews, multilingual support, and more.
+              Take your career preparation to the next level with AI-powered voice and video mock interviews, multilingual AI experience, and more.
             </p>
           </div>
 
@@ -357,8 +357,8 @@ export default function UpgradePage() {
               </div>
               <div className="border border-border rounded-xl p-6 text-center">
                 <Globe className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-                <h3 className="font-bold text-lg mb-2">Multilingual Support</h3>
-                <p className="text-muted-foreground">Access the platform and practice interviews in multiple languages.</p>
+                <h3 className="font-bold text-lg mb-2">🌍 Multilingual AI Experience</h3>
+                <p className="text-muted-foreground">Experience CareerCopilot in your preferred language. Premium members can use Resume Analysis, ATS Analysis, Interview Coach, AI Mock Interview, Dashboard, Profile, Settings, and future AI features in multiple supported languages.</p>
               </div>
             </div>
           </div>
