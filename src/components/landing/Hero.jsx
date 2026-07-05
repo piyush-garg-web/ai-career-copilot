@@ -91,32 +91,32 @@ export default function Hero() {
           </motion.div>
 
           {/* Floating Feature Cards */}
-          <div className="lg:col-span-5 relative w-full">
-            <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+          <div className="lg:col-span-5 relative w-full flex justify-center">
+            <div className="relative w-full max-w-md space-y-5">
               {/* Ambient glow */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-56 h-56 sm:w-72 sm:h-72 rounded-full bg-indigo-500/15 dark:bg-indigo-500/10 blur-[60px]" />
+                <div className="w-72 h-72 rounded-full bg-indigo-500/10 dark:bg-indigo-500/5 blur-[80px]" />
               </div>
 
               {/* Decorative rings */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-40">
-                <div className="w-[90%] max-w-[420px] aspect-square rounded-full border border-dashed border-indigo-500/20 animate-[spin_60s_linear_infinite]" />
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
+                <div className="w-[100%] aspect-square rounded-full border border-dashed border-indigo-500/20 animate-[spin_80s_linear_infinite]" />
               </div>
 
-              {/* Cards grid — balanced, non-overlapping */}
-              <div className="relative grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+              {/* Cards vertical stack — balanced, non-overlapping */}
+              <div className="relative flex flex-col gap-5">
                 {/* Card 1: Resume Analysis */}
                 <motion.div
-                  className={`${CARD_BASE} sm:col-span-2 min-h-[148px]`}
-                  animate={floatAnimation(6, 5.5, 0)}
-                  whileHover={{ scale: 1.02, y: -2 }}
+                  className={CARD_BASE}
+                  animate={floatAnimation(5, 5.5, 0)}
+                  whileHover={{ scale: 1.025 }}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="p-2.5 rounded-xl bg-green-500/15 text-green-600 dark:text-green-400 shrink-0">
+                    <div className="p-2.5 rounded-xl bg-green-500/10 text-green-500 dark:text-green-400 shrink-0 border border-green-500/20">
                       <FileText className="w-5 h-5" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-sm text-foreground leading-snug">
+                      <h3 className="font-bold text-sm text-foreground leading-snug">
                         {t("landing.hero.cards.resumeTitle")}
                       </h3>
                       <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
@@ -124,73 +124,76 @@ export default function Hero() {
                       </p>
                     </div>
                   </div>
-                  <div className="space-y-2 mt-auto">
-                    <div className="flex justify-between text-xs font-medium">
+                  <div className="space-y-2 mt-2">
+                    <div className="flex justify-between text-xs font-semibold">
                       <span className="text-muted-foreground">{t("landing.hero.cards.optimization")}</span>
-                      <span className="text-green-600 dark:text-green-400 font-bold">87%</span>
+                      <span className="text-green-500 dark:text-green-400 font-bold">87%</span>
                     </div>
-                    <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                      <div className="bg-green-500 h-full rounded-full transition-all duration-500" style={{ width: "87%" }} />
+                    <div className="w-full bg-secondary/50 h-2 rounded-full overflow-hidden border border-border/30">
+                      <div className="bg-gradient-to-r from-green-500 to-emerald-400 h-full rounded-full transition-all duration-500" style={{ width: "87%" }} />
                     </div>
                   </div>
                 </motion.div>
 
                 {/* Card 2: Interview Coach */}
                 <motion.div
-                  className={`${CARD_BASE} min-h-[200px]`}
-                  animate={floatAnimation(7, 6.5, 0.4)}
-                  whileHover={{ scale: 1.02, y: -2 }}
+                  className={CARD_BASE}
+                  animate={floatAnimation(5, 6, 0.4)}
+                  whileHover={{ scale: 1.025 }}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-purple-500/15 text-purple-600 dark:text-purple-400 shrink-0">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-500 dark:text-purple-400 shrink-0 border border-purple-500/20">
                       <Bot className="w-5 h-5" />
                     </div>
-                    <h3 className="font-semibold text-sm text-foreground leading-snug">
-                      {t("landing.hero.cards.interviewTitle")}
-                    </h3>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-bold text-sm text-foreground leading-snug">
+                        {t("landing.hero.cards.interviewTitle")}
+                      </h3>
+                      <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                        {t("landing.hero.cards.interviewPrompt")}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
-                    {t("landing.hero.cards.interviewPrompt")}
-                  </p>
-                  <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 text-xs leading-relaxed">
-                    <strong>{t("landing.hero.cards.tipLabel")}</strong> {t("landing.hero.cards.tipText")}
+                  <div className="p-3 rounded-xl bg-indigo-500/5 border border-indigo-500/15 text-xs leading-relaxed mt-1">
+                    <strong className="text-indigo-400 font-bold">{t("landing.hero.cards.tipLabel")}:</strong>{" "}
+                    <span className="text-muted-foreground font-medium">{t("landing.hero.cards.tipText")}</span>
                   </div>
                 </motion.div>
 
                 {/* Card 3: AI Mock Interview */}
                 <motion.div
-                  className={`${CARD_BASE} min-h-[200px] border-yellow-500/30 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 shadow-yellow-500/10`}
+                  className={`${CARD_BASE} border-yellow-500/30 bg-gradient-to-br from-yellow-500/5 to-orange-500/5 shadow-yellow-500/5`}
                   animate={floatAnimation(5, 5, 0.8)}
-                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileHover={{ scale: 1.025 }}
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="p-2 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 text-yellow-600 dark:text-yellow-400 shrink-0">
-                        <Mic className="w-4 h-4" />
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="p-2.5 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 text-yellow-500 dark:text-yellow-400 shrink-0 border border-yellow-500/20">
+                        <Mic className="w-5 h-5" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-[11px] text-muted-foreground">AI Mock Interview</p>
-                        <p className="text-sm font-bold text-foreground leading-tight">Voice + Video</p>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">AI Mock Interview</p>
+                        <p className="text-sm font-black text-foreground leading-tight mt-0.5">Voice + Video</p>
                       </div>
                     </div>
                     <PremiumBadge />
                   </div>
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-muted-foreground">
-                    <span className="inline-flex items-center gap-1">
-                      <Video className="w-3 h-3 shrink-0" />
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-muted-foreground mt-2">
+                    <span className="inline-flex items-center gap-1.5 font-medium">
+                      <Video className="w-3.5 h-3.5 text-yellow-500 shrink-0" />
                       Real-time AI
                     </span>
-                    <span className="text-border">•</span>
-                    <span className="inline-flex items-center gap-1">
-                      <TrendingUp className="w-3 h-3 shrink-0" />
+                    <span className="text-border/60">•</span>
+                    <span className="inline-flex items-center gap-1.5 font-medium">
+                      <TrendingUp className="w-3.5 h-3.5 text-orange-500 shrink-0" />
                       Smart Feedback
                     </span>
                   </div>
                   <Button
                     onClick={handleInterviewClick}
-                    className="w-full mt-auto bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold text-xs h-9 rounded-xl shadow-md"
+                    className="w-full mt-3 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold text-xs h-10 rounded-xl shadow-md border-0 transition-all duration-200"
                   >
-                    <Video className="w-3.5 h-3.5 mr-1.5 shrink-0" />
+                    <Video className="w-4 h-4 mr-2 shrink-0" />
                     Start Interview
                   </Button>
                 </motion.div>

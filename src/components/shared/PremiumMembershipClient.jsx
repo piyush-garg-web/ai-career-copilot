@@ -6,6 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PremiumBadge } from "@/components/shared/PremiumBadge";
+import { GoBackButton } from "@/components/shared/GoBackButton";
 import { CheckCircle2, Zap, ShieldCheck, Globe, Mic, Video, Download, Mail, ArrowLeft, ArrowRight, Calendar, CreditCard, History, Crown, Clock, Award, Check, FileText, Home, X, Sparkles, Lock, Database, TrendingUp, MessageSquare, Brain } from "lucide-react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
