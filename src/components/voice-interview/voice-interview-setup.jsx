@@ -538,7 +538,7 @@ export function VoiceInterviewSetup({ onStartSession, initialResumes = [], initi
               disabled={sessionLoading || resumes.length === 0}
               className="w-full h-12 rounded-xl"
             >
-              {sessionLoading ? "Generating initial voice prompt..." : "Start Voice Mock Interview"}
+              {sessionLoading ? "Generating initial voice prompt..." : (mode === "video" ? "Start Video Interview" : "Start Voice Interview")}
               <ArrowRight className="w-4 h-4" />
             </Button>
           </CardContent>

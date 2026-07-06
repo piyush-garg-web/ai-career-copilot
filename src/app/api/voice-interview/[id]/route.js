@@ -137,16 +137,32 @@ export async function PUT(req, { params }) {
       }
 
       // 3. Call Gemini to compile final scorecard & roadmap
-      const evaluation = await compileVoiceSessionScorecard({
-        role: session.role,
-        difficulty: session.difficulty,
-        interviewType: session.interviewType,
-        questionsData: dialogData,
-        videoAnalyticsData: visionSummary,
-        language: session.language,
-      });
+      let evaluation;
+      try {
+        evaluation = await compileVoiceSessionScorecard({
+          role: session.role,
+          difficulty: session.difficulty,
+          interviewType: session.interviewType,
+          questionsData: dialogData,
+          videoAnalyticsData: visionSummary,
+          language: session.language,
+        });
+      } catch (aiError) {
+        console.error("[VOICE INTERVIEW COMPILATION AI ERROR]:", aiError);
+        
+        // Check if it's a configuration error
+        if (aiError.message && aiError.message.includes("AI configuration error")) {
+          return NextResponse.json(
+            { error: "AI service is not properly configured. Please check that API keys are set in your environment variables (GEMINI_API_KEY, OPENAI_API_KEY, or GROK_API_KEY)." },
+            { status: 500 }
+          );
+        }
+        
+        // Re-throw other AI errors to be caught by the outer try-catch
+        throw aiError;
+      }
 
-      // 4. Save analytics & update session in database using transaction
+      // 4. Save analytics & update session in database using transaction with increased timeout
       await db.$transaction(async (tx) => {
         // Upsert VoiceInterviewAnalytics
         await tx.voiceInterviewAnalytics.upsert({
@@ -236,6 +252,9 @@ export async function PUT(req, { params }) {
             completedAt: new Date(),
           },
         });
+      }, {
+        maxWait: 60000, // Increase max wait time to 60 seconds
+        timeout: 60000, // Increase timeout to 60 seconds
       });
 
       console.log(`[VOICE INTERVIEW COMPLETED]: Session ${sessionId} compiled successfully.`);

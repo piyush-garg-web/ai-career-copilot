@@ -42,7 +42,7 @@ export async function generateVoiceQuestion({
     systemInstruction: VOICE_QUESTIONS_SYSTEM_PROMPT,
     validator: validateVoiceQuestion,
     temperature: 0.3, // slightly conversational
-    maxTokens: 1024,
+    maxTokens: 512, // Reduced for faster generation
     cacheContext: null, // Avoid caching voice questions to keep it dynamic and unique per session
   });
 }
@@ -72,7 +72,7 @@ export async function evaluateVoiceAnswer({
     systemInstruction: VOICE_ANSWER_EVALUATION_SYSTEM_PROMPT,
     validator: validateVoiceAnswerEvaluation,
     temperature: 0.1, // low temperature for grading consistency
-    maxTokens: 2048,
+    maxTokens: 1024, // Reduced for faster generation
     cacheContext: {
       feature: "interview-evaluation",
       questionContent: question,
@@ -108,7 +108,7 @@ export async function compileVoiceSessionScorecard({
     systemInstruction: VOICE_SESSION_EVALUATION_SYSTEM_PROMPT,
     validator: validateVoiceSessionEvaluation,
     temperature: 0.15,
-    maxTokens: 3072,
+    maxTokens: 2048, // Reduced for faster report generation
     cacheContext: null,
   });
 }

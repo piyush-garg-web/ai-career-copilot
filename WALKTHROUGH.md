@@ -74,6 +74,13 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 - **Detailed Communication Analytics**: Fluency, pauses, pacing, grammar, and video posture scoring
 - **Personalized Feedback**: Customized roadmaps for improvement
 - **Multilingual Support**: Practice in multiple languages (English, Hindi, Spanish, Japanese, German, etc.)
+- **Professional Permission Flow**: Pre-interview permission dialog for microphone and camera access
+- **Smart Question Management**: Never repeats skipped or answered questions
+- **Silence Detection**: Configurable 5-second silence timeout with polite question repeat
+- **Dynamic Question Rendering**: Typewriter effect synchronized with AI speech
+- **Stable Video Preview**: Reliable camera initialization with proper aspect ratio
+- **Comprehensive Cleanup**: Automatic media resource cleanup on completion/exit
+- **Edge Case Handling**: Graceful handling of disconnections, refresh, and network errors
 
 ### 📊 Dashboard & UI/UX
 - **Centralized Analytics**: Displays overview charts, recent match logs, and pending tasks
@@ -215,6 +222,8 @@ ai-career-copilot/
 - **VoiceInterviewReport**: Detailed report with analytics and scores
 - **VoiceInterviewHistory**: Historical sessions list
 - **VoiceInterviewSettings**: User preferences for voice/video settings
+- **PermissionDialog**: Professional pre-interview permission request dialog
+- **useVoiceSession**: Custom hook managing voice session logic, silence detection, and media cleanup
 
 ---
 
@@ -235,9 +244,117 @@ For user sync functionality, configure Clerk webhooks:
 
 ---
 
+---
+
+## AI Mock Interview Improvements (July 6, 2026)
+
+### Pre-Interview Permission Flow
+- **Professional Permission Dialog**: Added dedicated permission dialog component before interview starts
+- **Voice Interview**: Requests microphone permission with clear messaging
+- **Video Interview**: Requests both camera and microphone permissions
+- **Error Handling**: Graceful error messages for permission denial, device not found, and other errors
+- **Retry Support**: Users can retry permission request after denial
+- **Never Bypass**: Interview cannot start without required permissions
+- **File**: `src/components/voice-interview/permission-dialog.jsx`
+
+### Smart Question Management
+- **Skip Tracking**: Skipped questions are tracked and never asked again in current interview
+- **Answer Tracking**: Answered questions are tracked and never repeated
+- **State Persistence**: Skip and answer states maintained throughout session
+- **Professional Behavior**: Mimics real interviewer behavior - no duplicate questions
+- **File**: `src/hooks/voice/useVoiceSession.js`
+
+### Silence Detection with Configurable Timeout
+- **Configurable Constant**: `SILENCE_TIMEOUT_MS = 5000` (5 seconds)
+- **First Silence**: AI politely repeats question once: "I didn't hear your response. Could you please answer the question?"
+- **Second Silence**: Auto-submits "No Response" and moves to next question
+- **Reset on Speech**: Silence counter resets when user starts speaking
+- **Per-Question Reset**: Silence tracking resets for each new question
+- **File**: `src/hooks/voice/useVoiceSession.js`
+
+### Dynamic Question Rendering
+- **Typewriter Effect**: Question appears progressively while AI speaks
+- **Speech Synchronization**: Typing starts when TTS speech begins
+- **Smooth Animation**: 50ms per character for natural typewriter effect
+- **Full Text Display**: Complete question shown after speech completes
+- **Real-time Transcript Update**: Transcript updates in real-time as question types
+- **File**: `src/hooks/voice/useVoiceSession.js`
+
+### Video Interview Camera Fixes
+- **Stable Initialization**: Proper camera stream initialization with metadata loading
+- **Resolution Support**: 480p, 720p, and 1080p resolution options
+- **Aspect Ratio**: Correct aspect ratio maintained for all resolutions
+- **Error Handling**: Comprehensive error messages for various camera errors
+  - Permission denied
+  - Camera not found
+  - Camera in use by another app
+  - Resolution not supported
+  - Browser not supported
+ - **Live Preview**: Camera preview visible throughout interview
+ - **Mirror Support**: Proper horizontal mirroring with CSS transform
+ - **Track Monitoring**: Detects camera disconnection during interview
+ - **File**: `src/components/voice-interview/voice-interview-flow.jsx`
+
+### Comprehensive Media Cleanup
+- **Interview Completion**: All media resources stopped immediately on completion
+  - Microphone recording stopped
+  - Webcam stopped
+  - MediaStreams released
+  - Browser permissions released
+  - Event listeners removed
+  - Timers and intervals cleared
+  - Interview state reset
+  - Memory freed
+ - **Exit/Cancel**: Same comprehensive cleanup on interview exit
+ - **Browser Refresh**: Cleanup triggered on beforeunload event
+ - **Visibility Change**: Auto-pause when tab hidden
+ - **File**: `src/hooks/voice/useVoiceSession.js`, `src/components/voice-interview/voice-interview-flow.jsx`
+
+### Edge Case Handling
+- **Browser Refresh**: Media cleanup on page unload
+- **Visibility Change**: Auto-pause interview when tab hidden
+- **Network Loss**: Auto-pause on internet disconnection
+- **Network Restore**: Toast notification on connection restored
+- **Camera Disconnection**: Detects and handles camera track end events
+- **API Failures**: Graceful handling of API errors without breaking flow
+- **Browser Compatibility**: Check for MediaDevices API support
+- **File**: `src/components/voice-interview/voice-interview-flow.jsx`
+
+### Performance Improvements
+- **Low Latency**: Optimized audio processing for minimal delay
+- **Stable Streaming**: Reliable media stream handling
+- **Memory Leak Prevention**: Comprehensive cleanup in all scenarios
+- **GPU-Friendly Animations**: Hardware-accelerated transforms only
+- **Efficient Re-renders**: Optimized React state updates
+
+### Testing Checklist
+- ✅ Permission dialog appears before every interview
+- ✅ Interview never starts without required permissions
+- ✅ Retry works after permission denial
+- ✅ Skipped questions never reappear
+- ✅ Answered questions never repeat
+- ✅ Wrong answers are simply evaluated
+- ✅ Silence repeats question only once
+- ✅ Second silence records "No Response"
+- ✅ Next Question submits current response
+- ✅ Skip permanently skips question
+- ✅ Questions appear dynamically while AI speaks
+- ✅ Voice interview works correctly
+- ✅ Video interview camera works correctly
+- ✅ Live preview is stable
+- ✅ AI metrics continue updating
+- ✅ Camera and microphone automatically stop after interview
+- ✅ Browser camera indicator turns off
+- ✅ No MediaStreams remain active
+- ✅ No memory leaks
+- ✅ Final report generates correctly
+- ✅ No console errors
+- ✅ No JavaScript errors
+
+---
+
 ## Future Roadmap
 
-- 🎙️ **Voice Interviews**: Fully conversational practice using audio transcripts and speech-to-text API models
 - 📊 **Detailed Analytics**: Trend graphs detailing ATS improvements and score performance charts over time
 - 📂 **Resume Comparison**: Multi-resume side-by-side keyword overlap comparisons
 - 💾 **PDF Export**: Generate tailored resumes direct to print-ready PDF formats from recommendations

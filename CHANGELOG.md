@@ -10,10 +10,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- AI Mock Interview improvements documentation (WALKTHROUGH.md)
+- Professional pre-interview permission dialog for microphone and camera access
+- Smart question management - never repeats skipped or answered questions
+- Configurable silence detection with 5-second timeout
+- Dynamic question rendering with typewriter effect synchronized with AI speech
+- Stable video interview camera preview with proper aspect ratio
+- Comprehensive media cleanup on interview completion and exit
+- Edge case handling for browser refresh, disconnection, and network errors
 - UI/UX Refactoring documentation (WALKTHROUGH.md)
 - Comprehensive UI_REFACTORING_CHANGELOG.md with detailed phase breakdown
 
 ### Changed
+- **AI Voice + Video Mock Interview**: Complete interview flow overhaul for professional experience
+  - Added permission dialog before interview starts
+  - Implemented skip question tracking (never repeat skipped questions)
+  - Implemented answered question tracking (never repeat answered questions)
+  - Added silence detection with polite question repeat on first silence
+  - Added auto-submit "No Response" on second silence
+  - Improved dynamic question rendering with typewriter effect
+  - Fixed video camera preview with stable initialization
+  - Enhanced media cleanup on completion and exit
+  - Added edge case handling for various scenarios
+- **useVoiceSession Hook**: Enhanced with comprehensive state management
+  - Added skippedQuestions and answeredQuestions state tracking
+  - Added silenceCountRef and hasRepeatedQuestionRef for silence logic
+  - Improved cleanup function with comprehensive media resource cleanup
+  - Added SILENCE_TIMEOUT_MS configurable constant (5000ms)
+  - Improved speakQuestion with speech-synchronized typewriter effect
+- **VoiceInterviewFlow Component**: Enhanced with permission dialog and edge case handling
+  - Added PermissionDialog integration
+  - Added browser refresh cleanup on beforeunload event
+  - Added visibility change detection for auto-pause
+  - Added network online/offline detection
+  - Added camera disconnection detection
+  - Improved webcam initialization with proper error handling
+  - Enhanced stopWebcam with comprehensive cleanup
+  - Added resolution support (480p, 720p, 1080p)
+- **PermissionDialog Component**: New component for pre-interview permission requests
+  - Voice interview: microphone permission
+  - Video interview: camera and microphone permissions
+  - Graceful error handling for various permission errors
+  - Retry support after permission denial
+
+### Changed (Previous)
 - **Dashboard Welcome Section**: Fixed Premium badge vertical alignment with welcome heading
 - **AI Mock Interview History Card**: Fixed Premium badge vertical alignment with card heading
 - **AI Mock Interview Page**: Removed unnecessary screenshot preview section for cleaner layout
@@ -50,6 +90,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `src/components/landing/ComparisonTable.jsx - Enhanced table animations
 
 ### Fixed
+- **AI Mock Interview**: Permission flow - interview cannot start without required permissions
+- **AI Mock Interview**: Question repetition - skipped and answered questions never repeat
+- **AI Mock Interview**: Silence handling - polite repeat on first silence, auto-submit on second
+- **AI Mock Interview**: Question rendering - typewriter effect synchronized with speech
+- **AI Mock Interview**: Video camera - stable initialization with proper aspect ratio
+- **AI Mock Interview**: Media cleanup - comprehensive cleanup on completion/exit
+- **AI Mock Interview**: Edge cases - graceful handling of refresh, disconnection, network errors
 - Premium badge alignment issues across dashboard components
 - Layout clutter on AI Mock Interview page
 - Animation performance on landing page hero section

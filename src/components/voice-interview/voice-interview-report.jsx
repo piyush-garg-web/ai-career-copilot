@@ -101,11 +101,6 @@ export function VoiceInterviewReport({ session, onBackToHistory, onRetake }) {
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto p-1 print:p-0 print:bg-white print:text-black">
-      {/* Back Button */}
-      <div className="p-2 mb-2 print:hidden">
-        <GoBackButton onClick={onBackToHistory} />
-      </div>
-
       {/* Print-only title */}
       <div className="hidden print:block mb-6">
         <h1 className="text-2xl font-bold">AI Voice Mock Interview Scorecard Report</h1>

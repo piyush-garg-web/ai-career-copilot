@@ -49,13 +49,29 @@ export async function POST(req, { params }) {
     console.log(`[EVALUATE API]: Evaluating turn ${currentQuestionNumber}/${totalQuestions} for session ${sessionId}`);
 
     // Call AI to evaluate answer and generate conversational follow-up
-    const evaluation = await evaluateVoiceAnswer({
-      question: currentQuestion.content,
-      answer: userResponse,
-      language: session.language,
-      currentQuestionNumber,
-      totalQuestions,
-    });
+    let evaluation;
+    try {
+      evaluation = await evaluateVoiceAnswer({
+        question: currentQuestion.content,
+        answer: userResponse,
+        language: session.language,
+        currentQuestionNumber,
+        totalQuestions,
+      });
+    } catch (aiError) {
+      console.error("[EVALUATE API AI ERROR]:", aiError);
+      
+      // Check if it's a configuration error
+      if (aiError.message && aiError.message.includes("AI configuration error")) {
+        return NextResponse.json(
+          { error: "AI service is not properly configured. Please check that API keys are set in your environment variables (GEMINI_API_KEY, OPENAI_API_KEY, or GROK_API_KEY)." },
+          { status: 500 }
+        );
+      }
+      
+      // Re-throw other AI errors to be caught by the outer try-catch
+      throw aiError;
+    }
 
     const isLastTurn = currentQuestionNumber >= totalQuestions || evaluation.followUpQuestion === "Session Completed";
 

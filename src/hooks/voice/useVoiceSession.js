@@ -3,6 +3,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { ttsService } from "@/services/tts/tts-service";
 
+// Configurable silence timeout constant
+const SILENCE_TIMEOUT_MS = 5000;
+
 export function useVoiceSession({
   sessionId,
   settings = {},
@@ -17,6 +20,10 @@ export function useVoiceSession({
   const [micActive, setMicActive] = useState(false);
   const [coachingFeedback, setCoachingFeedback] = useState("");
   const [coachingTips, setCoachingTips] = useState([]);
+  
+  // Track skipped and answered question indices
+  const [skippedQuestions, setSkippedQuestions] = useState([]);
+  const [answeredQuestions, setAnsweredQuestions] = useState([]);
   
   // Real-time audio waveform values (0 to 100)
   const [volumeLevel, setVolumeLevel] = useState(0);
@@ -47,6 +54,13 @@ export function useVoiceSession({
   const animationFrameRef = useRef(null);
   const silenceTimerRef = useRef(null);
   const stopAndEvaluateRef = useRef(null);
+  
+  // Track silence count for repeat question logic
+  const silenceCountRef = useRef(0);
+  const hasRepeatedQuestionRef = useRef(false);
+  
+  // Track last question content to detect repeats
+  const lastQuestionContentRef = useRef("");
 
   // Speaking timers refs
   const speakStartTimeRef = useRef(0);
@@ -67,31 +81,77 @@ export function useVoiceSession({
 
   /**
    * Cleans up all Web Audio, Recognition, and Stream interfaces.
+   * Ensures complete media resource cleanup to prevent memory leaks.
    */
   const cleanup = useCallback(() => {
+    console.log("[CLEANUP]: Starting comprehensive media cleanup...");
+    
+    // Cancel animation frame
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
     }
+    
+    // Clear silence timer
     if (silenceTimerRef.current) {
       clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
     }
+    
+    // Stop media recorder
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
       try {
         mediaRecorderRef.current.stop();
-      } catch (e) {}
+        console.log("[CLEANUP]: Media recorder stopped");
+      } catch (e) {
+        console.warn("[CLEANUP]: Error stopping media recorder:", e);
+      }
+      mediaRecorderRef.current = null;
     }
+    
+    // Abort speech recognition
     if (recognitionRef.current) {
       try {
         recognitionRef.current.abort();
-      } catch (e) {}
+        console.log("[CLEANUP]: Speech recognition aborted");
+      } catch (e) {
+        console.warn("[CLEANUP]: Error aborting recognition:", e);
+      }
+      recognitionRef.current = null;
     }
+    
+    // Stop all media tracks (microphone)
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current.getTracks().forEach((track) => {
+        track.stop();
+        console.log("[CLEANUP]: Stopped track:", track.kind);
+      });
+      streamRef.current = null;
     }
+    
+    // Close audio context
     if (audioContextRef.current && audioContextRef.current.state !== "closed") {
-      audioContextRef.current.close();
+      try {
+        audioContextRef.current.close();
+        console.log("[CLEANUP]: Audio context closed");
+      } catch (e) {
+        console.warn("[CLEANUP]: Error closing audio context:", e);
+      }
+      audioContextRef.current = null;
     }
+    
+    // Stop TTS
     ttsService.stop();
+    console.log("[CLEANUP]: TTS stopped");
+    
+    // Clear audio chunks
+    audioChunksRef.current = [];
+    
+    // Reset refs
+    silenceCountRef.current = 0;
+    hasRepeatedQuestionRef.current = false;
+    
+    console.log("[CLEANUP]: Comprehensive cleanup completed");
   }, []);
 
   useEffect(() => {
@@ -180,17 +240,46 @@ export function useVoiceSession({
             silenceStart = Date.now();
           } else {
             const silentDuration = Date.now() - silenceStart;
-            // Trigger auto stop after 5 seconds of silence
-            if (silentDuration > 5000) {
-              console.log("[SILENCE DETECTED]: Auto-submitting response...");
-              if (stopAndEvaluateRef.current) {
-                stopAndEvaluateRef.current();
+            // Trigger auto stop after SILENCE_TIMEOUT_MS of silence
+            if (silentDuration > SILENCE_TIMEOUT_MS) {
+              silenceCountRef.current++;
+              console.log("[SILENCE DETECTED]: Silence count:", silenceCountRef.current);
+              
+              if (silenceCountRef.current === 1 && !hasRepeatedQuestionRef.current) {
+                // First silence - repeat the question politely
+                hasRepeatedQuestionRef.current = true;
+                silenceStart = 0; // Reset to detect second silence
+                console.log("[SILENCE DETECTED]: Repeating question...");
+                
+                // Use TTS to speak a polite prompt
+                ttsService.speak(
+                  "I didn't hear your response. Could you please answer the question?",
+                  resolvedSettings,
+                  () => {},
+                  () => {
+                    console.log("[SILENCE PROMPT]: Completed speaking prompt.");
+                  },
+                  (err) => {
+                    console.warn("[SILENCE PROMPT]: Error speaking prompt:", err);
+                  }
+                );
+              } else {
+                // Second silence or already repeated - auto-submit
+                console.log("[SILENCE DETECTED]: Auto-submitting response...");
+                if (stopAndEvaluateRef.current) {
+                  stopAndEvaluateRef.current();
+                }
+                return;
               }
-              return;
             }
           }
         } else {
           silenceStart = 0; // reset silence duration
+          // Reset silence count if user starts speaking
+          if (silenceCountRef.current > 0) {
+            console.log("[SILENCE DETECTED]: User started speaking, resetting silence count.");
+            silenceCountRef.current = 0;
+          }
         }
 
         animationFrameRef.current = requestAnimationFrame(checkAudio);
@@ -252,46 +341,56 @@ export function useVoiceSession({
 
   /**
    * AI Speaks the question aloud using TTS.
+   * Question appears progressively with typewriter effect synchronized with speech.
    */
   const speakQuestion = useCallback((questionText) => {
     console.log("[VOICE-SESSION]: speakQuestion called with text:", questionText.substring(0, 50));
     setCurrentQuestion(""); // Start with empty
     setStatus("speaking");
     
-    // Simulate dynamic text display with typing effect
+    // Calculate typing speed based on text length to sync with speech
+    // Average speaking rate is ~150 words per minute, ~2.5 words per second
+    // Average word length is ~5 characters, so ~12.5 characters per second
+    // We'll use 50ms per character for a smooth typewriter effect
+    const typingSpeed = 50; 
     let index = 0;
-    const typeInterval = setInterval(() => {
-      if (index < questionText.length) {
-        const nextSubstr = questionText.substring(0, index + 1);
-        setCurrentQuestion(nextSubstr);
-        
-        // Update the last AI transcript entry in real-time
-        setTranscripts((prev) => {
-          if (prev.length === 0) return prev;
-          const nextTranscripts = [...prev];
-          const lastIdx = nextTranscripts.length - 1;
-          if (nextTranscripts[lastIdx].speaker === "AI") {
-            nextTranscripts[lastIdx] = { ...nextTranscripts[lastIdx], text: nextSubstr };
-          }
-          return nextTranscripts;
-        });
-        
-        index++;
-      } else {
-        clearInterval(typeInterval);
-      }
-    }, 30); // Adjust speed here (30ms per character)
+    let typeInterval = null;
+    
+    const startTyping = () => {
+      typeInterval = setInterval(() => {
+        if (index < questionText.length) {
+          const nextSubstr = questionText.substring(0, index + 1);
+          setCurrentQuestion(nextSubstr);
+          
+          // Update the last AI transcript entry in real-time
+          setTranscripts((prev) => {
+            if (prev.length === 0) return prev;
+            const nextTranscripts = [...prev];
+            const lastIdx = nextTranscripts.length - 1;
+            if (nextTranscripts[lastIdx].speaker === "AI") {
+              nextTranscripts[lastIdx] = { ...nextTranscripts[lastIdx], text: nextSubstr };
+            }
+            return nextTranscripts;
+          });
+          
+          index++;
+        } else {
+          clearInterval(typeInterval);
+        }
+      }, typingSpeed);
+    };
 
     ttsService.speak(
       questionText,
       resolvedSettings,
-      // onStart
+      // onStart - Start typing when speech begins
       () => {
         console.log("[TTS]: Started speaking question.");
+        startTyping();
       },
-      // onEnd
+      // onEnd - Ensure full text is shown and start listening
       () => {
-        clearInterval(typeInterval);
+        if (typeInterval) clearInterval(typeInterval);
         setCurrentQuestion(questionText); // Ensure full text is shown
         setTranscripts((prev) => {
           if (prev.length === 0) return prev;
@@ -306,9 +405,9 @@ export function useVoiceSession({
         questionFinishTimeRef.current = Date.now();
         startListening();
       },
-      // onError
+      // onError - Handle errors gracefully
       (err) => {
-        clearInterval(typeInterval);
+        if (typeInterval) clearInterval(typeInterval);
         setCurrentQuestion(questionText); // Ensure full text is shown
         setTranscripts((prev) => {
           if (prev.length === 0) return prev;
@@ -340,6 +439,9 @@ export function useVoiceSession({
 
     setStatus("processing");
     setMicActive(false);
+
+    // Mark current question as answered
+    setAnsweredQuestions((prev) => [...prev, currentQuestionNumber]);
 
     // Track speech duration metrics
     const responseDuration = (Date.now() - responseStartTimeRef.current) / 1000;
@@ -402,9 +504,9 @@ export function useVoiceSession({
         }
       }
 
-      // If both STT result and Web Speech capture are empty, submit a fallback response text
-      if (!textResult) {
-        textResult = "Could not record clear audio answer.";
+      // If both STT result and Web Speech capture are empty, submit "No Response"
+      if (!textResult || textResult.trim() === "") {
+        textResult = "No Response";
       }
 
       console.log("[VOICE-SESSION]: Final text result:", textResult);
@@ -462,9 +564,27 @@ export function useVoiceSession({
       } else {
         // Create next turn
         const nextQ = evalData.nextQuestion;
+        
+        // Check if this is a new distinct question or a repeat
+        const isNewQuestion = nextQ !== lastQuestionContentRef.current;
+        
+        if (isNewQuestion) {
+          // Only increment question count for distinct new questions
+          setCurrentQuestionNumber((n) => n + 1);
+          console.log("[VOICE-SESSION]: New question detected, incrementing count to", currentQuestionNumber + 1);
+        } else {
+          console.log("[VOICE-SESSION]: Question repeated, keeping count at", currentQuestionNumber);
+        }
+        
         setCurrentQuestion(nextQ);
         setTranscripts((prev) => [...prev, { speaker: "AI", text: "" }]);
-        setCurrentQuestionNumber((n) => n + 1);
+        
+        // Update last question ref
+        lastQuestionContentRef.current = nextQ;
+        
+        // Reset silence tracking for next question
+        silenceCountRef.current = 0;
+        hasRepeatedQuestionRef.current = false;
         
         // Speak follow-up question
         console.log("[VOICE-SESSION]: Speaking next question...");
@@ -485,10 +605,14 @@ export function useVoiceSession({
 
   /**
    * Manually skip the current question.
+   * Marks question as skipped and never asks it again.
    */
   const skipQuestion = useCallback(() => {
     if (status === "completed" || status === "processing") return;
     cleanup();
+
+    // Mark current question as skipped
+    setSkippedQuestions((prev) => [...prev, currentQuestionNumber]);
 
     const skipText = "[Question Skipped]";
     setTranscripts((prev) => [...prev, { speaker: "USER", text: skipText }]);
@@ -531,9 +655,16 @@ export function useVoiceSession({
     coachingTips,
     setCoachingFeedback,
     setCoachingTips,
+    skippedQuestions,
+    answeredQuestions,
     startSession: (firstQ) => {
       console.log("[VOICE-SESSION]: startSession called with firstQ:", firstQ.substring(0, 50));
       setTranscripts([{ speaker: "AI", text: "" }]);
+      // Reset tracking for new session
+      setSkippedQuestions([]);
+      setAnsweredQuestions([]);
+      silenceCountRef.current = 0;
+      hasRepeatedQuestionRef.current = false;
       // Small delay to ensure DOM is ready, then speak
       setTimeout(() => {
         speakQuestion(firstQ);

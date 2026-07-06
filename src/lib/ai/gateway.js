@@ -335,6 +335,7 @@ class AIGateway {
       let fallbackUsed = null;
 
       // Provider Fallback Loop
+      let providersSkipped = 0;
       for (let providerIndex = 0; providerIndex < this.providerNames.length; providerIndex++) {
         const providerName = this.providerNames[providerIndex];
         const provider = this.providers[providerName];
@@ -343,6 +344,7 @@ class AIGateway {
         // Skip if provider doesn't have API key configured
         if (!providerConfig.apiKey) {
           console.warn(`[AI GATEWAY]: Skipping provider ${providerName} (no API key configured)`);
+          providersSkipped++;
           continue;
         }
         
@@ -450,6 +452,15 @@ class AIGateway {
       // All providers and models exhausted
       this.stats.failures++;
       const duration = Date.now() - startTime;
+
+      // Check if all providers were skipped due to missing API keys
+      if (providersSkipped === this.providerNames.length) {
+        const missingKeys = this.providerNames.filter(name => !AI_CONFIG.providers[name].apiKey).join(", ");
+        lastError = new AIServiceError(
+          `No AI provider has a valid API key configured. Missing keys for: ${missingKeys}. Please set at least one of: GEMINI_API_KEY, OPENAI_API_KEY, or GROK_API_KEY in your environment variables.`,
+          "INVALID_API_KEY"
+        );
+      }
 
       await this._logUsage({
         feature: cacheContext?.feature || "generic",

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useVoiceSession } from "@/hooks/voice/useVoiceSession";
 import { AnimatedWaveform } from "./animated-waveform";
 import { videoAnalyzer } from "@/services/video/video-analyzer";
+import { PermissionDialog } from "./permission-dialog";
 import {
   Mic,
   Video,
@@ -37,6 +38,10 @@ export function VoiceInterviewFlow({
   const [loadingVideoModels, setLoadingVideoModels] = useState(false);
   const [realtimeCoachingFeedback, setRealtimeCoachingFeedback] = useState("");
   const [realtimeTips, setRealtimeTips] = useState([]);
+  
+  // Permission dialog state
+  const [showPermissionDialog, setShowPermissionDialog] = useState(true);
+  const [permissionGranted, setPermissionGranted] = useState(false);
   
   // Video streams refs
   const videoRef = useRef(null);
@@ -70,13 +75,13 @@ export function VoiceInterviewFlow({
     },
   });
 
-  // Start interview session when component mounts
+  // Start interview session when component mounts AND permissions are granted
   useEffect(() => {
-    if (firstQuestion) {
+    if (firstQuestion && permissionGranted) {
       startSession(firstQuestion);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [firstQuestion]);
+  }, [firstQuestion, permissionGranted]);
 
   // Session timer incrementer
   useEffect(() => {
@@ -103,36 +108,147 @@ export function VoiceInterviewFlow({
 
   // Initialize optional video mode
   useEffect(() => {
-    if (videoEnabled) {
+    if (videoEnabled && permissionGranted) {
       initWebcam();
     }
     return () => {
       stopWebcam();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoEnabled]);
+  }, [videoEnabled, permissionGranted]);
+
+  // Handle browser refresh/close - cleanup media resources
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      // Cleanup media resources before page unload
+      stopWebcam();
+      cleanupVoice();
+      // Don't show warning - just cleanup silently
+      e.preventDefault();
+      e.returnValue = "";
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden && status === "listening") {
+        console.log("[VISIBILITY]: Page hidden, pausing interview...");
+        pauseSession();
+      }
+    };
+
+    const handleOnline = () => {
+      console.log("[NETWORK]: Connection restored");
+      toast.success("Internet connection restored");
+    };
+
+    const handleOffline = () => {
+      console.log("[NETWORK]: Connection lost");
+      toast.error("Internet connection lost. Please check your connection.");
+      if (status === "listening" || status === "processing") {
+        pauseSession();
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [status, pauseSession, cleanupVoice]);
 
   const initWebcam = async () => {
     setLoadingVideoModels(true);
     setVideoError("");
     try {
-      // 1. Request camera stream
+      // Check if media devices are available
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error("Media devices API not supported in this browser.");
+      }
+      
+      // 1. Request camera stream with proper constraints based on settings
+      const resolutionMap = {
+        "480p": { width: { ideal: 640 }, height: { ideal: 480 } },
+        "720p": { width: { ideal: 1280 }, height: { ideal: 720 } },
+        "1080p": { width: { ideal: 1920 }, height: { ideal: 1080 } },
+      };
+      
+      const selectedResolution = resolutionMap[settings.videoResolution] || resolutionMap["720p"];
+      
       const constraints = {
         video: {
-          width: { ideal: 640 },
-          height: { ideal: 480 },
-          frameRate: { ideal: 30 },
+          ...selectedResolution,
+          frameRate: { ideal: 30, max: 30 },
+          facingMode: "user",
         },
         audio: false, // audio is handled separately by MediaRecorder in useVoiceSession
       };
 
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       localStreamRef.current = stream;
+      
+      // 2. Set up video element with proper loading
       if (videoRef.current) {
+        // Clear any existing srcObject first
+        if (videoRef.current.srcObject) {
+          const oldStream = videoRef.current.srcObject;
+          oldStream.getTracks().forEach(track => track.stop());
+        }
+        
+        videoRef.current.srcObject = null;
+        videoRef.current.load(); // Reset the video element
+        
+        // Assign new stream
         videoRef.current.srcObject = stream;
+        videoRef.current.muted = true;
+        videoRef.current.playsInline = true;
+        videoRef.current.autoplay = true;
+        
+        // Set explicit dimensions
+        videoRef.current.width = 640;
+        videoRef.current.height = 480;
+        
+        videoRef.current.onloadedmetadata = () => {
+          console.log("[VIDEO]: Video metadata loaded, dimensions:", videoRef.current.videoWidth, "x", videoRef.current.videoHeight);
+          videoRef.current.play().then(() => {
+            console.log("[VIDEO]: Playing successfully");
+          }).catch((e) => {
+            console.error("[VIDEO]: Error playing video:", e);
+            setVideoError("Video playback error. Please refresh and try again.");
+          });
+        };
+        videoRef.current.oncanplay = () => {
+          console.log("[VIDEO]: Video can play");
+        };
+        videoRef.current.onplaying = () => {
+          console.log("[VIDEO]: Video is now playing");
+        };
+        videoRef.current.onerror = (e) => {
+          console.error("[VIDEO]: Video element error:", e);
+          setVideoError("Video playback error. Please refresh and try again.");
+        };
+        
+        // Force play after a short delay
+        setTimeout(() => {
+          if (videoRef.current && videoRef.current.readyState >= 2) {
+            videoRef.current.play().catch((e) => console.error("[VIDEO]: Delayed play error:", e));
+          }
+        }, 500);
+        
+        // Another fallback play attempt
+        setTimeout(() => {
+          if (videoRef.current && videoRef.current.paused) {
+            console.log("[VIDEO]: Attempting fallback play");
+            videoRef.current.play().catch((e) => console.error("[VIDEO]: Fallback play error:", e));
+          }
+        }, 1000);
       }
 
-      // 2. Load vision tracking libraries lazily (optional - continue even if fails)
+      // 3. Load vision tracking libraries lazily (optional - continue even if fails)
       let initialized = false;
       try {
         initialized = await videoAnalyzer.initModels();
@@ -142,7 +258,7 @@ export function VoiceInterviewFlow({
 
       if (initialized) {
         videoAnalyzer.resetMetrics();
-        // 3. Start processing frames
+        // 4. Start processing frames
         startVideoAnalysisLoop();
       } else {
         console.log("[VIDEO MODE]: Running without vision tracking analytics.");
@@ -151,32 +267,75 @@ export function VoiceInterviewFlow({
       }
     } catch (e) {
       console.error("[WEBCAM INITIALIZATION ERROR]:", e);
-      setVideoError("Camera access denied. Continuing with Voice-only mode.");
-      toast.warning("Camera disabled. Running in voice-only mode.");
+      
+      let errorMessage = "Camera access denied. Continuing with Voice-only mode.";
+      if (e.name === "NotAllowedError" || e.name === "PermissionDeniedError") {
+        errorMessage = "Camera permission denied. Please allow camera access in your browser settings.";
+      } else if (e.name === "NotFoundError") {
+        errorMessage = "No camera found on your device. Please connect a camera and try again.";
+      } else if (e.name === "NotReadableError") {
+        errorMessage = "Camera is already in use by another application. Please close other apps using the camera.";
+      } else if (e.name === "OverconstrainedError") {
+        errorMessage = "Camera does not support the requested resolution. Try a lower quality setting.";
+      } else if (e.message?.includes("Media devices API")) {
+        errorMessage = "Your browser does not support camera access. Please use a modern browser like Chrome or Firefox.";
+      }
+      
+      setVideoError(errorMessage);
+      toast.warning(errorMessage);
     } finally {
       setLoadingVideoModels(false);
     }
   };
 
   const stopWebcam = () => {
+    // Stop video analysis loop
     if (videoAnalysisLoopRef.current) {
       cancelAnimationFrame(videoAnalysisLoopRef.current);
+      videoAnalysisLoopRef.current = null;
     }
+    
+    // Stop all media tracks
     if (localStreamRef.current) {
-      localStreamRef.current.getTracks().forEach((track) => track.stop());
+      localStreamRef.current.getTracks().forEach((track) => {
+        track.stop();
+        console.log("[VIDEO]: Stopped track:", track.kind);
+      });
+      localStreamRef.current = null;
     }
+    
+    // Clear video element
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+      videoRef.current.onloadedmetadata = null;
+      videoRef.current.onerror = null;
+    }
+    
+    // Clear canvas
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext("2d");
+      if (ctx) {
+        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+      }
+    }
+    
+    console.log("[VIDEO]: Webcam stopped and cleaned up");
   };
 
   const startVideoAnalysisLoop = () => {
     const loop = async () => {
-      if (videoRef.current && canvasRef.current) {
-        const result = await videoAnalyzer.analyzeFrame(videoRef.current, canvasRef.current);
-        if (result && result.faceDetected) {
-          setRealtimeCoachingFeedback(result.feedback);
-          setRealtimeTips(result.coachingTips || []);
-        } else if (result && !result.faceDetected) {
-          setRealtimeCoachingFeedback("Face not detected");
-          setRealtimeTips(["Keep face centered", "Check camera visibility"]);
+      if (videoRef.current && canvasRef.current && videoRef.current.readyState === 4) {
+        try {
+          const result = await videoAnalyzer.analyzeFrame(videoRef.current, canvasRef.current);
+          if (result && result.faceDetected) {
+            setRealtimeCoachingFeedback(result.feedback);
+            setRealtimeTips(result.coachingTips || []);
+          } else if (result && !result.faceDetected) {
+            setRealtimeCoachingFeedback("Face not detected");
+            setRealtimeTips(["Keep face centered", "Check camera visibility"]);
+          }
+        } catch (e) {
+          console.warn("[VIDEO ANALYSIS]: Frame analysis error:", e);
         }
       }
       videoAnalysisLoopRef.current = requestAnimationFrame(loop);
@@ -186,6 +345,8 @@ export function VoiceInterviewFlow({
 
   const handleFinalize = async (finalSpeechMetrics = {}) => {
     toast.loading("Compiling overall scorecard reports...");
+    
+    // Stop all media resources immediately
     stopWebcam();
     cleanupVoice();
 
@@ -228,17 +389,64 @@ export function VoiceInterviewFlow({
 
   const handleExit = async () => {
     if (confirm("Are you sure you want to exit the mock interview? Progress on the current question will be lost.")) {
+      // Stop all media resources immediately
       stopWebcam();
       cleanupVoice();
+      
       try {
         await fetch(`/api/voice-interview/${sessionId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: "ABANDONED" }),
         });
-      } catch (e) {}
+      } catch (e) {
+        console.error("[EXIT ERROR]: Failed to update session status:", e);
+        // Continue with exit even if API call fails
+      }
+      
       if (onExit) onExit();
     }
+  };
+
+  // Handle camera disconnection during interview
+  useEffect(() => {
+    if (!videoEnabled || !localStreamRef.current) return;
+
+    const handleTrackEnded = (e) => {
+      console.error("[VIDEO]: Camera track ended:", e);
+      setVideoError("Camera disconnected. Please reconnect your camera and refresh.");
+      toast.error("Camera disconnected. Continuing with voice-only mode.");
+      stopWebcam();
+    };
+
+    const tracks = localStreamRef.current.getVideoTracks();
+    tracks.forEach((track) => {
+      track.addEventListener("ended", handleTrackEnded);
+    });
+
+    return () => {
+      tracks.forEach((track) => {
+        track.removeEventListener("ended", handleTrackEnded);
+      });
+    };
+  }, [videoEnabled, localStreamRef.current]);
+
+  const handlePermissionAllow = () => {
+    setPermissionGranted(true);
+    setShowPermissionDialog(false);
+  };
+
+  const handlePermissionDeny = () => {
+    setShowPermissionDialog(false);
+    toast.error(
+      videoEnabled
+        ? "Camera and microphone permissions are required for Video Interview."
+        : "Microphone access is required to start a Voice Interview."
+    );
+    // Exit the interview flow
+    setTimeout(() => {
+      if (onExit) onExit();
+    }, 500);
   };
 
   // Helper formatting for seconds to MM:SS
@@ -256,7 +464,18 @@ export function VoiceInterviewFlow({
   }, [transcripts]);
 
   return (
-    <div className="grid gap-6 lg:grid-cols-12 max-w-5xl mx-auto p-1">
+    <>
+      {/* Permission Dialog - shown before interview starts */}
+      <PermissionDialog
+        open={showPermissionDialog}
+        onAllow={handlePermissionAllow}
+        onDeny={handlePermissionDeny}
+        mode={videoEnabled ? "video" : "voice"}
+      />
+
+      {/* Main Interview Flow - only shown after permissions granted */}
+      {permissionGranted && (
+        <div className="grid gap-6 lg:grid-cols-12 max-w-5xl mx-auto p-1">
       {/* Visual Workspace: Waves, Camera, Coaching */}
       <div className="lg:col-span-7 flex flex-col gap-6">
         <Card className="border-border/40 bg-card/60 backdrop-blur-md overflow-hidden relative shadow-lg">
@@ -428,7 +647,12 @@ export function VoiceInterviewFlow({
                     autoPlay
                     playsInline
                     muted
-                    className={`w-full h-full object-cover ${settings.mirrorCamera ? "-scale-x-100" : ""}`}
+                    className="w-full h-full object-contain"
+                    style={{
+                      transform: settings.mirrorCamera ? "scaleX(-1)" : "scaleX(1)",
+                      width: '100%',
+                      height: '100%',
+                    }}
                   />
                   {/* Hidden Canvas used for image frames extraction */}
                   <canvas ref={canvasRef} width="320" height="240" className="hidden" />
@@ -495,6 +719,8 @@ export function VoiceInterviewFlow({
         </Card>
       </div>
     </div>
+      )}
+    </>
   );
 }
 export default VoiceInterviewFlow;

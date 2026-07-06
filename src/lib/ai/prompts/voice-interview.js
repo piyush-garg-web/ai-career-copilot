@@ -99,7 +99,10 @@ export function buildVoiceAnswerEvaluationPrompt({
 Question Asked: "${question}"
 Candidate's Spoken Answer: "${answer}"
 Selected Language: ${targetLanguage}
-Question Progress: ${currentQuestionNumber} of ${totalQuestions}
+Question Progress: ${currentQuestionNumber} of ${totalQuestions} (Total questions in this session: ${totalQuestions})
+
+IMPORTANT: This is a multi-question interview session. Continue generating follow-up questions until you reach question ${totalQuestions}.
+Only set "followUpQuestion" to "Session Completed" when you have reached the final question (question ${totalQuestions}).
 
 Evaluate this response and output the JSON evaluation scorecard.
 If this is the final question (${isLastQuestion}), set the "followUpQuestion" field strictly to "Session Completed".
