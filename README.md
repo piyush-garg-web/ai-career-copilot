@@ -11,13 +11,14 @@
 [![Vercel](https://img.shields.io/badge/Deployed-Vercel-black)](https://vercel.com/)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-black?logo=github)](https://github.com/piyush-garg-web/ai-career-copilot)
 
-> **Your intelligent career companion — optimize resumes, align with job descriptions, and ace interviews with AI-powered guidance.**
+> **Your intelligent career companion — optimize resumes, align with job descriptions, and prepare for interviews with AI-powered guidance.**
 
 **AI Career Copilot** is a full-stack, AI-powered career assistant built for modern job seekers. It helps candidates optimize resumes for ATS screening, analyze alignment with job descriptions, and prepare through interactive mock interviews with AI-powered evaluation and personalized feedback — all within a polished, responsive SaaS dashboard.
 
 Built with **Next.js 15**, **React**, **Prisma**, **PostgreSQL**, **Clerk**, **UploadThing**, and **Google Gemini AI**.
 
 <p align="center">
+<a href="https://ai-career-copilot-gray.vercel.app/">Live Demo</a> •
 <a href="https://github.com/piyush-garg-web">GitHub</a> •
 <a href="https://www.linkedin.com/in/piyushgarg-dev">LinkedIn</a>
 </p>
@@ -30,7 +31,7 @@ Today's job seekers need more than just applying for roles online. They need **o
 
 **AI Career Copilot** addresses this by combining:
 
-- **Resume optimization** — ATS scoring, quality evaluation, and actionable improvements
+- **Resume optimization** — ATS compatibility analysis, quality evaluation, and actionable improvements
 - **Job description analysis** — Compare resumes against role requirements
 - **Skill gap identification** — Surface missing keywords and competencies
 - **AI-powered interview practice** — Role-specific mock sessions with scored feedback
@@ -93,7 +94,7 @@ Experience the application live:
 
 - Secure resume uploads via UploadThing (PDF/DOCX, up to 10MB)
 - Text extraction using `pdf-parse` and `mammoth`
-- AI-assisted ATS compatibility analysis and scoring
+- AI-assisted ATS compatibility analysis
 - Resume quality evaluation across structure, formatting, and content
 - Grammar and formatting suggestions with actionable improvements
 
@@ -324,7 +325,7 @@ For Clerk webhook configuration to sync users with the database, refer to the **
 ## 🔮 Future Roadmap
 
 - **Voice AI Interviews** — Conversational mock interviews with speech-to-text and audio feedback
-- **Advanced Analytics** — Trend graphs for ATS score improvements and interview performance over time
+- **Advanced Analytics** — Trend graphs for ATS compatibility improvements and interview performance over time
 - **Resume Comparison** — Side-by-side multi-resume keyword and structure analysis
 - **AI Resume Builder** — Generate tailored resumes from AI recommendations
 - **Video Interview Analysis** — Review posture, expressions, and timing from camera-based mockups
