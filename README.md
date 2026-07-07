@@ -1,100 +1,186 @@
-# AI Career Copilot
+# 🚀 AI Career Copilot
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-15.2.8-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-18.3.1-blue)](https://react.dev/)
 [![Prisma](https://img.shields.io/badge/Prisma-7.8.0-emerald)](https://www.prisma.io/)
+[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL_Neon-blue)](https://neon.tech/)
 [![Clerk](https://img.shields.io/badge/Authentication-Clerk-purple)](https://clerk.com/)
+[![UploadThing](https://img.shields.io/badge/Storage-UploadThing-red)](https://uploadthing.com/)
 [![Gemini](https://img.shields.io/badge/AI-Google_Gemini-orange)](https://deepmind.google/technologies/gemini/)
+[![Vercel](https://img.shields.io/badge/Deployed-Vercel-black)](https://vercel.com/)
 
-**AI Career Copilot** is a production-grade SaaS application designed to streamline the modern job application lifecycle. It empowers candidates to optimize their resumes for ATS screening, analyze alignment with job descriptions, and conduct interactive, AI-powered mock interviews with real-time feedback.
+> **Your intelligent career companion — optimize resumes, align with job descriptions, and ace interviews with AI-powered guidance.**
 
-**Live Demo:** [https://ai-career-copilot-ehmy.vercel.app](https://ai-career-copilot-ehmy.vercel.app)
+**AI Career Copilot** is a full-stack, AI-powered career assistant built for modern job seekers. It helps candidates optimize resumes for ATS screening, analyze alignment with job descriptions, and prepare through interactive mock interviews with real-time AI feedback — all within a polished, responsive SaaS dashboard.
 
----
-
-## 🚀 Live Demo
-
-Check out the live application here: **[https://ai-career-copilot-ehmy.vercel.app](https://ai-career-copilot-ehmy.vercel.app)**
+Built with **Next.js 15**, **React**, **Prisma**, **PostgreSQL**, **Clerk**, **UploadThing**, and **Google Gemini AI**.
 
 ---
 
-## 🎨 Preview & Screenshots
+## 🌐 Live Demo
 
-Here is a look at the AI Career Copilot interface:
+Experience the application live:
+
+**[https://ai-career-copilot-gray.vercel.app/](https://ai-career-copilot-gray.vercel.app/)**
+
+---
+
+## 📸 Screenshots
 
 | Dashboard View | AI Resume Analysis |
 | :---: | :---: |
-| ![Dashboard](screenshots/dashboard.png) | ![Resume Analysis](screenshots/resume-analysis.png) |
+| ![Dashboard View](screenshots/dashboard.png) | ![AI Resume Analysis](screenshots/resume-analysis.png) |
 
 | ATS Score & Metrics | Job Alignment Match |
 | :---: | :---: |
-| ![ATS Score](screenshots/ats-score.png) | ![Job Match](screenshots/job-match.png) |
+| ![ATS Score & Metrics](screenshots/ats-score.png) | ![Job Alignment Match](screenshots/job-match.png) |
 
 | Interactive Interview Coach | Interview History |
 | :---: | :---: |
-| ![Interview Coach](screenshots/interview-coach.png) | ![Interview History](screenshots/interview-history.png) |
+| ![Interactive Interview Coach](screenshots/interview-coach.png) | ![Interview History](screenshots/interview-history.png) |
 
 | Profile Preferences |
 | :---: |
-| ![Profile](screenshots/profile.png) |
+| ![Profile Preferences](screenshots/profile.png) |
+
+---
+
+## ⚡ Project Highlights
+
+- Built with **Next.js 15 App Router** for modern server-side rendering and routing
+- **AI integration** using Google Gemini for resume analysis, job matching, and interview coaching
+- **Resume processing pipeline** supporting PDF and DOCX document extraction
+- **Clerk authentication** with OAuth and protected route middleware
+- **Prisma ORM** with a relational database design for users, resumes, and interviews
+- **PostgreSQL on Neon DB** for serverless, scalable data persistence
+- **UploadThing** for secure resume file storage and retrieval
+- **Serverless architecture** deployed on Vercel with zero infrastructure management
+- **Responsive SaaS dashboard** with dark/light mode and polished UI/UX
 
 ---
 
 ## ✨ Features
 
 ### 🔐 Authentication & Onboarding
-*   **Clerk Identity Provider**: Secured sign-in/sign-up through OAuth providers (Google, GitHub) or standard email verification.
-*   **Route Guards**: Next.js Middleware protects internal dashboard sections from unauthenticated users.
-*   **Interactive Onboarding**: Personalized onboarding process to establish user career targets and backgrounds.
+
+- Clerk authentication with OAuth login (Google, GitHub)
+- Email verification for secure account creation
+- Protected routes enforced via Next.js middleware
+- Personalized onboarding to capture career goals and preferences
 
 ### 📄 Resume Optimization
-*   **Secure Uploads**: Utilizes **UploadThing** for hosting and retrieving PDF/DOCX resumes (up to 10MB).
-*   **Local Text Parsing**: Extracts text locally using `pdf-parse` (for PDF) and `mammoth` (for Word documents).
-*   **ATS Score Evaluation**: Computes estimated ATS matching ratings based on structure and formatting rules.
-*   **Aesthetic Health Score**: AI-graded criteria for section completeness, formatting, and grammar.
-*   **Actionable Suggestions**: Specific suggestions to resolve typos, format issues, and weak wording.
+
+- Secure resume uploads via UploadThing (PDF/DOCX, up to 10MB)
+- Text extraction using `pdf-parse` and `mammoth`
+- AI-assisted ATS compatibility analysis and scoring
+- Resume quality evaluation across structure, formatting, and content
+- Grammar and formatting suggestions with actionable improvements
 
 ### 🎯 Job Description Alignment
-*   **Skill Gap Analysis**: Pastes a job description and compares it against the user's primary resume to discover missing keywords.
-*   **Match Scoring**: Calculates overall alignment percentage using semantic overlap checks.
-*   **AI Recommendations**: Offers precise guidance on bullet-point tailoring to address missing criteria.
 
-### 💬 Interactive Interview Coach
-*   **Custom Simulation Hub**: Generates session question sets from the user's resume, specific role, and selected difficulty.
-*   **Live Interactive Prep**: Candidates type answers in a mock interview dialog environment.
-*   **Detailed Evaluations**: Generates question-by-question scoring, strong points, weaknesses, and model "Ideal Answers".
-*   **History Logs**: Review and revisit previous session summaries and transcripts.
+- Side-by-side resume and job description comparison
+- Skill gap analysis with missing keyword detection
+- Match percentage scoring for role alignment
+- AI-generated recommendations to tailor bullet points and keywords
 
-### 📊 Dashboard & UI/UX
-*   **Centralized Analytics**: Displays overview charts, recent match logs, and pending tasks.
-*   **System Settings**: Fully supports Dark and Light mode preferences with `next-themes`.
+### 💬 AI Mock Interview Coach
+
+- Resume-based and role-specific interview question generation
+- Configurable difficulty levels for targeted practice
+- AI answer evaluation with detailed scoring and feedback
+- Ideal answer suggestions for each question
+- Full interview history with session summaries and transcripts
+
+### 📊 Dashboard
+
+- Centralized analytics and activity overview
+- Resume records management
+- Interview history and performance tracking
+- User profile and career preference settings
+- Dark/light mode toggle powered by `next-themes`
+- Fully responsive UI across desktop and mobile
 
 ---
 
 ## 🛠️ Tech Stack
 
-*   **Frontend**: Next.js 15 (App Router), React 18, Tailwind CSS, Framer Motion
-*   **Backend**: Next.js Route Handlers (stateless serverless APIs)
-*   **Database**: serverless PostgreSQL on Neon DB
-*   **ORM**: Prisma ORM
-*   **Authentication**: Clerk Identity SDK
-*   **File Storage**: UploadThing
-*   **AI Pipeline**: Google Gemini 1.5 API (via Google Gen AI SDK)
-*   **Deployment**: Vercel
+### Frontend
+
+| Technology | Purpose |
+| :--- | :--- |
+| Next.js 15 | App Router, SSR, and API route handlers |
+| React 18 | Component-based UI |
+| Tailwind CSS | Utility-first styling |
+| Framer Motion | Animations and transitions |
+
+### Backend
+
+| Technology | Purpose |
+| :--- | :--- |
+| Next.js Route Handlers | Serverless API endpoints |
+| Serverless APIs | Stateless request processing on Vercel |
+
+### Database
+
+| Technology | Purpose |
+| :--- | :--- |
+| PostgreSQL (Neon DB) | Serverless relational database |
+| Prisma ORM | Schema management and type-safe queries |
+
+### Authentication
+
+| Technology | Purpose |
+| :--- | :--- |
+| Clerk | Identity provider, OAuth, and session management |
+
+### Storage
+
+| Technology | Purpose |
+| :--- | :--- |
+| UploadThing | Secure resume file uploads and hosting |
+
+### AI
+
+| Technology | Purpose |
+| :--- | :--- |
+| Google Gemini API | Resume analysis, job matching, and interview evaluation |
+
+### Deployment
+
+| Technology | Purpose |
+| :--- | :--- |
+| Vercel | Serverless hosting and CI/CD |
 
 ---
 
 ## 📐 Architecture Overview
 
-AI Career Copilot utilizes a serverless architecture optimized for high performance and low maintenance costs:
-*   **Client**: Responsive Next.js App Router UI that queries backend API endpoints.
-*   **Server**: Next.js API Route Handlers running on Vercel Serverless Functions.
-*   **Database**: PostgreSQL hosted on Neon DB, queried via Prisma Client.
-*   **AI Pipeline**: Stateless text extraction from documents forwarded to Gemini API with structured JSON system prompts.
-*   **Auth Flow**: Authentication checked via JWTs in middleware, with profiles synced to PostgreSQL through Clerk Webhooks.
+```
+User
+ |
+Next.js Frontend
+ |
+API Routes
+ |
+-------------------------------
+|              |              |
+Prisma     Gemini AI     UploadThing
+ |
+PostgreSQL
+```
 
-> 📝 For a deep dive into schemas, diagrams, and folder layouts, refer to the **[System Architecture Guide](docs/ARCHITECTURE.md)**.
+### Layer Breakdown
+
+| Layer | Description |
+| :--- | :--- |
+| **Frontend** | Responsive Next.js App Router UI with client and server components |
+| **Backend / Serverless** | Next.js API Route Handlers running as Vercel Serverless Functions |
+| **Database** | PostgreSQL on Neon DB, accessed through Prisma Client |
+| **AI Processing** | Document text extraction forwarded to Google Gemini with structured prompts |
+| **Authentication** | Clerk JWT validation in middleware with user sync via webhooks |
+
+> For detailed schemas, data flows, and component diagrams, see the **[Architecture Guide](docs/ARCHITECTURE.md)**.
 
 ---
 
@@ -102,43 +188,58 @@ AI Career Copilot utilizes a serverless architecture optimized for high performa
 
 ```
 ai-career-copilot/
-├── docs/                         # Extended System Documentation
-│   ├── ARCHITECTURE.md           # System components & data flows
-│   ├── SETUP.md                  # Detailed environment & installation guide
-│   ├── FEATURES.md               # Detailed features walkthrough
-│   ├── DATABASE.md               # DB models & relational schemas
-│   └── API.md                    # Backend API endpoint reference
-├── prisma/                       # Database migrations & schemas
-├── public/                       # Assets & favicons
-├── screenshots/                  # Repository visualization images
+
+├── docs/
+│   ├── ARCHITECTURE.md
+│   ├── SETUP.md
+│   ├── FEATURES.md
+│   ├── DATABASE.md
+│   └── API.md
+
+├── prisma/
+├── public/
+├── screenshots/
+
 └── src/
-    ├── app/                      # Next.js App Router (Views & API Handlers)
-    ├── components/               # React UI & Layout components
-    └── lib/                      # Shared utility libraries & AI pipeline
+    ├── app/
+    ├── components/
+    └── lib/
 ```
 
 ---
 
-## ⚙️ Installation & Setup
+## 🔌 API Overview
+
+| Endpoint | Description |
+| :--- | :--- |
+| `/api/resumes` | Resume upload, parsing, and AI analysis |
+| `/api/interviews` | AI interview session generation and evaluation |
+| `/api/job-matches` | Resume-to-job-description matching and skill gap analysis |
+| `/api/user` | User profile and preference operations |
+
+> For full endpoint documentation, request/response schemas, and authentication details, see **[API Reference](docs/API.md)**.
+
+---
+
+## ⚙️ Installation
 
 ### 1. Clone the Repository
+
 ```bash
-git clone https://github.com/piyushgarg6702-cyber/ai-career-copilot.git
+git clone https://github.com/piyush-garg-web/ai-career-copilot.git
 cd ai-career-copilot
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 npm install
 ```
 
-### 3. Setup Environment File
-Create a `.env` file in the root directory:
-```bash
-cp .env.example .env
-```
+### 3. Configure Environment Variables
 
-Fill in the required configuration variables:
+Create a `.env` file in the project root and add the following variables:
+
 ```env
 DATABASE_URL="your-neon-postgres-connection-string"
 DIRECT_URL="your-neon-postgres-direct-connection-string"
@@ -149,55 +250,84 @@ UPLOADTHING_SECRET="your-uploadthing-secret"
 UPLOADTHING_APP_ID="your-uploadthing-app-id"
 ```
 
-### 4. Database Setup & Sync
+### 4. Set Up the Database
+
 ```bash
 npx prisma db push
 npx prisma generate
 ```
 
-### 5. Launch the Local Dev Server
+### 5. Run the Development Server
+
 ```bash
 npm run dev
 ```
-Navigate to [http://localhost:3000](http://localhost:3000) to view the application.
 
-> 💡 For comprehensive setup configurations, refer to the **[Setup Guide](docs/SETUP.md)**.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+> For comprehensive setup instructions, see the **[Setup Guide](docs/SETUP.md)**.
 
 ---
 
 ## 📦 Deployment
 
-This project is configured for deployment on **Vercel** with a simple setup:
-1. Connect your repository to Vercel.
-2. In **Environment Variables**, paste all the keys configured in your `.env`.
-3. Set the build command to `npm run build` (auto-detected).
-4. Click **Deploy**.
+This project is configured for one-click deployment on **Vercel**:
 
-For webhook user sync setups, see the **[Clerk Webhook Configuration Section in SETUP.md](docs/SETUP.md#clerk-webhook-setup-required-for-syncing-users)**.
+1. **Connect** your GitHub repository to Vercel.
+2. **Add environment variables** — paste all keys from your `.env` file into the Vercel project settings.
+3. **Deploy** — Vercel auto-detects Next.js and runs `npm run build`.
+
+For Clerk webhook configuration to sync users with the database, refer to the **[Setup Guide](docs/SETUP.md)**.
 
 ---
 
 ## 🔮 Future Roadmap
 
-*   🎙️ **Voice Interviews**: Fully conversational practice using audio transcripts and speech-to-text API models.
-*   📊 **Detailed Analytics**: Trend graphs detailing ATS improvements and score performance charts over time.
-*   📂 **Resume Comparison**: Multi-resume side-by-side keyword overlap comparisons.
-*   💾 **PDF Export**: Generate tailored resumes direct to print-ready PDF formats from recommendations.
-*   🎥 **Interview Video Playback**: Review candidate posture, expressions, and timing using camera mockups.
+- **Voice AI Interviews** — Conversational mock interviews with speech-to-text and audio feedback
+- **Advanced Analytics** — Trend graphs for ATS score improvements and interview performance over time
+- **Resume Comparison** — Side-by-side multi-resume keyword and structure analysis
+- **AI Resume Builder** — Generate tailored resumes from AI recommendations
+- **Video Interview Analysis** — Review posture, expressions, and timing from camera-based mockups
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these guidelines:
-1. Fork this repository.
-2. Create your feature branch (`git checkout -b feature/NewFeature`).
-3. Commit your changes (`git commit -m 'Add NewFeature'`).
-4. Push to the branch (`git push origin feature/NewFeature`).
-5. Open a Pull Request.
+Contributions are welcome! Please follow the standard GitHub workflow:
+
+1. **Fork** the repository.
+2. **Create** a feature branch (`git checkout -b feature/your-feature`).
+3. **Commit** your changes (`git commit -m 'Add your feature'`).
+4. **Push** to the branch (`git push origin feature/your-feature`).
+5. **Open** a Pull Request with a clear description of your changes.
+
+---
+
+## 🔒 Security
+
+- **Never commit `.env` files** or any files containing secrets to version control.
+- **Store all secrets** in environment variables — locally via `.env` and in production via your hosting provider.
+- **Protect API keys** — restrict Gemini, Clerk, and UploadThing keys to authorized environments only.
+
+---
+
+## 👨‍💻 Author
+
+**Piyush Garg**
+
+Full Stack Developer passionate about:
+
+- React
+- Next.js
+- Node.js
+- AI technologies
+
+**GitHub:** [https://github.com/piyush-garg-web](https://github.com/piyush-garg-web)
+
+**LinkedIn:** [https://www.linkedin.com/in/piyushgarg-dev](https://www.linkedin.com/in/piyushgarg-dev)
 
 ---
 
 ## 📄 License
 
-Distributed under the MIT License. See [LICENSE](LICENSE) for more details.
+This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for full details.
