@@ -13,7 +13,7 @@
 
 > **Your intelligent career companion — optimize resumes, align with job descriptions, and prepare for interviews with AI-powered guidance.**
 
-**AI Career Copilot** is a full-stack, AI-powered career assistant built for modern job seekers. It helps candidates optimize resumes for ATS screening, analyze alignment with job descriptions, and prepare through interactive mock interviews with AI-powered evaluation and personalized feedback — all within a polished, responsive SaaS dashboard.
+**AI Career Copilot** is a full-stack, AI-powered career assistant built for modern job seekers. It helps candidates optimize resumes for ATS compatibility, analyze alignment with job descriptions, and prepare through interactive mock interviews with AI-powered evaluation and personalized feedback — all within a polished, responsive SaaS dashboard.
 
 Built with **Next.js 15**, **React**, **Prisma**, **PostgreSQL**, **Clerk**, **UploadThing**, and **Google Gemini AI**.
 
