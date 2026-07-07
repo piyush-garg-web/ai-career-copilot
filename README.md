@@ -9,12 +9,32 @@
 [![UploadThing](https://img.shields.io/badge/Storage-UploadThing-red)](https://uploadthing.com/)
 [![Gemini](https://img.shields.io/badge/AI-Google_Gemini-orange)](https://deepmind.google/technologies/gemini/)
 [![Vercel](https://img.shields.io/badge/Deployed-Vercel-black)](https://vercel.com/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-black?logo=github)](https://github.com/piyush-garg-web/ai-career-copilot)
 
 > **Your intelligent career companion — optimize resumes, align with job descriptions, and ace interviews with AI-powered guidance.**
 
-**AI Career Copilot** is a full-stack, AI-powered career assistant built for modern job seekers. It helps candidates optimize resumes for ATS screening, analyze alignment with job descriptions, and prepare through interactive mock interviews with real-time AI feedback — all within a polished, responsive SaaS dashboard.
+**AI Career Copilot** is a full-stack, AI-powered career assistant built for modern job seekers. It helps candidates optimize resumes for ATS screening, analyze alignment with job descriptions, and prepare through interactive mock interviews with AI-powered evaluation and personalized feedback — all within a polished, responsive SaaS dashboard.
 
 Built with **Next.js 15**, **React**, **Prisma**, **PostgreSQL**, **Clerk**, **UploadThing**, and **Google Gemini AI**.
+
+<p align="center">
+<a href="https://github.com/piyush-garg-web">GitHub</a> •
+<a href="https://www.linkedin.com/in/piyushgarg-dev">LinkedIn</a>
+</p>
+
+---
+
+## 💡 Why AI Career Copilot?
+
+Today's job seekers need more than just applying for roles online. They need **optimized resumes** that pass ATS filters, a **clear understanding of job descriptions**, and **structured interview preparation** to stand out in competitive hiring pipelines.
+
+**AI Career Copilot** addresses this by combining:
+
+- **Resume optimization** — ATS scoring, quality evaluation, and actionable improvements
+- **Job description analysis** — Compare resumes against role requirements
+- **Skill gap identification** — Surface missing keywords and competencies
+- **AI-powered interview practice** — Role-specific mock sessions with scored feedback
+- **Personalized career feedback** — Tailored suggestions based on profile and goals
 
 ---
 
@@ -205,6 +225,26 @@ ai-career-copilot/
     ├── components/
     └── lib/
 ```
+
+---
+
+## 🗄️ Database Design
+
+```
+User
+ |
+ |---- Resume
+ |
+ |---- InterviewSession
+ |
+ |---- JobMatch
+ |
+ |---- JobDescription
+```
+
+The schema uses **Prisma ORM** with PostgreSQL on Neon DB. Core models include `User`, `Resume`, `ResumeAnalysis`, `JobDescription`, `JobMatch`, `InterviewSession`, `InterviewQuestion`, and `InterviewAnswer` — with cascade deletes and indexed foreign keys for efficient queries.
+
+Database schema documentation: **[Database Documentation](docs/DATABASE.md)**
 
 ---
 
