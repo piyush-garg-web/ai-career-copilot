@@ -282,13 +282,42 @@ npm install
 Create a `.env` file in the project root and add the following variables:
 
 ```env
+# Database Configuration
 DATABASE_URL="your-neon-postgres-connection-string"
 DIRECT_URL="your-neon-postgres-direct-connection-string"
+
+# Clerk Authentication Configuration
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="your-clerk-publishable-key"
 CLERK_SECRET_KEY="your-clerk-secret-key"
-GEMINI_API_KEY="your-gemini-api-key"
+NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
+NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL="/dashboard"
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/dashboard"
+
+# UploadThing Configuration
 UPLOADTHING_SECRET="your-uploadthing-secret"
 UPLOADTHING_APP_ID="your-uploadthing-app-id"
+
+# AI Provider Configuration
+AI_PROVIDER="gemini"  # Options: "gemini", "openai", "grok"
+
+# Google Gemini API Key
+GEMINI_API_KEY="your-gemini-api-key"
+GEMINI_MODEL="gemini-2.5-flash"
+
+# OpenAI API Key (for fallback)
+OPENAI_API_KEY="your-openai-api-key"
+
+# Grok (xAI) API Key (for fallback)
+GROK_API_KEY="your-grok-api-key"
+
+# Groq API Key for Whisper Speech-to-Text
+GROQ_API_KEY="your-groq-api-key"
+
+# Razorpay Configuration (Test Mode)
+RAZORPAY_KEY_ID="your-razorpay-key-id"
+RAZORPAY_KEY_SECRET="your-razorpay-key-secret"
+NEXT_PUBLIC_RAZORPAY_KEY_ID="your-razorpay-key-id"
 ```
 
 ### 4. Set Up the Database
