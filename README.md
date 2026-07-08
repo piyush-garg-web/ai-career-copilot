@@ -66,8 +66,8 @@ Experience the application live:
 | ![Profile Preferences](screenshots/profile.png) | ![Voice-Video Interview](screenshots/voiceVideoAI.png) |
 
 | Landing Page |
-| :---: | :---: |
-| ![Landing Page](screenshots/landing-page.png) |
+| :---: | 
+| ![Landing Page](screenshots/landing-page.png) 
 
 ---
 
