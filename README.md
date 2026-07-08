@@ -62,7 +62,7 @@ Experience the application live:
 | ![Interactive Interview Coach](screenshots/interview-coach.png) | ![Interview History](screenshots/interview-history.png) |
 
 | Profile Preferences | Voice-Video Interview |
-| :---: |
+| :---: | :---: |
 | ![Profile Preferences](screenshots/profile.png) | ![Voice-Video Interview](screenshots/voiceVideoAI.png) |
 
 | Landing Page |
