@@ -43,7 +43,8 @@ Today's job seekers need more than just applying for roles online. They need **o
 
 Experience the application live:
 
-**[https://ai-career-copilot-gray.vercel.app/](https://ai-career-copilot-gray.vercel.app/)**
+🌐 **Live Demo**  
+https://ai-career-copilot-gray.vercel.app/
 
 🌐 **Developer Portfolio**  
 https://portfolio-one-livid-15.vercel.app/
