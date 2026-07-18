@@ -45,6 +45,9 @@ Experience the application live:
 
 **[https://ai-career-copilot-gray.vercel.app/](https://ai-career-copilot-gray.vercel.app/)**
 
+🌐 **Developer Portfolio**  
+https://portfolio-one-livid-15.vercel.app/
+
 ---
 
 ## 📸 Screenshots
